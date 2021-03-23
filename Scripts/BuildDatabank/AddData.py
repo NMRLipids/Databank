@@ -680,7 +680,7 @@ else:
 
 # In[14]:
 
-socket.setdefaulttimeout(30)
+socket.setdefaulttimeout(15)
 
 download_failed = False
 
@@ -827,21 +827,34 @@ if sim.get('UNITEDATOM'):
 
 tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
 trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
+#structure_file = ""
+gro = str(dir_tmp) + '/conf.gro'
 
 # OTHER SOFTWARES THAN GROMACS!!!!
 
-#if sim['SOFTWARE'] == gromacs:
-gro = str(dir_tmp) + '/conf.gro'
-    #make gro file
+#if sim['SOFTWARE'] == 'gromacs':
+structure_file = str(dir_tmp) + '/conf.gro'
+#make gro file
 os.system('echo System | gmx trjconv -f '+trj+' -s '+tpr+' -dump 0 -o ' +gro)
-
+    
     # add gro into dictionary for later use
-sim['GRO'] = gro
+sim['GRO'] = structure_file
+    #u_trj = Universe(trj)
+    #u_selection = u_trj.
+    #write('frame_0.gro', frames=u_trj.trajectory[0])
+
+   
+
+#elseif sim['SOFTWARE'] == amber:
+#elseif sim['SOFTWARE'] == namd:
+#elseif sim['SOFTWARE'] == charmm:
+#elseif sim['SOFTWARE'] == openmm:
     
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(gro)
+u = Universe(structure_file)
+
 lipids = []
 
 # select lipids 
@@ -997,12 +1010,12 @@ DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' 
 # dictionary saved in yaml format
 outfileDICT=str(dir_tmp)+ '/README.yaml'
     
-    #with open(outfileDICT, 'w') as f:
-    #    yaml.dump(sim,f, sort_keys=False)
+with open(outfileDICT, 'w') as f:
+    yaml.dump(sim,f, sort_keys=False)
        
-    #    os.system('cp ' + str(dir_tmp) + '/README.yaml ' + DATAdir)
-    #outfileDICT.write(str(sim))
-    #    outfileDICT.close()
+    os.system('cp ' + str(dir_tmp) + '/README.yaml ' + DATAdir)
+ #   outfileDICT.write(str(sim))
+outfileDICT.close()
    
 
 
