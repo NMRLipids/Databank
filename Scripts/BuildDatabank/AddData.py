@@ -1015,7 +1015,7 @@ with open(outfileDICT, 'w') as f:
        
     os.system('cp ' + str(dir_tmp) + '/README.yaml ' + DATAdir)
  #   outfileDICT.write(str(sim))
-outfileDICT.close()
+#outfileDICT.close()
    
 
 
