@@ -1,0 +1,59 @@
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/
+DOI: 10.5281/zenodo.1129415
+PUBLICATION: null
+AUTHORS_CONTACT: null
+SYSTEM: POPS_298K
+SOFTWARE: gromacs
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ??/??/????
+TRJ:
+- - md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-CHARMM36_POPS_298K_v1.tpr
+CPT: null
+LOG: null
+TOP: null
+PREEQTIME: 400
+TIMELEFTOUT: 0
+MAPPING_DICT:
+  POPS: mappingPOPScharmm.txt
+  WATER: mappingWATERcharmm36.txt
+  IONS: mappingIONScharmm36.txt
+POPC: POPC
+POPG: POPG
+POPS: POPS
+POPE: POPE
+POT: K
+SOD: SOD
+CLA: CL
+CAL: CA
+SOL: TIP3
+GRO: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/tmp_6-295643/conf.gro
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 64
+- 64
+NPOPE:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NPOT: 0
+NSOD: 128
+NCLA: 0
+NCAL: 0
+NSOL: 4480
+TEMPERATURE: '298'
+TRJLENGTH: 100050.0
+DATEOFRUNNING: 23/03/2021
