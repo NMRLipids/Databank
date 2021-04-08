@@ -1,10 +1,11 @@
 # User input
-The databank entries are given as yaml files which locate in folders in here with integer names.
+The databank entries are given as yaml files which locate in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) folder with integer names.
 The dictionary variables that are used for indexing the data entries are described here.
 The necessary parameters required for the analyses are described first and are marked as ''compulsory''. 
 Because also other than compulsory parameters may be highly useful in upcycling the data, we strong recommend that all the possible parameters are given upon entry.
 
-When making the entry file for your simulation, looking already existing examples in subfolders in this folder is useful.
+When making the entry file for your simulation, looking already existing examples in 
+subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) is useful.
 
 #### DOI (compulsory)
 Give the DOI identity for the location of simulation files. 
