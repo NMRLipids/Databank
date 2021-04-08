@@ -8,7 +8,7 @@ Codes used to [add](https://github.com/NMRLipids/Databank/tree/main/Scripts/Buil
 
 1. Clone this repo to your own computer.
 2. Make a new directory with the next free integer into [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files) folder.
-3. Create info.yaml file into the folder that you created following the instructions.
+3. Create info.yaml file into the folder with the help of [instructions](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md).
 4. Return to the [Databank/Scripts/BuildDatabank/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) folder and run
 `python3 AddData.py -f {path to the info file that you created}`.
 After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the README.yaml file of your system and calculated order parameters.
