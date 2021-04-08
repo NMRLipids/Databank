@@ -101,69 +101,111 @@ There is also a script runAddData.sh that can be used to loop over several info 
 A simulation dictionary contains information about the simulation. Some of the information is provided by the user. The numbers of lipid molecules, solvent and ions are automatically read from the files and so are the simulation temperature and trajectory length. All this information is saved to a file named README.yaml.
 
 
+\subsubsection{User input}
+Dictionary variables defined by the user are listed here. 
+The necessary parameters required for the analyses are described first and are marked as ''compulsory''. Then the parameters used to describe the data for further usage and analyses are described.
+While only compulsory parameters are required for the databank entry, strong recommendation is that all the possible parameters would be given to maximize the possibilities to upcycle the contributed data. 
 
-\subsubsection{Compulsory user input}
-The following parameters are compulsory and have a strict format.
+\subsubsection*{DOI (compulsory)}
+Give DOI identity from where the simulation files are located. Current databank works only for the data in Zenodo, but other potential sources are may be implemented in the future. Note that the DOI must point to a specific version of dataset in Zenodo, i.e., DOI pointing to all versions of certain dataset does not work.
 
-\subsubsection*{DIR\_WRK}
-DIR\_WRK is the path of the working directory.
+\subsubsection*{SOFTWARE (compulsory)}
+Give the name of software used to run the simulation. The options are GROMACS, AMBER, NAMD, CHARMM and OPENMM. So far, only simulations run with GROMACS are accepted by the script.
 
-\subsubsection*{DOI}
-DOI is the DOI access number of the simulation. Use the version DOI on Zenodo.
+\subsubsection*{TRJ (compulsory)}
+Give the name of the trajectory file that is found from the DOI given above.
 
-\subsubsection*{MAPPING\_DICT}
-MAPPING\_DICT is a dictionary that contains the mapping file names for each lipid in the membrane. For each entry in the dictionary the key is the lipid name and the value is the name of the mapping file. The existing mapping files are in the directory named "mapping\_files". If a mapping file of a certain lipid does not exist the user must construct it.
-\newline \\
-The purpose of a mapping file is to circumvent the problem caused by different atom naming conventions used by different force fields. The first column of a mapping file contains general atom names. The second column contains the name of the atom as it is in the force field. If the lipid consists of several residues which is the case in some AMBER force fields, then a third column is needed which contains the name of the residue to which each atom belongs to.
+\subsubsection*{TPR (compulsory)}
+Give the name of the file with topology information (tpr file in the case of Gromacs) that is found from the DOI given above.
 
-\subsubsection*{SOFTWARE}
-SOFTWARE stands for the name of the software used for running the simulation. The options are GROMACS, AMBER, NAMD, CHARMM and OPENMM. So far, only simulations run with GROMACS are accepted by the script.
+\subsubsection*{PREEQTIME (compulsory)}
+Give the time simulated before the uploaded trajectory in nanoseconds. For example, if you upload 100-200~ns part of total 200~ns simulation, this should value should be 100.
 
-\subsubsection*{TRJ}
-TRJ stands for the name of the trajectory file.
-\subsubsection*{TPR}
-TPR stands for the name of the topology file.
+\subsubsection*{TIMELEFTOUT (compulsory)}
+Give the time that should be considered as an equilibration period in the uploaded trajectory. Frames before the give time will be discarded in the analysis. For example, if you upload 0-200~ns part of total 200~ns simulation where the first 100~ns should be considered as an equilibration, this value should be 100.
 
-\subsubsection*{PREEQTIME}
-PREEQTIME means the time used for pre-equilibrating the system. This should be in nano seconds. 
-\subsubsection*{TIMELEFTOUT}
-TIMELEFTOUT stands for the length of the simulation in nano seconds to be left out at the beginning of the simulation. This value is used in the script to discard the given length from the analysis!
 
-\subsubsection*{UNITEDATOM}
-The handling of united atom simulations is enabled by a separate script called buildH\_calcOP.py. In case of a united atom simulation, the user has to give the names of the lipids and the corresponding names of those lipids as they are in the dic\_lipids.py dictionary used by buildH\_calcOP.py script. In the case of an all atom simulation this can be given as an empty string.
+\subsubsection*{Molecule names (compulsory)}
+In the databank, each molecule has a unique abbreviation (see table~\ref{tab:abbreviations}). 
+You need to give the residue names of these molecules corresponding your simulation.
+%The user must also provide the names of the molecules, ions and solvent that are used in the simulation to match the names used by the databank. The names provided by the user must be the same as in the tpr file. 
+If atoms in a lipid belong to different residues (typical situation in Amber force fields), give the name of the head group residue here, and add the residue name of each atom to the third column in the mapping file (see below). If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules to the lipids\_dict, molecules\_dict, molecule\_numbers\_dict and molecule\_ff\_dict in the AddData.py script, as well as to table~\ref{tab:abbreviations}. 
 
-\subsubsection*{Molecule names}
-The databank has default names for lipids, ions and solvent. The user must also provide the names of the molecules, ions and solvent that are used in the simulation to match the names used by the databank. The names provided by the user must be the same as in the tpr file. If a lipid consists of more than one residue the name of the head group residue is given. If the name of the molecule is not in the databank it needs to be added. The names of the molecules are listed in dictionaries called lipids\_dict and molecules\_dict which are in the script. If a new molecule is added it needs to be added to molecule\_numbers\_dict and molecule\_ff\_dict too.
+\begin{table}[h]
+    \centering
+    \begin{tabular}{c|c}
+        Abbreviation & Molecule name \\
+        \hline
+        POPC &  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine\\
+        POPG &  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol \\
+        POPS & 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine \\
+        POPE & 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine \\
+        CHOL & cholesterol \\
+        DHMDMAB & dihexadecyldimethylammonium \\
+        \hline
+        POT & potassium ion \\
+        SOD & sodium ion \\
+        CLA & chloride ion \\
+        CAL & calcium ion \\
+        SOL & water \\
+    \end{tabular}
+    \caption{Abbreviations used in the databank}
+    \label{tab:abbreviations}
+\end{table}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%free form parameters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Optional and free form user input}
-The form of how the values of these parameters are written is not essential for the script to work properly.
+\subsubsection*{MAPPING\_DICT (compulsory)}
+For the analysis, we need to know the names of atoms in your system.
+These are defined using the mapping file convention introduced in \url{http://nmrlipids.blogspot.com/2015/03/mapping-scheme-for-lipid-atom-names-for.html}, where first column gives the universal atom name, second gives the atom name in force field, and third gives the residue name if not the same for all atoms.
+The name of the mapping file for each molecule needs to be given in dictionary format. The dictionary the key is the molecule name (abbreviation listed in table \ref{tab:abbreviations}) and the value is the name of the mapping file. The already existing mapping files can be found from the directory named "mapping\_files". If a mapping file for your molecule(s) do not exist, you need to construct one and add to the "mapping\_files" directory.
+
+%\newline \\
+%The purpose of a mapping file is to circumvent the problem caused by different atom naming conventions used by different force fields. The first column of a mapping file contains general atom names. The second column contains the name of the atom as it is in the force field. If the lipid consists of several residues which is the case in some AMBER force fields, then a third column is needed which contains the name of the residue to which each atom belongs to.
+
+\subsubsection*{DIR\_WRK (compulsory)}
+Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here. 
+
+
+\subsubsection*{UNITEDATOM\_DICT (compulsory for united atom trajectories)}
+Order parameters from united atom simulations are calculated using buildH code (\url{https://github.com/patrickfuchs/buildH}). For united atom simulations, you need to tell how hydrogens are added based on definitions in the dic\_lipids.py dictionary. This is done by giving a dictionary where the key is the molecule name (abbreviation listed in table \ref{tab:abbreviations}) and the value is the correct dictionary key in dic\_lipids.py. If correct dictionary key is not yet found, you need to add to dic\_lipids.py. 
+In the case of an all atom simulation, UNITEDATOM is left empty.
+
 
 \subsubsection*{PUBLICATION}
-PUBLICATION stand for the DOI of the associated publication.
+Give reference to a publication(s) related to the data.
 
 \subsubsection*{AUTHORS\_CONTACT}
-The author's contact information can be given if desired.
-
-\subsubsection*{SOFTWARE\_VERSION}
-SOFTWARE\_VERSION stands for the version of the program that was used for running the simulation.
+Give the name and email of the main author(s) of the data.
 
 \subsubsection*{SYSTEM}
-SYSTEM is name of the system.
+Give description of system in free format. For example ''POPC with cholesterol at 301K''.
+
+
+\subsubsection*{SOFTWARE\_VERSION}
+Give the version of the software used.
+
 \subsubsection*{FF}
-FF is the name of the forcefield used in the simulation.
+Give the name of the force field used used in the simulation.
+
 \subsubsection*{FF\_SOURCE}
-FF\_SOURCE tells where the forcefield parameters are taken from.
+Describe the source of the force field parameters. For example, CHARMM-GUI, link to webpage where parameters were downloaded, or citation to a paper.
+
 \subsubsection*{FF\_DATE}
-FF\_DATE is the date when the forcefield parameters were created. The format is day/month/year.
-\subsubsection*{CPT}
-CPT stands for the name of the cpt file. 
-\subsubsection*{LOG}
-LOG stands for the name of the log file.
-\subsubsection*{TOP}
-TOP stands for the name of the top file.
+Give the date when parameters were accessed or created. The format is day/month/year.
+
 \subsubsection*{Individual force field names for molecules}
-The user can also give forcefield names to different molecules individually. These parameters are named as FFPOPC, FFPOT, FFSOL etc.
+In some cases special force fields are used for certain molecules. For example, non-standard parameters for ions or other molecules have been used. These can be specified giving forcefield names separately for individual molecules. These can be given as parameters named as
+FF+[abbreviation from table \ref{tab:abbreviations}], i.e., FFPOPC, FFPOT, FFSOL etc.
+
+\subsubsection*{CPT (Gromacs)}
+Give the name of the Gromacs checkpoint file that is found from the DOI given above.
+CPT stands for the name of the cpt file. 
+
+\subsubsection*{LOG (Gromacs)}
+Give the name of the Gromacs log file that is found from the DOI given above.
+
+\subsubsection*{TOP (Gromacs)}
+Give the name of the Gromacs top file that is found from the DOI given above.
+
 
 
 \subsubsection{Automatically analyzed parameters}
