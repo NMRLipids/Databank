@@ -1,0 +1,27 @@
+DOI: 10.5281/zenodo.4643875
+SOFTWARE: gromacs
+TRJ: traj.trr
+TPR: popc407.tpr
+PREEQTIME: 270
+TIMELEFTOUT: 0
+POPC: PLA
+SOL: SOL
+MAPPING_DICT:
+  POPC: mappingPOPCberger.txt
+  SOL: mappingSPCwater.txt
+DIR_WRK: '/media/osollila/Data/tmp/DATABANK/'
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+PUBLICATION: Ferreira et al. Phys. Chem. Chem. Phys., 2013,15, 1976-1989
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+SYSTEM: POPC_T298K
+SOFTWARE_VERSION: 4.5
+FF: Berger
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE: ?/?/????
+TOP: topol.top
+
+
+
+
+
