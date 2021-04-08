@@ -1,11 +1,7 @@
+# This is the code that generates databank indexing 
 
-# coding: utf-8
+#IMPORTING LIBRARIES
 
-# # Database test
-
-# ## Simulation description file
-
-# In[1]:
 import sys
 import importlib
 import re
@@ -14,10 +10,6 @@ import argparse
 import yaml
 
 from datetime import date
-
-# ## General Imports
-
-# In[2]:
 
 
 # Working with files and directories
@@ -61,6 +53,7 @@ import sys
 import buildH_calcOP_test
 
 
+
 # Download link
 def download_link(doi, file):
     if "zenodo" in doi.lower():
@@ -85,28 +78,21 @@ with open(input_path) as yaml_file:
     sim = yaml.load(yaml_file, Loader=yaml.FullLoader)
 yaml_file.close()
 
-print(sim)
+# Show the input read
+print("\n Input read from " + input_path + " file:")
+print(yaml.dump(sim))
 
-
-# ## Directories
-
-# In[3]:
-
-
-#dir_wrk = os.path.normpath(dir_wrk)
+# Working directory
 dir_wrk = sim['DIR_WRK']
-#mapping_dir =os.path.normpath(mapping_dir)
-#print(dir_wrk)
-#print(mapping_dir)
 
 
-# ## Check that the DOI link is valid
 
-# In[4]:
 
+
+# Checking that the DOI link is valid
 
 DOI_url = 'https://doi.org/' + sim['DOI']
-print(DOI_url)
+print("Data will be downloaded from: " + DOI_url)
 
 try:
     response = urllib.request.urlopen(DOI_url)
@@ -127,46 +113,13 @@ else:
     pass
 
 
-# ## Read input description
 
-# In[5]:
-
-
-#bNMRLIPIDS = False #Check if the link contains NMRLIPIDS metadata
-#nsims =0 # Counter number of simulations in a submission
-#sims = [] #Array with the dictionary containing the information of a simulation
-
-#for line in inFile.user_information.split("\n"):
-#    if line.strip() == "":
-#        continue
-#    if "#NMRLIPIDS BEGIN" in line:
-#        bNMRLIPIDS = True
-#        continue
-#    if "#NMRLIPIDS END" in line:
-#        bNMRLIPIDS = False
-#        continue
-#    if "@SIM" in line:
-#        #sims.append({"ID" : nsims, "STATUS" : 0})
-#        sims.append({"ID" : nsims})
-#        nsims += 1
-#        sims[-1]["DOI"] = inFile.DOI
-#        continue
-#    if not bNMRLIPIDS:
-#        continue
-#    if line.strip()[0] == "@":
-#        key, value = line.split("=")
-#        sims[-1][key.strip('@')] = value
-#print(nsims)
-#print(sims)      
-        
+# Defining dictionaries
 
 
-# ### Dictionaries
-
-# In[6]:
-
-
-#Molecules dictionary
+# Dictionary of lipids.
+#
+# If you add a lipid which is not yet in the databank, you have to add it here
 
 lipids_dict = {
             'POPC' : {"REQUIRED": False,
@@ -189,6 +142,11 @@ lipids_dict = {
                         },
                 }
 
+
+# Dictionary of other than lipid molecules.
+#
+# If you add other than a lipid molecule which is not yet in the databank, you have to add it here
+
 molecules_dict = {
                 
             'POT' : {"REQUIRED": False,
@@ -209,6 +167,7 @@ molecules_dict = {
                 }
 
 
+# Dictionary containing the number of molecules which are automatically calculated from input files
                
 molecule_numbers_dict = {
             'NPOPC' : {"REQUIRED": False,
@@ -234,20 +193,22 @@ molecule_numbers_dict = {
             'NPOT' : {"REQUIRED": False,
                             "TYPE" : "integer",
                         },
-                'NSOD' : {"REQUIRED": False,
+            'NSOD' : {"REQUIRED": False,
                             "TYPE" : "integer",
                         },
-                'NCLA' : {"REQUIRED": False,
+            'NCLA' : {"REQUIRED": False,
                             "TYPE" : "integer",
                         },
-                'NCAL' : {"REQUIRED": False,
+            'NCAL' : {"REQUIRED": False,
                              "TYPE" : "integer",
                          },
-                'NSOL' : {"REQIRED": False,
+            'NSOL' : {"REQIRED": False,
                             "TYPE" : "integer",
                         },
     
                 }
+
+# Dictionary containing the force fields for molecules given by the contributor
 
 molecule_ff_dict = {
                 'FFPOPC' : {"REQUIRED": False,
@@ -288,7 +249,8 @@ molecule_ff_dict = {
                 
                 
 
-# Gromacs
+# Databank dictionary for simulations ran with Gromacs
+
 gromacs_dict = {
                'INI' : {"REQUIRED": False,
                         "TYPE" : "files",
@@ -350,8 +312,8 @@ gromacs_dict = {
           'TIMELEFTOUT' : {"REQUIRED":True,
                           "TYPE" : "integer",
                           },
-            'UNITEDATOM' : {"REQUIRED": False,
-                            "TYPE" : "string",
+            'UNITEDATOM_DICT' : {"REQUIRED": False,
+                            "TYPE" : "dictionary",
                          },
             'PUBLICATION' : {"REQUIRED": False,
                              "TYPE" : "string",
@@ -490,13 +452,8 @@ software_dict = {
                 "OPENMM"  : openmm_dict,
                 }
 
-#print(software_dict.keys())
-
 
 # ### Check software used by the simulation
-
-# In[7]:
-
 
 #sims_valid_software = []
 
@@ -515,17 +472,13 @@ else:
 
 # ### Check that all entry keys provided for each simulation are valid:
 
-# In[8]:
-
-#print(gromacs_dict.keys())
-
 
 #sims_valid_entries = []
 #for sim in sims_valid_software:
     #print("ID {0}".format(sim["ID"]))
 wrong_key_entries = 0
 software_dict_name = "{0}_dict".format(sim['SOFTWARE'].lower())
-print(sim.items())
+#print(sim.items())
 for key_sim, value_sim in sim.items():
         #print(key_sim, value_sim)
         #print(key_sim.upper())
@@ -546,9 +499,8 @@ else:
 #print(sims_valid_entries)
 
 
+# PLEASE CLARIFY THIS COMMENT
 # ### Process entries with files information to contain file names in arrays
-
-# In[9]:
 
 
 #sims_files_to_array = deepcopy(sims_valid_entries)
@@ -562,7 +514,9 @@ for key_sim, value_sim in sim.items():
         if "file" in entry_type:
             if isinstance(value_sim, list): continue  
             files_list = []
-            print("{0} added to list".format(value_sim))
+            #print(value_sim)
+            #print("{0} will be downloaded".format(value_sim))
+            print(value_sim + " will be downloaded")
             # Place filenames into arrays
             for file_provided in value_sim.split(";"):
                 files_list.append([file_provided.strip()])
@@ -573,10 +527,8 @@ for key_sim, value_sim in sim.items():
 #print(sims_valid_entries)
 
 
+# PLEASE CLARIFY THIS COMMENT
 # ### Check for multiple files in entries that can only contain one
-
-# In[10]:
-
 
 #sims_valid_file_entries = []
 #for sim in sims_files_to_array:
@@ -595,14 +547,13 @@ if files_issues:
     print("Sim will be no longer processed")
     quit()
 else:
-    print("ok")
+    print("Files are ok")
 #        sims_valid_file_entries.append(sim.copy())
 #print(sims_valid_file_entries)
 
 
+# PLEASE CLARIFY THIS COMMENT
 # ### Check if the submitted simulation has rssion has all required files and information
-
-# In[11]:
 
 
 missing_required_keys = 0
@@ -618,16 +569,12 @@ if missing_required_keys:
     print("Entry will not be further processed.\n")
     quit()
 else:
-    print("All required entries present.\n")
+    print("All required dictionary entries are present.\n")
     #sims_required_entries.append(sim.copy())
 
 
+
 # ### Check status links
-
-# In[12]:
-
-# In[13]:      
-
 
 wrong_links = 0
 software_sim = software_dict[sim['SOFTWARE'].upper()]
@@ -676,9 +623,11 @@ else:
 #print(sims_working_links)
 
 
+
+
 # ## Download files from links
 
-# In[14]:
+print("Starting to download data from " + DOI_url)
 
 socket.setdefaulttimeout(15)
 
@@ -686,6 +635,7 @@ download_failed = False
 
 # Create temporary directory where to download files and analyze them
 dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+print("The data will be processed in directory path " + dir_tmp)
 
 if (not os.path.isdir(dir_tmp)): 
     os.mkdir(dir_tmp)
@@ -701,7 +651,7 @@ for key_sim, value_sim in sim.items():
     try:
         entry_type = software_sim[key_sim]['TYPE']
         extension_type = software_sim[key_sim]['EXTENSION']
-        print("entry_type = {0}".format(entry_type))
+        #print("entry_type = {0}".format(entry_type))
         if "file" in entry_type and "txt" not in extension_type:
             for file_provided in tqdm(value_sim, desc = key_sim):
                 file_url = download_link(DOI, file_provided[0])
@@ -741,13 +691,8 @@ if download_failed:
     print("One of the downloads failed. Terminating the script.")
     quit()
 
-#print(sim)
 
-
-
-# ## Calculate hash downloaded files
-
-# In[15]:
+# ## Calculate hash of downloaded files
 
 
 #dir_tmp = os.path.join(dir_wrk, "tmp/")
@@ -792,31 +737,32 @@ for key_sim, value_sim in sim_hashes.items():
             sim_hashes[key_sim] = files_list #Problematic
     except: #It is notmal that fails for "ID" and "SOFTWARE"
         continue
+
+print("\n Summary of downloaded files: ")
 print(df_files)
-print("\n{0}\n".format(sha1_list_requied))      
+#print("\n{0}\n".format(sha1_list_requied))      
+
 # Calculate the hash of a file contaning the hashes of each of the required files
 # This should be always invariant as it will be used unique identifier for a simualtion
 # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
-print(sim_hashes)
+#print(sim_hashes)
 
 
-# In[16]:
+
 
 #in case of a united atom simulation make a dictionary of united atom names 
-if sim.get('UNITEDATOM'):
-    unitedAtoms = sim['UNITEDATOM'].split(',')
-    unitedAtomsDic = {}
-    for i in range(0, int(len(unitedAtoms)/2)):
-        lipid = unitedAtoms[2*i]
-        UAlipid = unitedAtoms[2*i+1]
-        unitedAtomsDic[lipid]=UAlipid
-    sim['UADICTIONARY'] = unitedAtomsDic
+#if sim.get('UNITEDATOM'):
+#    unitedAtoms = sim['UNITEDATOM'].split(',')
+#    unitedAtomsDic = {}
+#    for i in range(0, int(len(unitedAtoms)/2)):
+#        lipid = unitedAtoms[2*i]
+#        UAlipid = unitedAtoms[2*i+1]
+#        unitedAtomsDic[lipid]=UAlipid
+#    sim['UADICTIONARY'] = unitedAtomsDic
         
-#    print(sim)
 
 # ## Read molecule numbers into dictionary
 
-# In[22]:
 
 #Anne:Read molecule numbers from tpr or gro file.
 #Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre 
@@ -824,6 +770,8 @@ if sim.get('UNITEDATOM'):
 #If a lipid molecule is split so that headgroup and tails are their own residues, the centre of mass of the
 #headgroup is used in the calculation.
 ################################################################################################################
+
+print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
 tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
 trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
@@ -834,11 +782,16 @@ gro = str(dir_tmp) + '/conf.gro'
 
 #if sim['SOFTWARE'] == 'gromacs':
 structure_file = str(dir_tmp) + '/conf.gro'
+
 #make gro file
+print("\n Makin gro file")
 os.system('echo System | gmx trjconv -f '+trj+' -s '+tpr+' -dump 0 -o ' +gro)
     
     # add gro into dictionary for later use
-sim['GRO'] = structure_file
+    
+# SAMULI: I COMMENTED THIS OUT BECAUSE IT SAVES THE GRO WITH WORKING DIRECTORY PATH WHICH WE DO NO WANT INTO THE DATABANK DICTIONARY
+#sim['GRO'] = structure_file
+
     #u_trj = Universe(trj)
     #u_selection = u_trj.
     #write('frame_0.gro', frames=u_trj.trajectory[0])
@@ -859,7 +812,7 @@ lipids = []
 
 # select lipids 
 for key_mol in lipids_dict:
-    print(key_mol)
+    print("Calculating number of " + key_mol + " lipids")
     selection = ""
     if key_mol in sim['MAPPING_DICT'].keys():
         m_file = sim['MAPPING_DICT'][key_mol]
@@ -871,16 +824,16 @@ for key_mol in lipids_dict:
                     continue
                 else:
                     selection = "resname " + sim.get(key_mol)
-                    print(selection)
+                    #print(selection)
                     break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
     molecules = u.select_atoms(selection)
-    print("molecules")
-    print(molecules)
+    #print("molecules")
+    #print(molecules)
     if molecules.n_residues > 0:
         lipids.append(u.select_atoms(selection))
-        print(lipids) 
+        #print(lipids) 
 # join all the selected the lipids together to make a selection of the entire membrane and calculate the
 # z component of the centre of mass of the membrane
 membrane = u.select_atoms("")
@@ -888,10 +841,10 @@ R_membrane_z = 0
 if lipids!= []:
     for i in range(0,len(lipids)):
         membrane = membrane + lipids[i]
-    print("membrane") 
-    print(membrane)  
+    #print("membrane") 
+    #print(membrane)  
     R_membrane_z = membrane.center_of_mass()[2]
-print(R_membrane_z)
+print("Center of the mass of the membrane " + str(R_membrane_z))
     
 #####number of each lipid per leaflet
         
@@ -914,7 +867,7 @@ for key_mol in lipids_dict:
     selection = selection.rstrip(' or ')
 #   print(selection)
     molecules = u.select_atoms(selection)
-    print(molecules.residues)
+    #print(molecules.residues)
     x = 'N' + key_mol
     if molecules.n_residues > 0:
         for mol in molecules.residues:
@@ -928,21 +881,19 @@ for key_mol in lipids_dict:
               # print('layer2  ' + str(leaflet2))
     sim[x] = [leaflet1, leaflet2] 
 
-        
-#print("upper leaflet: " + str(leaflet1))
-#print("lower leaflet: " + str(leaflet2))
+    print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
+    print("Number of " + key_mol  + " in lower leaflet: " + str(leaflet2))
 
 ###########################################################################################        
 #numbers of other molecules
 for key_mol in molecules_dict:
     value_mol = sim.get(key_mol)
-    print(value_mol)
+    if not value_mol:
+        continue
+    #print(value_mol)
     x = 'N' + key_mol
     sim[x] = u.select_atoms("resname " + value_mol ).n_residues
-        
-
-# In[23]:
-
+    print("Number of " + key_mol  + ": " + str(sim[x]))   
 
 #Anne: Read temperature and trajectory length from tpr file
 
@@ -952,6 +903,7 @@ nstxout = 0
 
 file1 = str(dir_tmp) + '/tpr.txt'
 
+print("Exporting information with gmx dump")
 os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
     
     
@@ -968,20 +920,21 @@ timestep = mol.trajectory.dt
 trj_length = Nframes * timestep
    
 sim['TRJLENGTH'] = trj_length
-    
-print(sim)
+
+print("Parameters read from input files:")
+print("TEMPERATURE: " + sim['TEMPERATURE'])
+print("LENGTH OF THE TRAJECTORY: " + str(sim['TRJLENGTH']))
 
 #####DATE OF RUNNING#####
 today = date.today().strftime("%d/%m/%Y")
-print(today)
+#print(today)
 sim['DATEOFRUNNING'] = today
 
-print(sim)
+print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
 
 # # Save to databank
 
-# In[24]:
 
 # Batuhan: Creating a nested directory structure as discussed on the Issue here https://github.com/NMRLipids/NMRlipidsVIpolarizableFFs/issues/3
     
@@ -989,7 +942,8 @@ head_dir = sim_hashes.get('TPR')[0][1][0:3]
 sub_dir1 = sim_hashes.get('TPR')[0][1][3:6]
 sub_dir2 = sim_hashes.get('TPR')[0][1]
 sub_dir3 = sim_hashes.get('TRJ')[0][1]
-    
+
+print("Creating databank directories.")
 os.system('mkdir ../../Data/Simulations/' + str(head_dir))
 os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1))
 os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2))
@@ -998,18 +952,11 @@ os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) 
 DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3)
 #    data_directory[str(ID)] = DATAdir
     
-    # SAMULI: I am writin now in txt, but using json might be better in the future
-   # outfileDICT=open(str(DATAdir)+'/README.md','w')
-   # outfileDICT=str(dir_wrk)+'/tmp/'+str(ID)+'/'+ 'README.json'
-    
-   # with open(outfileDICT, 'w') as f:
-   #     json.dump(sim, f)
-   
 
-    #!cp {str(dir_wrk)}'/tmp/'{str(ID)}'/README.json' {data_directory.get(str(ID))}  
 # dictionary saved in yaml format
 outfileDICT=str(dir_tmp)+ '/README.yaml'
-    
+
+print("Writing the README.yaml dictionary to " + outfileDICT)
 with open(outfileDICT, 'w') as f:
     yaml.dump(sim,f, sort_keys=False)
        
@@ -1018,28 +965,28 @@ with open(outfileDICT, 'w') as f:
 #outfileDICT.close()
    
 
+#SAMULI: WE NEED TO THINK IF THE ANALYSIS SHOULD BE IN ANOTHER SCRIPT
 
 # # Analysis starts here
 # 
 
-# In[ ]:
+print("Calculating order parameters for all C-H bonds using the mapping file")
 
 
-#!cp corr_ftios_ind.sh {dir_wrk}
 #for sim in sims_working_links:
 trj=sim.get('TRJ')
 tpr=sim.get('TPR')
    # ID=sim.get('ID')
 software=sim.get('SOFTWARE')
 EQtime=float(sim.get('TIMELEFTOUT'))*1000
-unitedAtom = sim.get('UNITEDATOM')
+unitedAtom = sim.get('UNITEDATOM_DICT')
     
 ext=str(trj)[-6:-3] # getting the trajectory extension
-print(ext)
+print("Trajectory format: " + ext)
     # BATUHAN: Adding a few lines to convert the trajectory into .xtc using MDTRAJ
     #          We will need users to install MDTRAJ in their system so that we can convert other trajectories into xtc
 
-if ext != "xtc":
+if ext != "xtc" and ext != "trr":
         
     print("converting the trajectory into xtc")
         
@@ -1064,14 +1011,16 @@ else:
     xtc = str(dir_tmp) + '/' + str(trj[0][0])  
     tpr = str(dir_tmp) + '/' + str(tpr[0][0])
     xtcwhole=str(dir_tmp) + '/whole.xtc'
+
+    print("Make molecules whole in the trajectory")
     os.system('echo System | gmx trjconv -f ' + xtc + ' -s ' + tpr + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
    
 
     
-print("Calculating order parameters")
+#print("Calculating order parameters")
     
 if unitedAtom:
-    for key in sim['UADICTIONARY']:
+    for key in sim['UNITEDATOM_DICT']:
     #construct order parameter definition file for CH bonds from mapping file
         def_file = open(str(dir_tmp) + '/' + key + '.def', 'w')
 
@@ -1100,17 +1049,46 @@ if unitedAtom:
                         def_line = items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
                         if def_line != previous_line:
                             def_file.write(def_line)
-                            print(def_line)
+                            #print(def_line)
                             previous_line = def_line
         def_file.close()
 
      #Add hydrogens to trajectory and calculate order parameters with buildH
-        ordPfile = str(dir_tmp) + '/' + key + '_order_parameter.dat' 
-        topfile = sim.get('GRO')
+        ordPfile = str(dir_tmp) + '/' + key + 'OrderParameters.dat' 
+        topfile = gro #sim.get('GRO')
         deffile = str(dir_tmp) + '/' + key + '.def' 
-        lipidname = sim['UADICTIONARY'][key]
+        lipidname = sim['UNITEDATOM_DICT'][key]
         #    print(lipidname)
         buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+
+        outfile=open(ordPfile,'w')
+        line1="Atom     Average OP     OP stem"+'\n'
+        outfile.write(line1)
+        
+        data = {}
+        outfile2=str(dir_tmp) + '/' + key + 'OrderParameters.json'
+        
+        with open(ordPfile + '.jmelcr_style.out') as OPfile:
+            lines=OPfile.readlines()
+            for line in lines:
+                if "#" in line:
+                    continue
+                line2 = line.split()[0] + "  " + line.split()[4] + "  " + line.split()[6] + "\n"
+                outfile.write(line2)
+
+                OPname = line.split()[0]
+                OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
+                data[str(OPname)]=[]
+                data[str(OPname)].append(OPvalues)
+        
+        with open(outfile2, 'w') as f:
+            json.dump(data,f)
+
+        outfile.close()
+        outfile.close()
+        
+        os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir)
+        os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
 else:
     for key in sim['MAPPING_DICT']:    
         mapping_file = sim['MAPPING_DICT'][key]

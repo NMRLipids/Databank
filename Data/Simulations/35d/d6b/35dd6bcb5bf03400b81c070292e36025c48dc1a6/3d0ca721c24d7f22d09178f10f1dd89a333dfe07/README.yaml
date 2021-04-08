@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.3247435
+SOFTWARE: gromacs
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+POPC: POPC
+SOL: SOL
+MAPPING_DICT:
+  POPC: mappingPOPCgromos-ckp.txt
+  SOL: mappingSPCwater.txt
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+UNITEDATOM_DICT:
+  POPC: GROMOS_CKP_POPC
+PUBLICATION: ??
+AUTHORS_CONTACT: Antonio Peon (alopez@fc.up.pt)
+SYSTEM: POPC_T310K
+SOFTWARE_VERSION: 2018.3
+FF: gromos-ckp
+FF_SOURCE: ??
+FF_DATE: ?/?/????
+TOP:
+- - topol.top
+NPOPC:
+- 250
+- 250
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOL: 25000
+TEMPERATURE: '310'
+TRJLENGTH: 100010.0
+DATEOFRUNNING: 07/04/2021
