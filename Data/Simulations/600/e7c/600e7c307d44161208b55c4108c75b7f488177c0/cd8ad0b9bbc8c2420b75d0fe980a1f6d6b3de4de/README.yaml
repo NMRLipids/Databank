@@ -1,0 +1,74 @@
+DOI: 10.5281/zenodo.4651415
+SOFTWARE: gromacs
+TRJ:
+- - DMPC_PI.xtc
+TPR:
+- - DMPC_PI.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 500
+DMPC: DMPC
+POPI: POPI
+SAPI: SAPI
+SLPI: SLPI
+SOD: SOD
+CLA: CLA
+SOL: TIP3
+MAPPING_DICT:
+  DMPC: mappingDMPCcharmm.txt
+  POPI: mappingPOPIcharmm.txt
+  SAPI: mappingSAPIcharmm.txt
+  SLPI: mappingSLPIcharmm.txt
+  SOD: mappingSOD.txt
+  CLA: mappingCLA.txt
+  CAL: mappingCAL.txt
+  SOL: mappingTIP3Pwater.txt
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+UNITEDATOM_DICT: null
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
+SYSTEM: DMPC/liverPI bilayer
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: null
+CPT:
+- - DMPC_PI.cpt
+LOG: null
+TOP:
+- - topol.top
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 90
+- 90
+NPOPI:
+- 8
+- 8
+NSAPI:
+- 23
+- 23
+NSLPI:
+- 7
+- 7
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 104
+NCLA: 28
+NSOL: 12800
+TEMPERATURE: '303.15'
+TRJLENGTH: 2000100.0
+DATEOFRUNNING: 09/04/2021
