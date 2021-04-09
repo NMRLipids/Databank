@@ -134,6 +134,18 @@ lipids_dict = {
             'POPE' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DMPC' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'POPI' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'SAPI' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'SLPI' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'CHOL' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -182,6 +194,18 @@ molecule_numbers_dict = {
             'NPOPE' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
+            'NDMPC' : {"REQUIRED": False,
+                       "TYPE" : "array",
+                        },
+            'NPOPI' : {"REQUIRED": False,
+                       "TYPE" : "array",
+                        },
+            'NSAPI' : {"REQUIRED": False,
+                       "TYPE" : "array",
+                        },
+            'NSLPI' : {"REQUIRED": False,
+                       "TYPE" : "array",
+                        },
     
             'NCHOL' : {"REQUIRED": False,
                        "TYPE" : "array",
@@ -221,6 +245,18 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFPOPE' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFDMPC' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFPOPI' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFSAPI' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFSLPI' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFCHOL' : {"REQUIRED": False,
@@ -913,7 +949,7 @@ with open(file1, 'rt') as tpr_info:
         if 'ref-t' in line:
             sim['TEMPERATURE']=line.split()[1]
     
-mol = Universe(tpr, trj)
+mol = Universe(gro, trj)
 Nframes=len(mol.trajectory)
 timestep = mol.trajectory.dt
  
@@ -956,7 +992,6 @@ DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' 
 # dictionary saved in yaml format
 outfileDICT=str(dir_tmp)+ '/README.yaml'
 
-print("Writing the README.yaml dictionary to " + outfileDICT)
 with open(outfileDICT, 'w') as f:
     yaml.dump(sim,f, sort_keys=False)
        
@@ -964,6 +999,8 @@ with open(outfileDICT, 'w') as f:
  #   outfileDICT.write(str(sim))
 #outfileDICT.close()
    
+print('\033[1m' + "\n Writing the README.yaml dictionary to " + DATAdir + "\n" + '\033[0m')
+
 
 #SAMULI: WE NEED TO THINK IF THE ANALYSIS SHOULD BE IN ANOTHER SCRIPT
 
@@ -1092,7 +1129,7 @@ if unitedAtom:
 else:
     for key in sim['MAPPING_DICT']:    
         mapping_file = sim['MAPPING_DICT'][key]
-        OrdParam=find_OP('./mapping_files/'+mapping_file,tpr,xtcwhole,key)
+        OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,key)
 
         outfile=open(str(dir_tmp) + '/' + key + 'OrderParameters.dat','w')
         line1="Atom     Average OP     OP stem"+'\n'
@@ -1118,6 +1155,6 @@ else:
         os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir)
         os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
     
-print("Done calculating order parameters.")
+print("Order parameters calculated and saved to " + DATAdir)
 
 
