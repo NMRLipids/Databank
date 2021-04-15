@@ -179,6 +179,14 @@ molecules_dict = {
                 }
 
 
+all_molecules = []
+for key in lipids_dict:
+    all_molecules.append(key)
+for key in molecules_dict:
+    all_molecules.append(key)
+
+
+
 # Dictionary containing the number of molecules which are automatically calculated from input files
                
 molecule_numbers_dict = {
@@ -366,6 +374,12 @@ gromacs_dict = {
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
+            'NUMBER_OF_ATOMS' : {"REQUIRED": False,
+                               "TYPE" : "string",
+                              },
+            'TRAJECTORY_SIZE' : {"REQUIRED": False,
+                               "TYPE" : "string",
+                              },    
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
@@ -799,6 +813,12 @@ print(df_files)
 
 # ## Read molecule numbers into dictionary
 
+tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
+trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
+#structure_file = ""
+gro = str(dir_tmp) + '/conf.gro'
+
+sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 
 #Anne:Read molecule numbers from tpr or gro file.
 #Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre 
@@ -808,11 +828,6 @@ print(df_files)
 ################################################################################################################
 
 print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
-
-tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
-trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
-#structure_file = ""
-gro = str(dir_tmp) + '/conf.gro'
 
 # OTHER SOFTWARES THAN GROMACS!!!!
 
@@ -960,6 +975,42 @@ sim['TRJLENGTH'] = trj_length
 print("Parameters read from input files:")
 print("TEMPERATURE: " + sim['TEMPERATURE'])
 print("LENGTH OF THE TRAJECTORY: " + str(sim['TRJLENGTH']))
+
+
+## Check that the number of atoms between data and README.yaml match
+
+number_of_atomsTRJ = len(mol.atoms)
+
+number_of_atoms = 0
+for key_mol in all_molecules:
+    try:
+        mapping_file = './mapping_files/'+sim['MAPPING_DICT'][key_mol]
+    except:
+        continue
+    if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
+        lines = open(mapping_file).readlines(  )
+        mapping_file_length = 0
+        for line in lines:
+            if 'H' in line:
+                continue
+            else:
+                mapping_file_length += 1
+    else:
+        mapping_file_length = len(open(mapping_file).readlines(  ))
+    try:
+        number_of_atoms += np.sum(sim['N' + key_mol]) * mapping_file_length
+    except:
+        continue
+
+if number_of_atoms != number_of_atomsTRJ:
+    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
+    # Do you still want to continue the analysis (y/n)?")
+    #if stop == "n":
+    sys.exit("Interrupted because atomnumbers did not match")
+
+sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
+print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))
+
 
 #####DATE OF RUNNING#####
 today = date.today().strftime("%d/%m/%Y")
@@ -1129,7 +1180,8 @@ if unitedAtom:
 else:
     for key in sim['MAPPING_DICT']:    
         mapping_file = sim['MAPPING_DICT'][key]
-        OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,key)
+        resname = sim[key]
+        OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,resname)
 
         outfile=open(str(dir_tmp) + '/' + key + 'OrderParameters.dat','w')
         line1="Atom     Average OP     OP stem"+'\n'
@@ -1137,7 +1189,7 @@ else:
     
         data = {}
         outfile2=str(dir_tmp) + '/' + key + 'OrderParameters.json' 
-        
+
         for i,op in enumerate(OrdParam):
             resops =op.get_op_res
             (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP

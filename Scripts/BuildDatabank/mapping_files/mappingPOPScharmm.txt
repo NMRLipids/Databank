@@ -1,4 +1,3 @@
-#Individual atoms
 M_G1_M        C3
 M_G1H1_M      HX
 M_G1H2_M      HY
