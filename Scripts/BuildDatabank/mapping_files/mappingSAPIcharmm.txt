@@ -123,6 +123,8 @@ M_G3C4_M          C11
 M_G3C4H1_M         H1
 M_G3C5_M          C12
 M_G3C5H1_M         H2
+M_G3C5O1_M         O2
+M_G3C5O1H1_M      HO2
 M_G3C6_M          C13
 M_G3C6H1_M         H3
 M_G3C6O1_M         O3
