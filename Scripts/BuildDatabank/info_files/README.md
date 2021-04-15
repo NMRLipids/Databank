@@ -66,6 +66,8 @@ The already existing mapping files can be found from the
 directory. 
 If a mapping file for your molecule(s) do not exist, you need to construct one and add to 
 the [mapping\_files](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files) directory.
+The mapping file should contain all the atoms of the molecules and no extra lines. 
+The number of lines is used to calculate the number of atoms according to the databank which is compared to the number of atoms in trajectory for consistency check.
 
 #### DIR\_WRK (compulsory)
 Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here. 
