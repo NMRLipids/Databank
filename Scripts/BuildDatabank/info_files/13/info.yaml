@@ -1,0 +1,33 @@
+DOI: 10.5281/zenodo.1288297
+
+SYSTEM: POPC10%DHMDMAB_T313K
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  DHMDMAB: mappingDHMDMABcharmm.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+  CLA: mappingCLA.txt
+SOFTWARE: gromacs
+FF: CHARMM36
+FFSOL: TIP3P
+FF_SOURCE: NMRlipids IVa
+FF_DATE: ??
+TRJ: run10.xtc
+TPR: run10.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 20
+
+POPC: POPC
+POPG: POPG
+POPS: POPS
+POPE: POPE
+CHOL: CHOL
+DHMDMAB: T7H
+
+POT: K
+SOD: NA
+CLA: CLA
+CAL: CA
+SOL: TIP3
+
+
+DIR_WRK :  /media/osollila/Data/tmp/DATABANK/

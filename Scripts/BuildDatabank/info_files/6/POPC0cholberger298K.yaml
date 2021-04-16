@@ -17,6 +17,7 @@ AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
 SYSTEM: POPC_T298K
 SOFTWARE_VERSION: 4.5
 FF: Berger
+FFSOL: SPC
 FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
 FF_DATE: ?/?/????
 TOP: topol.top

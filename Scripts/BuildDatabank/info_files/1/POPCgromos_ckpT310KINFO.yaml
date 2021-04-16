@@ -17,6 +17,7 @@ AUTHORS_CONTACT: Antonio Peon (alopez@fc.up.pt)
 SYSTEM: POPC_T310K
 SOFTWARE_VERSION: 2018.3
 FF: gromos-ckp
+FFSOL: SPC
 FF_SOURCE: ??
 FF_DATE: ?/?/????
 TOP: topol.top

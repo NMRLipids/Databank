@@ -10,13 +10,14 @@ SOL: TIP3
 MAPPING_DICT:
   POPS: mappingPOPScharmm.txt
   SOD: mappingSOD.txt
-  SOL: mappingTIP3Pwater.txt
+  SOL: mappingTIP3PCHARMMgui.txt
 DIR_WRK: '/media/osollila/Data/tmp/DATABANK/'
 PUBLICATION:
 AUTHORS_CONTACT: Tom Piggot ()
 SYSTEM: POPS_298K
 SOFTWARE_VERSION:
 FF: CHARMM36
+FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: ??/??/????
 

@@ -16,7 +16,7 @@ MAPPING_DICT:
     SOD:  mappingSOD.txt
     CLA:  mappingCLA.txt
     CAL:  mappingCAL.txt
-    SOL:  mappingTIP3Pwater.txt
+    SOL:  mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT: 
 PUBLICATION: 
@@ -24,6 +24,7 @@ AUTHORS_CONTACT: Anne Kiirikki (anne.kiirikki@helsinki.fi), Samuli Ollila (samul
 SYSTEM: POPC:POPG(1:1)_100mMCaCl2_T298K
 SOFTWARE_VERSION: 
 FF: CHARMM36
+FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: ?/?/2020
 CPT:
