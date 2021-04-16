@@ -240,13 +240,15 @@ def parse_op_input(fname,lipid_name):
             if not line.startswith("#"):
                 regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
                 regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
                 regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
                 regexp2_C = re.compile(r'M_G[0-9]_M')
+                regexp3_C = re.compile(r'M_C[0-9]_M')
 
-                if regexp1_C.search(line) or regexp2_C.search(line):
+                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
                     atomC = line.split()
                     atomH = []
-                elif regexp1_H.search(line) or regexp2_H.search(line):
+                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
                     atomH = line.split()
                     if len(line.split())> 2:
                         resname = line.split()[2]
