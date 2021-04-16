@@ -20,8 +20,7 @@ MAPPING_DICT:
   SLPI: mappingSLPIcharmm.txt
   SOD: mappingSOD.txt
   CLA: mappingCLA.txt
-  CAL: mappingCAL.txt
-  SOL: mappingTIP3Pwater.txt
+  SOL: mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT: null
 PUBLICATION: null
@@ -29,6 +28,7 @@ AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
 SYSTEM: DMPC/liverPI bilayer
 SOFTWARE_VERSION: null
 FF: CHARMM36
+FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: null
 CPT:
@@ -36,6 +36,7 @@ CPT:
 LOG: null
 TOP:
 - - topol.top
+TRAJECTORY_SIZE: 5194468496
 NPOPC:
 - 0
 - 0
@@ -71,4 +72,5 @@ NCLA: 28
 NSOL: 12800
 TEMPERATURE: '303.15'
 TRJLENGTH: 2000100.0
-DATEOFRUNNING: 09/04/2021
+NUMBER_OF_ATOMS: 70516
+DATEOFRUNNING: 16/04/2021

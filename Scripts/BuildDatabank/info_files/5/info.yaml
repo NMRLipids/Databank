@@ -18,8 +18,7 @@ MAPPING_DICT:
     SLPI: mappingSLPIcharmm.txt
     SOD:  mappingSOD.txt
     CLA:  mappingCLA.txt
-    CAL:  mappingCAL.txt
-    SOL:  mappingTIP3Pwater.txt
+    SOL:  mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT: 
 PUBLICATION: 
@@ -27,6 +26,7 @@ AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
 SYSTEM: DMPC/liverPI bilayer
 SOFTWARE_VERSION: 
 FF: CHARMM36
+FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: 
 CPT: DMPC_PI.cpt

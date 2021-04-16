@@ -18,7 +18,7 @@ MAPPING_DICT:
   SOD: mappingSOD.txt
   CLA: mappingCLA.txt
   CAL: mappingCAL.txt
-  SOL: mappingTIP3Pwater.txt
+  SOL: mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT: null
 PUBLICATION: null
@@ -26,11 +26,13 @@ AUTHORS_CONTACT: Anne Kiirikki (anne.kiirikki@helsinki.fi), Samuli Ollila (samul
 SYSTEM: POPC:POPG(1:1)_100mMCaCl2_T298K
 SOFTWARE_VERSION: null
 FF: CHARMM36
+FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: ?/?/2020
 CPT: null
 LOG: null
 TOP: null
+TRAJECTORY_SIZE: 7398652684
 NPOPC:
 - 75
 - 75
@@ -41,6 +43,18 @@ NPOPS:
 - 0
 - 0
 NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
 - 0
 - 0
 NCHOL:
@@ -55,4 +69,5 @@ NCAL: 57
 NSOL: 31329
 TEMPERATURE: '298'
 TRJLENGTH: 300020.0
-DATEOFRUNNING: 07/04/2021
+NUMBER_OF_ATOMS: 133458
+DATEOFRUNNING: 15/04/2021

@@ -16,6 +16,7 @@ AUTHORS_CONTACT: Hanne Antila ()
 SYSTEM: Berger_POPC_T303K
 SOFTWARE_VERSION: Gpu_version_2020.1
 FF: Berger
+FFSOL: SPC
 FF_SOURCE: https://zenodo.org/record/1402417/
 FF_DATE: ?/?/????
 
