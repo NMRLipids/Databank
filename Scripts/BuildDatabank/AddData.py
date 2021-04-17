@@ -1019,7 +1019,7 @@ sim['DATEOFRUNNING'] = today
 
 print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
-
+# BATUHAN: add openmm parser #
 # # Save to databank
 
 
