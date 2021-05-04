@@ -426,14 +426,6 @@ charmm_dict = {}
 
 # OPENMM
 openmm_dict = {
-               'INI' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("gro", "pdb",),
-                       }, # Could be not needed in the future (tpr)
-               'MDP' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("mdp",),
-                       }, # Could be not needed in the future (tpr)
                'TRJ' : {"REQUIRED": True,
                         "TYPE" : "files",
                         "EXTENSION" : ("xtc","trr",),
@@ -442,22 +434,18 @@ openmm_dict = {
                         "TYPE" : "file",
                         "EXTENSION" : ("pdb",),
                        },
-               'TPR' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("tpr",),
-                       },
-               'CPT' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("cpt",),
-                       },
                'TOP' : {"REQUIRED": False,
                         "TYPE" : "file",
-                        "EXTENSION" : ("top",),
+                        "EXTENSION" : ("psf",),
                        },
-               'ITP' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("itp",),
-                       },
+               'STATE' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
+                        "TYPE" : "file",
+                        "EXTENSION" : ("xml"),
+                            },
+               'INPUT' : {"REQUIRED" : False, # input file used to run the simulation
+                          "TYPE" : "file",
+                          "EXTENSION" : ("inp"),
+                          },
                'FF'  : {"REQUIRED": False,
                         "TYPE" : "string",
                        },
@@ -470,7 +458,6 @@ openmm_dict = {
                'DOI' : {"REQUIRED": True,
                             "TYPE" : "string",
                            },
-
                'SYSTEM' : {"REQUIRED": True,
                             "TYPE" : "string",
                            },
