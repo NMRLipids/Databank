@@ -426,14 +426,6 @@ charmm_dict = {}
 
 # OPENMM
 openmm_dict = {
-               'INI' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("gro", "pdb",),
-                       }, # Could be not needed in the future (tpr)
-               'MDP' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("mdp",),
-                       }, # Could be not needed in the future (tpr)
                'TRJ' : {"REQUIRED": True,
                         "TYPE" : "files",
                         "EXTENSION" : ("xtc","trr",),
@@ -442,22 +434,18 @@ openmm_dict = {
                         "TYPE" : "file",
                         "EXTENSION" : ("pdb",),
                        },
-               'TPR' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("tpr",),
-                       },
-               'CPT' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("cpt",),
-                       },
                'TOP' : {"REQUIRED": False,
                         "TYPE" : "file",
-                        "EXTENSION" : ("top",),
+                        "EXTENSION" : ("psf",),
                        },
-               'ITP' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("itp",),
-                       },
+               'STATE' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
+                        "TYPE" : "file",
+                        "EXTENSION" : ("xml"),
+                            },
+               'INPUT' : {"REQUIRED" : False, # input file used to run the simulation
+                          "TYPE" : "file",
+                          "EXTENSION" : ("inp"),
+                          },
                'FF'  : {"REQUIRED": False,
                         "TYPE" : "string",
                        },
@@ -470,7 +458,6 @@ openmm_dict = {
                'DOI' : {"REQUIRED": True,
                             "TYPE" : "string",
                            },
-
                'SYSTEM' : {"REQUIRED": True,
                             "TYPE" : "string",
                            },
@@ -485,6 +472,33 @@ openmm_dict = {
                           },
           'TIMELEFTOUT' : {"REQUIRED":True,
                           "TYPE" : "integer",
+                          },
+          'UNITEDATOM_DICT' : {"REQUIRED": False,
+                            "TYPE" : "dictionary",
+                         },
+            'PUBLICATION' : {"REQUIRED": False,
+                             "TYPE" : "string",
+                            },
+            'AUTHORS_CONTACT' : {"REQUIRED": False,
+                                 "TYPE": "string",
+                                },
+            'SOFTWARE_VERSION' : {"REQUIRED": False,
+                                  "TYPE": "string",
+                             },
+            'MAPPING_DICT' : {"REQUIRED": True,
+                               "TYPE" : "dictionary",
+                             },
+            'DATEOFRUNNING' : {"REQUIRED": False,
+                               "TYPE" : "string",
+                              },
+            'NUMBER_OF_ATOMS' : {"REQUIRED": False,
+                               "TYPE" : "integer",
+                              },
+            'TRAJECTORY_SIZE' : {"REQUIRED": False,
+                               "TYPE" : "integer",
+                              },    
+             'DIR_WRK' : {"REQUIRED": True,
+                           "TYPE": "string",
                           },
             'MAPPING' : {"REQUIRED": True,
                              "TYPE" : "string",
@@ -1019,7 +1033,7 @@ sim['DATEOFRUNNING'] = today
 
 print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
-
+# BATUHAN: add openmm parser #
 # # Save to databank
 
 
