@@ -44,6 +44,7 @@ POPG |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol
 POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
+DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
