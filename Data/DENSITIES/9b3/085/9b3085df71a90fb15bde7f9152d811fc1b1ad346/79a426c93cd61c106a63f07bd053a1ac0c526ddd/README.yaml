@@ -1,0 +1,66 @@
+DOI: 10.5281/zenodo.35159
+SOFTWARE: gromacs
+TRJ:
+- - 035M_CaCl2_POPC_CRM36_100_200ns.xtc
+TPR:
+- - 035M_CaCl2_POPC_CRM36.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+POPC: POPC
+SOL: TIP3
+CAL: CAL
+CLA: CLA
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+  CAL: mappingCAL.txt
+  CLA: mappingCLA.txt
+DIR_WRK: /usr/home/bort/Databank
+AUTHORS_CONTACT: Girych Mykhailo and Ollila O. H. Samuli
+SYSTEM: POPC_CHARMM36_CaCl2_035Mol_303K
+SOFTWARE_VERSION: 5.0.4
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG:
+- - md.log
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 1351974812
+NPOPC:
+- 64
+- 64
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NCLA: 70
+NCAL: 35
+NSOL: 6400
+TEMPERATURE: '303'
+TRJLENGTH: 100010.0
+NUMBER_OF_ATOMS: 36457
+DATEOFRUNNING: 03/05/2021
