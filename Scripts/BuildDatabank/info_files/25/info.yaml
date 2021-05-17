@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.3483793
+
+SOFTWARE: gromacs
+TRJ: run.wrapped.xtc
+TPR: step7_1.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+POPC: POPC
+POPG: POPG
+SOL: TIP3
+CAL: CAL
+CLA: CLA
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ POPG: mappingPOPGcharmm.txt
+ SOL: mappingTIP3PCHARMMgui.txt
+ CAL: mappingCAL.txt
+ CLA: mappingCLA.txt 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Jesper J. Madsen
+
+SYSTEM: 250POPC_250POPG_445CAL_640CLA_298K_1206774Atoms
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
