@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.32570
+
+SOFTWARE: gromacs
+TRJ: traj80-200ns.xtc
+TPR: popcRUN3.tpr
+PREEQTIME: 80
+TIMELEFTOUT: 0
+
+POPC: POPC
+SOL: SOL
+CAL: Cal
+CLA: CL
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ SOL: mappingTIP3Pwater.txt 
+ CAL: mappingCAL.txt
+ CLA: mappingCLA.txt 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila, Samuli
+
+SYSTEM: 72POPC_2164SOL_26CAL_52CLA_303K
+SOFTWARE_VERSION: 4.5
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT:
+LOG:
+TOP: popc.top
