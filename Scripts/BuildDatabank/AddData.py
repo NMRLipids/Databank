@@ -224,7 +224,7 @@ molecule_numbers_dict = {
             'NCHOL' : {"REQUIRED": False,
                        "TYPE" : "array",
                      },
-            'DHMDMAB' : {"REQUIRED": False,
+            'NDHMDMAB' : {"REQUIRED": False,
                             "TYPE" : "array",
                         },
     
