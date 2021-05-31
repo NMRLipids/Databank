@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.35156
+
+SOFTWARE: gromacs
+TRJ: 1M_CaCl2_POPC_CRM36_100_200ns.xtc
+TPR: 1M_CaCl2_POPC_CRM36.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+
+POPC: POPC
+SOL: TIP3
+CAL: CAL
+CLA: CLA
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ SOL: mappingTIP3PCHARMMgui.txt
+ CAL: mappingCAL.txt
+ CLA: mappingCLA.txt
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Girych Mykhailo and Ollila O. H. Samuli
+
+SYSTEM: 128POPC_6400SOL_100CAL_200CLA_303K
+SOFTWARE_VERSION: 5.0.4
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT: 
+LOG: md.log
+TOP: topol.top
+
