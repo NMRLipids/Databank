@@ -19,7 +19,7 @@ AUTHORS_CONTACT: Melcr, Josef
 SYSTEM: 80POPC_7200SOL_80CHOL_303.80K
 SOFTWARE_VERSION: 5.1.2
 FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
 FF_DATE: null
 CPT:
 - - step7_10.cpt
