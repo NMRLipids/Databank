@@ -19,7 +19,7 @@ AUTHORS_CONTACT: Melcr, Josef
 SYSTEM: 80POPC_7200SOL_80CHOL_303.80K
 SOFTWARE_VERSION: 5
 FF: CHARMM36
-FF_SOURCE: null
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
 FF_DATE: null
 CPT:
 - - state.cpt
