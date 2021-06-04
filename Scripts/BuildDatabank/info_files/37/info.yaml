@@ -1,0 +1,33 @@
+DOI: 10.5281/zenodo.209362
+
+SOFTWARE: gromacs
+TRJ: traj_comp.xtc
+TPR: topol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+POPC: POPC
+SOL: SOL
+CHOL: CLOL
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ SOL: mappingTIP3PCHARMMgui.txt
+ CHOL: mappingCHOLESTEROLcharmm.txt
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 84POPC_4800SOL_36CHOL_303.84K
+SOFTWARE_VERSION: 5.1.2
+
+FF: CHARMM36
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
+FF_DATE:
+
+CPT: state.cpt
+LOG: md.log
+TOP: topol.top
+
