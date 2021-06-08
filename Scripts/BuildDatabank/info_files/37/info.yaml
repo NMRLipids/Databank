@@ -12,7 +12,7 @@ CHOL: CLOL
 
 MAPPING_DICT:
  POPC: mappingPOPCcharmm.txt
- SOL: mappingTIP3PCHARMMgui.txt
+ SOL: mappingTIP3Pwater.txt
  CHOL: mappingCHOLESTEROLcharmm.txt
 
 DIR_WRK: /usr/home/bort/Databank
