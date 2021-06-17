@@ -30,7 +30,7 @@ For example, if you upload 0-200 ns part of total 200 ns simulation where the fi
 
 #### Molecule names (compulsory)
 In the databank, each molecule has a unique abbreviation (see table below). 
-You need to give the residue names of these molecules corresponding your simulation.
+You need to give the residue names (in Gromacs: the fourth column of the \[atoms\] directive in an itp-file) of these molecules corresponding your simulation.
 If atoms in a lipid belong to different residues (typical situation in Amber force fields), 
 give the name of the head group residue here, and add the residue name of each atom to the third column in the mapping file (see below). 
 If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules 
