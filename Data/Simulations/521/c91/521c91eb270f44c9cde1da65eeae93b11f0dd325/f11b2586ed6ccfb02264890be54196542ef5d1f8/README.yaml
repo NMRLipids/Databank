@@ -1,0 +1,83 @@
+DOI: 10.5281/zenodo.1010083
+SOFTWARE: gromacs
+TRJ:
+- - POPC_512_NaCl_Dang_150mM_310K_md.xtc
+TPR:
+- - POPC_512_NaCl_Dang_150mM_310K_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+POPC: POPC
+SOL: SOL
+SOD: NA
+CLA: CL
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  SOL: mappingSPCwater.txt
+  SOD: mappingNA.txt
+  CLA: mappingCL.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Martinez-Seara, Hector
+SYSTEM: 512POPC_20480SOL_55SOD_55CLA_310K
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT:
+- - POPC_512_NaCl_Dang_150mM_310K_md.cpt
+LOG: null
+TOP:
+- - POPC_512_NaCl_Dang_150mM_310K_md.top
+TRAJECTORY_SIZE: 2441681200
+NPOPC:
+- 256
+- 256
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 55
+NCLA: 55
+NSOL: 20480
+TEMPERATURE: '310'
+TRJLENGTH: 500100.0
+NUMBER_OF_ATOMS: 130158
+DATEOFRUNNING: 23/06/2021
