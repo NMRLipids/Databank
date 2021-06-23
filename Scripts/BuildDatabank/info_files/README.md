@@ -30,7 +30,7 @@ For example, if you upload 0-200 ns part of total 200 ns simulation where the fi
 
 #### Molecule names (compulsory)
 In the databank, each molecule has a unique abbreviation (see table below). 
-You need to give the residue names of these molecules corresponding your simulation.
+You need to give the residue names (in Gromacs: the fourth column of the \[atoms\] directive in an itp-file) of these molecules corresponding your simulation.
 If atoms in a lipid belong to different residues (typical situation in Amber force fields), 
 give the name of the head group residue here, and add the residue name of each atom to the third column in the mapping file (see below). 
 If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules 
@@ -45,6 +45,10 @@ POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
 DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
+DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
+DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
+DOPC | 1,2-dioleoyl-sn-glycero-3-phosphocholine
+DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
