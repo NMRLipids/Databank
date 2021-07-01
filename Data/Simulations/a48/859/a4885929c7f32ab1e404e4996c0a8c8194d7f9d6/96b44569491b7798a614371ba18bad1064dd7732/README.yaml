@@ -1,0 +1,84 @@
+DOI: 10.5281/zenodo.3592499
+SOFTWARE: gromacs
+TRJ:
+- - dlpc.xtc
+TPR:
+- - dlpc.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DLPC: DLPC
+SOL: TIP3
+SOD: SOD
+CLA: CLA
+MAPPING_DICT:
+  DLPC: mappingDLPCcharmm.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+  SOD: mappingSOD.txt
+  CLA: mappingCLA.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen
+SYSTEM: 200DLPC_10000SOL_23SOD_23CLA
+SOFTWARE_VERSION: 2019
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT:
+- - dlpc.cpt
+LOG:
+- - dlpc.log
+TOP:
+- - dlpc.top
+TRAJECTORY_SIZE: 934589544
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 100
+- 100
+NDOPC:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 23
+NCLA: 23
+NSOL: 10000
+TEMPERATURE: '310'
+TRJLENGTH: 500100.0
+NUMBER_OF_ATOMS: 51246
+DATEOFRUNNING: 29/06/2021
