@@ -1,0 +1,25 @@
+DOI: 10.5281/zenodo.3693681
+
+SYSTEM: POPC:POPG(4:1)_T298K
+MAPPING_DICT:
+  POPC: mappingPOPClipid17.txt
+  POPG: mappingPOPGlipid17.txt
+  SOD: mappingSODlipid17.txt
+  SOL: mappingTIP3Pwater.txt
+
+SOFTWARE: gromacs
+FF: lipid17
+FF_SOURCE: 10.5281/zenodo.2585523
+FF_DATE: ??
+TRJ: trajSKIP.xtc
+TPR: topol.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+POPC: system1
+POPG: system2
+
+SOD: NA_d
+SOL: SOL
+
+DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
