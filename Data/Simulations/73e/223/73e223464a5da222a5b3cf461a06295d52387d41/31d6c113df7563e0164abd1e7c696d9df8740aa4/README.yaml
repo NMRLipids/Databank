@@ -1,0 +1,61 @@
+DOI: 10.5281/zenodo.3605386
+SYSTEM: POPCPOPE_(1:1)_T298K
+MAPPING_DICT:
+  POPC: mappingPOPCslipids.txt
+  POPE: mappingPOPEslipids.txt
+  SOL: mappingTIP3Pwater.txt
+SOFTWARE: gromacs
+FF: Slipids
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/
+FF_DATE: ??
+TRJ:
+- - pcpe_slipids.xtc
+TPR:
+- - pcpe_slipids.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+POPC: POPC
+POPG: POPG
+POPS: POPS
+POPE: POPE
+SOL: SOL
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+TRAJECTORY_SIZE: 587346672
+NPOPC:
+- 50
+- 50
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 50
+- 50
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOL: 9000
+TEMPERATURE: '298'
+TRJLENGTH: 300100.0
+NUMBER_OF_ATOMS: 52900
+DATEOFRUNNING: 28/06/2021
