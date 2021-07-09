@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.1010083
+
+SOFTWARE: gromacs
+TRJ: POPC_512_NaCl_Dang_150mM_310K_md.xtc
+TPR: POPC_512_NaCl_Dang_150mM_310K_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+POPC: POPC
+SOL: SOL
+SOD: NA
+CLA: CL
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ SOL: mappingSPCwater.txt
+ SOD: mappingNA.txt 
+ CLA: mappingCL.txt 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Martinez-Seara, Hector
+
+SYSTEM: 512POPC_20480SOL_55SOD_55CLA_310K
+SOFTWARE_VERSION: 5.0.6
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE:
+
+CPT: POPC_512_NaCl_Dang_150mM_310K_md.cpt
+LOG:
+TOP: POPC_512_NaCl_Dang_150mM_310K_md.top

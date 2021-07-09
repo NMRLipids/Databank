@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.1493229
+
+SOFTWARE: gromacs
+TRJ: traj.xtc
+TPR: topol.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+POPC: POPC
+POPS: POPS
+SOL: TIP3
+SOD: SOD
+CLA: CLA
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ POPS: mappingPOPScharmm.txt 
+ SOL: mappingTIP3PCHARMMgui.txt
+ SOD: mappingSOD.txt
+ CLA: mappingCLA.txt
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila, O. H. S.
+
+SYSTEM: 110POPC_22POPS_4932SOL_101SOD_79CLA_298K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
