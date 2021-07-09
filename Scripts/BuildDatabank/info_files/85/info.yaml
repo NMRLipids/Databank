@@ -4,9 +4,9 @@ SYSTEM: POPCPOPG(1:1)200mMCaCl2
 MAPPING_DICT:
   POPC: mappingPOPCslipids.txt
   POPG: mappingPOPGslipids.txt
-  SOD: mappingSODecc.txt
-  CAL: mappingCALecc.txt
-  CLA: mappingCLAecc.txt
+  SOD: mappingSOD.txt
+  CAL: mappingCAL.txt
+  CLA: mappingCLA.txt
   SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
 FF: Slipids
@@ -19,17 +19,10 @@ TIMELEFTOUT: 500
 
 POPC: POPC
 POPG: POPG
-POPS: POPS
-POPE: POPE
 
 SOD: NA
-CLA: CLA
-CAL: CAL
-SOL: TIP3
+CLA: CL
+CAL: CA
+SOL: SOL
 
-
-
-
-
-
-DIR_WRK :  media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/

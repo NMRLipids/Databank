@@ -1,32 +1,24 @@
-DOI: 10.5281/zenodo.3855729
+DOI: 10.5281/zenodo.3859339
 
-SYSTEM: POPC:POPG(1:1)_T298K_100mM_CaCl
+SYSTEM: POPC:POPG(1:1)_T298K
 MAPPING_DICT:
   POPC: mappingPOPClipid17ecc.txt
   POPG: mappingPOPGlipid17ecc.txt
   SOD: mappingSODecc.txt
-  CAL: mappingCALecc.txt
-  CLA: mappingCLAecc.txt
   SOL: mappingSPCwater.txt
-  
 SOFTWARE: gromacs
 FF: lipid17ecc
 FF_SOURCE: NMRlipidsIV
 FF_DATE: ?/?/2020
 TRJ: traj.xtc
 TPR: topol.tpr
-PREEQTIME: 100
-TIMELEFTOUT: 0
+PREEQTIME: 0
+TIMELEFTOUT: 15
 
 POPC: POPC
 POPG: POPG
-POPS: POPS
-POPE: POPE
 
-POT: K
 SOD: NA
-CLA: CL
-CAL: CA
 SOL: SOL
 
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/

@@ -18,12 +18,12 @@ TPR: run_400ns.tpr
 PREEQTIME: 100
 TIMELEFTOUT: 0
 
-POPC: system1
-POPG: system2
+POPC: PC
+POPG: PGR
 
-SOD: NA_d
-CLA: CL_d
-CAL: CA_d
+SOD: NA
+CLA: CL
+CAL: CA
 SOL: SOL
 
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/

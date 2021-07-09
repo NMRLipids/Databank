@@ -15,8 +15,6 @@ PREEQTIME: 200
 TIMELEFTOUT: 0
 
 POPC: POPC
-POPG: POPG
-POPS: POPS
 POPE: POPE
 
 
@@ -24,7 +22,5 @@ SOL: SOL
 
 
 
-
-
-
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+

@@ -1,13 +1,13 @@
 DOI: 10.5281/zenodo.4005515
 
-SYSTEM: POPCPOPG(1:1)+100mMCaCl_T298K
+SYSTEM: POPC:POPG(1:1)_100mMCaCl2_T298K
 MAPPING_DICT:
   POPC: mappingPOPCcharmm.txt
   POPG: mappingPOPGcharmm.txt
-  SOD: mappingSOD.txt
   CAL: mappingCAL.txt
   CLA: mappingCLA.txt
-  SOL: mappingTIP3PCHARMMgui.txt
+  SOD: mappingSOD.txt
+  SOL: mappingTIP3PCHARMMgui.txt 
 SOFTWARE: gromacs
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI
@@ -29,8 +29,5 @@ CAL: CAL
 SOL: TIP3
 
 
-
-
-
-
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+
