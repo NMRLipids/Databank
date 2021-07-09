@@ -2,7 +2,7 @@ DOI: 10.5281/zenodo.1011096
 
 MAPPING_DICT:
   POPG: mappingPOPGcharmm.txt
-  SOD: mappingSOD.txt
+  SOD: mappingPOT.txt
   SOL: mappingTIP3PCHARMMgui.txt
 
 SYSTEM: POPG_T298K
@@ -18,7 +18,7 @@ TIMELEFTOUT: 20
 
 POPG: POPG
 
-SOD: SOD
+SOD: POT
 SOL: TIP3
 
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/

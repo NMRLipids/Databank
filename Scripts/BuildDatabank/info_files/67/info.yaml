@@ -16,10 +16,10 @@ TPR: topol.tpr
 PREEQTIME: 50
 TIMELEFTOUT: 0
 
-POPC: system1
-POPG: system2
+POPC: PC
+POPG: PGR
 
-SOD: NA_d
+SOD: NA
 SOL: SOL
 
 DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
