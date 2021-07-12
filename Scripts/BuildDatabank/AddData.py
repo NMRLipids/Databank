@@ -1011,7 +1011,7 @@ for key_mol in molecules_dict:
         continue
     #print(value_mol)
     x = 'N' + key_mol
-    sim[x] = u.select_atoms("resname " + value_mol ).n_residues
+    sim[x] = u.select_atoms("resname " + value_mol).n_residues
     print("Number of " + key_mol  + ": " + str(sim[x]))   
 
 #Anne: Read temperature and trajectory length from tpr file
@@ -1069,6 +1069,7 @@ for key_mol in all_molecules:
         number_of_atoms += np.sum(sim['N' + key_mol]) * mapping_file_length
     except:
         continue
+        
 
 if number_of_atoms != number_of_atomsTRJ:
     stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
