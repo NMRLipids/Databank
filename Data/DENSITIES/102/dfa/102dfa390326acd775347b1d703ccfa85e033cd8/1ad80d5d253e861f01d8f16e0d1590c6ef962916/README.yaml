@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.4537207
+SOFTWARE: gromacs
+TRJ:
+- - prottraj.xtc
+TPR:
+- - protonated.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+POPC: POPC
+SOL: SOL
+MAPPING_DICT:
+  POPC: mappingPOPCberger.txt
+  SOL: mappingSPCwater.txt
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+UNITEDATOM_DICT: null
+PUBLICATION: ??
+AUTHORS_CONTACT: Hanne Antila ()
+SYSTEM: Berger_POPC_T303K
+SOFTWARE_VERSION: Gpu_version_2020.1
+FF: Berger
+FF_SOURCE: https://zenodo.org/record/1402417/
+FF_DATE: ?/?/????
+NPOPC:
+- 128
+- 128
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOL: 10342
+TEMPERATURE: '303'
+TRJLENGTH: 1200010.0
+DATEOFRUNNING: 07/04/2021

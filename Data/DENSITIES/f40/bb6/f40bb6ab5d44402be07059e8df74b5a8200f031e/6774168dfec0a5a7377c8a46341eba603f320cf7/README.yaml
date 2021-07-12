@@ -1,0 +1,58 @@
+DOI: 10.5281/zenodo.1129415
+SOFTWARE: gromacs
+TRJ:
+- - md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-CHARMM36_POPS_298K_v1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+POPS: POPS
+SOD: SOD
+SOL: TIP3
+MAPPING_DICT:
+  POPS: mappingPOPScharmm.txt
+  SOD: mappingSOD.txt
+  SOL: mappingTIP3Pwater.txt
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Tom Piggot ()
+SYSTEM: POPS_298K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ??/??/????
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 64
+- 64
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 128
+NSOL: 4480
+TEMPERATURE: '298'
+TRJLENGTH: 100050.0
+DATEOFRUNNING: 09/04/2021

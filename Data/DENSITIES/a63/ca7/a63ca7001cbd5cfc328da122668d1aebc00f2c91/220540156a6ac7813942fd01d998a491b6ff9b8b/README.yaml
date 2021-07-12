@@ -1,0 +1,62 @@
+DOI: 10.5281/zenodo.1306800
+SYSTEM: POPC_T300K
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+SOFTWARE: gromacs
+FF: CHARMM36
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - md_dt100_OK_centered.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+POPC: POPC
+POPG: POPG
+POPS: POPS
+POPE: POPE
+POT: K
+SOD: NA
+CLA: CL
+CAL: CA
+SOL: TIP3
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+NPOPC:
+- 128
+- 128
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NPOT: 0
+NSOD: 0
+NCLA: 0
+NCAL: 0
+NSOL: 9767
+TEMPERATURE: '300'
+TRJLENGTH: 300100.0
+DATEOFRUNNING: 09/04/2021

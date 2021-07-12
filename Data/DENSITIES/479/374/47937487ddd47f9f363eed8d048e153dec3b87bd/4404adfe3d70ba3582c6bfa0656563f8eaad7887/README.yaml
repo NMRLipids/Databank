@@ -1,0 +1,58 @@
+DOI: 10.5281/zenodo.4005515
+SOFTWARE: gromacs
+TRJ:
+- - 100-400ns.xtc
+TPR:
+- - run_400ns.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+POPC: POPC
+POPG: POPG
+SOD: SOD
+CLA: CLA
+CAL: CAL
+SOL: TIP3
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  POPG: mappingPOPGcharmm.txt
+  SOD: mappingSOD.txt
+  CLA: mappingCLA.txt
+  CAL: mappingCAL.txt
+  SOL: mappingTIP3Pwater.txt
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+UNITEDATOM_DICT: null
+PUBLICATION: null
+AUTHORS_CONTACT: Anne Kiirikki (anne.kiirikki@helsinki.fi), Samuli Ollila (samuli.ollila@helsinki.fi)
+SYSTEM: POPC:POPG(1:1)_100mMCaCl2_T298K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ?/?/2020
+CPT: null
+LOG: null
+TOP: null
+NPOPC:
+- 75
+- 75
+NPOPG:
+- 75
+- 75
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 150
+NCLA: 114
+NCAL: 57
+NSOL: 31329
+TEMPERATURE: '298'
+TRJLENGTH: 300020.0
+DATEOFRUNNING: 07/04/2021
