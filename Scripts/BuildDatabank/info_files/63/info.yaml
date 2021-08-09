@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.3371327
+
+SOFTWARE: gromacs
+TRJ: popc_pops_250_50_contra_sodium_940mM_CaCl_nbfix_han.xtc
+TPR: popc_pops_250_50_contra_sodium_940mM_CaCl_nbfix_han.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 137
+
+POPC: POPC
+POPS: POPS
+SOL: TIP3
+SOD: SOD
+CAL: CAL
+CLA: CLA
+
+MAPPING_DICT:
+ POPC: mappingPOPCcharmm.txt
+ POPS: mappingPOPScharmm.txt
+ SOL: mappingTIP3PCHARMMgui.txt
+ SOD: mappingSOD.txt 
+ CAL: mappingCAL.txt 
+ CLA: mappingCLA.txt 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Nencini, Ricky
+
+SYSTEM: 250POPC_50POPS_11174SOL_50SOD_189CAL_378CLA_320K
+SOFTWARE_VERSION: 2018.6
+
+FF: CHARMM36 with NBFIX for calcium ions
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT: popc_pops_250_50_contra_sodium_940mM_CaCl_nbfix_han.cpt
+LOG:
+TOP: popc_pops_250_50_contra_sodium_940mM_CaCl_nbfix_han.top
