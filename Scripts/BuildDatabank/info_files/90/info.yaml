@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.3997135
+
+SYSTEM: POPC:POPG(1:1)+1MCaCl_T298K
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  POPG: mappingPOPGcharmm.txt
+  SOD: mappingSOD.txt
+  CAL: mappingCAL.txt
+  CLA: mappingCLA.txt
+  SOL: mappingTIP3Pwater.txt
+SOFTWARE: gromacs
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ?/?/2020
+TRJ: 100-400ns.xtc
+TPR: run_400ns.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+
+POPC: POPC
+POPG: POPG
+POPS: POPS
+POPE: POPE
+
+SOD: SOD
+CLA: CLA
+CAL: CAL
+SOL: TIP3
+
+
+
+
+
+
+DIR_WRK : /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
