@@ -1,29 +1,35 @@
-DOI: 10.5281/zenodo.3613573
+DOI: 10.5281/zenodo.3592499
 
-SYSTEM: POPC_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  POPG: mappingPOPGslipids.txt
-  SOD: mappingSOD.txt
-  SOL: mappingTIP3PwaterSlipids.txt
 SOFTWARE: gromacs
-FF: Slipids
-FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/, https://bitbucket.org/hseara/ions/
-FF_DATE: ??
-TRJ: PCPG_CA0.xtc
-TPR: PCPG_CA0.tpr
+TRJ: dopc.xtc
+TPR: dopc.tpr
 PREEQTIME: 0
-TIMELEFTOUT: 100
+TIMELEFTOUT: 0
 
-POPC: POPC
-POPG: POPG
+DOPC: DOPC
+SOL: TIP3
+SOD: SOD
+CLA: CLA
 
-SOD: NA 
-SOL: SOL
+MAPPING_DICT:
+ DOPC: mappingDOPCcharmm.txt 
+ SOL: mappingTIP3PCHARMMgui.txt
+ SOD: mappingSOD.txt
+ CLA: mappingCLA.txt 
 
+DIR_WRK: /usr/home/bort/Databank
 
+PUBLICATION:
+AUTHORS_CONTACT: Matti Javanainen
 
+SYSTEM: 200DOPC_10000SOL_23SOD_23CLA
+SOFTWARE_VERSION: 2019
 
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
 
+CPT: dopc.cpt
+LOG: dopc.log
+TOP: dopc.top
 
-DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
