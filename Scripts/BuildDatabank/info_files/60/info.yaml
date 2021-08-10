@@ -1,35 +1,35 @@
-DOI: 10.5281/zenodo.3997135
+DOI: 10.5281/zenodo.1009094
 
-SYSTEM: POPC:POPG(1:1)+1MCaCl_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  POPG: mappingPOPGcharmm.txt
-  SOD: mappingSOD.txt
-  CAL: mappingCAL.txt
-  CLA: mappingCLA.txt
-  SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI
-FF_DATE: ?/?/2020
-TRJ: 100-400ns.xtc
-TPR: run_400ns.tpr
-PREEQTIME: 100
+TRJ: DSPC_512_NaCl_150mM_333K_md.xtc
+TPR: DSPC_512_NaCl_150mM_333K_md.tpr
+PREEQTIME: 0
 TIMELEFTOUT: 0
 
-POPC: POPC
-POPG: POPG
-POPS: POPS
-POPE: POPE
+DSPC: DSPC
+SOL: SOL
+SOD: NA
+CLA: CL
 
-SOD: SOD
-CLA: CLA
-CAL: CAL
-SOL: TIP3
+MAPPING_DICT:
+ DSPC: mappingDSPCcharmm.txt 
+ SOL: mappingTIP3Pwater.txt
+ SOD: mappingNA.txt
+ CLA: mappingCL.txt
 
+DIR_WRK: /usr/home/bort/Databank
 
+PUBLICATION:
+AUTHORS_CONTACT: Martinez-Seara, Hector
 
+SYSTEM: 512DSPC_20480SOL_55SOD_55CLA_333K
+SOFTWARE_VERSION: 5.0.4
 
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE:
 
+CPT: DSPC_512_NaCl_150mM_333K_md.cpt
+LOG:
+TOP: DSPC_512_NaCl_150mM_333K_md.top
 
-DIR_WRK : /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
