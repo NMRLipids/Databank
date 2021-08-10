@@ -288,6 +288,9 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/f40/bb6/f40bb6ab5d44
                 
                 comment = '#lt    ' + lt + '\n' + '#dt    ' + timestep + '\n' + '#dn    ' + '\n' + '#edges    ' + edges
                 np.savetxt(matrix_file,t_matrix,comments='# edges \n' + '# ' +  fmt='%d')
+
+
+
              
 
              
