@@ -83,7 +83,7 @@ class OrderParameter:
         calculates Order Parameter according to equation
         S = 1/2 * (3*cos(theta)^2 -1)
         """
-        print(atoms)
+       # print(atoms)
         vec = atoms[1].position - atoms[0].position
         d2 = np.square(vec).sum()
 	

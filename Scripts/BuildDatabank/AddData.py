@@ -11,7 +11,6 @@ import yaml
 
 from datetime import date
 
-
 # Working with files and directories
 import os
 
@@ -52,17 +51,13 @@ import sys
 #for building hydrogens to united atom simulations 
 import buildH_calcOP_test
 
+#import databank dictionaries
+from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
 
 # Download link
-def download_link(doi, file):
-    if "zenodo" in doi.lower():
-        zenodo_entry_number = doi.split(".")[2]
-        return 'https://zenodo.org/record/' + zenodo_entry_number + '/files/' + file
-    else:
-        print ("DOI provided: {0}".format(doi))
-        print ("Repository not validated. Please upload the data for example to zenodo.org")
-        return ""
+from databankLibrary import download_link
+
 
 #parse input yaml file
 parser = argparse.ArgumentParser(description="")
@@ -71,6 +66,7 @@ parser.add_argument("-f","--file", help="Input file in yaml "
 args = parser.parse_args()
 input_path = "./" + args.file
 
+#load input yaml file into empty dictionary
 sim = {}
 
 #open input file for reading and writing
@@ -85,8 +81,11 @@ print(yaml.dump(sim))
 # Working directory
 dir_wrk = sim['DIR_WRK']
 
-
-
+all_molecules = []
+for key in lipids_dict:
+    all_molecules.append(key)
+for key in molecules_dict:
+    all_molecules.append(key)
 
 
 # Checking that the DOI link is valid
@@ -113,464 +112,6 @@ else:
     pass
 
 
-
-# Defining dictionaries
-
-
-# Dictionary of lipids.
-#
-# If you add a lipid which is not yet in the databank, you have to add it here
-
-lipids_dict = {
-            'POPC' : {"REQUIRED": False,
-                             "TYPE": "string",
-                         },
-            'POPG' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'POPS' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'POPE' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DMPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DPPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DEPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DLPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DOPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DOPS' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DSPC' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'POPI' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'SAPI' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'SLPI' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'CHOL' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'DHMDMAB' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                }
-
-
-# Dictionary of other than lipid molecules.
-#
-# If you add other than a lipid molecule which is not yet in the databank, you have to add it here
-
-molecules_dict = {
-                
-            'POT' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'SOD' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'CLA' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'CAL' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'SOL' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                }
-
-
-all_molecules = []
-for key in lipids_dict:
-    all_molecules.append(key)
-for key in molecules_dict:
-    all_molecules.append(key)
-
-
-
-# Dictionary containing the number of molecules which are automatically calculated from input files
-               
-molecule_numbers_dict = {
-            'NPOPC' : {"REQUIRED": False,
-                              "TYPE": "array",
-                          },
-            'NPOPG' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                         },
-            'NPOPS' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-            'NPOPE' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDMPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDPPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDEPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDLPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPS' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDSPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NPOPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSAPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSLPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-    
-            'NCHOL' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
-            'NDHMDMAB' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-    
-            'NPOT' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NSOD' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCLA' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCAL' : {"REQUIRED": False,
-                             "TYPE" : "integer",
-                         },
-            'NSOL' : {"REQIRED": False,
-                            "TYPE" : "integer",
-                        },
-    
-                }
-
-# Dictionary containing the force fields for molecules given by the contributor
-
-molecule_ff_dict = {
-                'FFPOPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFPOPG' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFPOPS' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFPOPE' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDMPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDPPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDEPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDLPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDOPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDOPS' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDSPC' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFPOPI' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFSAPI' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFSLPI' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFCHOL' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFDHMDMAB' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-		'FFPOT' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                'FFSOD' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                'FFCLA' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                'FFCAL' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-                'FFSOL' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-               }
-
-                
-                
-
-# Databank dictionary for simulations ran with Gromacs
-
-gromacs_dict = {
-               'INI' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("gro", "pdb",),
-                       }, # Could be not needed in the future (tpr)
-               'MDP' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("mdp",),
-                       }, # Could be not needed in the future (tpr)
-               'TRJ' : {"REQUIRED": True,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("xtc","trr",),
-                       },
-               'TPR' : {"REQUIRED": True,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("tpr",),
-                       },
-               'CPT' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("cpt",),
-                       },
-               'TOP' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("top",),
-                       },
-               'ITP' : {"REQUIRED": False,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("itp",),
-                       },
-               'LOG' : {"REQUIRED": False,
-                        "TYPE": "file",
-                        "EXTENSION" :("log",),
-                       },
-               'FF'  : {"REQUIRED": False,
-                        "TYPE" : "string",
-                       },
-               'FF_SOURCE' : {"REQUIRED": False,
-                              "TYPE" : "string",
-                              },
-               'FF_DATE' : {"REQUIRED": False,
-                            "TYPE" : "date",
-                           },
-               'DOI' : {"REQUIRED": True,
-                            "TYPE" : "string",
-                           },
-    
-               'SYSTEM' : {"REQUIRED": True,
-                            "TYPE" : "string",
-                           },
-            'TEMPERATURE' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                            },
-             'TRJLENGTH' : {"REQUIRED": False,
-                           "TYPE" : "integer",
-                           },
-            'PREEQTIME' : {"REQUIRED": True,
-                          "TYPE" : "integer",
-                          },
-          'TIMELEFTOUT' : {"REQUIRED":True,
-                          "TYPE" : "integer",
-                          },
-            'UNITEDATOM_DICT' : {"REQUIRED": False,
-                            "TYPE" : "dictionary",
-                         },
-            'PUBLICATION' : {"REQUIRED": False,
-                             "TYPE" : "string",
-                            },
-            'AUTHORS_CONTACT' : {"REQUIRED": False,
-                                 "TYPE": "string",
-                                },
-            'SOFTWARE_VERSION' : {"REQUIRED": False,
-                                  "TYPE": "string",
-                             },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
-            'DATEOFRUNNING' : {"REQUIRED": False,
-                               "TYPE" : "string",
-                              },
-            'NUMBER_OF_ATOMS' : {"REQUIRED": False,
-                               "TYPE" : "integer",
-                              },
-            'TRAJECTORY_SIZE' : {"REQUIRED": False,
-                               "TYPE" : "integer",
-                              },    
-             'DIR_WRK' : {"REQUIRED": True,
-                           "TYPE": "string",
-                          },
-               }
-
-# Amber
-amber_dict = {}
-
-# NAMD
-namd_dict = {   
-            'TRJ' : { "REQUIRED": True,
-                      "TYPE": "files",
-                      "EXTENSION": ("dcd"),
-                    },
-            'INP' : { "REQUIRED": False,
-                      "TYPE": "file",
-                      "EXTENSION": (".inp"),
-                    },
-            'LOG' : { "REQUIRED": False,
-                      "TYPE": "files",
-                      "EXTENSION": ("log"),
-                      # can be parsed to get software version etc.
-                    },
-            'PSF' : { "REQUIRED": False,
-                      "TYPE": "file",
-                      "EXTENSION": ("psf"),
-                    },
-            'FF'  :  { "REQUIRED": False,
-                      "TYPE" : "string",
-                    },
-            'FF_SOURCE' : {"REQUIRED": False,
-                           "TYPE" : "string",
-                              },
-            'FF_DATE' : {"REQUIRED": False,
-                         "TYPE" : "date",
-                        },
-            'PDB'  : { "REQUIRED": True,
-                    "TYPE": "file",
-                    "EXTENSION": "pdb",}
-               }
-          
-# CHARMM
-charmm_dict = {}
-
-# OPENMM
-openmm_dict = {
-               'TRJ' : {"REQUIRED": True,
-                        "TYPE" : "files",
-                        "EXTENSION" : ("xtc","trr",),
-                       },
-               'PDB' : {"REQUIRED": True,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("pdb",),
-                       },
-               'TOP' : {"REQUIRED": False,
-                        "TYPE" : "file",
-                        "EXTENSION" : ("psf",),
-                       },
-               'STATE' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
-                        "TYPE" : "file",
-                        "EXTENSION" : ("xml"),
-                            },
-               'INPUT' : {"REQUIRED" : False, # input file used to run the simulation
-                          "TYPE" : "file",
-                          "EXTENSION" : ("inp"),
-                          },
-               'FF'  : {"REQUIRED": False,
-                        "TYPE" : "string",
-                       },
-               'FF_SOURCE' : {"REQUIRED": False,
-                              "TYPE" : "string",
-                              },
-               'FF_DATE' : {"REQUIRED": False,
-                            "TYPE" : "date",
-                           },
-               'DOI' : {"REQUIRED": True,
-                            "TYPE" : "string",
-                           },
-               'SYSTEM' : {"REQUIRED": True,
-                            "TYPE" : "string",
-                           },
-            'TEMPERATURE' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                            },
-             'TRJLENGTH' : {"REQUIRED": False,
-                           "TYPE" : "integer",
-                           },
-            'PREEQTIME' : {"REQUIRED": True,
-                          "TYPE" : "integer",
-                          },
-          'TIMELEFTOUT' : {"REQUIRED":True,
-                          "TYPE" : "integer",
-                          },
-          'UNITEDATOM_DICT' : {"REQUIRED": False,
-                            "TYPE" : "dictionary",
-                         },
-            'PUBLICATION' : {"REQUIRED": False,
-                             "TYPE" : "string",
-                            },
-            'AUTHORS_CONTACT' : {"REQUIRED": False,
-                                 "TYPE": "string",
-                                },
-            'SOFTWARE_VERSION' : {"REQUIRED": False,
-                                  "TYPE": "string",
-                             },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
-            'DATEOFRUNNING' : {"REQUIRED": False,
-                               "TYPE" : "string",
-                              },
-            'NUMBER_OF_ATOMS' : {"REQUIRED": False,
-                               "TYPE" : "integer",
-                              },
-            'TRAJECTORY_SIZE' : {"REQUIRED": False,
-                               "TYPE" : "integer",
-                              },    
-             'DIR_WRK' : {"REQUIRED": True,
-                           "TYPE": "string",
-                          },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             },
-
-               }
-
-# SOFTWARE
-software_dict = {
-                "GROMACS" : gromacs_dict, 
-                "AMBER"   : amber_dict,
-                "NAMD"    : namd_dict,
-                "CHARMM"  : charmm_dict,
-                "OPENMM"  : openmm_dict,
-                }
-
-
 # ### Check software used by the simulation
 
 #sims_valid_software = []
@@ -590,10 +131,6 @@ else:
 
 # ### Check that all entry keys provided for each simulation are valid:
 
-
-#sims_valid_entries = []
-#for sim in sims_valid_software:
-    #print("ID {0}".format(sim["ID"]))
 wrong_key_entries = 0
 software_dict_name = "{0}_dict".format(sim['SOFTWARE'].lower())
 #print(sim.items())
@@ -620,11 +157,6 @@ else:
 # PLEASE CLARIFY THIS COMMENT
 # ### Process entries with files information to contain file names in arrays
 
-
-#sims_files_to_array = deepcopy(sims_valid_entries)
-
-#for sim in sims_files_to_array:
- #   print("ID {0}".format(sim["ID"]), flush=True)
 software_sim = software_dict[sim['SOFTWARE'].upper()]
 for key_sim, value_sim in sim.items():
     try:
@@ -648,9 +180,6 @@ for key_sim, value_sim in sim.items():
 # PLEASE CLARIFY THIS COMMENT
 # ### Check for multiple files in entries that can only contain one
 
-#sims_valid_file_entries = []
-#for sim in sims_files_to_array:
-#    print("ID {0}".format(sim["ID"]), flush=True)
 files_issues = 0
 software_sim = software_dict[sim['SOFTWARE'].upper()]
 for key_sim, value_sim in sim.items():
@@ -688,7 +217,6 @@ if missing_required_keys:
     quit()
 else:
     print("All required dictionary entries are present.\n")
-    #sims_required_entries.append(sim.copy())
 
 
 
@@ -706,8 +234,7 @@ for key_sim, value_sim in sim.items():
             for file_provided in value_sim:
                 #print("File={0}".format(file_provided[0]))
                 file_url = download_link(DOI, file_provided[0])
-                if file_url == "":
-                        
+                if file_url == "":                        
                     wrong_links += 1
                     continue
                 try:
@@ -865,18 +392,6 @@ print(df_files)
 # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
 #print(sim_hashes)
 
-
-
-
-#in case of a united atom simulation make a dictionary of united atom names 
-#if sim.get('UNITEDATOM'):
-#    unitedAtoms = sim['UNITEDATOM'].split(',')
-#    unitedAtomsDic = {}
-#    for i in range(0, int(len(unitedAtoms)/2)):
-#        lipid = unitedAtoms[2*i]
-#        UAlipid = unitedAtoms[2*i+1]
-#        unitedAtomsDic[lipid]=UAlipid
-#    sim['UADICTIONARY'] = unitedAtomsDic
         
 
 # ## Read molecule numbers into dictionary
@@ -898,35 +413,35 @@ sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
 # OTHER SOFTWARES THAN GROMACS!!!!
+top = ''
+traj = ''
 
-#if sim['SOFTWARE'] == 'gromacs':
-structure_file = str(dir_tmp) + '/conf.gro'
 
-#make gro file
-print("\n Makin gro file")
-os.system('echo System | gmx trjconv -f '+trj+' -s '+tpr+' -dump 0 -o ' +gro)
-    
-    # add gro into dictionary for later use
-    
-# SAMULI: I COMMENTED THIS OUT BECAUSE IT SAVES THE GRO WITH WORKING DIRECTORY PATH WHICH WE DO NO WANT INTO THE DATABANK DICTIONARY
-#sim['GRO'] = structure_file
-
-    #u_trj = Universe(trj)
-    #u_selection = u_trj.
-    #write('frame_0.gro', frames=u_trj.trajectory[0])
-
-   
-
-#elseif sim['SOFTWARE'] == amber:
-#elseif sim['SOFTWARE'] == namd:
-#elseif sim['SOFTWARE'] == charmm:
-#elseif sim['SOFTWARE'] == openmm:
+if sim['SOFTWARE'] == 'gromacs':
+    top = str(dir_tmp) + '/' + sim['TPR'][0][0]
+    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+elif sim['SOFTWARE'] == 'amber':                    #CHECK IF THESE WORK
+    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
+    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+elif sim['SOFTWARE'] == 'namd':
+    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
+    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+elif sim['SOFTWARE'] == 'charmm':
+    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
+    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+elif sim['SOFTWARE'] == 'openmm':
+    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
+    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
     
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(structure_file)
+u = Universe(top, traj)
+u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
+gro = str(dir_tmp) + '/frame0.gro'
+
+u0 = Universe(gro)
 lipids = []
 
 # select lipids 
@@ -934,34 +449,34 @@ for key_mol in lipids_dict:
     print("Calculating number of " + key_mol + " lipids")
     selection = ""
     if key_mol in sim['MAPPING_DICT'].keys():
-        m_file = sim['MAPPING_DICT'][key_mol]
-        with open('./mapping_files/'+m_file,"r") as f:
-            for line in f:
-                if len(line.split()) > 2 and "Individual atoms" not in line:
-                    selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
-                elif "Individual atoms" in line:
-                    continue
-                else:
-                    selection = "resname " + sim.get(key_mol)
-                    #print(selection)
-                    break
+       m_file = sim['MAPPING_DICT'][key_mol]
+       with open('./mapping_files/'+m_file,"r") as f:
+           for line in f:
+               if len(line.split()) > 2 and "Individual atoms" not in line:
+                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
+               elif "Individual atoms" in line:
+                   continue
+               else:
+                   selection = "resname " + sim.get(key_mol)
+                   #print(selection)
+                   break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
-    molecules = u.select_atoms(selection)
+    molecules = u0.select_atoms(selection)
     #print("molecules")
     #print(molecules)
     if molecules.n_residues > 0:
-        lipids.append(u.select_atoms(selection))
+        lipids.append(u0.select_atoms(selection))
         #print(lipids) 
 # join all the selected the lipids together to make a selection of the entire membrane and calculate the
 # z component of the centre of mass of the membrane
-membrane = u.select_atoms("")
+membrane = u0.select_atoms("")
 R_membrane_z = 0
 if lipids!= []:
     for i in range(0,len(lipids)):
         membrane = membrane + lipids[i]
-    #print("membrane") 
-    #print(membrane)  
+        #print("membrane") 
+        #print(membrane)  
     R_membrane_z = membrane.center_of_mass()[2]
 print("Center of the mass of the membrane " + str(R_membrane_z))
     
@@ -984,8 +499,8 @@ for key_mol in lipids_dict:
                     selection = "resname " + sim.get(key_mol)
                     break
     selection = selection.rstrip(' or ')
-#   print(selection)
-    molecules = u.select_atoms(selection)
+    #   print(selection)
+    molecules = u0.select_atoms(selection)
     #print(molecules.residues)
     x = 'N' + key_mol
     if molecules.n_residues > 0:
@@ -994,10 +509,10 @@ for key_mol in lipids_dict:
                 
             if R[2] - R_membrane_z > 0:
                 leaflet1 = leaflet1 + 1
-              # print('layer1  ' + str(leaflet1))
+                # print('layer1  ' + str(leaflet1))
             elif R[2] - R_membrane_z < 0:
                 leaflet2 = leaflet2 +1
-              # print('layer2  ' + str(leaflet2))
+                  # print('layer2  ' + str(leaflet2))
     sim[x] = [leaflet1, leaflet2] 
 
     print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
@@ -1011,34 +526,34 @@ for key_mol in molecules_dict:
         continue
     #print(value_mol)
     x = 'N' + key_mol
-    sim[x] = u.select_atoms("resname " + value_mol).n_residues
+    sim[x] = u0.select_atoms("resname " + value_mol).n_residues
     print("Number of " + key_mol  + ": " + str(sim[x]))   
 
-#Anne: Read temperature and trajectory length from tpr file
+#Anne: Read trajectory length 
 
 dt = 0
 nsteps = 0
 nstxout = 0
 
+Nframes=len(u.trajectory)
+timestep = u.trajectory.dt
+ 
+trj_length = Nframes * timestep
+   
+sim['TRJLENGTH'] = trj_length
+
+#Read temperature from tpr
 file1 = str(dir_tmp) + '/tpr.txt'
 
-print("Exporting information with gmx dump")
+print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
 os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
-    
-    
 
 with open(file1, 'rt') as tpr_info:
     for line in tpr_info:
         if 'ref-t' in line:
             sim['TEMPERATURE']=float(line.split()[1])
     
-mol = Universe(gro, trj)
-Nframes=len(mol.trajectory)
-timestep = mol.trajectory.dt
- 
-trj_length = Nframes * timestep
-   
-sim['TRJLENGTH'] = trj_length
+
 
 print("Parameters read from input files:")
 print("TEMPERATURE: " + str(sim['TEMPERATURE']))
@@ -1047,7 +562,7 @@ print("LENGTH OF THE TRAJECTORY: " + str(sim['TRJLENGTH']))
 
 ## Check that the number of atoms between data and README.yaml match
 
-number_of_atomsTRJ = len(mol.atoms)
+number_of_atomsTRJ = len(u.atoms)
 
 number_of_atoms = 0
 for key_mol in all_molecules:
@@ -1107,7 +622,10 @@ os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) 
     
 DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3)
 #    data_directory[str(ID)] = DATAdir
-    
+ 
+ #copy simulation trajectory and top files to DATAdir
+os.system('cp '+ traj + ' ' + DATAdir)
+os.system('cp '+ top + ' ' + DATAdir) 
 
 # dictionary saved in yaml format
 outfileDICT=str(dir_tmp)+ '/README.yaml'
@@ -1122,161 +640,6 @@ with open(outfileDICT, 'w') as f:
 print('\033[1m' + "\n Writing the README.yaml dictionary to " + DATAdir + "\n" + '\033[0m')
 
 
-#SAMULI: WE NEED TO THINK IF THE ANALYSIS SHOULD BE IN ANOTHER SCRIPT
 
-# # Analysis starts here
-# 
-
-print("Calculating order parameters for all C-H bonds using the mapping file")
-
-
-#for sim in sims_working_links:
-trj=sim.get('TRJ')
-tpr=sim.get('TPR')
-   # ID=sim.get('ID')
-software=sim.get('SOFTWARE')
-EQtime=float(sim.get('TIMELEFTOUT'))*1000
-unitedAtom = sim.get('UNITEDATOM_DICT')
-    
-ext=str(trj)[-6:-3] # getting the trajectory extension
-print("Trajectory format: " + ext)
-    # BATUHAN: Adding a few lines to convert the trajectory into .xtc using MDTRAJ
-    #          We will need users to install MDTRAJ in their system so that we can convert other trajectories into xtc
-
-if ext != "xtc" and ext != "trr":
-        
-    print("converting the trajectory into xtc")
-        
-    pdb = sim.get('PDB')
-    output_traj = str(dir_tmp) + '/' + 'tmp_converted.xtc'
-    input_traj = str(dir_tmp) + '/' + trj[0][0]
-    input_pdb = str(dir_tmp) + '/' + pdb[0][0]
-      
-    if os.path.isfile(output_traj): # when we're done with the converted trajectory we can simply remove it
-        os.system('rm {output_traj}')
-        
-    os.system('echo System | mdconvert {input_traj} -o {output_traj} -t {input_pdb} --force # force overwrite')
-        
-        # SAMULI: this xtcwhole does not necessarily have molecules as whole. Only if {input_traj} has.
-    xtcwhole = str(dir_tmp) + '/' + 'tmp_converted.xtc'
-    tpr=input_pdb
-        
-    print("trajectory conversion is completed")
-        
-else:
-    
-    xtc = str(dir_tmp) + '/' + str(trj[0][0])  
-    tpr = str(dir_tmp) + '/' + str(tpr[0][0])
-    xtcwhole=str(dir_tmp) + '/whole.xtc'
-
-    print("Make molecules whole in the trajectory")
-    os.system('echo System | gmx trjconv -f ' + xtc + ' -s ' + tpr + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
-   
-
-    
-#print("Calculating order parameters")
-    
-if unitedAtom:
-    for key in sim['UNITEDATOM_DICT']:
-    #construct order parameter definition file for CH bonds from mapping file
-        def_file = open(str(dir_tmp) + '/' + key + '.def', 'w')
-
-        mapping_file = sim['MAPPING_DICT'][key]
-        previous_line = ""
-            
-        with open('./mapping_files/'+mapping_file, "r") as f:
-            for line in f.readlines():
-                if not line.startswith("#"):
-                    regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                    regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                    regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                    regexp2_C = re.compile(r'M_G[0-9]_M')
-
-                    if regexp1_C.search(line) or regexp2_C.search(line):
-                        atomC = line.split()
-                        atomH = []
-                    elif regexp1_H.search(line) or regexp2_H.search(line):
-                        atomH = line.split()
-                    else:
-                        atomC = []
-                        atomH = []
-
-                    if atomH:
-                        items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-                        def_line = items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-                        if def_line != previous_line:
-                            def_file.write(def_line)
-                            #print(def_line)
-                            previous_line = def_line
-        def_file.close()
-
-     #Add hydrogens to trajectory and calculate order parameters with buildH
-        ordPfile = str(dir_tmp) + '/' + key + 'OrderParameters.dat' 
-        topfile = gro #sim.get('GRO')
-        deffile = str(dir_tmp) + '/' + key + '.def' 
-        lipidname = sim['UNITEDATOM_DICT'][key]
-        #    print(lipidname)
-        buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
-
-        outfile=open(ordPfile,'w')
-        line1="Atom     Average OP     OP stem"+'\n'
-        outfile.write(line1)
-        
-        data = {}
-        outfile2=str(dir_tmp) + '/' + key + 'OrderParameters.json'
-        
-        with open(ordPfile + '.jmelcr_style.out') as OPfile:
-            lines=OPfile.readlines()
-            for line in lines:
-                if "#" in line:
-                    continue
-                line2 = line.split()[0] + "  " + line.split()[4] + "  " + line.split()[6] + "\n"
-                outfile.write(line2)
-
-                OPname = line.split()[0]
-                OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
-                data[str(OPname)]=[]
-                data[str(OPname)].append(OPvalues)
-        
-        with open(outfile2, 'w') as f:
-            json.dump(data,f)
-
-        outfile.close()
-        outfile.close()
-        
-        os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir)
-        os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
-else:
-    for key in sim['MAPPING_DICT']:
-        if key in lipids_dict.keys(): 
-            mapping_file = sim['MAPPING_DICT'][key]
-            resname = sim[key]
-            OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,resname)
-
-            outfile=open(str(dir_tmp) + '/' + key + 'OrderParameters.dat','w')
-            line1="Atom     Average OP     OP stem"+'\n'
-            outfile.write(line1)
-    
-            data = {}
-            outfile2=str(dir_tmp) + '/' + key + 'OrderParameters.json' 
-
-            for i,op in enumerate(OrdParam):
-                resops =op.get_op_res
-                (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP
-                line2=str(op.name)+" "+str(op.avg)+" "+str(op.stem)+'\n'
-                outfile.write(line2)
-    
-                data[str(op.name)]=[]
-                data[str(op.name)].append(op.get_avg_std_stem_OP)
-        
-            with open(outfile2, 'w') as f:
-                json.dump(data,f)
-
-            outfile.close()
-
-            os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir)
-            os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
-    
-print("Order parameters calculated and saved to " + DATAdir)
 
 
