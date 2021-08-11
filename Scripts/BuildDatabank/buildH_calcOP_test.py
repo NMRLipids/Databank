@@ -1024,7 +1024,8 @@ def make_dic_atname2genericname(filename):
             for line in f:
                 # TODO: This line might have to be changed if the file contains more than
                 # 4 columns.
-                name, _, C, H = line.split()
+                name1, name2, _, C, H = line.split()
+                name = name1 + " " + name2
                 dic[(C, H)] = name
     except:
         raise UserWarning("Can't read order parameter definition in "
@@ -1193,7 +1194,7 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
     with open("{}.jmelcr_style.out".format(outOP), "w") as f, \
         open("{}.apineiro_style.out".format(outOP), "w") as f2:
         # J. Melcr output style.
-        f.write("# {:18s} {:7s} {:5s} {:5s}  {:7s} {:7s} {:7s}\n"
+        f.write("# {:30s} {:7s} {:5s} {:5s}  {:7s} {:7s} {:7s}\n"
                 .format("OP_name", "resname", "atom1", "atom2", "OP_mean",
                 "OP_stddev", "OP_stem"))
         f.write("#-------------------------------"
@@ -1224,9 +1225,10 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
             # Calc standard deviation and STEM (std error of the mean).
             std_dev = np.std(means)
             stem = np.std(means) / np.sqrt(len(means))
-            f.write("{:20s} {:7s} {:5s} {:5s} {: 2.5f} {: 2.5f} {: 2.5f}\n"
+            f.write("{:30s} {:7s} {:5s} {:5s} {: 2.5f} {: 2.5f} {: 2.5f}\n"
                     .format(name, dic_lipid["resname"], Cname, Hname, mean,
                             std_dev, stem))
+#########################################################################################                            
         # A. Pineiro output style.
         f2.write("Atom_name  Hydrogen\tOP\t      STD\t   STDmean\n")
         list_unique_Cnames = []
