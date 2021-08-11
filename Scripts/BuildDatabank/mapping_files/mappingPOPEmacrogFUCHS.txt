@@ -123,4 +123,3 @@ M_G3N6_M      N1
 M_G3N6H1_M    H3
 M_G3N6H2_M    H4
 M_G3N6H3_M    H5
-

@@ -1,0 +1,25 @@
+DOI: 10.5281/zenodo.1011096
+
+MAPPING_DICT:
+  POPG: mappingPOPGcharmm.txt
+  SOD: mappingPOT.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+
+SYSTEM: POPG_T298K
+SOFTWARE: gromacs
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ??
+TRJ: run2.xtc
+TPR: run2.tpr
+
+PREEQTIME: 0
+TIMELEFTOUT: 20
+
+POPG: POPG
+
+SOD: POT
+SOL: TIP3
+
+DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+

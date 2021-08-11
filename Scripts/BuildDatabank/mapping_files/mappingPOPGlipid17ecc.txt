@@ -1,4 +1,4 @@
-M_G1_M         C1    PGR  
+M_G1_M         C1    PGR
 M_G1H1_M       HR    PGR
 M_G1H2_M       HS    PGR
 M_G1O1_M      O11    PGR
