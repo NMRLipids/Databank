@@ -1,0 +1,60 @@
+DOI: 10.5281/zenodo.3364460
+MAPPING_DICT:
+  POPG: mappingPOPGslipids.txt
+  SOD: mappingSODecc.txt
+  SOL: mappingTIP3PwaterSlipids.txt
+SYSTEM: POPG_T310K
+SOFTWARE: gromacs
+FF: Slipids
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+POPG: POG
+SOD: NA
+SOL: SOL
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+TRAJECTORY_SIZE: 5149467936
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 250
+- 250
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 500
+NSOL: 25000
+TEMPERATURE: 310.0
+TRJLENGTH: 100010.0
+NUMBER_OF_ATOMS: 139000
+DATEOFRUNNING: 30/06/2021

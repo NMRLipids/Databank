@@ -1,0 +1,25 @@
+DOI: 10.5281/zenodo.3364460
+
+MAPPING_DICT:
+  POPG: mappingPOPGslipids.txt
+  SOD: mappingSODecc.txt
+  SOL: mappingTIP3PwaterSlipids.txt
+
+SYSTEM: POPG_T310K
+SOFTWARE: gromacs
+FF: Slipids
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ: total_4_500.xtc
+TPR: md_1.tpr
+
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+POPG: POG
+
+SOD: NA
+SOL: SOL
+
+DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+

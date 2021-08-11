@@ -1,0 +1,62 @@
+DOI: 10.5281/zenodo.3241243
+SYSTEM: POPC:POPG(7:3)_T310K
+MAPPING_DICT:
+  POPC: mappingPOPClipid17.txt
+  POPG: mappingPOPGlipid17.txt
+  SOD: mappingSODlipid17.txt
+  SOL: mappingTIP3Pwater.txt
+SOFTWARE: gromacs
+FF: lipid17
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+POPC: system1
+POPG: system2
+SOD: Na+
+SOL: WAT
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+TRAJECTORY_SIZE: 5227930244
+NPOPC:
+- 175
+- 175
+NPOPG:
+- 75
+- 75
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 150
+NSOL: 25000
+TEMPERATURE: 310.0
+TRJLENGTH: 100010.0
+NUMBER_OF_ATOMS: 141100
+DATEOFRUNNING: 08/07/2021
