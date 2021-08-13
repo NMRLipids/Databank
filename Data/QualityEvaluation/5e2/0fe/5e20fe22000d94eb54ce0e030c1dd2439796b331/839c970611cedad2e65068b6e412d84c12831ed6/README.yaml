@@ -1,63 +1,63 @@
-DOI: 10.5281/zenodo.3859339
-SYSTEM: POPC:POPG(1:1)_T298K
-MAPPING_DICT:
-  POPC: mappingPOPClipid17ecc.txt
-  POPG: mappingPOPGlipid17ecc.txt
-  SOD: mappingSODecc.txt
-  SOL: mappingSPCwater.txt
-SOFTWARE: gromacs
-FF: lipid17ecc
-FF_SOURCE: NMRlipidsIV
-FF_DATE: ?/?/2020
-TRJ:
-- - traj.xtc
-TPR:
-- - topol.tpr
 PREEQTIME: 0
+TEMPERATURE: 298.0
 TIMELEFTOUT: 15
-POPC: POPC
-POPG: POPG
-SOD: NA
-SOL: SOL
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-TRAJECTORY_SIZE: 8278576984
-NPOPC:
-- 75
-- 75
-NPOPG:
-- 76
-- 74
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
 NSLPI:
 - 0
 - 0
 NCHOL:
 - 0
 - 0
+FF: lipid17ecc
+NSOL: 29865
+NUMBER_OF_ATOMS: 128895
+TRAJECTORY_SIZE: 8278576984
+TRJ:
+- - traj.xtc
+NDPPC:
+- 0
+- 0
+SYSTEM: POPC:POPG(1:1)_T298K
+SOFTWARE: gromacs
+TRJLENGTH: 347500.0
+SOL: SOL
+NDMPC:
+- 0
+- 0
+POPG: POPG
+NPOPE:
+- 0
+- 0
+FF_DATE: ?/?/2020
+NPOPI:
+- 0
+- 0
+NPOPG:
+- 76
+- 74
+FF_SOURCE: NMRlipidsIV
+NPOPS:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+DOI: 10.5281/zenodo.3859339
+POPC: POPC
+NPOPC:
+- 75
+- 75
+TPR:
+- - topol.tpr
 NDHMDMAB:
 - 0
 - 0
+MAPPING_DICT:
+  POPC: mappingPOPClipid17ecc.txt
+  SOD: mappingSODecc.txt
+  SOL: mappingSPCwater.txt
+  POPG: mappingPOPGlipid17ecc.txt
 NSOD: 150
-NSOL: 29865
-TEMPERATURE: 298.0
-TRJLENGTH: 347500.0
-NUMBER_OF_ATOMS: 128895
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
 DATEOFRUNNING: 06/07/2021
 EXPERIMENT: 10.1002/j.1460-2075.1987.tb02595.x/5
+SOD: NA

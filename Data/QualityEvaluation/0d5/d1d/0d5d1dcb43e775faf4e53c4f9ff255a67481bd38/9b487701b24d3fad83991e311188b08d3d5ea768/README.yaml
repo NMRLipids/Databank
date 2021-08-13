@@ -1,76 +1,76 @@
-DOI: 10.5281/zenodo.1011096
-MAPPING_DICT:
-  POPG: mappingPOPGcharmm.txt
-  SOD: mappingPOT.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-SYSTEM: POPG_T298K
-SOFTWARE: gromacs
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI
-FF_DATE: ??
-TRJ:
-- - run2.xtc
-TPR:
-- - run2.tpr
 PREEQTIME: 0
+TEMPERATURE: '298'
+NDOPS:
+- 0
+- 0
 TIMELEFTOUT: 20
-POPG: POPG
-SOD: POT
-SOL: TIP3
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-TRAJECTORY_SIZE: 1012328064
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 59
-- 59
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
+NSLPI:
 - 0
 - 0
 NDOPC:
 - 0
 - 0
-NDOPS:
+NCHOL:
 - 0
 - 0
+FF: CHARMM36
+NDLPC:
+- 0
+- 0
+NSOL: 4110
 NDSPC:
 - 0
 - 0
+TRAJECTORY_SIZE: 1012328064
+TRJ:
+- - run2.xtc
+NDPPC:
+- 0
+- 0
+SYSTEM: POPG_T298K
+SOFTWARE: gromacs
+TRJLENGTH: 100010.0
+SOL: TIP3
+NDMPC:
+- 0
+- 0
+POPG: POPG
+NPOPE:
+- 0
+- 0
+FF_DATE: ??
 NPOPI:
+- 0
+- 0
+NPOPG:
+- 59
+- 59
+NDEPC:
+- 0
+- 0
+FF_SOURCE: CHARMM-GUI
+NPOPS:
 - 0
 - 0
 NSAPI:
 - 0
 - 0
-NSLPI:
+DOI: 10.5281/zenodo.1011096
+NUMBER_OF_ATOMS: 27434
+NPOPC:
 - 0
 - 0
-NCHOL:
-- 0
-- 0
+TPR:
+- - run2.tpr
 NDHMDMAB:
 - 0
 - 0
+MAPPING_DICT:
+  SOD: mappingPOT.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+  POPG: mappingPOPGcharmm.txt
 NSOD: 118
-NSOL: 4110
-TEMPERATURE: '298'
-TRJLENGTH: 100010.0
-NUMBER_OF_ATOMS: 27434
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
 DATEOFRUNNING: 12/07/2021
 EXPERIMENT: 10.5281/zenodo.4748647/1
+SOD: POT

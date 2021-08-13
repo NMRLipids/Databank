@@ -1,58 +1,58 @@
-DOI: 10.5281/zenodo.166034
-SYSTEM: POPC_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  SOL: mappingTIP3PwaterSlipids.txt
-SOFTWARE: gromacs
-FF: Slipids
-FF_SOURCE: ??
-FF_DATE: ??
-TRJ:
-- - popc00_T298_every100ps.xtc
-TPR:
-- - popc00_T298_every100ps.tpr
 PREEQTIME: 0
+TEMPERATURE: 298.0
 TIMELEFTOUT: 70
-POPC: POPC
-SOL: SOL
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-TRAJECTORY_SIZE: 527345968
-NPOPC:
-- 256
-- 256
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
 NSLPI:
 - 0
 - 0
 NCHOL:
 - 0
 - 0
+FF: Slipids
+NSOL: 23943
+POPC: POPC
+TRAJECTORY_SIZE: 527345968
+TRJ:
+- - popc00_T298_every100ps.xtc
+NDPPC:
+- 0
+- 0
+SYSTEM: POPC_T298K
+SOFTWARE: gromacs
+TRJLENGTH: 100100.0
+SOL: SOL
+NDMPC:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+FF_DATE: ??
+NPOPI:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+FF_SOURCE: ??
+NPOPS:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+DOI: 10.5281/zenodo.166034
+NUMBER_OF_ATOMS: 140437
+NPOPC:
+- 256
+- 256
+TPR:
+- - popc00_T298_every100ps.tpr
 NDHMDMAB:
 - 0
 - 0
-NSOL: 23943
-TEMPERATURE: 298.0
-TRJLENGTH: 100100.0
-NUMBER_OF_ATOMS: 140437
+MAPPING_DICT:
+  POPC: mappingPOPCslipids.txt
+  SOL: mappingTIP3PwaterSlipids.txt
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
 DATEOFRUNNING: 09/07/2021
 EXPERIMENT: 10.1039/c2cp42738a/1
