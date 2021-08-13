@@ -257,17 +257,21 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
     a = OP_exp - exp_error
     b = OP_exp + exp_error
-   # print('experiment OP')
-   # print(OP_exp)
-   # print('simulation OP')
-   # print(OP_sim)
-  #  print('b')
-  #  print(norm.cdf(b, loc=OP_sim, scale=op_sim_sd))
-  #  print('a')
-  #  print(norm.cdf(a, loc=OP_sim, scale=op_sim_sd))
-    
     P_S = norm.cdf(b, loc=OP_sim, scale=op_sim_sd) - norm.cdf(a, loc=OP_sim, scale=op_sim_sd)
-    
+
+    if OP_exp > 0 or OP_exp < 0:
+        print('experiment OP')
+        print(OP_exp,exp_error)
+        print('simulation OP')
+        print(OP_sim,op_sim_sd)
+        print('b')
+        print(norm.cdf(b, loc=OP_sim, scale=op_sim_sd))
+        print('a')
+        print(norm.cdf(a, loc=OP_sim, scale=op_sim_sd))
+        
+
+        print('P')
+        print(P_S)
     return P_S
     
 # quality of simulated order parameter
@@ -275,9 +279,9 @@ def OPquality(P_S,op_sim_STEM):
    # print('probability')
     #print(P_S)
     if P_S != 0:
-        quality = math.log(P_S/op_sim_STEM)                   #/ math.sqrt(op_sim_STEM) #/ (op_sim_STEM*op_sim_STEM)
+        quality = 1-math.log(P_S) #/op_sim_STEM     # math.log(P_S/op_sim_STEM)      #/ math.sqrt(op_sim_STEM) #/ (op_sim_STEM*op_sim_STEM)
     else:
-        quality = -1000
+        quality = 0
    # quality_float = quality.item()
  #   print('quality')
  #   print(quality)
@@ -339,7 +343,7 @@ if args.q:
             #print(OP_data_lipid)
 
         # get readme file of the experiment
-            experimentFilepath = "../../../../expDATABANK/Data/experiments/" + simulation.readme['EXPERIMENT']
+            experimentFilepath = "../../../expDATABANK/Data/experiments/" + simulation.readme['EXPERIMENT']
             READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
             experiment = Experiment()
             with open(READMEfilepathExperiment) as yaml_file_exp:
@@ -378,9 +382,9 @@ if args.q:
                     op_sim_sd = OP_array[1] 
                     op_sim_STEM = OP_array[2] 
 
-                    S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd) #(OP_exp, exp_error, OP_sim, op_sim_sd)
+                    S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
              
-                    op_quality = OPquality(S_prob, op_sim_STEM) #numpy float must be converted to float
+                    op_quality = np.absolute(OP_exp - OP_sim)  # OPquality(S_prob, op_sim_STEM) #numpy float must be converted to float
                 #print(type(op_quality))
                     OP_array.append(op_quality)
                 #print(OP_array)
