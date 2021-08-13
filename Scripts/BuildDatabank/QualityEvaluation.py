@@ -53,7 +53,7 @@ class Experiment:
 # # Analysis starts here
 
 if args.op:
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/35d/d6b/35dd6bcb5bf03400b81c070292e36025c48dc1a6/3d0ca721c24d7f22d09178f10f1dd89a333dfe07'): 
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): 
         for filename1 in files:
             filepath = subdir + os.sep + filename1        
             if filepath.endswith("README.yaml"):
@@ -375,7 +375,7 @@ if args.q:
                     #print(type(OP_array))
                     OP_exp = value[0][0]
                     OP_sim = OP_array[0]
-                    op_sim_sd = OP_array[2] #standard error of mean
+                    op_sim_sd = OP_array[1] 
                     op_sim_STEM = OP_array[2] 
 
                     S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd) #(OP_exp, exp_error, OP_sim, op_sim_sd)
