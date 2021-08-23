@@ -1,12 +1,16 @@
 # code to generate transition matrix
 import yaml
 import os
+import sys
 import numpy as np
 import MDAnalysis as mda
 from MDAnalysis import Universe
-from databankLibrary import download_link, read_mapping_file, lipids_dict
+
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
+
+sys.path.insert(1, '../BuildDatabank/')
+from databankLibrary import download_link, read_mapping_file, lipids_dict
 
 def getLipids(readme):
         lipids = []
@@ -276,18 +280,18 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/f40/bb6/f40bb6ab5d44
                 #bin edges z = 0 at the center of mass of the membrane
                 edges = np.array2string(bins_to_txt_file,separator=' ')
                 
-                with open(matrix_file, 'w') as f:
-                    f.write('#lt    ' + lt + '\n')
-                    f.write('#dt    ' + dt + '\n')
-                    f.write('#dn    \n')
-                    f.write('#edges   ' + np.array2string(bins_to_txt_file,separator=' ') + '\n')
-                    
-                    for row in t_matrix:
-                        f.write(np.array2string(row,separator=' ')+'\n')
+              #  with open(matrix_file, 'w') as f:
+              #      f.write('#lt    ' + lt + '\n')
+              #      f.write('#dt    ' + dt + '\n')
+              #      f.write('#dn   ??? \n')
+              #      f.write('#edges   ' + np.array2string(bins_to_txt_file,separator=' ') + '\n')
+                header =  'lt    ' + lt + '\n' + 'dt    ' + dt + '\n' + 'dn   ??? \n' + 'edges   ' + np.array2string(bins_to_txt_file,separator=' ') + '\n'
+
+                #f.write(np.array2string(row,separator=' ')+'\n') #need to remove [ and ] from string
                 
                 
-                comment = '#lt    ' + lt + '\n' + '#dt    ' + timestep + '\n' + '#dn    ' + '\n' + '#edges    ' + edges
-                np.savetxt(matrix_file,t_matrix,comments='# edges \n' + '# ' +  fmt='%d')
+              #  comment = '#lt    ' + lt + '\n' + '#dt    ' + timestep + '\n' + '#dn    ' + '\n' + '#edges    ' + edges
+                np.savetxt(matrix_file,t_matrix,header=header,  fmt='%d')
 
 
 
