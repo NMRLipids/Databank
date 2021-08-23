@@ -5,6 +5,7 @@
 
 
 import os
+import sys
 import numpy as np
 
 import yaml
@@ -17,6 +18,7 @@ import seaborn as sns
 import MDAnalysis
 from MDAnalysis.analysis.waterdynamics import MeanSquareDisplacement as MSD
 
+sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, read_mapping_file, read_mapping_file_res, read_mapping_filePAIR, make_positive_angles, lipids_dict, molecules_dict
 
 # Calculate density profiles of all molecules
