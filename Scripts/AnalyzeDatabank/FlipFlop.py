@@ -1,6 +1,7 @@
 #Lipid flip-flops
 #loops over trajectories and checks if some molecule (lipid or cholesterol) in membrane flips
 import os
+import sys
 import yaml
 import json
 import matplotlib.pyplot as plt
@@ -16,6 +17,7 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 
 import MDAnalysis as mda
 
+sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict
 
 def getLipids(readme):
