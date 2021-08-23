@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 
 import yaml
@@ -8,14 +9,13 @@ import MDAnalysis as mda
 import urllib.request
 import seaborn as sns
 
-#from OrderParameter import *
 
 from MDAnalysis.analysis.base import AnalysisBase
 from MDAnalysis.lib.distances import calc_dihedrals
 from MDAnalysis.analysis.dihedrals import Dihedral
 
 import copy
-
+sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, read_mapping_file, read_mapping_filePAIR, make_positive_angles, DihedralFromAtoms, calcDihedrals
 
 
