@@ -140,79 +140,6 @@ class Experiment:
                 continue
         return expIons
  
-       
-####################plot data #########################
-def plotData(simulation, experiment):
-    lipids = simulation.getLipids()
-    for lipid in lipids:
-        fig= plt.figure(figsize=(10,7))
-
-        for key,value in simulation.data[lipid].items():
-        #print (key,value[0][0],value[0][2])
-            plt.gca().invert_yaxis()
-                       
-            if lipid == 'POPG' and 'M_G3C6_M' in key:
-                plt.plot(0,value[0][0],"s", color='red',marker=".", markersize=10)  #color=colors[i],
-                plt.errorbar(0,value[0][0],color='red',yerr=value[0][2])
-            if 'M_G3N6' in key:
-           #     print(key)
-           #     print(value)
-           #     print(simulation.indexingPath)
-                plt.plot(0,float(value[0][0]),"s",color='red',marker=".", markersize=10)
-                plt.errorbar(0,float(value[0][0]),color='red',yerr=float(value[0][2]))
-            if 'M_G3C5_M' in key:
-                plt.plot(1,value[0][0],"s",color='red',marker=".", markersize=10)
-                plt.errorbar(1,value[0][0],color='red',yerr=value[0][2])
-            if 'M_G3C4_M' in key:
-                plt.plot(2,value[0][0],"s",color='red', marker=".", markersize=10)
-                plt.errorbar(2,value[0][0],color='red',yerr=value[0][2])
-            if 'M_G3_M' in key:
-                plt.plot(3,value[0][0],"s",color='red',marker=".", markersize=10)
-                plt.errorbar(3,value[0][0],color='red',yerr=value[0][2])
-            if 'M_G2_M' in key:
-                plt.plot(4,value[0][0],"s",label=simulation.readme.get('SYSTEM')+" "+simulation.readme.get('FF'),color='red', marker=".", markersize=10)
-                plt.errorbar(4,value[0][0],color='red',yerr=value[0][2])
-            if 'M_G1_M' in key:
-                plt.plot(5,value[0][0],"s",color='red',marker=".", markersize=10)
-                plt.errorbar(5,value[0][0],color='red',yerr=value[0][2])
-
-        dataFile = experiment.data
- #   print(dataFile)
-        for key,value in simulation.data[lipid].items():
-            if lipid == 'POPG' and 'M_G3C6_M' in key:
-                plt.plot(0,value[0][0],"s", color='blue',marker=".", markersize=10)  
-                plt.errorbar(0,value[0][0], color='blue',yerr=value[0][1])            
-            if 'M_G3N6' in key:
-                plt.plot(0,value[0][0],"s",color='blue',marker=".", markersize=10)   
-                plt.errorbar(0,value[0][0],color='blue',yerr=value[0][1])
-            if 'M_G3C5_M' in key:
-                plt.plot(1,value[0][0],"s",color='blue',marker=".", markersize=10)
-                plt.errorbar(1,value[0][0],color='blue',yerr=value[0][1])
-            if 'M_G3C4_M' in key:
-                plt.plot(2,value[0][0],"s",color='blue', marker=".", markersize=10)
-                plt.errorbar(2,value[0][0],color='blue',yerr=value[0][1])
-            if 'M_G3_M' in key:
-                plt.plot(3,value[0][0],"s",color='blue',marker=".", markersize=10)
-                plt.errorbar(3,value[0][0],color='blue',yerr=value[0][1])
-            if 'M_G2_M' in key:
-                plt.plot(4,value[0][0],"s",label="experiment " +lipid +" "+str(experiment.readme.get('TEMPERATURE')) + "K",color='blue', marker=".", markersize=10)
-                plt.errorbar(4,value[0][0],color='blue',yerr=value[0][1])
-            if 'M_G1_M' in key:
-                plt.plot(5,value[0][0],"s",color='blue',marker=".", markersize=10)
-                plt.errorbar(5,value[0][0],color='blue',yerr=value[0][1])
-            
-        plt.legend(loc='lower center',ncol=2, fontsize=15, bbox_to_anchor=(0.5, 1.01))
-        plt.ylabel('S_CH', fontsize=20)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-#save figures
-# make path like in the simulation databank!!
-       # plt.savefig('./figures/' + simulation.readme.get('SYSTEM') + '_' + simulation.readme.get('FF') + '.png', bbox_inches='tight')
-        save_plot_path = '../Data/QualityEvaluation/OrderParameters/' + simulation.indexingPath + '/'
-   #     plt.savefig('./figures/' + simulation.readme.get('SYSTEM') + '.png', bbox_inches='tight')
-        plt.savefig(save_plot_path + simulation.readme.get('SYSTEM') + '.png', bbox_inches='tight')
-        plt.close()
-
 ##############################################
 #loop over the simulations in the simulation databank and read simulation readme and order parameter files into objects
 simulations = []
@@ -334,16 +261,16 @@ for experiment in experiments:
                     print(simulation.indexingPath)
                     print(experiment.dataPath)
                     #Add path to experiment into simulation README.yaml
-                    simulation.readme['EXPERIMENT'] = "/".join(experiment.dataPath.split("/")[3:6])
+                    simulation.readme['EXPERIMENT'] = "/".join(experiment.dataPath.split("/")[4:7])
                     print(simulation.readme['EXPERIMENT'])
                     outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
     
                     with open(outfileDICT, 'w') as f:
                         yaml.dump(simulation.readme,f, sort_keys=False)
 print("Found " + str(len(pairs)) + " pairs")  
-#for pair in pairs:
-#    print(pair[0].readme)
-#    print(pair[1].readme)
+for pair in pairs:
+    print(pair[0].readme)
+    print(pair[1].readme)
                        
 
         
