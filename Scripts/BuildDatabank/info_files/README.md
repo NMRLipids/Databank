@@ -50,6 +50,7 @@ DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DOPC | 1,2-dioleoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
+DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
