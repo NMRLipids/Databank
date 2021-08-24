@@ -1,0 +1,20 @@
+# POPS T298K
+# POPS order parameters measured by Tiago Ferreira for NMRlipids IV project 
+# 298K,  lipid:water 60:40 wt%
+#
+# 0 = gamma 
+# 1 = beta  
+# 2 = alpha 
+# 3 = g3 
+# 4 = g2 
+# 5 = g1 
+#label    carbon   hydrogen        OP1    error
+M_G3C5_M M_G3C5H1_M -0.11 0.02
+M_G3C4_M M_G3C4H1_M -0.0 0.02
+M_G3C4_M M_G3C4H2_M 0.09 0.02
+M_G3_M M_G3H1_M -0.21 0.02
+M_G3_M M_G3H2_M -0.21 0.02
+M_G2_M M_G2H1_M -0.18 0.02
+M_G1_M M_G1H1_M -0.13 0.02
+M_G1_M M_G1H2_M 0.0 0.02
+
