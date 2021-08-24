@@ -1,0 +1,28 @@
+#POPC alpha(1) taken from Fig. 5 in Scherer and Seelig EMBO Journal vol.6 no.10 pp.2915-2922, 1987
+#POPC:POPE POPE mole fraction 0.0512820512821
+
+# 0 = gamma = M_G3N6C ...
+# 1 = beta  = M_G3C5H ...
+# 2 = alpha = M_G3C4H ...
+# 3 = g3 = M_G3H ...
+# 4 = g2 = M_G2H ...
+# 5 = g1 = M_G1H ...
+#label carbon hydrogen      Order_Parameter_1    error
+M_G3N6C3_M M_G3N6C3H1_M NaN NaN
+M_G3N6C3_M M_G3N6C3H2_M NaN NaN
+M_G3N6C3_M M_G3N6C3H3_M NaN NaN
+M_G3N6C2_M M_G3N6C2H1_M NaN NaN
+M_G3N6C2_M M_G3N6C2H2_M NaN NaN
+M_G3N6C2_M M_G3N6C2H3_M NaN NaN
+M_G3N6C1_M M_G3N6C1H1_M NaN NaN
+M_G3N6C1_M M_G3N6C1H2_M NaN NaN
+M_G3N6C1_M M_G3N6C1H3_M NaN NaN
+M_G3C5_M M_G3C5H1_M NaN NaN
+M_G3C5_M M_G3C5H2_M NaN NaN
+M_G3C4_M M_G3C4H1_M 0.047802568 0.02
+M_G3C4_M M_G3C4H2_M 0.047802568 0.02
+M_G3_M M_G3H1_M NaN NaN
+M_G3_M M_G3H2_M NaN NaN
+M_G2_M M_G2H1_M NaN NaN
+M_G1_M M_G1H1_M NaN NaN
+M_G1_M M_G1H2_M NaN NaN
