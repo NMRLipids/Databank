@@ -163,6 +163,13 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/'):
                             json_file.close()
                 simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
                 yaml_file_sim.close()
+
+# make empty dictionary for saving paths to matching experimental data entries                
+for simulation in simulations:
+    simulation.readme['EXPERIMENT'] = {}
+    outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
+    with open(outfileDICT, 'w') as f:
+        yaml.dump(simulation.readme,f, sort_keys=False)
                 
 #loop over the experiment entries in the experiment databank and read experiment readme and order parameter files into objects 
 experiments = []                    
@@ -261,7 +268,9 @@ for experiment in experiments:
                     print(simulation.indexingPath)
                     print(experiment.dataPath)
                     #Add path to experiment into simulation README.yaml
-                    simulation.readme['EXPERIMENT'] = "/".join(experiment.dataPath.split("/")[4:7])
+                    #many experiment entries can match to same simulation
+                    exp_doi = experiment.readme['DOI'] 
+                    simulation.readme['EXPERIMENT'][exp_doi] = "/".join(experiment.dataPath.split("/")[4:7])
                     print(simulation.readme['EXPERIMENT'])
                     outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
     
@@ -270,8 +279,7 @@ for experiment in experiments:
 print("Found " + str(len(pairs)) + " pairs")  
 for pair in pairs:
     print(pair[0].readme)
-    print(pair[1].readme)
-                       
+    print(pair[1].readme)                        
 
         
                 
