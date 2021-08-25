@@ -97,17 +97,12 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/'):
                 indexingPath = "/".join(filepath.split("/")[4:8])
                 print(indexingPath)
                 DATAdir = '../../../../tst/FlipFlop/' + indexingPath + '/'                                     #change directory when code works properly!!!
-                #make temporary directory for processing
-                tmp_path = '/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK'
-                dir_tmp = os.path.join(tmp_path, "tmp_6-" + str(randint(100000, 999999)))
-                if (not os.path.isdir(dir_tmp)): 
-                    os.mkdir(dir_tmp)
                 
                 doi = readme['DOI']
                 trj=readme['TRJ'][0][0]
                 tpr=readme['TPR'][0][0]
-                trj_name = dir_tmp + '/' + trj
-                tpr_name = dir_tmp + '/' + tpr
+                trj_name = subdir + '/' + trj
+                tpr_name = subdir + '/' + tpr
                 trj_url = download_link(doi, trj)
                 tpr_url = download_link(doi, tpr)
                 EQtime=float(readme['TIMELEFTOUT'])*1000
@@ -152,7 +147,7 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/'):
                             if hg_z < R_m:
                                 hg_leaflet_fr.append('l1') #in leaflet 1
                             if hg_z > R_m:
-                               hg_leaflet_fr.append('l2') #in leaflet 2
+                                hg_leaflet_fr.append('l2') #in leaflet 2
                                
                         
                         #check if lipid has changed leaflet between frames
