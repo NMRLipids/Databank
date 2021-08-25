@@ -273,7 +273,7 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/f40/bb6/f40bb6ab5d44
                 matrix_file = dataDIR + "/transition_matrix_bins" + str(nbins) + ".txt"
                 
                 # lagtime 
-                lt = str(0)
+                lt = str(0) #???
                 #dn = ???
                 avg_box_z = average_box_z(u, readme)
                 bins_to_txt_file = np.linspace(-0.5*avg_box_z, 0.5*avg_box_z, num=100, endpoint=True)
