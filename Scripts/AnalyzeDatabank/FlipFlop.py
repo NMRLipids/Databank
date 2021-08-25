@@ -127,13 +127,16 @@ for subdir, dirs, files in os.walk(r'../../Data/Simulations/'):
                 dt = u.trajectory.dt
                 start = int(EQtime*dt)
                 flipflops = 0
+                time_diff = 500
+                skip = int(time_diff / dt)
                 
                 frames_lipids = []
                 
                 for lipid in lipids:
                     previous_leaflet = []
-                    for ts in u.trajectory[start:end]:
-                       # print('frame ' + str(ts.frame))
+                    #every 500th frame for checking flip flops
+                    for ts in u.trajectory[start:end:skip]:
+                        print('frame ' + str(ts.frame))
                         headgroup = getHeadgroup(readme, lipid)
                        # print(headgroup)
 
