@@ -308,6 +308,7 @@ if args.q:
                     print(filepath)
                     try:
                         if readmeSim['EXPERIMENT']:
+                            print("toimii")
                             simOPdata = {} #order parameter files for each type of lipid
                             for filename2 in files:
                                 if filename2.endswith('OrderParameters.json'):
@@ -347,66 +348,59 @@ if args.q:
         
             #print(OP_data_lipid)
 
-        # get readme file of the experiment
-            experimentFilepath = "../../../expDATABANK/Data/experiments/" + simulation.readme['EXPERIMENT']
-            READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
-            experiment = Experiment()
-            with open(READMEfilepathExperiment) as yaml_file_exp:
-                readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-                experiment.readme = readmeExp
-               #print(experiment.readme)
-            yaml_file_exp.close()
-
-            lipidExpOPdata = {}
-            try:
-                exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
-            #print(exp_OP_filepath)
-                with open(exp_OP_filepath) as json_file:
-                    lipidExpOPdata = json.load(json_file)
-                json_file.close()
-            
-                simulationREADMEsave = DATAdir + '/README.yaml'
-                with open(simulationREADMEsave, 'w') as f:
-                    yaml.dump(simulation.readme,f, sort_keys=False)
-                f.close()
-            except FileNotFoundError:
-                print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
-                continue
-
-            exp_error = 0.02
-
             OP_qual_data = {}
-        
-            for key, value in lipidExpOPdata.items():
-                if lipidExpOPdata[key][0][0] is not 'NaN':
-                    OP_array = [float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings UNITED ATOM SIMULATIONS ONLY HAVE HYDROGEN MAPPING NAME AS KEY
-                    #print(OP_array)
-                    #print(type(OP_array))
-                    OP_exp = value[0][0]
-                    OP_sim = OP_array[0]
-                    op_sim_sd = OP_array[1] 
-                    op_sim_STEM = OP_array[2] 
+        # go through file paths in simulation.readme['EXPERIMENT']
+            print(simulation.readme['EXPERIMENT'].values())
+            for value in simulation.readme['EXPERIMENT'].values():
+          # get readme file of the experiment
+                experimentFilepath = "../../Data/experiments/" + value
+                print(experimentFilepath)
+                READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
+                experiment = Experiment()
+                with open(READMEfilepathExperiment) as yaml_file_exp:
+                    readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+                    experiment.readme = readmeExp
+                    #print(experiment.readme)
+                yaml_file_exp.close()
 
-                    S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
+                lipidExpOPdata = {}
+                try:
+                    exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
+                #print(exp_OP_filepath)
+                    with open(exp_OP_filepath) as json_file:
+                        lipidExpOPdata = json.load(json_file)
+                    json_file.close()
+            
+                    simulationREADMEsave = DATAdir + '/README.yaml'
+                    with open(simulationREADMEsave, 'w') as f:
+                        yaml.dump(simulation.readme,f, sort_keys=False)
+                    f.close()
+                except FileNotFoundError:
+                    print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
+                    continue
+
+                exp_error = 0.02
+
+                for key, value in lipidExpOPdata.items():
+                    if lipidExpOPdata[key][0][0] is not 'NaN':
+                        OP_array = [float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
+                        #print(OP_array)
+                        #print(type(OP_array))
+                        OP_exp = value[0][0]
+                        OP_sim = OP_array[0]
+                        op_sim_sd = OP_array[1] 
+                        op_sim_STEM = OP_array[2] 
+
+                        S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
              
-                    op_quality = np.absolute(OP_exp - OP_sim)  # OPquality(S_prob, op_sim_STEM) #numpy float must be converted to float
-                #print(type(op_quality))
-                    OP_array.append(op_quality)
-                #print(OP_array)
+                        op_quality = np.absolute(OP_exp - OP_sim)  # OPquality(S_prob, op_sim_STEM) #numpy float must be converted to float
+                    #print(type(op_quality))
+                        OP_array.append(op_quality)
+                    #print(OP_array)
                 
-                    OP_qual_data[key] = OP_array
-                
-#            else:
-#                OP_qual_data[key] = value.append('nan')
-                
-#        outfile = DATAdir + '/' + lipid1 + '_OP_quality.json'
-        
-#        with open(outfile, 'w') as f:
-#            json.dump(OP_qual_data,f)
+                        OP_qual_data[key] = OP_array
 
-#        f.close()  
-        
-        
+            print(OP_qual_data) 
         # quality data should be added into the OrderParameters.json file of the simulation                  
             outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
         
@@ -418,7 +412,7 @@ if args.q:
         
         
         
-      #  print(OP_qual_data)                        
+     #   print(OP_qual_data)                        
                 
                 
                 
