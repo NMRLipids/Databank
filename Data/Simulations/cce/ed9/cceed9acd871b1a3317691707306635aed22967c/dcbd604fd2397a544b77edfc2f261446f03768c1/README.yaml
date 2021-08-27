@@ -1,0 +1,95 @@
+DOI: 10.5281/zenodo.1009027
+SOFTWARE: gromacs
+TRJ:
+- - DPPC_512_NaCl_150mM_338K_md.xtc
+TPR:
+- - DPPC_512_NaCl_150mM_338K_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DPPC: DPPC
+SOL: SOL
+SOD: NA
+CLA: CL
+MAPPING_DICT:
+  DPPC: mappingDPPCcharmm.txt
+  SOL: mappingSPCwater.txt
+  SOD: mappingNA.txt
+  CLA: mappingCL.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Martinez-Seara, Hector
+SYSTEM: DPPC_512_NaCl_150mM_338K
+SOFTWARE_VERSION: 5.0.4
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT:
+- - DPPC_512_NaCl_150mM_338K_md.cpt
+LOG: null
+TOP:
+- - DPPC_512_NaCl_150mM_338K_md.top
+TRAJECTORY_SIZE: 2396743500
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 256
+- 256
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDLIPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDDOPC:
+- 0
+- 0
+NDOPS:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NDAPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 55
+NCLA: 55
+NSOL: 20480
+TRJLENGTH: 500100.0
+TEMPERATURE: 338.0
+NUMBER_OF_ATOMS: 128110
+DATEOFRUNNING: 27/08/2021
