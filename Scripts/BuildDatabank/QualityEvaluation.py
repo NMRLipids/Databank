@@ -280,17 +280,69 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     return P_S
     
 # quality of simulated order parameter
-def OPquality(P_S,op_sim_STEM):
-   # print('probability')
-    #print(P_S)
-    if P_S != 0:
-        quality = 1-math.log(P_S) #/op_sim_STEM     # math.log(P_S/op_sim_STEM)      #/ math.sqrt(op_sim_STEM) #/ (op_sim_STEM*op_sim_STEM)
-    else:
-        quality = 0
+#def OPquality(P_S,op_sim_STEM):
+#   # print('probability')
+#    #print(P_S)
+#    if P_S != 0:
+#        quality = 1-math.log(P_S) #/op_sim_STEM     # math.log(P_S/op_sim_STEM)      #/ math.sqrt(op_sim_STEM) #/ (op_sim_STEM*op_sim_STEM)
+#    else:
+#        quality = 0
    # quality_float = quality.item()
  #   print('quality')
  #   print(quality)
+#    return quality
+    
+#
+def OPquality(OP_exp, OP_sim):
+    quality = np.absolute(OP_exp - OP_sim)
     return quality
+    
+# quality of molecule fragments
+
+def evaluated_percentage(fragment, exp_op_data):
+    count_value = 0
+    fragment_size = 0
+    for key, value in exp_op_data.items():
+        if fragment in key:
+            fragment_size += 1
+            if value[0][0] != 'nan':
+                count_value += 1
+    if fragment_size != 0:
+        return count_value / fragment_size
+    else:
+        return 0
+    
+def carbonError(OP_sim, OP_exp):
+    
+    E_i = 0
+    quality = OPquality(OP_exp, OP_sim)
+
+    if quality > 0.02:
+        E_i = quality - 0.02
+    else:
+        E_i = 0
+    return E_i  
+
+
+
+def fragmentQuality(fragment, exp_op_data, sim_op_data):
+    p_F = evaluated_percentage(fragment, exp_op_data)
+    E_sum = 0
+    if p_F != 0:
+        for key_exp, value_exp in exp_op_data.items():
+            #  print(key_exp)
+            #  print(value_exp)
+            if fragment in key_exp and value_exp[0][0] != 'nan':
+                OP_exp = value_exp[0][0]
+                print(OP_exp)
+                OP_sim = sim_op_data[key_exp][0]
+                print(OP_sim)
+                E_sum += carbonError(OP_exp, OP_sim)
+        E_F = E_sum / p_F
+        return E_F
+    else:
+        return 'nan'
+
     
 ###################################################################################################
 if args.q:
@@ -308,7 +360,7 @@ if args.q:
                     print(filepath)
                     try:
                         if readmeSim['EXPERIMENT']:
-                            print("toimii")
+
                             simOPdata = {} #order parameter files for each type of lipid
                             for filename2 in files:
                                 if filename2.endswith('OrderParameters.json'):
@@ -340,14 +392,17 @@ if args.q:
     # read existing experimental values and mapping names to match with simulated CH bonds
 
         for lipid1 in simulation.getLipids():
-            print(lipid1)
+            #print(lipid1)
             print(simulation.indexingPath)
-            print(simulation.data.keys())
+            #print(simulation.data.keys())
         
-            OP_data_lipid = simulation.data[lipid1]
-        
-            #print(OP_data_lipid)
-
+           # OP_data_lipid = simulation.data[lipid1]
+            OP_data_lipid = {}
+            #convert elements to float because in some files the elements are strings
+            for key, value in simulation.data[lipid1].items():
+                OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
+                OP_data_lipid[key] = OP_array
+            
             OP_qual_data = {}
         # go through file paths in simulation.readme['EXPERIMENT']
             print(simulation.readme['EXPERIMENT'].values())
@@ -383,20 +438,20 @@ if args.q:
 
                 for key, value in lipidExpOPdata.items():
                     if lipidExpOPdata[key][0][0] is not 'NaN':
-                        OP_array = [float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
-                        #print(OP_array)
+                        OP_array = OP_data_lipid[key] #[float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
+                        print(OP_array)
                         #print(type(OP_array))
                         OP_exp = value[0][0]
                         OP_sim = OP_array[0]
-                        op_sim_sd = OP_array[1] 
-                        op_sim_STEM = OP_array[2] 
+                        #op_sim_sd = OP_array[1] 
+                        #op_sim_STEM = OP_array[2] 
 
-                        S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
+                        #S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
              
-                        op_quality = np.absolute(OP_exp - OP_sim)  # OPquality(S_prob, op_sim_STEM) #numpy float must be converted to float
-                    #print(type(op_quality))
+                        op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
+                       # print(type(op_quality))
                         OP_array.append(op_quality)
-                    #print(OP_array)
+                        #print(OP_array)
                 
                         OP_qual_data[key] = OP_array
 
@@ -407,8 +462,29 @@ if args.q:
             with open(outfile, 'w') as f:
                 json.dump(OP_qual_data,f)
             f.close()
-        
-       
+            
+        # calculate quality for molecule fragments headgroup, sn-1, sn-2
+            headgroup = fragmentQuality('M_G3', lipidExpOPdata, OP_data_lipid)
+            sn1 = fragmentQuality('M_G1', lipidExpOPdata, OP_data_lipid)
+            sn2 = fragmentQuality('M_G2', lipidExpOPdata, OP_data_lipid)
+            
+            fragment_quality = {}
+            fragment_quality['headgroup'] = headgroup
+            fragment_quality['sn-1'] = sn1
+            fragment_quality['sn-2'] = sn2
+           
+            print('headgroup ')
+            print(headgroup)
+            print('sn1 ') 
+            print(sn1)
+            print('sn2 ') 
+            print(sn2) 
+            
+            fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+            
+            with open(fragment_quality_file, 'w') as f:
+                json.dump(fragment_quality,f)
+            f.close()
         
         
         
