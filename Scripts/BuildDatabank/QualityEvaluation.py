@@ -303,10 +303,11 @@ def evaluated_percentage(fragment, exp_op_data):
     count_value = 0
     fragment_size = 0
     for key, value in exp_op_data.items():
-        if fragment in key:
-            fragment_size += 1
-            if value[0][0] != 'nan':
-                count_value += 1
+        for f in fragment:
+            if f in key:
+                fragment_size += 1
+                if value[0][0] != 'nan':
+                    count_value += 1
     if fragment_size != 0:
         return count_value / fragment_size
     else:
@@ -332,16 +333,17 @@ def fragmentQuality(fragment, exp_op_data, sim_op_data):
         for key_exp, value_exp in exp_op_data.items():
             #  print(key_exp)
             #  print(value_exp)
-            if fragment in key_exp and value_exp[0][0] != 'nan':
-                OP_exp = value_exp[0][0]
-                print(OP_exp)
-                OP_sim = sim_op_data[key_exp][0]
-                print(OP_sim)
-                E_sum += carbonError(OP_exp, OP_sim)
+            for f in fragment:
+                if f in key_exp and value_exp[0][0] != 'nan':
+                    OP_exp = value_exp[0][0]
+                    print(OP_exp)
+                    OP_sim = sim_op_data[key_exp][0]
+                    print(OP_sim)
+                    E_sum += carbonError(OP_exp, OP_sim)
         E_F = E_sum / p_F
-        return E_F
     else:
-        return 'nan'
+        E_F = 'nan'
+    return E_F
 
     
 ###################################################################################################
@@ -464,9 +466,9 @@ if args.q:
             f.close()
             
         # calculate quality for molecule fragments headgroup, sn-1, sn-2
-            headgroup = fragmentQuality('M_G3', lipidExpOPdata, OP_data_lipid)
-            sn1 = fragmentQuality('M_G1', lipidExpOPdata, OP_data_lipid)
-            sn2 = fragmentQuality('M_G2', lipidExpOPdata, OP_data_lipid)
+            headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
+            sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
+            sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
             
             fragment_quality = {}
             fragment_quality['headgroup'] = headgroup
