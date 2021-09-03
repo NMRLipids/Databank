@@ -35,7 +35,7 @@ If atoms in a lipid belong to different residues (typical situation in Amber for
 give the name of the head group residue here, and add the residue name of each atom to the third column in the mapping file (see below). 
 If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules 
 to the lipids\_dict, molecules\_dict, molecule\_numbers\_dict and molecule\_ff\_dict in 
-the [AddData.py](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/AddData.py) script, as well as to table below. 
+the [databankLibrary.py](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py), as well as to table below. 
 
 Abbreviation | Molecule name 
 ------------ | -------------
