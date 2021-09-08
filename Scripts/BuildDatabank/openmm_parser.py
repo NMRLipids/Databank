@@ -32,7 +32,7 @@ def read_inp_input(input):
 
             split = line.split()
 
-            if len(split) > 0:
+            if len(split) > 2:
 
                 tmp_type.append(split[0])
                 tmp_value.append(split[2])
@@ -64,7 +64,7 @@ class openmmParser:
     def __init__(self, filename, type):
         [properties, values] = openmm_input(filename, type)
         print(properties)
-        self.temperature = values[properties.index('temp')]
+        self.temperature = float(values[properties.index('temp')])
  #       self.pressure = values[properties.index('p_ref')]
  #       self.ptype = values[properties.index('p_type')]
  #       self.dt = values[properties.index('dt')]

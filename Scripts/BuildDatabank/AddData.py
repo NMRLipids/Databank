@@ -51,6 +51,8 @@ import sys
 #for building hydrogens to united atom simulations 
 import buildH_calcOP_test
 
+import openmm_parser
+
 #import databank dictionaries
 from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
@@ -421,17 +423,7 @@ if sim['SOFTWARE'] == 'gromacs':
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
 elif sim['SOFTWARE'] == 'openMM':
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-    try:
-        if sim['XML']:
-            top = str(dir_tmp) + '/' + sim['XML'][0][0] # does xml contain topology???
-    except KeyError:
-        print('no xml file given in the info file')
-    try:
-        if sim['INP']:
-            top = str(dir_tmp) + '/' + sim['TOP'][0][0]
-    except KeyError:
-        print('xml and inp files are missing')
-        exit()
+    top = str(dir_tmp) + '/' + sim['PDB'][0][0]
 
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
@@ -556,17 +548,17 @@ if sim['SOFTWARE'] == 'gromacs':
 #read temperature from xml or inp
 elif sim['SOFTWARE'] == 'openMM':
 #Use parser written by batuhan to read inp and xml files
-    try:
-        if sim['INP']:
-            inp_file = str(dir_tmp) + '/' + sim['INP'][0][0]
-            with open(inp_file, 'rt') as inp_info:
-                for line in inp_info:
-                    if 'temp' in line:
-                        print(float(line.split()[1]))
-                        sim['TEMPERATURE']=float(line.split()[1])
-    except KeyError:
-        print('xml and inp files are missing')
-        exit()
+    for key in ['INP','XML']:
+        try:
+            file1 = str(dir_tmp) + '/' + sim[key][0][0]
+        except KeyError:
+            print(key + ' file does not exist')
+            continue
+        else:
+            type = key.lower()
+            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
+            break
+
 print("Parameters read from input files:")
 print("TEMPERATURE: " + str(sim['TEMPERATURE']))
 print("LENGTH OF THE TRAJECTORY: " + str(sim['TRJLENGTH']))
@@ -621,9 +613,9 @@ print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
 # Batuhan: Creating a nested directory structure as discussed on the Issue here https://github.com/NMRLipids/NMRlipidsVIpolarizableFFs/issues/3
     
-head_dir = sim_hashes.get('TPR')[0][1][0:3]
-sub_dir1 = sim_hashes.get('TPR')[0][1][3:6]
-sub_dir2 = sim_hashes.get('TPR')[0][1]
+head_dir = sim_hashes.get('TRJ')[0][1][0:3]
+sub_dir1 = sim_hashes.get('TRJ')[0][1][3:6]
+sub_dir2 = sim_hashes.get('TRJ')[0][1]
 sub_dir3 = sim_hashes.get('TRJ')[0][1]
 
 print("Creating databank directories.")
