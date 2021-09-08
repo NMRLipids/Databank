@@ -412,27 +412,27 @@ sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 
 print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
-# OTHER SOFTWARES THAN GROMACS!!!!
 top = ''
 traj = ''
 
-
+# OTHER SOFTWARES THAN GROMACS!!!!
 if sim['SOFTWARE'] == 'gromacs':
     top = str(dir_tmp) + '/' + sim['TPR'][0][0]
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'amber':                    #CHECK IF THESE WORK
-    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
+elif sim['SOFTWARE'] == 'openMM':
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'namd':
-    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'charmm':
-    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'openmm':
-    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-    
+    try:
+        if sim['XML']:
+            top = str(dir_tmp) + '/' + sim['XML'][0][0] # does xml contain topology???
+    except KeyError:
+        print('no xml file given in the info file')
+    try:
+        if sim['INP']:
+            top = str(dir_tmp) + '/' + sim['TOP'][0][0]
+    except KeyError:
+        print('xml and inp files are missing')
+        exit()
+
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
@@ -543,18 +543,30 @@ trj_length = Nframes * timestep
 sim['TRJLENGTH'] = trj_length
 
 #Read temperature from tpr
-file1 = str(dir_tmp) + '/tpr.txt'
+if sim['SOFTWARE'] == 'gromacs':
+    file1 = str(dir_tmp) + '/tpr.txt'
 
-print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
-os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
+    print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
+    os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
 
-with open(file1, 'rt') as tpr_info:
-    for line in tpr_info:
-        if 'ref-t' in line:
-            sim['TEMPERATURE']=float(line.split()[1])
-    
-
-
+    with open(file1, 'rt') as tpr_info:
+        for line in tpr_info:
+            if 'ref-t' in line:
+                sim['TEMPERATURE']=float(line.split()[1])
+#read temperature from xml or inp
+elif sim['SOFTWARE'] == 'openMM':
+#Use parser written by batuhan to read inp and xml files
+    try:
+        if sim['INP']:
+            inp_file = str(dir_tmp) + '/' + sim['INP'][0][0]
+            with open(inp_file, 'rt') as inp_info:
+                for line in inp_info:
+                    if 'temp' in line:
+                        print(float(line.split()[1]))
+                        sim['TEMPERATURE']=float(line.split()[1])
+    except KeyError:
+        print('xml and inp files are missing')
+        exit()
 print("Parameters read from input files:")
 print("TEMPERATURE: " + str(sim['TEMPERATURE']))
 print("LENGTH OF THE TRAJECTORY: " + str(sim['TRJLENGTH']))
