@@ -54,196 +54,204 @@ class Experiment:
 # # Analysis starts here
 
 if args.op:
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): 
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'):
+        FileFound = False
+        
         for filename1 in files:
-            filepath = subdir + os.sep + filename1  
+            filepath = subdir + os.sep + filename1
+            #print(filepath)
             if filepath.endswith("OrderParameters.json"): 
-               # print("Order parameters exist in " + filepath)               
+                print("Order parameters exist in " + filepath)               
+                FileFound = True
+
+        for filename1 in files:
+            if FileFound:
                 break
-            else:      
-                if filepath.endswith("README.yaml"):
-                    READMEfilepathSimulation = subdir + '/README.yaml'
-                    with open(READMEfilepathSimulation) as yaml_file_sim:
-                        sim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
-                        indexingPath = "/".join(filepath.split("/")[4:8])
-                        print(indexingPath)
-                        #download files to
-                        DATAdir = '../../Data/Simulations/' + indexingPath
-                      #  dir_wrk = "/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/"
-                      #  dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
-                       # if (not os.path.isdir(dir_tmp)): 
-                       #     os.mkdir(dir_tmp)
+            filepath = subdir + os.sep + filename1
+            print(filepath)
+            if filepath.endswith("README.yaml"):
+                READMEfilepathSimulation = subdir + '/README.yaml'
+                with open(READMEfilepathSimulation) as yaml_file_sim:
+                    sim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
+                    indexingPath = "/".join(filepath.split("/")[4:8])
+                    print(indexingPath)
+                    #download files to
+                    DATAdir = '../../Data/Simulations/' + indexingPath
+                    #  dir_wrk = "/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/"
+                    #  dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+                    # if (not os.path.isdir(dir_tmp)): 
+                    #     os.mkdir(dir_tmp)
                 
-                        print("Calculating order parameters for all C-H bonds using the mapping file")
+                    print("Calculating order parameters for all C-H bonds using the mapping file")
                 
-                        doi = sim['DOI']
-                        trj=sim['TRJ'][0][0]
-                        tpr=sim['TPR'][0][0]
-                        trj_name = DATAdir + '/' + trj
-                        tpr_name = DATAdir + '/' + tpr
-                        trj_url = download_link(doi, trj)
-                        tpr_url = download_link(doi, tpr)
+                    doi = sim['DOI']
+                    trj=sim['TRJ'][0][0]
+                    tpr=sim['TPR'][0][0]
+                    trj_name = DATAdir + '/' + trj
+                    tpr_name = DATAdir + '/' + tpr
+                    trj_url = download_link(doi, trj)
+                    tpr_url = download_link(doi, tpr)
                 
                 
-                        #Download tpr and xtc files to a tmp directory in dir wrk defined in readme file / or should these be put into the same directory as README.yaml ???
-                        if (not os.path.isfile(tpr_name)):
-                            response = urllib.request.urlretrieve(tpr_url, tpr_name)
+                    #Download tpr and xtc files to a tmp directory in dir wrk defined in readme file / or should these be put into the same directory as README.yaml ???
+                    if (not os.path.isfile(tpr_name)):
+                        response = urllib.request.urlretrieve(tpr_url, tpr_name)
                         
-                        if (not os.path.isfile(trj_name)):
-                            response = urllib.request.urlretrieve(trj_url, trj_name)
+                    if (not os.path.isfile(trj_name)):
+                        response = urllib.request.urlretrieve(trj_url, trj_name)
                 
                 
                 
-                        software=sim.get('SOFTWARE')
-                        EQtime=float(sim.get('TIMELEFTOUT'))*1000
-                        unitedAtom = sim.get('UNITEDATOM_DICT')
+                    software=sim.get('SOFTWARE')
+                    EQtime=float(sim.get('TIMELEFTOUT'))*1000
+                    unitedAtom = sim.get('UNITEDATOM_DICT')
                 
                 
     
-                        ext=str(trj)[-3:] # getting the trajectory extension
-                  #  print("Trajectory format: " + ext)
-                  # BATUHAN: Adding a few lines to convert the trajectory into .xtc using MDTRAJ
-                  # We will need users to install MDTRAJ in their system so that we can convert other trajectories into xtc
-
-                        if ext != "xtc" and ext != "trr":
+                    ext=str(trj)[-3:] # getting the trajectory extension
+                    #  print("Trajectory format: " + ext)
+                    # BATUHAN: Adding a few lines to convert the trajectory into .xtc using MDTRAJ
+                    # We will need users to install MDTRAJ in their system so that we can convert other trajectories into xtc
+                    
+                    if ext != "xtc" and ext != "trr":
          
-                            print("converting the trajectory into xtc")
+                        print("converting the trajectory into xtc")
         
-                            pdb = sim.get('PDB')
-                            output_traj = str(DATAdir) + '/' + 'tmp_converted.xtc'
-                            input_traj = str(DATAdir) + '/' + trj
-                            input_pdb = str(DATAdir) + '/' + pdb
+                        pdb = sim.get('PDB')
+                        output_traj = str(DATAdir) + '/' + 'tmp_converted.xtc'
+                        input_traj = str(DATAdir) + '/' + trj
+                        input_pdb = str(DATAdir) + '/' + pdb
       
-                            if os.path.isfile(output_traj): # when we're done with the converted trajectory we can simply remove it
-                                os.system('rm {output_traj}')
+                        if os.path.isfile(output_traj): # when we're done with the converted trajectory we can simply remove it
+                            os.system('rm {output_traj}')
         
-                            os.system('echo System | mdconvert {input_traj} -o {output_traj} -t {input_pdb} --force # force overwrite')
+                        os.system('echo System | mdconvert {input_traj} -o {output_traj} -t {input_pdb} --force # force overwrite')
         
-                            # SAMULI: this xtcwhole does not necessarily have molecules as whole. Only if {input_traj} has.
-                            xtcwhole = str(DATAdir) + '/' + 'tmp_converted.xtc'
-                            tpr=input_pdb
+                        # SAMULI: this xtcwhole does not necessarily have molecules as whole. Only if {input_traj} has.
+                        xtcwhole = str(DATAdir) + '/' + 'tmp_converted.xtc'
+                        tpr=input_pdb
         
-                            print("trajectory conversion is completed")
+                        print("trajectory conversion is completed")
         
-                        else:
+                    else:
     
-                            xtc = str(DATAdir) + '/' + str(trj)  
-                            tpr = str(DATAdir) + '/' + str(tpr)
-                            xtcwhole=str(DATAdir) + '/whole.xtc'
+                        xtc = str(DATAdir) + '/' + str(trj)  
+                        tpr = str(DATAdir) + '/' + str(tpr)
+                        xtcwhole=str(DATAdir) + '/whole.xtc'
 
-                        print("Make molecules whole in the trajectory")
-                        os.system('echo System | gmx trjconv -f ' + xtc + ' -s ' + tpr + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+                    print("Make molecules whole in the trajectory")
+                    os.system('echo System | gmx trjconv -f ' + xtc + ' -s ' + tpr + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     
-                        if unitedAtom:
-                            for key in sim['UNITEDATOM_DICT']:
-                            #construct order parameter definition file for CH bonds from mapping file
-                                def_file = open(str(DATAdir) + '/' + key + '.def', 'w')
+                    if unitedAtom:
+                        for key in sim['UNITEDATOM_DICT']:
+                        #construct order parameter definition file for CH bonds from mapping file
+                            def_file = open(str(DATAdir) + '/' + key + '.def', 'w')
 
-                                mapping_file = sim['MAPPING_DICT'][key]
-                                previous_line = ""
+                            mapping_file = sim['MAPPING_DICT'][key]
+                            previous_line = ""
             
-                                with open('./mapping_files/'+mapping_file, "r") as f:
-                                    for line in f.readlines():
-                                        if not line.startswith("#"):
-                                            regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                                            regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                                            regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                                            regexp2_C = re.compile(r'M_G[0-9]_M')
+                            with open('./mapping_files/'+mapping_file, "r") as f:
+                                for line in f.readlines():
+                                    if not line.startswith("#"):
+                                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+                                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+                                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+                                        regexp2_C = re.compile(r'M_G[0-9]_M')
 
-                                            if regexp1_C.search(line) or regexp2_C.search(line):
-                                                atomC = line.split()
-                                                atomH = []
-                                            elif regexp1_H.search(line) or regexp2_H.search(line):
-                                                atomH = line.split()
-                                            else:
-                                                atomC = []
-                                                atomH = []
+                                        if regexp1_C.search(line) or regexp2_C.search(line):
+                                            atomC = line.split()
+                                            atomH = []
+                                        elif regexp1_H.search(line) or regexp2_H.search(line):
+                                            atomH = line.split()
+                                        else:
+                                            atomC = []
+                                            atomH = []
 
-                                            if atomH:
-                                                items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-                                                def_line = items[2] + " " + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-                                                if def_line != previous_line:
-                                                    def_file.write(def_line)
-                                                    print(def_line)
-                                                    previous_line = def_line
-                                def_file.close()
+                                        if atomH:
+                                            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+                                            def_line = items[2] + " " + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+                                            if def_line != previous_line:
+                                                def_file.write(def_line)
+                                                print(def_line)
+                                                previous_line = def_line
+                            def_file.close()
                         #Add hydrogens to trajectory and calculate order parameters with buildH
-                            ordPfile = str(DATAdir) + '/' + key + 'OrderParameters.dat' 
-                            topfile = str(DATAdir) + '/frame0.gro'
+                        ordPfile = str(DATAdir) + '/' + key + 'OrderParameters.dat' 
+                        topfile = str(DATAdir) + '/frame0.gro'
                         
-                            os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr + ' -dump 0 -o ' + topfile )
+                        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr + ' -dump 0 -o ' + topfile )
                          
-                            deffile = str(DATAdir) + '/' + key + '.def' 
-                            lipidname = sim['UNITEDATOM_DICT'][key]
-                    #    print(lipidname)
-                            buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+                        deffile = str(DATAdir) + '/' + key + '.def' 
+                        lipidname = sim['UNITEDATOM_DICT'][key]
+                        #    print(lipidname)
+                        buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
 
-                            outfile=open(ordPfile,'w')
-                            line1="Atom     Average OP     OP stem"+'\n'
-                            outfile.write(line1)
+                        outfile=open(ordPfile,'w')
+                        line1="Atom     Average OP     OP stem"+'\n'
+                        outfile.write(line1)
         
-                            data = {}
-                            outfile2=str(DATAdir) + '/' + key + 'OrderParameters.json'
+                        data = {}
+                        outfile2=str(DATAdir) + '/' + key + 'OrderParameters.json'
         
-                            with open(ordPfile + '.jmelcr_style.out') as OPfile:
-                                lines=OPfile.readlines()
-                                for line in lines:
-                                    if "#" in line:
-                                        continue
-                                    line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
+                        with open(ordPfile + '.jmelcr_style.out') as OPfile:
+                            lines=OPfile.readlines()
+                            for line in lines:
+                                if "#" in line:
+                                    continue
+                                line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
+                                outfile.write(line2)
+
+                                OPname = line.split()[0] + " " + line.split()[1]
+                                OPvalues = [line.split()[5], line.split()[6] ,line.split()[7]]
+                                data[str(OPname)]=[]
+                                data[str(OPname)].append(OPvalues)
+        
+                            with open(outfile2, 'w') as f:
+                                json.dump(data,f)
+
+                        outfile.close()
+                        outfile.close()
+
+                        # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
+                        # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
+                    else:
+                        trj = str(DATAdir) + '/' + str(trj)
+                        gro = str(DATAdir) + '/conf.gro'
+
+                        #make gro file
+                        print("\n Makin gro file")
+                        os.system('echo System | gmx trjconv -f '+trj+' -s '+tpr+' -dump 0 -o ' +gro)
+                    
+                        for key in sim['MAPPING_DICT']:
+                            if key in lipids_dict.keys(): 
+                                mapping_file = sim['MAPPING_DICT'][key]
+                                resname = sim[key]
+                                OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,resname)
+
+                                outfile=open(str(DATAdir) + '/' + key + 'OrderParameters.dat','w')
+                                line1="Atom     Average OP     OP stem"+'\n'
+                                outfile.write(line1)
+    
+                                data = {}
+                                outfile2=str(DATAdir) + '/' + key + 'OrderParameters.json' 
+
+                                for i,op in enumerate(OrdParam):
+                                    resops =op.get_op_res
+                                    (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP
+                                    line2=str(op.name)+" "+str(op.avg)+" "+str(op.stem)+'\n'
                                     outfile.write(line2)
-
-                                    OPname = line.split()[0] + " " + line.split()[1]
-                                    OPvalues = [line.split()[5], line.split()[6] ,line.split()[7]]
-                                    data[str(OPname)]=[]
-                                    data[str(OPname)].append(OPvalues)
+    
+                                    data[str(op.name)]=[]
+                                    data[str(op.name)].append(op.get_avg_std_stem_OP)
         
                                 with open(outfile2, 'w') as f:
                                     json.dump(data,f)
-
-                            outfile.close()
-                            outfile.close()
-
-                           # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
-                           # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
-                        else:
-                            trj = str(DATAdir) + '/' + str(trj)
-                            gro = str(DATAdir) + '/conf.gro'
-
-                        #make gro file
-                            print("\n Makin gro file")
-                            os.system('echo System | gmx trjconv -f '+trj+' -s '+tpr+' -dump 0 -o ' +gro)
-                    
-                            for key in sim['MAPPING_DICT']:
-                                if key in lipids_dict.keys(): 
-                                    mapping_file = sim['MAPPING_DICT'][key]
-                                    resname = sim[key]
-                                    OrdParam=find_OP('./mapping_files/'+mapping_file,gro,xtcwhole,resname)
-
-                                    outfile=open(str(DATAdir) + '/' + key + 'OrderParameters.dat','w')
-                                    line1="Atom     Average OP     OP stem"+'\n'
-                                    outfile.write(line1)
+                                outfile.close()
+                                f.close()
+                                # os.system('cp ' + str(dir_path) + '/' + key + 'OrderParameters.dat ' + DATAdir) #MUUTA
+                                #os.system('cp ' +str(dir_path) + '/' + key + 'OrderParameters.json ' + DATAdir) #MUUTA
     
-                                    data = {}
-                                    outfile2=str(DATAdir) + '/' + key + 'OrderParameters.json' 
-
-                                    for i,op in enumerate(OrdParam):
-                                        resops =op.get_op_res
-                                        (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP
-                                        line2=str(op.name)+" "+str(op.avg)+" "+str(op.stem)+'\n'
-                                        outfile.write(line2)
-    
-                                        data[str(op.name)]=[]
-                                        data[str(op.name)].append(op.get_avg_std_stem_OP)
-        
-                                    with open(outfile2, 'w') as f:
-                                        json.dump(data,f)
-                                    outfile.close()
-                                    f.close()
-                                   # os.system('cp ' + str(dir_path) + '/' + key + 'OrderParameters.dat ' + DATAdir) #MUUTA
-                                    #os.system('cp ' +str(dir_path) + '/' + key + 'OrderParameters.json ' + DATAdir) #MUUTA
-    
-                        print("Order parameters calculated and saved to " + DATAdir)
+                    print("Order parameters calculated and saved to " + DATAdir)
                   
 #################################
 #Quality evaluation of simulated data
