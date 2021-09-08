@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.2580153
+
+SOFTWARE: gromacs
+TRJ: dm_popg_pope_3_1_charmm.xtc
+TPR: md_03.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+POPG: POPG
+POPE: POPE
+SOL: SOL
+SOD: NA
+CLA: CL
+
+MAPPING_DICT:
+ POPG: mappingPOPGcharmm.txt 
+ POPE: mappingPOPEcharmm.txt  
+ SOL: mappingTIP3Pwater.txt
+ SOD: mappingNA.txt
+ CLA: mappingCL.txt
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: PEÓN, Antonio
+
+SYSTEM: 374POPG_126POPE_25000SOL_423SOD_49CLA_310K
+SOFTWARE_VERSION: 5.1.2
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
