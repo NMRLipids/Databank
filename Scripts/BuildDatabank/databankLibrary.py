@@ -507,7 +507,11 @@ charmm_dict = {}
 openmm_dict = {
                'TRJ' : {"REQUIRED": True,
                         "TYPE" : "files",
+<<<<<<< HEAD
                         "EXTENSION" : ("xtc","trr","nc","ncdf","trj","mdcrd","dcd",),
+=======
+                        "EXTENSION" : ("xtc","trr","nc","ncdf","trj", "mdcrd", "dcd"),
+>>>>>>> 80ac025a9aab677ed3d679c0537251c9582c301a
                        },
                'PDB' : {"REQUIRED": True,
                         "TYPE" : "file",
