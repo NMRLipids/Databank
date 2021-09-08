@@ -511,7 +511,7 @@ charmm_dict = {}
 openmm_dict = {
                'TRJ' : {"REQUIRED": True,
                         "TYPE" : "files",
-                        "EXTENSION" : ("xtc","trr",),
+                        "EXTENSION" : ("xtc","trr","nc","ncdf","trj", "mdcrd", "dcd"),
                        },
                'PDB' : {"REQUIRED": True,
                         "TYPE" : "file",
@@ -545,7 +545,7 @@ openmm_dict = {
                             "TYPE" : "string",
                            },
             'TEMPERATURE' : {"REQUIRED": False,
-                            "TYPE" : "integer",
+                            "TYPE" : "float",
                             },
              'TRJLENGTH' : {"REQUIRED": False,
                            "TYPE" : "integer",
