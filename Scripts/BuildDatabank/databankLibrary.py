@@ -498,10 +498,6 @@ namd_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
               }
           
 # CHARMM
@@ -511,7 +507,7 @@ charmm_dict = {}
 openmm_dict = {
                'TRJ' : {"REQUIRED": True,
                         "TYPE" : "files",
-                        "EXTENSION" : ("xtc","trr",),
+                        "EXTENSION" : ("xtc","trr","nc","ncdf","trj","mdcrd","dcd",),
                        },
                'PDB' : {"REQUIRED": True,
                         "TYPE" : "file",
@@ -521,14 +517,18 @@ openmm_dict = {
                         "TYPE" : "file",
                         "EXTENSION" : ("psf",),
                        },
-               'STATE' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
+               'XML' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
                         "TYPE" : "file",
-                        "EXTENSION" : ("xml"),
-                            },
-               'INPUT' : {"REQUIRED" : False, # input file used to run the simulation
-                          "TYPE" : "file",
-                          "EXTENSION" : ("inp"),
-                          },
+                        "EXTENSION" : ("xml",),
+                        },
+               'CHK' : {"REQUIRED" : False,
+                        "TYPE" : "file",
+                        "EXTENSION" : ("chk",),
+                       },
+               'INP' : {"REQUIRED" : False, # input file used to run the simulation
+                        "TYPE" : "file",
+                        "EXTENSION" : ("inp",),
+                        },
                'FF'  : {"REQUIRED": False,
                         "TYPE" : "string",
                        },
@@ -545,7 +545,7 @@ openmm_dict = {
                             "TYPE" : "string",
                            },
             'TEMPERATURE' : {"REQUIRED": False,
-                            "TYPE" : "integer",
+                            "TYPE" : "float",
                             },
              'TRJLENGTH' : {"REQUIRED": False,
                            "TYPE" : "integer",
@@ -579,15 +579,10 @@ openmm_dict = {
                               },
             'TRAJECTORY_SIZE' : {"REQUIRED": False,
                                "TYPE" : "integer",
-                              },    
+                              },
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
-                          },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
-
+                          }
                }
 
 # SOFTWARE
