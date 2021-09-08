@@ -7,7 +7,7 @@ INP: step8_production_joe.inp
 PREEQTIME: 0
 TIMELEFTOUT: 0
 POPC: POPC
-CHOL: CHOL
+CHOL: CHL1
 SOL: TIP3
 MAPPING_DICT:
   POPC: mappingPOPCcharmm.txt
