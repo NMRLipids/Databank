@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import argparse
+import decimal as dc
 
 from random import randint
 
@@ -270,22 +271,20 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
     a = OP_exp - exp_error
     b = OP_exp + exp_error
-    P_S = norm.cdf(b, loc=OP_sim, scale=op_sim_sd) - norm.cdf(a, loc=OP_sim, scale=op_sim_sd)
-
-    if OP_exp > 0 or OP_exp < 0:
-        print('experiment OP')
-        print(OP_exp,exp_error)
-        print('simulation OP')
-        print(OP_sim,op_sim_sd)
-        print('b')
-        print(norm.cdf(b, loc=OP_sim, scale=op_sim_sd))
-        print('a')
-        print(norm.cdf(a, loc=OP_sim, scale=op_sim_sd))
-        
-
-        print('P')
-        print(P_S)
-    return P_S
+    #P_S = norm.cdf(b, loc=OP_sim, scale=op_sim_sd) - norm.cdf(a, loc=OP_sim, scale=op_sim_sd)
+    #changing to survival function to increase precision, note scaling. Must be recoded to increase precision still 
+    P_S = -norm.sf(b, loc=OP_sim, scale=op_sim_sd) + norm.sf(a, loc=OP_sim, scale=op_sim_sd)
+    
+    if math.isnan(P_S) :
+      return P_S
+      
+    #this is an attempt to deal with precision, max set manually to 70.
+    dc.getcontext().prec=70
+    precise_log=-dc.Decimal(P_S).log10()
+    	
+    #print("difference of two prec logs",float(foo)+math.log10(P_S)) 
+    	
+    return float(precise_log)
     
 # quality of simulated order parameter
 #def OPquality(P_S,op_sim_STEM):
@@ -335,6 +334,8 @@ def carbonError(OP_sim, OP_exp):
 
 def fragmentQuality(fragment, exp_op_data, sim_op_data):
     p_F = evaluated_percentage(fragment, exp_op_data)
+    #warning, hard coded experimental error
+    exp_error=0.02
     E_sum = 0
     if p_F != 0:
         for key_exp, value_exp in exp_op_data.items():
@@ -342,10 +343,13 @@ def fragmentQuality(fragment, exp_op_data, sim_op_data):
             #  print(value_exp)
             if fragment in key_exp and value_exp[0][0] != 'nan':
                 OP_exp = value_exp[0][0]
-                print(OP_exp)
+              #  print(OP_exp)
                 OP_sim = sim_op_data[key_exp][0]
-                print(OP_sim)
+              #  print(OP_sim)
+              #  op_sim_STEM=sim_op_data[key_exp][0][2]
                 E_sum += carbonError(OP_exp, OP_sim)
+              #change here if you want to use shitness(TM) scale for fragments. Warning, big numbers will dominate  
+              # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
         E_F = E_sum / p_F
         return E_F
     else:
@@ -452,11 +456,11 @@ if args.q:
                         OP_exp = value[0][0]
                         OP_sim = OP_array[0]
                         #op_sim_sd = OP_array[1] 
-                        #op_sim_STEM = OP_array[2] 
-
-                        #S_prob = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
+                        op_sim_STEM = OP_array[2] 
+			 #changing to use the shitness(TM) scale. This code needs to be cleaned.
+                        op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
              
-                        op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
+                       # op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
                        # print(type(op_quality))
                         OP_array.append(op_quality)
                         #print(OP_array)
@@ -493,10 +497,6 @@ if args.q:
             with open(fragment_quality_file, 'w') as f:
                 json.dump(fragment_quality,f)
             f.close()
-        
-        
-        
-     #   print(OP_qual_data)                        
                 
                 
                 
