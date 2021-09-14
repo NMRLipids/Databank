@@ -1,6 +1,7 @@
 \documentclass[fleqn,10pt]{wlscirep}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{graphicx}
 \title{NMRlipids Databank}
 
 \author[1,*]{Anne Kiirikki}
@@ -76,7 +77,21 @@ Usefulness of the databank beyond MD simulation experts is demonstrated by analy
 
 \subsection{Structure of the databank}
 
-NMRlipids databank is a overlay databank composed of index files containing information on the location of original data and all essential information on simulations needed in further use and automatic analysis. Each simulation system is identified using the hash of original trajectory and topology file. The index files are stored in folder structure based on the identity codes of the simulations.
+\begin{figure}
+  \includegraphics[width=\textwidth]{figures/DataBankStructure.pdf}
+  \caption{Structure of the NMRlipids databank}\label{DatabankStructure}
+\end{figure}
+
+NMRlipids databank is a overlay databank composed of files that contain all the essential information
+on the molecular dynamics simulation trajectories that are listed in the databank.
+The location publicly avaiable raw MD simulation data is flexible.
+The NMRlipids databank files contain all the essential information on the
+original data that enable wide range of applications.
+%and all essential information on simulations needed in further use and automatic analysis.
+
+
+
+Each simulation system is identified using the hash of original trajectory and topology file. The index files are stored in folder structure based on the identity codes of the simulations.
 
 \subsection{Analysis of the data in databank}
 
