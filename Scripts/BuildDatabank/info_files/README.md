@@ -45,6 +45,7 @@ POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
 DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
+DPPE | 1,2-dipalmitoyl-sn-glycero-3-phosphoethanolamine
 DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
 DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DLIPC| 1,2-dilinoleoyl-sn-glycero-3-phosphocholine
