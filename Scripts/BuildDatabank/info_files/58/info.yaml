@@ -1,34 +1,30 @@
 DOI: 10.5281/zenodo.3592499
-
 SOFTWARE: gromacs
 TRJ: dlpc.xtc
 TPR: dlpc.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-
-DLPC: DLPC
-SOL: TIP3
-SOD: SOD
-CLA: CLA
-
-MAPPING_DICT:
- DLPC: mappingDLPCcharmm.txt
- SOL: mappingTIP3PCHARMMgui.txt
- SOD: mappingSOD.txt
- CLA: mappingCLA.txt 
-
 DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+PUBLICATION: null
 AUTHORS_CONTACT: Matti Javanainen
-
 SYSTEM: 200DLPC_10000SOL_23SOD_23CLA
 SOFTWARE_VERSION: 2019
-
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI v1.7
-FF_DATE:
-
+FF_DATE: null
 CPT: dlpc.cpt
 LOG: dlpc.log
 TOP: dlpc.top
+COMPOSITION:
+  DLPC:
+  - DLPC
+  - mappingDLPCcharmm.txt
+  SOL:
+  - TIP3
+  - mappingTIP3PCHARMMgui.txt
+  SOD:
+  - SOD
+  - mappingSOD.txt
+  CLA:
+  - CLA
+  - mappingCLA.txt

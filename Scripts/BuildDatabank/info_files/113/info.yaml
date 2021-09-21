@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.2562079
+SOFTWARE: gromacs
+TRJ: traj_comp.xtc
+TPR: topol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
+SOFTWARE_VERSION: 5.1.4
+FF: ECC-CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: topol.top
+COMPOSITION:
+  POPC:
+  - POPC
+  - mappingPOPCcharmm.txt
+  SOL:
+  - SOL
+  - mappingTIP3PCHARMMgui.txt
+  CAL:
+  - CA
+  - mappingCA.txt
+  CLA:
+  - CL
+  - mappingCL.txt

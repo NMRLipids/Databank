@@ -1,26 +1,21 @@
 DOI: 10.5281/zenodo.3605386
-
 SYSTEM: POPCPOPE_(1:1)_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  POPE: mappingPOPEslipids.txt
-  SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
 FF: Slipids
-FF_SOURCE: "http://www.fos.su.se/~sasha/SLipids/"
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/
 FF_DATE: ??
 TRJ: pcpe_slipids.xtc
 TPR: pcpe_slipids.tpr
 PREEQTIME: 200
 TIMELEFTOUT: 0
-
-POPC: POPC
-POPE: POPE
-
-
-SOL: SOL
-
-
-
-DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+  - POPC
+  - mappingPOPCslipids.txt
+  POPE:
+  - POPE
+  - mappingPOPEslipids.txt
+  SOL:
+  - SOL
+  - mappingTIP3Pwater.txt

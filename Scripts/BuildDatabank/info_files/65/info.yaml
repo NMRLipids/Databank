@@ -1,27 +1,24 @@
-POPG: POPG
-POPC: POPC
-SOD: SOD
-SOL: TIP3
-
-MAPPING_DICT:
- POPG: mappingPOPGcharmm.txt
- POPC: mappingPOPCcharmm.txt
- SOD: mappingSOD.txt
- SOL: mappingTIP3PCHARMMgui.txt 
-
 DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+PUBLICATION: null
 AUTHORS_CONTACT: Kiirikki, M. Anne; Ollila O. H. Samuli
-
 SYSTEM: 150POPG_150POPC_150SOD_31500SOL_298K
-SOFTWARE_VERSION:
-
+SOFTWARE_VERSION: null
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI FF-Converter
-FF_DATE:
-
-CPT:
-LOG:
+FF_DATE: null
+CPT: null
+LOG: null
 TOP: topol.top
-
+COMPOSITION:
+  POPG:
+  - POPG
+  - mappingPOPGcharmm.txt
+  POPC:
+  - POPC
+  - mappingPOPCcharmm.txt
+  SOD:
+  - SOD
+  - mappingSOD.txt
+  SOL:
+  - TIP3
+  - mappingTIP3PCHARMMgui.txt

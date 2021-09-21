@@ -4,23 +4,22 @@ TRJ: md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc
 TPR: for-md-CHARMM36_POPS_298K_v1.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-POPS: POPS
-SOD: SOD
-SOL: TIP3
-MAPPING_DICT:
-  POPS: mappingPOPScharmm.txt
-  SOD: mappingSOD.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-DIR_WRK: '/media/osollila/Data/tmp/DATABANK/'
-PUBLICATION:
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
 AUTHORS_CONTACT: Tom Piggot ()
 SYSTEM: POPS_298K
-SOFTWARE_VERSION:
+SOFTWARE_VERSION: null
 FF: CHARMM36
 FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
 FF_DATE: ??/??/????
-
-
-
-
+COMPOSITION:
+  POPS:
+  - POPS
+  - mappingPOPScharmm.txt
+  SOD:
+  - SOD
+  - mappingSOD.txt
+  SOL:
+  - TIP3
+  - mappingTIP3PCHARMMgui.txt

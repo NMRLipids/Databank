@@ -4,31 +4,38 @@ TRJ: DMPC_PI.xtc
 TPR: DMPC_PI.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 500
-DMPC: DMPC
-POPI: POPI
-SAPI: SAPI
-SLPI: SLPI
-SOD: SOD
-CLA: CLA
-SOL: TIP3
-MAPPING_DICT: 
-    DMPC: mappingDMPCcharmm.txt
-    POPI: mappingPOPIcharmm.txt
-    SAPI: mappingSAPIcharmm.txt
-    SLPI: mappingSLPIcharmm.txt
-    SOD:  mappingSOD.txt
-    CLA:  mappingCLA.txt
-    SOL:  mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-UNITEDATOM_DICT: 
-PUBLICATION: 
+UNITEDATOM_DICT: null
+PUBLICATION: null
 AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
 SYSTEM: DMPC/liverPI bilayer
-SOFTWARE_VERSION: 
+SOFTWARE_VERSION: null
 FF: CHARMM36
 FFSOL: TIP3P
 FF_SOURCE: CHARMM-GUI
-FF_DATE: 
+FF_DATE: null
 CPT: DMPC_PI.cpt
-LOG:
+LOG: null
 TOP: topol.top
+COMPOSITION:
+  DMPC:
+  - DMPC
+  - mappingDMPCcharmm.txt
+  POPI:
+  - POPI
+  - mappingPOPIcharmm.txt
+  SAPI:
+  - SAPI
+  - mappingSAPIcharmm.txt
+  SLPI:
+  - SLPI
+  - mappingSLPIcharmm.txt
+  SOD:
+  - SOD
+  - mappingSOD.txt
+  CLA:
+  - CLA
+  - mappingCLA.txt
+  SOL:
+  - TIP3
+  - mappingTIP3PCHARMMgui.txt
