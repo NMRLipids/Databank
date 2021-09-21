@@ -1,13 +1,5 @@
 DOI: 10.5281/zenodo.3613573
-
 SYSTEM: POPC_POPG_1:1_1000mMCaCL2
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  POPG: mappingPOPGslipids.txt
-  SOD: mappingSOD.txt
-  CAL: mappingCAL.txt
-  CLA: mappingCLA.txt
-  SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
 FF: Slipids
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/,  https://bitbucket.org/hseara/ions/
@@ -16,14 +8,23 @@ TRJ: PCPG_CA1000_extend.xtc
 TPR: PCPG_CA1000.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 500
-
-POPC: POPC
-POPG: POPG
-
-SOD: NA
-CLA: CL
-CAL: CA
-SOL: SOL
-
-DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGslipids.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingSOD.txt
+  CAL:
+    NAME: CA
+    MAPPING: mappingCAL.txt
+  CLA:
+    NAME: CL
+    MAPPING: mappingCLA.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt

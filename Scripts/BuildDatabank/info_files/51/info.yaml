@@ -1,32 +1,27 @@
 DOI: 10.5281/zenodo.3237463
-
 SOFTWARE: gromacs
 TRJ: total_4_500.xtc
 TPR: md_0.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-
-POPG: POPG
-SOL: SOL
-SOD: NA
-
-MAPPING_DICT:
- POPG: mappingPOPGcharmm.txt
- SOL: mappingTIP3Pwater.txt
- SOD: mappingNA.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
 AUTHORS_CONTACT: ANTONIO PEON
-
 SYSTEM: 500POPG_25000SOL_500SOD_310K
 SOFTWARE_VERSION: 2018.3
-
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI v1.7
-FF_DATE:
-
-CPT:
-LOG:
+FF_DATE: null
+CPT: null
+LOG: null
 TOP: topol.top
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt

@@ -1,34 +1,30 @@
 DOI: 10.5281/zenodo.1009027
-
 SOFTWARE: gromacs
 TRJ: DPPC_512_NaCl_150mM_325K_v-rescale_md.xtc
 TPR: DPPC_512_NaCl_150mM_325K_v-rescale_md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-
-DPPC: DPPC
-SOL: SOL
-SOD: NA
-CLA: CL
-
-MAPPING_DICT:
- DPPC: mappingDPPCcharmm.txt 
- SOL: mappingSPCwater.txt 
- SOD: mappingNA.txt
- CLA: mappingCL.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
 AUTHORS_CONTACT: Martinez-Seara, Hector
-
 SYSTEM: DPPC_512_NaCl_150mM_325K_v-rescale
 SOFTWARE_VERSION: 5.0.4
-
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI v1.6
-FF_DATE:
-
+FF_DATE: null
 CPT: DPPC_512_NaCl_150mM_325K_v-rescale_md.cpt
-LOG:
+LOG: null
 TOP: DPPC_512_NaCl_150mM_325K_v-rescale_md.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
