@@ -394,16 +394,7 @@ print(df_files)
 # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
 #print(sim_hashes)
 
-        
 
-# ## Read molecule numbers into dictionary
-
-tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
-trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
-#structure_file = ""
-gro = str(dir_tmp) + '/conf.gro'
-
-sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 
 #Anne:Read molecule numbers from tpr or gro file.
 #Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre 
@@ -424,6 +415,8 @@ if sim['SOFTWARE'] == 'gromacs':
 elif sim['SOFTWARE'] == 'openMM':
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
     top = str(dir_tmp) + '/' + sim['PDB'][0][0]
+    
+
 
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
@@ -440,8 +433,8 @@ lipids = []
 for key_mol in lipids_dict:
     print("Calculating number of " + key_mol + " lipids")
     selection = ""
-    if key_mol in sim['MAPPING_DICT'].keys():
-       m_file = sim['MAPPING_DICT'][key_mol]
+    if key_mol in sim['COMPOSITION'].keys():
+       m_file = sim['COMPOSITION'][key_mol]['MAPPING']
        with open('./mapping_files/'+m_file,"r") as f:
            for line in f:
                if len(line.split()) > 2 and "Individual atoms" not in line:
@@ -449,7 +442,7 @@ for key_mol in lipids_dict:
                elif "Individual atoms" in line:
                    continue
                else:
-                   selection = "resname " + sim.get(key_mol)
+                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                    #print(selection)
                    break
     selection = selection.rstrip(' or ')
@@ -479,8 +472,8 @@ for key_mol in lipids_dict:
     leaflet2 = 0 
         
     selection = ""
-    if key_mol in sim['MAPPING_DICT'].keys():
-        m_file = sim['MAPPING_DICT'][key_mol]
+    if key_mol in sim['COMPOSITION'].keys():
+        m_file = sim['COMPOSITION'][key_mol]['MAPPING']
         with open('./mapping_files/'+m_file,"r") as f:
             for line in f:
                 if len(line.split()) > 2 and "Individual atoms" not in line:
@@ -488,13 +481,13 @@ for key_mol in lipids_dict:
                 elif "Individual atoms" in line:
                     continue
                 else:
-                    selection = "resname " + sim.get(key_mol)
+                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                     break
     selection = selection.rstrip(' or ')
     #   print(selection)
     molecules = u0.select_atoms(selection)
     #print(molecules.residues)
-    x = 'N' + key_mol
+
     if molecules.n_residues > 0:
         for mol in molecules.residues:
             R = mol.atoms.center_of_mass()
@@ -505,23 +498,29 @@ for key_mol in lipids_dict:
             elif R[2] - R_membrane_z < 0:
                 leaflet2 = leaflet2 +1
                   # print('layer2  ' + str(leaflet2))
-    sim[x] = [leaflet1, leaflet2] 
-
-    print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
-    print("Number of " + key_mol  + " in lower leaflet: " + str(leaflet2))
+    try:              
+        sim['COMPOSITION'][key_mol]['COUNT'] = [leaflet1, leaflet2] 
+    except KeyError:
+        continue
+    else:
+        print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
+        print("Number of " + key_mol  + " in lower leaflet: " + str(leaflet2))
 
 ###########################################################################################        
 #numbers of other molecules
 for key_mol in molecules_dict:
-    value_mol = sim.get(key_mol)
-    if not value_mol:
+    try:
+        mol_name = sim['COMPOSITION'][key_mol]['NAME']
+    except KeyError:
         continue
-    #print(value_mol)
-    x = 'N' + key_mol
-    sim[x] = u0.select_atoms("resname " + value_mol).n_residues
-    print("Number of " + key_mol  + ": " + str(sim[x]))   
+    else:
+        mol_number = u0.select_atoms("resname " + mol_name).n_residues
+        sim['COMPOSITION'][key_mol]['COUNT'] = mol_number
+        print("Number of " + key_mol  + ": " + str(sim['COMPOSITION'][key_mol]['COUNT']))   
 
-#Anne: Read trajectory length 
+#Anne: Read trajectory size and length 
+
+sim['TRAJECTORY_SIZE'] = os.path.getsize(traj)
 
 dt = 0
 nsteps = 0
@@ -539,7 +538,7 @@ if sim['SOFTWARE'] == 'gromacs':
     file1 = str(dir_tmp) + '/tpr.txt'
 
     print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
-    os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
+    os.system('echo System | gmx dump -s '+ top + ' > '+file1)
 
     with open(file1, 'rt') as tpr_info:
         for line in tpr_info:
@@ -571,7 +570,7 @@ number_of_atomsTRJ = len(u.atoms)
 number_of_atoms = 0
 for key_mol in all_molecules:
     try:
-        mapping_file = './mapping_files/'+sim['MAPPING_DICT'][key_mol]
+        mapping_file = './mapping_files/'+sim['COMPOSITION'][key_mol]['MAPPING']
     except:
         continue
     if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
@@ -585,7 +584,7 @@ for key_mol in all_molecules:
     else:
         mapping_file_length = len(open(mapping_file).readlines(  ))
     try:
-        number_of_atoms += np.sum(sim['N' + key_mol]) * mapping_file_length
+        number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
     except:
         continue
         

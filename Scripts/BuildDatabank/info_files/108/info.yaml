@@ -1,30 +1,24 @@
 DOI: 10.5281/zenodo.3431948
-
 SOFTWARE: gromacs
 TRJ: original_CHARMM_tip4p2005water_no_ions.xtc
 TPR: original_CHARMM_tip4p2005water_no_ions.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-
-POPC: POPC
-SOL: water
-
-MAPPING_DICT:
- POPC: mappingPOPCcharmm.txt
- SOL: mappingTIP4Pwater.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
 AUTHORS_CONTACT: Nencini, Ricky
-
 SYSTEM: 200POPC_10456SOL_310K
 SOFTWARE_VERSION: 5
-
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI v1.7
-FF_DATE:
-
+FF_DATE: null
 CPT: original_CHARMM_tip4p2005water_no_ions.cpt
 LOG: original_CHARMM_tip4p2005water_no_ions.log
 TOP: original_CHARMM_tip4p2005water_no_ions.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: water
+    MAPPING: mappingTIP4Pwater.txt

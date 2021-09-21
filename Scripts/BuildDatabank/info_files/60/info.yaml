@@ -1,35 +1,30 @@
 DOI: 10.5281/zenodo.1009094
-
 SOFTWARE: gromacs
 TRJ: DSPC_512_NaCl_150mM_333K_md.xtc
 TPR: DSPC_512_NaCl_150mM_333K_md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-
-DSPC: DSPC
-SOL: SOL
-SOD: NA
-CLA: CL
-
-MAPPING_DICT:
- DSPC: mappingDSPCcharmm.txt 
- SOL: mappingTIP3Pwater.txt
- SOD: mappingNA.txt
- CLA: mappingCL.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
 AUTHORS_CONTACT: Martinez-Seara, Hector
-
 SYSTEM: 512DSPC_20480SOL_55SOD_55CLA_333K
 SOFTWARE_VERSION: 5.0.4
-
 FF: CHARMM36
 FF_SOURCE: CHARMM-GUI v1.6
-FF_DATE:
-
+FF_DATE: null
 CPT: DSPC_512_NaCl_150mM_333K_md.cpt
-LOG:
+LOG: null
 TOP: DSPC_512_NaCl_150mM_333K_md.top
-
+COMPOSITION:
+  DSPC:
+    NAME: DSPC
+    MAPPING: mappingDSPCcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt

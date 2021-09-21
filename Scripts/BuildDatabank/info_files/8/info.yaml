@@ -1,9 +1,5 @@
 DOI: 10.5281/zenodo.3474863
-
 SYSTEM: POPC_T303K
-MAPPING_DICT:
- POPC: mappingPOPCcharmm.txt
- SOL: mappingTIP3PCHARMMgui.txt
 SOFTWARE: gromacs
 FF: CHARMM36
 FFSOL: TIP3P
@@ -13,21 +9,18 @@ TRJ: traj_comp.xtc
 TPR: mdrun.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 20
-
-POPC: POPC
 POPG: POPG
 POPS: POPS
 POPE: POPE
-
 POT: K
 SOD: NA
 CLA: CL
 CAL: CA
-SOL: TIP3
-
-
-
-
-
-
-DIR_WRK :  /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
