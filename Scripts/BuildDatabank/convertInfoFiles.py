@@ -22,6 +22,7 @@ def convertFile(info_file):
 #    new_info_file['DIR_WRK'] = '/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK'
 #    return new_info_file
 
+
 for subdir, dirs, files in os.walk(r'./info_files/'):
     for filename in files:
         filepath = subdir + os.sep + filename

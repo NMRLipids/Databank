@@ -8,9 +8,6 @@ TRJ: 100-400ns.xtc
 TPR: run_400ns.tpr
 PREEQTIME: 100
 TIMELEFTOUT: 0
-POPS: POPS
-POPE: POPE
-POT: K
 DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
 COMPOSITION:
   POPC:
@@ -31,3 +28,4 @@ COMPOSITION:
   SOL:
     NAME: TIP3
     MAPPING: mappingTIP3PCHARMMgui.txt
+
