@@ -9,13 +9,6 @@ TRJ: md_dt100_OK_centered.xtc
 TPR: md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 50
-POPG: POPG
-POPS: POPS
-POPE: POPE
-POT: K
-SOD: NA
-CLA: CL
-CAL: CA
 DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
 COMPOSITION:
   POPC:
@@ -24,3 +17,4 @@ COMPOSITION:
   SOL:
     NAME: TIP3
     MAPPING: mappingTIP3PCHARMMgui.txt
+
