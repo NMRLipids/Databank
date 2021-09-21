@@ -26,6 +26,9 @@ lipids_dict = {
             'DPPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DPPE' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'DEPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -117,6 +120,9 @@ molecule_numbers_dict = {
             'NDPPC' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
+            'NDPPE' : {"REQUIRED": False,
+                       "TYPE" : "array",
+                        },
             'NDEPC' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
@@ -194,6 +200,9 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFDPPC' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFDPPE' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFDEPC' : {"REQUIRED": False,
@@ -330,9 +339,6 @@ gromacs_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -345,6 +351,9 @@ gromacs_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
+             'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
                }
 
 # Amber
@@ -400,9 +409,6 @@ amber_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -415,10 +421,9 @@ amber_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
+            'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
              }
 
 # NAMD
@@ -483,9 +488,6 @@ namd_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -498,6 +500,9 @@ namd_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
+              'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
               }
           
 # CHARMM
@@ -568,9 +573,6 @@ openmm_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -582,7 +584,10 @@ openmm_dict = {
                               },
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
-                          }
+                          },
+             'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
                }
 
 # SOFTWARE

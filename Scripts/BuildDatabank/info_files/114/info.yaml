@@ -1,0 +1,24 @@
+DOI: 10.5281/zenodo.3237461
+SOFTWARE: gromacs
+TRJ: total_4_500.xtc
+TPR: md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: ANTONIO PEON
+SYSTEM: 500POPE_25000SOL_310K
+SOFTWARE_VERSION: 2018.3
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: topol.top
+COMPOSITION:
+  POPE:
+  - POPE
+  - mappingPOPEcharmm.txt
+  SOL:
+  - SOL
+  - mappingTIP3Pwater.txt

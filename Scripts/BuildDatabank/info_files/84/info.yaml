@@ -1,29 +1,30 @@
 DOI: 10.5281/zenodo.3613573
-
 SYSTEM: POPCPOPG(1_1)_slipids
-MAPPING_DICT:
-  POPC: mappingPOPCslipidsECCions.txt
-  POPG: mappingPOPGslipids.txt
-  CAL: mappingCALecc.txt
-  CLA: mappingCLAecc.txt
-  SOD: mappingSODecc.txt
-  SOL: mappingTIP3PwaterSlipids.txt
 SOFTWARE: gromacs
 FF: Slipids
-FF_SOURCE:
+FF_SOURCE: null
 FF_DATE: ??
 TRJ: PCPG_CA100_extend.xtc
 TPR: PCPG_CA100.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 500
-
-POPC: POPC
-POPG: POPG
-
-SOD: NA
-CLA: CL
-CAL: CA
-SOL: SOL
-
 DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
-
+COMPOSITION:
+  POPC:
+  - POPC
+  - mappingPOPCslipidsECCions.txt
+  POPG:
+  - POPG
+  - mappingPOPGslipids.txt
+  CAL:
+  - CA
+  - mappingCALecc.txt
+  CLA:
+  - CL
+  - mappingCLAecc.txt
+  SOD:
+  - NA
+  - mappingSODecc.txt
+  SOL:
+  - SOL
+  - mappingTIP3PwaterSlipids.txt

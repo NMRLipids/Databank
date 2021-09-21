@@ -1,15 +1,10 @@
-DOI: 10.5281/zenodo.3247435 
+DOI: 10.5281/zenodo.3247435
 SOFTWARE: gromacs
 TRJ: total_4_500.xtc
 TPR: md_0.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-POPC: POPC
-SOL: SOL
-MAPPING_DICT:
-  POPC: mappingPOPCgromos-ckp.txt
-  SOL: mappingSPCwater.txt
-DIR_WRK: '/media/osollila/Data/tmp/DATABANK/'
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT:
   POPC: GROMOS_CKP_POPC
 PUBLICATION: ??
@@ -21,6 +16,10 @@ FFSOL: SPC
 FF_SOURCE: ??
 FF_DATE: ?/?/????
 TOP: topol.top
-
-
-
+COMPOSITION:
+  POPC:
+  - POPC
+  - mappingPOPCgromos-ckp.txt
+  SOL:
+  - SOL
+  - mappingSPCwater.txt
