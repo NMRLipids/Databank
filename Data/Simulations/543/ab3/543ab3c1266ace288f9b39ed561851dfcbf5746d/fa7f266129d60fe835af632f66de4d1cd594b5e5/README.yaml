@@ -1,0 +1,96 @@
+DOI: 10.5281/zenodo.1493190
+SOFTWARE: gromacs
+TRJ:
+- - run.trr
+TPR:
+- - run.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+POPC: POPC
+POPS: POPS
+SOL: TIP3
+SOD: SOD
+CLA: CLA
+MAPPING_DICT:
+  POPC: mappingPOPCcharmm.txt
+  POPS: mappingPOPScharmm.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+  SOD: mappingSOD.txt
+  CLA: mappingCLA.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila, O. H. S.
+SYSTEM: 110POPC_22POPS_4965SOL_61SOD_39CLA_298K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 15617100816
+NPOPC:
+- 55
+- 55
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 11
+- 11
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDLIPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDDOPC:
+- 0
+- 0
+NDOPS:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NDAPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 61
+NCLA: 39
+NSOL: 4965
+TRJLENGTH: 200010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 32529
+DATEOFRUNNING: 20/09/2021
