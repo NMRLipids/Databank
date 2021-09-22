@@ -58,6 +58,7 @@ DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
+CER  | N-palmitoyl-D-erythro-sphingosine
 CHOL | cholesterol 
 DHMDMAB | dihexadecyldimethylammonium 
 POT | potassium ion 
