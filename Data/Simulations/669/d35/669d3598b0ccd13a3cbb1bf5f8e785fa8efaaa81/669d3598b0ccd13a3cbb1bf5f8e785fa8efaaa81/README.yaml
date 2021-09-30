@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.1009027
+SOFTWARE: gromacs
+TRJ:
+- - DPPC_512_NaCl_150mM_320K_v-rescale_md.xtc
+TPR:
+- - DPPC_512_NaCl_150mM_320K_v-rescale_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
+AUTHORS_CONTACT: Martinez-Seara, Hector
+SYSTEM: DPPC_512_NaCl_150mM_320K_v-rescale
+SOFTWARE_VERSION: 5.0.4
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT:
+- - DPPC_512_NaCl_150mM_320K_v-rescale_md.cpt
+LOG: null
+TOP:
+- - DPPC_512_NaCl_150mM_320K_v-rescale_md.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+    COUNT:
+    - 256
+    - 256
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 20480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 55
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 55
+TRAJECTORY_SIZE: 2396453896
+TRJLENGTH: 500100.0
+TEMPERATURE: 320.0
+NUMBER_OF_ATOMS: 128110
+DATEOFRUNNING: 28/09/2021

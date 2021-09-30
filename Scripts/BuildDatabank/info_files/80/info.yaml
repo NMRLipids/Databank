@@ -12,9 +12,9 @@ DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPClipid17ecc.txt
+    MAPPING: mappingPOPClipid17ecc_POPCres.txt
   POPG:
-    NAME: POPG
+    NAME: PGR
     MAPPING: mappingPOPGlipid17ecc.txt
   CAL:
     NAME: CA
