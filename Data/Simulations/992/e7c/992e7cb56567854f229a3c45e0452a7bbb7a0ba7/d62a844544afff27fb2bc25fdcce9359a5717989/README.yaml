@@ -1,0 +1,105 @@
+DOI: 10.5281/zenodo.2579108
+SOFTWARE: gromacs
+TRJ:
+- - m_400_500_PG_PE_1_3_charmm.xtc
+TPR:
+- - md_04.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+POPG: POPG
+POPE: POPE
+SOL: SOL
+SOD: NA
+CLA: CL
+MAPPING_DICT:
+  POPG: mappingPOPGcharmm.txt
+  POPE: mappingPOPEcharmm.txt
+  SOL: mappingTIP3Pwater.txt
+  SOD: mappingNA.txt
+  CLA: mappingCL.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
+SYSTEM: 126POPG_374POPE_25000SOL_176SOD_50CLA_310K
+SOFTWARE_VERSION: 5.1.2
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 5164944108
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 63
+- 63
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 187
+- 187
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NDPPE:
+- 0
+- 0
+NDPPG:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDLIPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDDOPC:
+- 0
+- 0
+NDOPS:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NDAPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCER:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOD: 176
+NCLA: 50
+NSOL: 25000
+TRJLENGTH: 100010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 137978
+DATEOFRUNNING: 30/09/2021
