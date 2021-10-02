@@ -1,0 +1,97 @@
+DOI: 10.5281/zenodo.4522359
+SOFTWARE: gromacs
+TRJ:
+- - dppc_64.xtc
+TPR:
+- - dppc_64.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DPPC: DPPC
+SOL: SOL
+MAPPING_DICT:
+  DPPC: mappingDPPCcharmm.txt
+  SOL: mappingTIP3Pwater.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1016/j.bbamem.2021.183714
+AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara,
+  Olivier; Thalmann, Fabrice
+SYSTEM: 64DPPC_10623SOL
+SOFTWARE_VERSION: 2016.4
+FF: CHARMM36
+FF_SOURCE: null
+FF_DATE: June 2015
+CPT: null
+LOG: null
+TOP: null
+TRAJECTORY_SIZE: 1465101144
+NPOPC:
+- 0
+- 0
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 32
+- 32
+NDPPE:
+- 0
+- 0
+NDPPG:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDLIPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDDOPC:
+- 0
+- 0
+NDOPS:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NDAPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCER:
+- 0
+- 0
+NCHOL:
+- 0
+- 0
+NDHMDMAB:
+- 0
+- 0
+NSOL: 10623
+TRJLENGTH: 50005.0
+TEMPERATURE: 288.0
+NUMBER_OF_ATOMS: 40189
+DATEOFRUNNING: 02/10/2021
