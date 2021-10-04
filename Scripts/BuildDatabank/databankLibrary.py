@@ -29,9 +29,6 @@ lipids_dict = {
             'DPPE' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
-            'DPPG' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
             'DEPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -63,9 +60,6 @@ lipids_dict = {
                             "TYPE" : "string",
                         },
             'SLPI' : {"REQUIRED": False,
-                            "TYPE" : "string",
-                        },
-            'CER' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
             'CHOL' : {"REQUIRED": False,
@@ -129,9 +123,6 @@ molecule_numbers_dict = {
             'NDPPE' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
-            'NDPPG' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
             'NDEPC' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
@@ -165,9 +156,6 @@ molecule_numbers_dict = {
             'NSLPI' : {"REQUIRED": False,
                        "TYPE" : "array",
                         },
-            'NCER' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
             'NCHOL' : {"REQUIRED": False,
                        "TYPE" : "array",
                      },
@@ -217,9 +205,6 @@ molecule_ff_dict = {
                 'FFDPPE' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
-                'FFDPPG' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
                 'FFDEPC' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
@@ -251,9 +236,6 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFSLPI' : {"REQUIRED": False,
-                                "TYPE": "string",
-                           },
-                'FFCER' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFCHOL' : {"REQUIRED": False,
@@ -357,9 +339,6 @@ gromacs_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -372,6 +351,9 @@ gromacs_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
+             'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
                }
 
 # Amber
@@ -427,9 +409,6 @@ amber_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -442,10 +421,9 @@ amber_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
+            'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
              }
 
 # NAMD
@@ -510,9 +488,6 @@ namd_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -525,10 +500,9 @@ namd_dict = {
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
+              'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
               }
           
 # CHARMM
@@ -548,14 +522,18 @@ openmm_dict = {
                         "TYPE" : "file",
                         "EXTENSION" : ("psf",),
                        },
-               'STATE' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
+               'XML' : {"REQUIRED" : False, # state files from openmm, almost similar to a restart file
                         "TYPE" : "file",
-                        "EXTENSION" : ("xml"),
-                            },
-               'INPUT' : {"REQUIRED" : False, # input file used to run the simulation
-                          "TYPE" : "file",
-                          "EXTENSION" : ("inp"),
-                          },
+                        "EXTENSION" : ("xml",),
+                        },
+               'CHK' : {"REQUIRED" : False,
+                        "TYPE" : "file",
+                        "EXTENSION" : ("chk",),
+                       },
+               'INP' : {"REQUIRED" : False, # input file used to run the simulation
+                        "TYPE" : "file",
+                        "EXTENSION" : ("inp",),
+                        },
                'FF'  : {"REQUIRED": False,
                         "TYPE" : "string",
                        },
@@ -595,9 +573,6 @@ openmm_dict = {
             'SOFTWARE_VERSION' : {"REQUIRED": False,
                                   "TYPE": "string",
                              },
-            'MAPPING_DICT' : {"REQUIRED": True,
-                               "TYPE" : "dictionary",
-                             },
             'DATEOFRUNNING' : {"REQUIRED": False,
                                "TYPE" : "string",
                               },
@@ -606,15 +581,13 @@ openmm_dict = {
                               },
             'TRAJECTORY_SIZE' : {"REQUIRED": False,
                                "TYPE" : "integer",
-                              },    
+                              },
              'DIR_WRK' : {"REQUIRED": True,
                            "TYPE": "string",
                           },
-            'MAPPING' : {"REQUIRED": True,
-                             "TYPE" : "string",
- #                        "EXTENSION": ("txt"),
-                             }
-
+             'COMPOSITION' : {"REQUIRED": True,
+                              "TYPE" : "dictionary",
+                              }
                }
 
 # SOFTWARE
@@ -625,6 +598,44 @@ software_dict = {
                 "CHARMM"  : charmm_dict,
                 "OPENMM"  : openmm_dict,
                 }
+
+
+##############CLASS FOR LOOPING OVER SYSTEMS#######################################
+
+import yaml
+class databank():
+    
+    def __init__(self,path=r'../../Data/Simulations/'):
+        self.path = path
+        self.systems = []
+        self.__load_systems__(path)
+
+    def __load_systems__(self,path):
+        for subdir, dirs, files in os.walk(path):
+            for filename in files:
+                filepath = os.path.join(subdir, filename)
+                #print(filepath)
+                if filename == "README.yaml":
+                    with open(filepath) as yaml_file:
+                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                        size = len(filepath)
+                        content['path'] = filepath[:size-11]
+                        self.systems.append(content)
+                
+    def get_systems(self):
+        return self.systems
+    
+    def pie_temperature(self):
+        list_feature = [ int(float(system['TEMPERATURE'])) for system in self.systems]
+        import collections
+        counter = collections.Counter(list_feature)
+        plt.pie(counter.values(),labels=counter.keys(), normalize=True)
+
+
+
+
+
+
 
 #########################FUNCTIONS###################################################
 #functions used in building and analyzing the databank

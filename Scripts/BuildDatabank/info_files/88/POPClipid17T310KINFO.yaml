@@ -1,11 +1,5 @@
 DOI: 10.5281/zenodo.3237657
-
 SYSTEM: POPC_T310K
-MAPPING_DICT:
-  POPC: mappingPOPClipid17.txt
-  SOL: mappingTIP3Pwater.txt 
-  SOD: mappingSOD.txt
-
 SOFTWARE: gromacs
 FF: lipid17
 FF_SOURCE: ??
@@ -14,21 +8,20 @@ TRJ: total_4_500.xtc
 TPR: md_0.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-
-POPC: system1
 POPG: system2
 POPS: POPS
 POPE: POPE
-
 POT: K
-SOD: NA+
 CLA: CL
 CAL: CA
-SOL: WAT
-
-
-
-
-
-
-DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: system1
+    MAPPING: mappingPOPClipid17.txt
+  SOL:
+    NAME: WAT
+    MAPPING: mappingTIP3Pwater.txt
+  SOD:
+    NAME: NA+
+    MAPPING: mappingSOD.txt
