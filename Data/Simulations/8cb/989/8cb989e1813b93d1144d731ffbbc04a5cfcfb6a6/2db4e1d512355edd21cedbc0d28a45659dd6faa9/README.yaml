@@ -1,9 +1,5 @@
 DOI: 10.5281/zenodo.159434
 SYSTEM: POPC:CHOL(1:1)_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  CHOL: mappingCHOLESTEROLslipid.txt
-  SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
 SOFTWARE_VERSION: 4.6.3
 FF: slipids
@@ -13,64 +9,28 @@ TPR:
 - - popc50_T298_every100ps.tpr
 PREEQTIME: 70
 TIMELEFTOUT: 0
-POPC: POPC
-CHOL: CHL1
-SOL: SOL
-DIR_WRK: /media/osollila/Data/tmp/DATABANK
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 AUTHORS_CONTACT: Fernando Favela
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 128
+    - 128
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.txt
+    COUNT:
+    - 128
+    - 128
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 20334
 TRAJECTORY_SIZE: 425433616
-NPOPC:
-- 128
-- 128
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 128
-- 128
-NDHMDMAB:
-- 0
-- 0
-NSOL: 20334
 TRJLENGTH: 100100.0
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 114250
-DATEOFRUNNING: 20/08/2021
-EXPERIMENT:
-  10.1039/c2cp42738a: 10.1039/c2cp42738a/5
+DATEOFRUNNING: 04/10/2021
+TYPEOFSYSTEM: lipid bilayer

@@ -1,9 +1,5 @@
 DOI: 10.5281/zenodo.3725637
 SYSTEM: POPC:POPE(1:1)_T300K
-MAPPING_DICT:
-  POPC: mappingPOPCmacrogFUCHS.txt
-  POPE: mappingPOPEmacrogFUCHS.txt
-  SOL: mappingTIP3Pwater.txt
 SOFTWARE: gromacs
 FF: MacRog
 FF_SOURCE: 10.5281/zenodo.3725637
@@ -14,64 +10,29 @@ TPR:
 - - md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 200
-POPC: POPC
 POPG: POPG
 POPS: POPS
-POPE: POPE
-SOL: SOL
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCmacrogFUCHS.txt
+    COUNT:
+    - 32
+    - 32
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEmacrogFUCHS.txt
+    COUNT:
+    - 32
+    - 32
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 5120
 TRAJECTORY_SIZE: 583257372
-NPOPC:
-- 32
-- 32
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 32
-- 32
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOL: 5120
-TEMPERATURE: 300.0
 TRJLENGTH: 500100.0
+TEMPERATURE: 300.0
 NUMBER_OF_ATOMS: 31936
-DATEOFRUNNING: 15/07/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

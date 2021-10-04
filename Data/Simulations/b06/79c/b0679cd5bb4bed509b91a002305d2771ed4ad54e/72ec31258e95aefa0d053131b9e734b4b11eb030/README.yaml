@@ -6,11 +6,6 @@ TPR:
 - - popc407.tpr
 PREEQTIME: 270
 TIMELEFTOUT: 0
-POPC: PLA
-SOL: SOL
-MAPPING_DICT:
-  POPC: mappingPOPCberger.txt
-  SOL: mappingSPCwater.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT:
   POPC: Berger_PLA
@@ -24,41 +19,20 @@ FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
 FF_DATE: ?/?/????
 TOP:
 - - topol.top
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 7290
 TRAJECTORY_SIZE: 3424404744
-NPOPC:
-- 64
-- 64
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOL: 7290
-TEMPERATURE: '298'
 TRJLENGTH: 50010.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 28526
-DATEOFRUNNING: 15/04/2021
-EXPERIMENT:
-  10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

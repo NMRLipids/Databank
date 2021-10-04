@@ -6,12 +6,7 @@ TPR:
 - - for-md_CHARMM36_GMX506_POPC_8A-switch_v2.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-POPC: POPC
-SOL: SOL
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  SOL: mappingSPCwater.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Piggot, Thomas
 SYSTEM: 128POPC_4040SOL_8A-switch_v2
@@ -22,66 +17,20 @@ FF_DATE: null
 CPT: null
 LOG: null
 TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 4040
 TRAJECTORY_SIZE: 1091851556
-NPOPC:
-- 64
-- 64
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDLIPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NDAPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOL: 4040
 TRJLENGTH: 500050.0
 TEMPERATURE: 303.0
 NUMBER_OF_ATOMS: 29272
-DATEOFRUNNING: 20/09/2021
+DATEOFRUNNING: 04/10/2021
+TYPEOFSYSTEM: lipid bilayer

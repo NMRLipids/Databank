@@ -1,10 +1,5 @@
 DOI: 10.5281/zenodo.3613573
 SYSTEM: POPC_T298K
-MAPPING_DICT:
-  POPC: mappingPOPCslipids.txt
-  POPG: mappingPOPGslipids.txt
-  SOD: mappingSOD.txt
-  SOL: mappingTIP3PwaterSlipids.txt
 SOFTWARE: gromacs
 FF: Slipids
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/, https://bitbucket.org/hseara/ions/
@@ -15,50 +10,31 @@ TPR:
 - - PCPG_CA0.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 100
-POPC: POPC
-POPG: POPG
-SOD: NA
-SOL: SOL
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 64
+    - 64
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGslipids.txt
+    COUNT:
+    - 64
+    - 64
+  SOD:
+    NAME: NA
+    MAPPING: mappingSOD.txt
+    COUNT: 128
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 12800
 TRAJECTORY_SIZE: 1340011568
-NPOPC:
-- 64
-- 64
-NPOPG:
-- 64
-- 64
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 128
-NSOL: 12800
-TEMPERATURE: 298.0
 TRJLENGTH: 500100.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 71936
-DATEOFRUNNING: 06/07/2021
-EXPERIMENT:
-  10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/5
+DATEOFRUNNING: 04/10/2021
+TYPEOFSYSTEM: lipid bilayer

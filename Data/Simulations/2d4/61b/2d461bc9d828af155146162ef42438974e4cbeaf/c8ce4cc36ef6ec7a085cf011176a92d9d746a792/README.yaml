@@ -1,7 +1,4 @@
 DOI: 10.5281/zenodo.2641987
-MAPPING_DICT:
-  POPE: mappingPOPEcharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
 SYSTEM: POPE_310K
 SOFTWARE: gromacs
 FF: CHARMM36
@@ -13,62 +10,21 @@ TPR:
 - - POPE_C36_310K.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 50
-POPE: POPE
-SOL: TIP3
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.txt
+    COUNT:
+    - 72
+    - 72
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 5760
 TRAJECTORY_SIZE: 654088256
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 72
-- 72
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOL: 5760
 TRJLENGTH: 500100.0
 TEMPERATURE: 310.0
 NUMBER_OF_ATOMS: 35280
-DATEOFRUNNING: 23/07/2021
-EXPERIMENT:
-  10.5281/zenodo.4748647: 10.1021/jacs.1c05549/2
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

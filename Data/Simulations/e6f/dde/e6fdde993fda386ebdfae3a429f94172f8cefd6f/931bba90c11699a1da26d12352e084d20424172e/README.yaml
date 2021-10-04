@@ -6,16 +6,7 @@ TPR:
 - - DSPC_512_NaCl_150mM_338K_md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DSPC: DSPC
-SOL: SOL
-SOD: NA
-CLA: CL
-MAPPING_DICT:
-  DSPC: mappingDSPCcharmm.txt
-  SOL: mappingTIP3Pwater.txt
-  SOD: mappingNA.txt
-  CLA: mappingCL.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Martinez-Seara, Hector
 SYSTEM: 512DSPC_20480SOL_55SOD_55CLA_338K
@@ -28,60 +19,28 @@ CPT:
 LOG: null
 TOP:
 - - DSPC_512_NaCl_150mM_338K_md.top
+COMPOSITION:
+  DSPC:
+    NAME: DSPC
+    MAPPING: mappingDSPCcharmm.txt
+    COUNT:
+    - 256
+    - 256
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 20480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 55
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 55
 TRAJECTORY_SIZE: 2516991996
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 256
-- 256
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 55
-NCLA: 55
-NSOL: 20480
-TEMPERATURE: '338'
 TRJLENGTH: 500100.0
+TEMPERATURE: 338.0
 NUMBER_OF_ATOMS: 134254
-DATEOFRUNNING: 09/07/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

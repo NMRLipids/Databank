@@ -6,14 +6,7 @@ TPR:
 - - DPPC_128_CHL1_32_310K_md.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DPPC: DPPC
-SOL: SOL
-CHOL: CHL1
-MAPPING_DICT:
-  DPPC: mappingDPPCcharmm.txt
-  SOL: mappingTIP3Pwater.txt
-  CHOL: mappingCHOLESTEROLcharmm.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Martinez-Seara, Hector
 SYSTEM: 128DPPC_4800SOL_32CHOL_310K
@@ -26,43 +19,26 @@ CPT:
 LOG: null
 TOP:
 - - DPPC_128_CHL1_32_310K_md.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 4800
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.txt
+    COUNT:
+    - 16
+    - 16
 TRAJECTORY_SIZE: 1240484768
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 64
-- 64
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 16
-- 16
-NDHMDMAB:
-- 0
-- 0
-NSOL: 4800
-TEMPERATURE: '310'
 TRJLENGTH: 1000100.0
+TEMPERATURE: 310.0
 NUMBER_OF_ATOMS: 33408
-DATEOFRUNNING: 12/06/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

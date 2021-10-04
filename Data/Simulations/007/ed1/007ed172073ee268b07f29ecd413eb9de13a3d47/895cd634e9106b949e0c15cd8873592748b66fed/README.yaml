@@ -6,12 +6,7 @@ TPR:
 - - run.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 20
-POPC: POPC
-SOL: TIP3
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Ollila
 SYSTEM: 200POPC_9000SOL_313K
@@ -25,43 +20,20 @@ LOG:
 - - run.log
 TOP:
 - - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 9000
 TRAJECTORY_SIZE: 3979765856
-NPOPC:
-- 100
-- 100
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOL: 9000
-TEMPERATURE: '313'
 TRJLENGTH: 200010.0
+TEMPERATURE: 313.0
 NUMBER_OF_ATOMS: 53800
-DATEOFRUNNING: 12/06/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

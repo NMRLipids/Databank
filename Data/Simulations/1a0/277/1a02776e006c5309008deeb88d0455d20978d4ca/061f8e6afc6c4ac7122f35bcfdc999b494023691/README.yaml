@@ -6,18 +6,7 @@ TPR:
 - - step7_1.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 20
-POPC: POPC
-POPS: POPS
-SOL: TIP3
-CAL: CAL
-CLA: CLA
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  POPS: mappingPOPScharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-  CAL: mappingCAL.txt
-  CLA: mappingCLA.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Jesper J. Madsen
 SYSTEM: 250POPC_50POPS_53CAL_56CLA_298K_73529Atoms
@@ -29,42 +18,34 @@ CPT: null
 LOG: null
 TOP:
 - - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 25
+    - 25
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 11190
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.txt
+    COUNT: 53
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 56
 TRAJECTORY_SIZE: 548902276
-NPOPC:
-- 125
-- 125
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 25
-- 25
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NCLA: 56
-NCAL: 53
-NSOL: 11190
-TEMPERATURE: '298'
 TRJLENGTH: 200100.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 73529
-DATEOFRUNNING: 10/05/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

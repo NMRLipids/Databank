@@ -1,11 +1,5 @@
 DOI: 10.5281/zenodo.3859339
-
 SYSTEM: POPC:POPG(1:1)_T298K
-MAPPING_DICT:
-  POPC: mappingPOPClipid17ecc.txt
-  POPG: mappingPOPGlipid17ecc.txt
-  SOD: mappingSODecc.txt
-  SOL: mappingSPCwater.txt
 SOFTWARE: gromacs
 FF: lipid17ecc
 FF_SOURCE: NMRlipidsIV
@@ -14,11 +8,17 @@ TRJ: traj.xtc
 TPR: topol.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 15
-
-POPC: POPC
-POPG: POPG
-
-SOD: NA
-SOL: SOL
-
-DIR_WRK :  /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid17ecc.txt
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17ecc.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingSODecc.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt

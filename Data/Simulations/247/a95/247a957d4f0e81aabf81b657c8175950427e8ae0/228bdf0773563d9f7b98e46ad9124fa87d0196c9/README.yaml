@@ -6,20 +6,7 @@ TPR:
 - - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 135
-POPC: POPC
-POPS: POPS
-SOL: TIP3
-SOD: SOD
-CAL: CAL
-CLA: CLA
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  POPS: mappingPOPScharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-  SOD: mappingSOD.txt
-  CAL: mappingCAL.txt
-  CLA: mappingCLA.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Nencini, Ricky
 SYSTEM: 250POPC_50POPS_11190SOL_50SOD_28CAL_56CLA_320K
@@ -32,61 +19,38 @@ CPT:
 LOG: null
 TOP:
 - - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 25
+    - 25
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 11190
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 50
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.txt
+    COUNT: 28
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 56
 TRAJECTORY_SIZE: 1192376312
-NPOPC:
-- 125
-- 125
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 25
-- 25
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 50
-NCLA: 56
-NCAL: 28
-NSOL: 11190
-TEMPERATURE: '320'
 TRJLENGTH: 434500.0
+TEMPERATURE: 320.0
 NUMBER_OF_ATOMS: 73554
-DATEOFRUNNING: 09/07/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer
