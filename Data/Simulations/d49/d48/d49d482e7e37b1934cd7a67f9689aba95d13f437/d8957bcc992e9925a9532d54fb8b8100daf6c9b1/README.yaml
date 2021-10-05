@@ -1,0 +1,100 @@
+DOI: 10.5281/zenodo.3238157
+SOFTWARE: gromacs
+TRJ:
+- - chol40_500ns.xtc
+TPR:
+- - chol40.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+CHOL: CHL1
+POPC: POPC
+SOL: TIP3
+MAPPING_DICT:
+  CHOL: mappingCHOLESTEROLcharmm.txt
+  POPC: mappingPOPCcharmm.txt
+  SOL: mappingTIP3PCHARMMgui.txt
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 134CHOL_200POPC_15030SOL_310K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI (http://www.charmm-gui.org)
+FF_DATE: null
+CPT:
+- - chol40_500ns.cpt
+LOG: null
+TOP:
+- - chol40.top
+TRAJECTORY_SIZE: 1521741868
+NPOPC:
+- 100
+- 100
+NPOPG:
+- 0
+- 0
+NPOPS:
+- 0
+- 0
+NPOPE:
+- 0
+- 0
+NDMPC:
+- 0
+- 0
+NDPPC:
+- 0
+- 0
+NDPPE:
+- 0
+- 0
+NDPPG:
+- 0
+- 0
+NDEPC:
+- 0
+- 0
+NDLPC:
+- 0
+- 0
+NDLIPC:
+- 0
+- 0
+NDOPC:
+- 0
+- 0
+NDDOPC:
+- 0
+- 0
+NDOPS:
+- 0
+- 0
+NDSPC:
+- 0
+- 0
+NDAPC:
+- 0
+- 0
+NPOPI:
+- 0
+- 0
+NSAPI:
+- 0
+- 0
+NSLPI:
+- 0
+- 0
+NCER:
+- 0
+- 0
+NCHOL:
+- 67
+- 67
+NDHMDMAB:
+- 0
+- 0
+NSOL: 15030
+TRJLENGTH: 500100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 81806
+DATEOFRUNNING: 30/09/2021
