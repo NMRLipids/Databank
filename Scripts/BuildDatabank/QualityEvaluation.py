@@ -193,11 +193,14 @@ for simulation in simulations:
     os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
     os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
     os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
-    DATAdir = '../../Data/QualityEvaluation/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
+    
+    #save fragment quality here
+    DATAdir_FQ = '../../Data/QualityEvaluation/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
+    
+    #save OP quality here
+    DATAdir_OP = '../../Data/Simulations/' + + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
    # print(DATAdir)
      
-    # measured values do not exist for all CH!!!!! need to take mapping name and find matching CH from simulation
-    # read existing experimental values and mapping names to match with simulated CH bonds
 
     for lipid1 in simulation.getLipids():
         #print(lipid1)
@@ -244,29 +247,49 @@ for simulation in simulations:
                 f.close()
 
             exp_error = 0.02
-
-            for key, value in lipidExpOPdata.items():
-                if lipidExpOPdata[key][0][0] is not 'NaN':
-                    OP_array = OP_data_lipid[key] #[float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
-                    print(OP_array)
-                    #print(type(OP_array))
-                    OP_exp = value[0][0]
-                    OP_sim = OP_array[0]
-                    #op_sim_sd = OP_array[1] 
-                    op_sim_STEM = OP_array[2] 
-                    #changing to use shitness(TM) scale. This code needs to be cleaned
-                    op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
-             
-                    # op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
-                    # print(type(op_quality))
-                    OP_array.append(op_quality)
-                    #print(OP_array)
+            
+            for key in OP_data_lipid.keys():
+                OP_array = OP_data_lipid[key]
+                try:
+                    OP_exp = lipidExpOPdata[key][0][0]
+                except KeyError:
+                    OP_array.append('NaN')
+                    continue
+                else:
+                    if lipidExpOPdata[key][0][0] is not 'NaN':
+                        OP_sim = OP_array[0]
+                        op_sim_STEM = OP_array[2]
+                        #changing to use shitness(TM) scale. This code needs to be cleaned
+                        op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                        OP_array.append(op_quality)
+                    else:
+                        OP_array.append('NaN')
                 
-                    OP_qual_data[key] = OP_array
+                OP_qual_data[key] = OP_array    
+                
+             print(OP_qual_data)
+#            for key, value in lipidExpOPdata.items():
+#                if lipidExpOPdata[key][0][0] is not 'NaN':
+#                    OP_array = OP_data_lipid[key] #[float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
+#                    print(OP_array)
+#                    #print(type(OP_array))
+#                    OP_exp = value[0][0]
+#                    OP_sim = OP_array[0]
+#                    #op_sim_sd = OP_array[1] 
+#                    op_sim_STEM = OP_array[2] 
+#                    #changing to use shitness(TM) scale. This code needs to be cleaned
+#                    op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
+#             
+#                    # op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
+#                    # print(type(op_quality))
+#                    OP_array.append(op_quality)
+#                    #print(OP_array)
+#                
+#                    OP_qual_data[key] = OP_array
 
-            print(OP_qual_data) 
-        # quality data should be added into the OrderParameters.json file of the simulation                  
-            outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
+#            print(OP_qual_data) 
+        # quality data should be written into the OrderParameters.json file of the simulation                  
+            outfile = DATAdir_OP + '/' + lipid1 + '_OrderParameters.json'
         
             with open(outfile, 'w') as f:
                 json.dump(OP_qual_data,f)
@@ -289,7 +312,7 @@ for simulation in simulations:
             print('sn2 ') 
             print(sn2) 
             
-            fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+            fragment_quality_file = DATAdir_FQ + '/' + lipid1 + '_FragmentQuality.json'
             
             with open(fragment_quality_file, 'w') as f:
                 json.dump(fragment_quality,f)
