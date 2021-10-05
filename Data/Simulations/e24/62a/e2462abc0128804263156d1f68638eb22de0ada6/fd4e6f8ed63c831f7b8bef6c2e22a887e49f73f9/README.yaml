@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.3241243
+SYSTEM: POPC:POPG(7:3)_T310K
+SOFTWARE: gromacs
+FF: lipid17
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: system1
+    MAPPING: mappingPOPClipid17.txt
+    COUNT:
+    - 175
+    - 175
+  POPG:
+    NAME: system2
+    MAPPING: mappingPOPGlipid17.txt
+    COUNT:
+    - 75
+    - 75
+  SOD:
+    NAME: Na+
+    MAPPING: mappingSODlipid17.txt
+    COUNT: 150
+  SOL:
+    NAME: WAT
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 25000
+TRAJECTORY_SIZE: 5227930244
+TRJLENGTH: 100010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 141100
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.1493229
+SOFTWARE: gromacs
+TRJ:
+- - traj.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila, O. H. S.
+SYSTEM: 110POPC_22POPS_4932SOL_101SOD_79CLA_298K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 55
+    - 55
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 11
+    - 11
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 4932
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 101
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 79
+TRAJECTORY_SIZE: 1814930132
+TRJLENGTH: 150010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 32510
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

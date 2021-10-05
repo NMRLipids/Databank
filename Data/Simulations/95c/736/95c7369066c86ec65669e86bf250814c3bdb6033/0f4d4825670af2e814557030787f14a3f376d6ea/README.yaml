@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.15549
+SOFTWARE: gromacs
+TRJ:
+- - dppcRUN5-30ns.trr
+TPR:
+- - dppcRUN2.tpr
+PREEQTIME: 5
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Ollila Samuli and Miettinen Markus
+SYSTEM: 72DPPC_2189SOL_323K
+SOFTWARE_VERSION: 4.5
+FF: CHARMM36
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - dppc_c36.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 2189
+TRAJECTORY_SIZE: 1912222368
+TRJLENGTH: 25005.0
+TEMPERATURE: 323.0
+NUMBER_OF_ATOMS: 15927
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

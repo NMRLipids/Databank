@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.2580153
+SOFTWARE: gromacs
+TRJ:
+- - dm_popg_pope_3_1_charmm.xtc
+TPR:
+- - md_03.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
+SYSTEM: 374POPG_126POPE_25000SOL_423SOD_49CLA_310K
+SOFTWARE_VERSION: 5.1.2
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.txt
+    COUNT:
+    - 187
+    - 187
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.txt
+    COUNT:
+    - 63
+    - 63
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 25000
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 423
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 49
+TRAJECTORY_SIZE: 5195549740
+TRJLENGTH: 100010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 138720
+DATEOFRUNNING: 04/10/2021
+TYPEOFSYSTEM: lipid bilayer

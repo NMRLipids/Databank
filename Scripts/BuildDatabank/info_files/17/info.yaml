@@ -1,0 +1,28 @@
+DOI: 10.5281/zenodo.35159
+SOFTWARE: gromacs
+TRJ: 035M_CaCl2_POPC_CRM36_100_200ns.xtc
+TPR: 035M_CaCl2_POPC_CRM36.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+AUTHORS_CONTACT: Girych Mykhailo and Ollila O. H. Samuli
+SYSTEM: POPC_CHARMM36_CaCl2_035Mol_303K
+SOFTWARE_VERSION: 5.0.4
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: md.log
+TOP: topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.txt
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt

@@ -1,0 +1,56 @@
+DOI: 10.5281/zenodo.3371327
+SOFTWARE: gromacs
+TRJ:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.xtc
+TPR:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 135
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 250POPC_50POPS_11190SOL_50SOD_28CAL_56CLA_320K
+SOFTWARE_VERSION: 2018.6
+FF: CHARMM36 with NBFIX for calcium ions
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.cpt
+LOG: null
+TOP:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 25
+    - 25
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 11190
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 50
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.txt
+    COUNT: 28
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 56
+TRAJECTORY_SIZE: 1192376312
+TRJLENGTH: 434500.0
+TEMPERATURE: 320.0
+NUMBER_OF_ATOMS: 73554
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.3997176
+SYSTEM: POPC:POPG(4:1)_T298K_0.1MCaCl
+SOFTWARE: gromacs
+FF: lipid17ecc
+FF_SOURCE: NMRlipidsIV
+FF_DATE: ?/?/2020
+TRJ:
+- - 100-400ns.xtc
+TPR:
+- - run_400ns.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+POPS: POPS
+POPE: POPE
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    COUNT:
+    - 175
+    - 175
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGlipid17ecc.txt
+    COUNT:
+    - 44
+    - 44
+  SOD:
+    NAME: NA
+    MAPPING: mappingSODecc.txt
+    COUNT: 88
+  CAL:
+    NAME: CA
+    MAPPING: mappingCALecc.txt
+    COUNT: 47
+  CLA:
+    NAME: CL
+    MAPPING: mappingCLAecc.txt
+    COUNT: 94
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 26124
+TRAJECTORY_SIZE: 7595871916
+TRJLENGTH: 300020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 136677
+DATEOFRUNNING: 05/10/2021
+TYPEOFSYSTEM: lipid bilayer

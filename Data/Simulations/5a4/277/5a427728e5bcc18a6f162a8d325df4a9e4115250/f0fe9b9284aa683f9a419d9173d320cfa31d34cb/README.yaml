@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.166034
+SYSTEM: POPC_T298K
+SOFTWARE: gromacs
+FF: Slipids
+FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - popc00_T298_every100ps.xtc
+TPR:
+- - popc00_T298_every100ps.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 70
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 256
+    - 256
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 23943
+TRAJECTORY_SIZE: 527345968
+TRJLENGTH: 100100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 140437
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

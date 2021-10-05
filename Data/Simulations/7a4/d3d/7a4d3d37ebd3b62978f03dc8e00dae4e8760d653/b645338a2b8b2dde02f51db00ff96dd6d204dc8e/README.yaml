@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.209362
+SOFTWARE: gromacs
+TRJ:
+- - traj_comp.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 84POPC_4800SOL_36CHOL_303.84K
+SOFTWARE_VERSION: 5.1.2
+FF: CHARMM36
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
+FF_DATE: null
+CPT:
+- - state.cpt
+LOG:
+- - md.log
+TOP:
+- - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 42
+    - 42
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 4800
+  CHOL:
+    NAME: CLOL
+    MAPPING: mappingCHOLESTEROLcharmm.txt
+    COUNT:
+    - 18
+    - 18
+TRAJECTORY_SIZE: 1042927012
+TRJLENGTH: 100010.0
+TEMPERATURE: 303.15
+NUMBER_OF_ATOMS: 28320
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.4643875
+SOFTWARE: gromacs
+TRJ:
+- - traj.trr
+TPR:
+- - popc407.tpr
+PREEQTIME: 270
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+PUBLICATION: Ferreira et al. Phys. Chem. Chem. Phys., 2013,15, 1976-1989
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+SYSTEM: POPC_T298K
+SOFTWARE_VERSION: 4.5
+FF: Berger
+FFSOL: SPC
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE: ?/?/????
+TOP:
+- - topol.top
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 7290
+TRAJECTORY_SIZE: 3424404744
+TRJLENGTH: 50010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 28526
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer
