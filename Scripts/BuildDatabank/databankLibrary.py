@@ -599,6 +599,44 @@ software_dict = {
                 "OPENMM"  : openmm_dict,
                 }
 
+
+##############CLASS FOR LOOPING OVER SYSTEMS#######################################
+
+import yaml
+class databank():
+    
+    def __init__(self,path=r'../../Data/Simulations/'):
+        self.path = path
+        self.systems = []
+        self.__load_systems__(path)
+
+    def __load_systems__(self,path):
+        for subdir, dirs, files in os.walk(path):
+            for filename in files:
+                filepath = os.path.join(subdir, filename)
+                #print(filepath)
+                if filename == "README.yaml":
+                    with open(filepath) as yaml_file:
+                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                        size = len(filepath)
+                        content['path'] = filepath[:size-11]
+                        self.systems.append(content)
+                
+    def get_systems(self):
+        return self.systems
+    
+    def pie_temperature(self):
+        list_feature = [ int(float(system['TEMPERATURE'])) for system in self.systems]
+        import collections
+        counter = collections.Counter(list_feature)
+        plt.pie(counter.values(),labels=counter.keys(), normalize=True)
+
+
+
+
+
+
+
 #########################FUNCTIONS###################################################
 #functions used in building and analyzing the databank
 

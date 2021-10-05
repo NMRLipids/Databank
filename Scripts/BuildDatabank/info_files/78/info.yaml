@@ -1,0 +1,21 @@
+DOI: 10.5281/zenodo.3605386
+SYSTEM: POPCPOPE_(1:1)_T298K
+SOFTWARE: gromacs
+FF: Slipids
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/
+FF_DATE: ??
+TRJ: pcpe_slipids.xtc
+TPR: pcpe_slipids.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEslipids.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt

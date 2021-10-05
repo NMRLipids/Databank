@@ -14,7 +14,9 @@ def convertFile(info_file):
         new_info_file['COMPOSITION'][key]['NAME'] = mol_name
         new_info_file['COMPOSITION'][key]['MAPPING'] = mapping_name
         del new_info_file[key]
-    new_info_file['DIR_WRK'] = '/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK'
+
+    new_info_file['DIR_WRK'] = '/media/osollila/Data/tmp/DATABANK/'
+
     return new_info_file
     
 #def addWRKdir(info_file):
@@ -30,6 +32,11 @@ for subdir, dirs, files in os.walk(r'./info_files/'):
             new_info_file = {}
             with open(filepath) as f:
                 info_file = yaml.load(f, Loader=yaml.FullLoader)
+                try:
+                    tst = info_file['COMPOSITION']
+                    continue
+                except:
+                    print('Converting', info_file['DOI'])
                 new_info_file = convertFile(info_file)
                 print(new_info_file)
             f.close()
