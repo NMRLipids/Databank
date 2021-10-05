@@ -30,6 +30,11 @@ for subdir, dirs, files in os.walk(r'./info_files/'):
             new_info_file = {}
             with open(filepath) as f:
                 info_file = yaml.load(f, Loader=yaml.FullLoader)
+                try:
+                    tst = info_file['COMPOSITION']
+                    continue
+                except:
+                    print('Converting', info_file['DOI'])
                 new_info_file = convertFile(info_file)
                 print(new_info_file)
             f.close()

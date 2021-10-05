@@ -1,10 +1,5 @@
 DOI: 10.5281/zenodo.3997154
 SYSTEM: POPC:POPG(4:1)_T298K
-MAPPING_DICT:
-  POPC: mappingPOPClipid17ecc.txt
-  POPG: mappingPOPGlipid17ecc.txt
-  SOD: mappingSODecc.txt
-  SOL: mappingSPCwater.txt
 SOFTWARE: gromacs
 FF: lipid17ecc
 FF_SOURCE: NMRlipidsIV
@@ -15,50 +10,31 @@ TPR:
 - - run_400ns.tpr
 PREEQTIME: 100
 TIMELEFTOUT: 0
-POPC: POPC
-POPG: POPG
-SOD: NA
-SOL: SOL
-DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    COUNT:
+    - 175
+    - 175
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGlipid17ecc.txt
+    COUNT:
+    - 44
+    - 44
+  SOD:
+    NAME: NA
+    MAPPING: mappingSODecc.txt
+    COUNT: 88
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 26265
 TRAJECTORY_SIZE: 7607903024
-NPOPC:
-- 175
-- 175
-NPOPG:
-- 44
-- 44
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 88
-NSOL: 26265
-TEMPERATURE: 298.0
 TRJLENGTH: 300020.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 136959
-DATEOFRUNNING: 08/07/2021
-EXPERIMENT:
-  10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/4
+DATEOFRUNNING: 05/10/2021
+TYPEOFSYSTEM: lipid bilayer
