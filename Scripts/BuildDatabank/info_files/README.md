@@ -60,6 +60,7 @@ SAPI | 
 SLPI | 
 CER  | N-palmitoyl-D-erythro-sphingosine
 CHOL | cholesterol 
+DCHOL | 18,19-di-nor-cholesterol
 DHMDMAB | dihexadecyldimethylammonium 
 POT | potassium ion 
 SOD | sodium ion 
