@@ -39,29 +39,28 @@ class Simulation:
         
     def getLipids(self, molecules=lipid_numbers_list):
         lipids = []
-        for key in molecules:
-            try:
-                if self.readme['N'+key] != [0,0]: 
-                    lipids.append(key)
-            except KeyError:
-                continue
-        return lipids     
+        
+        for key in self.readme['COMPOSITION'].keys():
+            if key in molecules:
+                lipids.append(key)
+        return lipids
         
 class Experiment:
     pass
-    
+
+#class Data:
+#    def __init__(self, molecule, data_path):
+#        self.molecule = molecule
+#        self.data = {}
+#        self.__load_data__(data_path)
+#    
+#    def __load_data__(self,data_path):
+#        with open(data_path) as json_file:
+#            self.data = json.load(json_file)
+#        json_file.close()
 
 #Quality evaluation of simulated data
-#assume that an order parameter calculated S from a simulation is normally distributed
-# OP_sd = sqrt(N)*STEM, where N is number of lipids and STEM is standard error of mean
-#def OP_sd(N, STEM):
-#    op_sd = math.sqrt(N)*STEM
-#    
-#    return op_sd
 
-# op_sd = STEM
-    
-# P: what is the probability that S_exp +/- 0.02 is in g(s) where g(s) is the probability density function of normal distribution N(s, S_sim, S_sim_sd)
 
 def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
@@ -82,20 +81,7 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
 
     return float(precise_log)
 
-# quality of simulated order parameter
-#def OPquality(P_S,op_sim_STEM):
-#   # print('probability')
-#    #print(P_S)
-#    if P_S != 0:
-#        quality = 1-math.log(P_S) #/op_sim_STEM     # math.log(P_S/op_sim_STEM)      #/ math.sqrt(op_sim_STEM) #/ (op_sim_STEM*op_sim_STEM)
-#    else:
-#        quality = 0
-   # quality_float = quality.item()
- #   print('quality')
- #   print(quality)
-#    return quality
-    
-#
+
 def OPquality(OP_exp, OP_sim):
     quality = np.absolute(OP_exp - OP_sim)
     return quality
@@ -151,54 +137,58 @@ def fragmentQuality(fragment, exp_op_data, sim_op_data):
         return E_F
     else:
         return 'nan'
+        
+def loadSimulations():
+    simulations = []
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f40/bb6/f40bb6ab5d44402be07059e8df74b5a8200f031e/6774168dfec0a5a7377c8a46341eba603f320cf7'): #
+        for filename1 in files:
+            filepath = subdir + os.sep + filename1
+        
+            if filepath.endswith("README.yaml"):
+                READMEfilepathSimulation = subdir + '/README.yaml'
+                with open(READMEfilepathSimulation) as yaml_file_sim:
+                    readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
+                    indexingPath = "/".join(filepath.split("/")[4:8])
+                    print(indexingPath)
+                    print(filepath)
+                    try:
+                        experiments = readmeSim['EXPERIMENT']
+                    except KeyError:
+                        # print("No matching experimental data for system " + readmeSim['SYSTEM'] + " in directory " + indexingPath)
+                        continue
+                    else:
+                         if experiments: #if experiments is not empty
+                            simOPdata = {} #order parameter files for each type of lipid
+                            for filename2 in files:
+                                if filename2.endswith('OrderParameters.json'):
+                                    lipid_name = filename2.replace('OrderParameters.json', '')
+                                    dataPath = subdir + "/" + filename2
+                                    with open(dataPath) as json_file:
+                                        OPdata = json.load(json_file)
+                                        simOPdata[lipid_name] = OPdata
+                                    json_file.close()
+                                    
+                            simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                yaml_file_sim.close()
+                    
+    return simulations
 
     
 ###################################################################################################
-simulations = []
-for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
-    for filename1 in files:
-        filepath = subdir + os.sep + filename1
-        
-        if filepath.endswith("README.yaml"):
-            READMEfilepathSimulation = subdir + '/README.yaml'
-            with open(READMEfilepathSimulation) as yaml_file_sim:
-                readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
-                indexingPath = "/".join(filepath.split("/")[4:8])
-                print(indexingPath)
-                print(filepath)
-                try:
-                    if readmeSim['EXPERIMENT']:
-
-                        simOPdata = {} #order parameter files for each type of lipid
-                        for filename2 in files:
-                            if filename2.endswith('OrderParameters.json'):
-                                key_data1 = filename2.replace('OrderParameters.json', '')
-                                OPfilepath = subdir + "/" + filename2
-                                with open(OPfilepath) as json_file:
-                                    simOPdata[key_data1] = json.load(json_file)
-                                    json_file.close()
-                        simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
-                        yaml_file_sim.close()
-                except KeyError:
-                    # print("No matching experimental data for system " + readmeSim['SYSTEM'] + " in directory " + indexingPath)
-                    continue
-                    
+simulations = loadSimulations()
 
 if (not os.path.isdir('../../Data/QualityEvaluation/')): 
     os.system('mkdir ../../Data/QualityEvaluation/')
 
 for simulation in simulations:
     sub_dirs = simulation.indexingPath.split("/")
-    os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
-    os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
-    os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
-    os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
-    
-    #save fragment quality here
-    DATAdir_FQ = '../../Data/QualityEvaluation/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
+   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
+   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
+   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
+   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
     
     #save OP quality here
-    DATAdir_OP = '../../Data/Simulations/' + + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
+    DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
    # print(DATAdir)
      
 
@@ -215,9 +205,11 @@ for simulation in simulations:
             OP_data_lipid[key] = OP_array
             
         OP_qual_data = {}
+        
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
-        for value in simulation.readme['EXPERIMENT'].values():
+        
+        for lipid, doi, path in simulation.readme['EXPERIMENT'].items():
           # get readme file of the experiment
             experimentFilepath = "../../Data/experiments/" + value
             print(experimentFilepath)
@@ -267,29 +259,10 @@ for simulation in simulations:
                 
                 OP_qual_data[key] = OP_array    
                 
-             print(OP_qual_data)
-#            for key, value in lipidExpOPdata.items():
-#                if lipidExpOPdata[key][0][0] is not 'NaN':
-#                    OP_array = OP_data_lipid[key] #[float(x) for x in OP_data_lipid[key][0]] #convert elements to float because in some files the elements are strings 
-#                    print(OP_array)
-#                    #print(type(OP_array))
-#                    OP_exp = value[0][0]
-#                    OP_sim = OP_array[0]
-#                    #op_sim_sd = OP_array[1] 
-#                    op_sim_STEM = OP_array[2] 
-#                    #changing to use shitness(TM) scale. This code needs to be cleaned
-#                    op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM) #(OP_exp, exp_error, OP_sim, op_sim_sd)
-#             
-#                    # op_quality = OPquality(OP_exp, OP_sim)   #numpy float must be converted to float
-#                    # print(type(op_quality))
-#                    OP_array.append(op_quality)
-#                    #print(OP_array)
-#                
-#                    OP_qual_data[key] = OP_array
+            print(OP_qual_data)
 
-#            print(OP_qual_data) 
         # quality data should be written into the OrderParameters.json file of the simulation                  
-            outfile = DATAdir_OP + '/' + lipid1 + '_OrderParameters.json'
+            outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
         
             with open(outfile, 'w') as f:
                 json.dump(OP_qual_data,f)
@@ -312,7 +285,7 @@ for simulation in simulations:
             print('sn2 ') 
             print(sn2) 
             
-            fragment_quality_file = DATAdir_FQ + '/' + lipid1 + '_FragmentQuality.json'
+            fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
             
             with open(fragment_quality_file, 'w') as f:
                 json.dump(fragment_quality,f)

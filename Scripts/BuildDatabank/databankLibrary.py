@@ -100,7 +100,7 @@ molecules_dict = {
 
 
 # Dictionary containing the number of molecules which are automatically calculated from input files
-               
+# not needed anymore!!!!!              
 molecule_numbers_dict = {
             'NPOPC' : {"REQUIRED": False,
                               "TYPE": "array",
