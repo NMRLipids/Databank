@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.3483789
+SOFTWARE: gromacs
+TRJ:
+- - run.wrapped.xtc
+TPR:
+- - step7_1.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
+AUTHORS_CONTACT: Jesper J. Madsen
+SYSTEM: 250POPG_250POPC_128CAL_6CLA_298K_127778Atoms
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 20798
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.txt
+    COUNT: 128
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 6
+TRAJECTORY_SIZE: 958294056
+TRJLENGTH: 200100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 127778
+DATEOFRUNNING: 28/09/2021

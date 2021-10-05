@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.32570
+SOFTWARE: gromacs
+TRJ:
+- - traj80-200ns.xtc
+TPR:
+- - popcRUN3.tpr
+PREEQTIME: 80
+TIMELEFTOUT: 0
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila, Samuli
+SYSTEM: 72POPC_2164SOL_26CAL_52CLA_303K
+SOFTWARE_VERSION: 4.5
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 2164
+  CAL:
+    NAME: Cal
+    MAPPING: mappingCAL.txt
+    COUNT: 26
+  CLA:
+    NAME: CL
+    MAPPING: mappingCLA.txt
+    COUNT: 52
+TRAJECTORY_SIZE: 722320064
+TRJLENGTH: 120010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 16218
+DATEOFRUNNING: 28/09/2021

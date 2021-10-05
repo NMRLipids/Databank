@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.3693681
+SYSTEM: POPC:POPG(4:1)_T298K
+SOFTWARE: gromacs
+FF: lipid17
+FF_SOURCE: 10.5281/zenodo.2585523
+FF_DATE: ??
+TRJ:
+- - trajSKIP.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+COMPOSITION:
+  POPC:
+    NAME: PC
+    MAPPING: mappingPOPClipid17.txt
+    COUNT:
+    - 175
+    - 175
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17.txt
+    COUNT:
+    - 44
+    - 44
+  SOD:
+    NAME: NA
+    MAPPING: mappingSODlipid17.txt
+    COUNT: 88
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 26265
+TRAJECTORY_SIZE: 4438480544
+TRJLENGTH: 350040.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 136959
+DATEOFRUNNING: 29/09/2021

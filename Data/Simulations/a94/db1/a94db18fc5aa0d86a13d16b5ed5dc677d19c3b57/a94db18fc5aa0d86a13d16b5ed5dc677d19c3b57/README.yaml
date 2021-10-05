@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.2542151
+SOFTWARE: gromacs
+TRJ:
+- - run.wrapped.xtc
+TPR:
+- - step7_1.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 20
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
+AUTHORS_CONTACT: Jesper J. Madsen
+SYSTEM: 250POPC_50POPS_50POT_298K_73521Atoms
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 25
+    - 25
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 11207
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.txt
+    COUNT: 50
+TRAJECTORY_SIZE: 548674636
+TRJLENGTH: 200100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 73521
+DATEOFRUNNING: 28/09/2021

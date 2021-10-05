@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.3859339
+SYSTEM: POPC:POPG(1:1)_T298K
+SOFTWARE: gromacs
+FF: lipid17ecc
+FF_SOURCE: NMRlipidsIV
+FF_DATE: ?/?/2020
+TRJ:
+- - traj.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 15
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    COUNT:
+    - 75
+    - 75
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGlipid17ecc.txt
+    COUNT:
+    - 76
+    - 74
+  SOD:
+    NAME: NA
+    MAPPING: mappingSODecc.txt
+    COUNT: 150
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 29865
+TRAJECTORY_SIZE: 8278576984
+TRJLENGTH: 347500.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 128895
+DATEOFRUNNING: 29/09/2021

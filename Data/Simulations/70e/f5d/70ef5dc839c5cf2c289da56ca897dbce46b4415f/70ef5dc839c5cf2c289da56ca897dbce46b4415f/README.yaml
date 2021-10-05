@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.3371327
+SOFTWARE: gromacs
+TRJ:
+- - popc_pops_250_50_contra_sodium_nbfix_han.xtc
+TPR:
+- - popc_pops_250_50_contra_sodium_nbfix_han.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 99
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 250POPC_50POPS_11207SOL_50SOD_320K
+SOFTWARE_VERSION: 2018.6
+FF: CHARMM36 with NBFIX
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT:
+- - popc_pops_250_50_contra_sodium_nbfix_han.cpt
+LOG: null
+TOP:
+- - popc_pops_250_50_contra_sodium_nbfix_han.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.txt
+    COUNT:
+    - 25
+    - 25
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 11207
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 50
+TRAJECTORY_SIZE: 1093718212
+TRJLENGTH: 398900.0
+TEMPERATURE: 320.0
+NUMBER_OF_ATOMS: 73521
+DATEOFRUNNING: 28/09/2021
