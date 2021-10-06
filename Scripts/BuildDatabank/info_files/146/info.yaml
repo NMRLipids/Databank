@@ -1,36 +1,33 @@
 DOI: 10.5281/zenodo.2580902
-
 SOFTWARE: gromacs
 TRJ: dm_popc_popg_7_3_charmm.xtc
 TPR: md_05.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-
-POPC: POPC
-POPG: POPG
-SOL: SOL
-SOD: NA
-CLA: CL
-
-MAPPING_DICT:
- POPC: mappingPOPCcharmm.txt
- POPG: mappingPOPGcharmm.txt
- SOL: mappingTIP3Pwater.txt
- SOD: mappingNA.txt
- CLA: mappingCL.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
-PUBLICATION:
-AUTHORS_CONTACT: PEÓN, Antonio
-
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
 SYSTEM: 350POPC_150POPG_25000SOL_150SOD_310K_2
 SOFTWARE_VERSION: 5.1.2
-
 FF: CHARMM36
-FF_SOURCE: 
-FF_DATE:
-
-CPT:
-LOG:
-TOP:
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
