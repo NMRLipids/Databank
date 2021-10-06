@@ -6,21 +6,6 @@ TPR:
 - - DMPC_PI.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 500
-DMPC: DMPC
-POPI: POPI
-SAPI: SAPI
-SLPI: SLPI
-SOD: SOD
-CLA: CLA
-SOL: TIP3
-MAPPING_DICT:
-  DMPC: mappingDMPCcharmm.txt
-  POPI: mappingPOPIcharmm.txt
-  SAPI: mappingSAPIcharmm.txt
-  SLPI: mappingSLPIcharmm.txt
-  SOD: mappingSOD.txt
-  CLA: mappingCLA.txt
-  SOL: mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 UNITEDATOM_DICT: null
 PUBLICATION: null
@@ -36,42 +21,46 @@ CPT:
 LOG: null
 TOP:
 - - topol.top
+COMPOSITION:
+  DMPC:
+    NAME: DMPC
+    MAPPING: mappingDMPCcharmm.txt
+    COUNT:
+    - 90
+    - 90
+  POPI:
+    NAME: POPI
+    MAPPING: mappingPOPIcharmm.txt
+    COUNT:
+    - 8
+    - 8
+  SAPI:
+    NAME: SAPI
+    MAPPING: mappingSAPIcharmm.txt
+    COUNT:
+    - 23
+    - 23
+  SLPI:
+    NAME: SLPI
+    MAPPING: mappingSLPIcharmm.txt
+    COUNT:
+    - 7
+    - 7
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 104
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 28
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 12800
 TRAJECTORY_SIZE: 5194468496
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 90
-- 90
-NPOPI:
-- 8
-- 8
-NSAPI:
-- 23
-- 23
-NSLPI:
-- 7
-- 7
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 104
-NCLA: 28
-NSOL: 12800
-TEMPERATURE: '303.15'
 TRJLENGTH: 2000100.0
+TEMPERATURE: 303.15
 NUMBER_OF_ATOMS: 70516
-DATEOFRUNNING: 16/04/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

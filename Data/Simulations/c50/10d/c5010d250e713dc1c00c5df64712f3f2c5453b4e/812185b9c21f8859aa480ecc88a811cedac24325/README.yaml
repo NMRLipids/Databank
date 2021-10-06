@@ -6,16 +6,7 @@ TPR:
 - - depc.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DEPC: DEPC
-SOL: TIP3
-SOD: SOD
-CLA: CLA
-MAPPING_DICT:
-  DEPC: mappingDEPCcharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-  SOD: mappingSOD.txt
-  CLA: mappingCLA.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Matti Javanainen
 SYSTEM: 200DEPC_10000SOL_23SOD_23CLA
@@ -29,57 +20,28 @@ LOG:
 - - depc.log
 TOP:
 - - depc.top
+COMPOSITION:
+  DEPC:
+    NAME: DEPC
+    MAPPING: mappingDEPCcharmm.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 10000
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.txt
+    COUNT: 23
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.txt
+    COUNT: 23
 TRAJECTORY_SIZE: 1149476476
-NPOPC:
-- 0
-- 0
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDEPC:
-- 100
-- 100
-NDLPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NSOD: 23
-NCLA: 23
-NSOL: 10000
-TEMPERATURE: '310'
 TRJLENGTH: 500100.0
+TEMPERATURE: 310.0
 NUMBER_OF_ATOMS: 62446
-DATEOFRUNNING: 29/06/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer

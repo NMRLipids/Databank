@@ -6,16 +6,7 @@ TPR:
 - - step7_1.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-POPC: POPC
-POPG: POPG
-SOL: TIP3
-POT: POT
-MAPPING_DICT:
-  POPC: mappingPOPCcharmm.txt
-  POPG: mappingPOPGcharmm.txt
-  SOL: mappingTIP3PCHARMMgui.txt
-  POT: mappingPOT.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Jesper J. Madsen
 SYSTEM: 250POPC_250POPG_250POT_298K_119974Atoms
@@ -27,44 +18,30 @@ CPT: null
 LOG: null
 TOP:
 - - topol.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.txt
+    COUNT:
+    - 125
+    - 125
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.txt
+    COUNT: 18158
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.txt
+    COUNT: 250
 TRAJECTORY_SIZE: 901173616
-NPOPC:
-- 125
-- 125
-NPOPG:
-- 125
-- 125
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCHOL:
-- 0
-- 0
-NDHMDMAB:
-- 0
-- 0
-NPOT: 250
-NSOL: 18158
-TEMPERATURE: '298'
 TRJLENGTH: 200100.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 119974
-DATEOFRUNNING: 15/05/2021
-EXPERIMENT: {}
+DATEOFRUNNING: 01/10/2021
+TYPEOFSYSTEM: lipid bilayer
