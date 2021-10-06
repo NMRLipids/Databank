@@ -1,11 +1,12 @@
 # User input
-The databank entries are given as yaml files which locate in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) folder with integer names.
+The databank entries are given as yaml files locating in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) with integer names.
 The dictionary variables that are used for indexing the data entries are described here.
 The necessary parameters required for the analyses are described first and are marked as ''compulsory''. 
 Because also other than compulsory parameters may be highly useful in upcycling the data, we strong recommend that all the possible parameters are given upon entry.
 
-When making the entry file for your simulation, looking already existing examples in 
-subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) is useful.
+The already existing info files in 
+subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/)
+serve as useful examples when preparing the new entry files.
 
 #### DOI (compulsory)
 Give the DOI identity for the location of simulation files. 
@@ -28,8 +29,9 @@ Give the time simulated before the uploaded trajectory in nanoseconds. For examp
 Give the time that should be considered as an equilibration period in the uploaded trajectory. Frames before the give time will be discarded in the analysis. 
 For example, if you upload 0-200 ns part of total 200 ns simulation where the first 100 ns should be considered as an equilibration, this value should be 100.
 
-#### Molecule names (compulsory)
-In the databank, each molecule has a unique abbreviation (see table below). 
+#### COMPOSITION (compulsory)
+Information that is used to determine the composition (i.e., the number of molecules) of each simulation is given in python dictionary format in COMPOSITION.
+Each molecule has a unique abbreviation in the NMRlipids databank as listed  in the table below. 
 You need to give the residue names (in Gromacs: the fourth column of the \[atoms\] directive in an itp-file) of these molecules corresponding your simulation.
 If atoms in a lipid belong to different residues (typical situation in Amber force fields), 
 give the name of the head group residue here, and add the residue name of each atom to the third column in the mapping file (see below). 

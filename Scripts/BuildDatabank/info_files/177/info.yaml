@@ -1,30 +1,25 @@
 DOI: 10.5281/zenodo.3950029
-
 SOFTWARE: gromacs
 TRJ: dppc_348k.xtc
 TPR: dppc_348k.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-
-DPPC: DPPC
-SOL: SOL
-
-MAPPING_DICT:
- DPPC: mappingDPPCcharmm.txt
- SOL: mappingTIP3Pwater.txt
-
-DIR_WRK: /usr/home/bort/Databank
-
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: 10.1039/D0CP02058C
-AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Benzerara, Olivier; Marques, Carlos; Thalmann, Fabrice
-
+AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Benzerara, Olivier; Marques, Carlos;
+  Thalmann, Fabrice
 SYSTEM: 212DPPC_29826SOL_348K
 SOFTWARE_VERSION: 2016.4
-
 FF: CHARMM36
-FF_SOURCE:
+FF_SOURCE: null
 FF_DATE: June 2015
-
-CPT:
-LOG:
-TOP:
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt

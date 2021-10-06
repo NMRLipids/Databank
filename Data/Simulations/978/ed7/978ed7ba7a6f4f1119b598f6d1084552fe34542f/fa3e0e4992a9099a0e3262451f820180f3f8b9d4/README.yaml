@@ -6,18 +6,7 @@ TPR:
 - - md20.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-CHOL: CHL1
-POPC: POPC
-SOL: SOL
-CAL: Cal
-CLA: CL
-MAPPING_DICT:
-  CHOL: mappingCHOLESTEROLcharmm.txt
-  POPC: mappingPOPCcharmm.txt
-  SOL: mappingTIP3Pwater.txt
-  CAL: mappingCAL.txt
-  CLA: mappingCL.txt
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
 SYSTEM: 50CHOL_200POPC_9000SOL_73CAL_146CLA_310K
@@ -29,77 +18,34 @@ CPT: null
 LOG: null
 TOP:
 - - md20.top
+COMPOSITION:
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.txt
+    COUNT:
+    - 27
+    - 23
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 9000
+  CAL:
+    NAME: Cal
+    MAPPING: mappingCAL.txt
+    COUNT: 73
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 146
 TRAJECTORY_SIZE: 4315584484
-NPOPC:
-- 100
-- 100
-NPOPG:
-- 0
-- 0
-NPOPS:
-- 0
-- 0
-NPOPE:
-- 0
-- 0
-NDMPC:
-- 0
-- 0
-NDPPC:
-- 0
-- 0
-NDPPE:
-- 0
-- 0
-NDPPG:
-- 0
-- 0
-NDEPC:
-- 0
-- 0
-NDLPC:
-- 0
-- 0
-NDLIPC:
-- 0
-- 0
-NDOPC:
-- 0
-- 0
-NDDOPC:
-- 0
-- 0
-NDOPS:
-- 0
-- 0
-NDSPC:
-- 0
-- 0
-NDAPC:
-- 0
-- 0
-NPOPI:
-- 0
-- 0
-NSAPI:
-- 0
-- 0
-NSLPI:
-- 0
-- 0
-NCER:
-- 0
-- 0
-NCHOL:
-- 27
-- 23
-NDHMDMAB:
-- 0
-- 0
-NCLA: 146
-NCAL: 73
-NSOL: 9000
 TRJLENGTH: 2000100.0
 TEMPERATURE: 310.15
 NUMBER_OF_ATOMS: 57719
-DATEOFRUNNING: 30/09/2021
+DATEOFRUNNING: 05/10/2021
+TYPEOFSYSTEM: lipid bilayer
