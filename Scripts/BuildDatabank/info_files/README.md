@@ -32,25 +32,25 @@ For example, if you upload 0-200 ns part of total 200 ns simulation where the fi
 #### COMPOSITION (compulsory)
 Information that is used to determine the composition (i.e., the number of molecules) of each simulation is given in python dictionary format in COMPOSITION.
 The COMPOSITION is given in a dictionary format, where the first key is the universal molecule name (abbreviation listed in the table below).
-Another dictionary is then created for each molecule containing the values for the residue name in your simulatin (NAME) and the name of the mapping file (MAPPING). 
+Another dictionary is then created for each molecule containing the values for the residue name in your simulation (NAME) and the name of the mapping file (MAPPING). 
 For example, the COMPOSITION dictionary for [a system](https://doi.org/10.5281/zenodo.259392) containing POPC, Cholesterol (CHOL), water (SOL), sodium (SOD), and chloride (CLA) can be given as
 
-COMPOSITION:
-  CHOL:
-    NAME: CHL1
-    MAPPING: mappingCHOLESTEROLcharmm.txt
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-  SOD:
-    NAME: SOD
-    MAPPING: mappingSOD.txt
-  CLA:
-    NAME: CLA
-    MAPPING: mappingCLA.txt
+COMPOSITION:<br />
+&nbsp;&nbsp;CHOL:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;NAME: CHL1<br />
+&nbsp;&nbsp;&nbsp;&nbsp;MAPPING: mappingCHOLESTEROLcharmm.txt<br />
+&nbsp;&nbsp;POPC:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;NAME: POPC<br />
+&nbsp;&nbsp;&nbsp;&nbsp;MAPPING: mappingPOPCcharmm.txt<br />
+&nbsp;&nbsp;SOL:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;NAME: TIP3<br />
+&nbsp;&nbsp;&nbsp;&nbsp;MAPPING: mappingTIP3PCHARMMgui.txt<br />
+&nbsp;&nbsp;SOD:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;NAME: SOD<br />
+&nbsp;&nbsp;&nbsp;&nbsp;MAPPING: mappingSOD.txt<br />
+&nbsp;&nbsp;CLA:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;NAME: CLA<br />
+&nbsp;&nbsp;&nbsp;&nbsp;MAPPING: mappingCLA.txt<br />
 
 For example in Gromacs, the residue name can be found from the fourth column of the \[atoms\] directive in an itp-file.
 Mapping files define the atom names in your system using [the mapping file convention](\url{http://nmrlipids.blogspot.com/2015/03/mapping-scheme-for-lipid-atom-names-for.html}), 
