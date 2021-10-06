@@ -51,6 +51,8 @@ import sys
 #for building hydrogens to united atom simulations 
 import buildH_calcOP_test
 
+import openmm_parser
+
 #import databank dictionaries
 from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
@@ -392,16 +394,7 @@ print(df_files)
 # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
 #print(sim_hashes)
 
-        
 
-# ## Read molecule numbers into dictionary
-
-tpr = str(dir_tmp) + '/' + str(sim.get('TPR')).translate({ord(c): None for c in "']["})
-trj = str(dir_tmp) + '/' + str(sim.get('TRJ')).translate({ord(c): None for c in "']["})
-#structure_file = ""
-gro = str(dir_tmp) + '/conf.gro'
-
-sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 
 #Anne:Read molecule numbers from tpr or gro file.
 #Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre 
@@ -412,33 +405,32 @@ sim['TRAJECTORY_SIZE'] = os.path.getsize(trj)
 
 print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
-# OTHER SOFTWARES THAN GROMACS!!!!
 top = ''
 traj = ''
 
-
+# OTHER SOFTWARES THAN GROMACS!!!!
 if sim['SOFTWARE'] == 'gromacs':
     top = str(dir_tmp) + '/' + sim['TPR'][0][0]
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'amber':                    #CHECK IF THESE WORK
-    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
+elif sim['SOFTWARE'] == 'openMM':
     traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'namd':
-    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'charmm':
-    top = str(dir_tmp) + '/' + sim['PSF'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-elif sim['SOFTWARE'] == 'openmm':
-    top = str(dir_tmp) + '/' + sim['TOP'][0][0] 
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+    top = str(dir_tmp) + '/' + sim['PDB'][0][0]
     
+
+
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(top, traj)
-u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
+try:
+    u = Universe(top, traj)
+    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+except:
+    conf = str(dir_tmp) + '/conf.gro'
+    print("Generating conf.gro because MDAnalysis cannot read tpr version")
+    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
+    u = Universe(conf, traj)
+    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+    
 gro = str(dir_tmp) + '/frame0.gro'
 
 u0 = Universe(gro)
@@ -448,8 +440,8 @@ lipids = []
 for key_mol in lipids_dict:
     print("Calculating number of " + key_mol + " lipids")
     selection = ""
-    if key_mol in sim['MAPPING_DICT'].keys():
-       m_file = sim['MAPPING_DICT'][key_mol]
+    if key_mol in sim['COMPOSITION'].keys():
+       m_file = sim['COMPOSITION'][key_mol]['MAPPING']
        with open('./mapping_files/'+m_file,"r") as f:
            for line in f:
                if len(line.split()) > 2 and "Individual atoms" not in line:
@@ -457,7 +449,7 @@ for key_mol in lipids_dict:
                elif "Individual atoms" in line:
                    continue
                else:
-                   selection = "resname " + sim.get(key_mol)
+                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                    #print(selection)
                    break
     selection = selection.rstrip(' or ')
@@ -487,8 +479,8 @@ for key_mol in lipids_dict:
     leaflet2 = 0 
         
     selection = ""
-    if key_mol in sim['MAPPING_DICT'].keys():
-        m_file = sim['MAPPING_DICT'][key_mol]
+    if key_mol in sim['COMPOSITION'].keys():
+        m_file = sim['COMPOSITION'][key_mol]['MAPPING']
         with open('./mapping_files/'+m_file,"r") as f:
             for line in f:
                 if len(line.split()) > 2 and "Individual atoms" not in line:
@@ -496,13 +488,13 @@ for key_mol in lipids_dict:
                 elif "Individual atoms" in line:
                     continue
                 else:
-                    selection = "resname " + sim.get(key_mol)
+                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                     break
     selection = selection.rstrip(' or ')
     #   print(selection)
     molecules = u0.select_atoms(selection)
     #print(molecules.residues)
-    x = 'N' + key_mol
+
     if molecules.n_residues > 0:
         for mol in molecules.residues:
             R = mol.atoms.center_of_mass()
@@ -513,23 +505,29 @@ for key_mol in lipids_dict:
             elif R[2] - R_membrane_z < 0:
                 leaflet2 = leaflet2 +1
                   # print('layer2  ' + str(leaflet2))
-    sim[x] = [leaflet1, leaflet2] 
-
-    print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
-    print("Number of " + key_mol  + " in lower leaflet: " + str(leaflet2))
+    try:              
+        sim['COMPOSITION'][key_mol]['COUNT'] = [leaflet1, leaflet2] 
+    except KeyError:
+        continue
+    else:
+        print("Number of " + key_mol  + " in upper leaflet: " + str(leaflet1))
+        print("Number of " + key_mol  + " in lower leaflet: " + str(leaflet2))
 
 ###########################################################################################        
 #numbers of other molecules
 for key_mol in molecules_dict:
-    value_mol = sim.get(key_mol)
-    if not value_mol:
+    try:
+        mol_name = sim['COMPOSITION'][key_mol]['NAME']
+    except KeyError:
         continue
-    #print(value_mol)
-    x = 'N' + key_mol
-    sim[x] = u0.select_atoms("resname " + value_mol).n_residues
-    print("Number of " + key_mol  + ": " + str(sim[x]))   
+    else:
+        mol_number = u0.select_atoms("resname " + mol_name).n_residues
+        sim['COMPOSITION'][key_mol]['COUNT'] = mol_number
+        print("Number of " + key_mol  + ": " + str(sim['COMPOSITION'][key_mol]['COUNT']))   
 
-#Anne: Read trajectory length 
+#Anne: Read trajectory size and length 
+
+sim['TRAJECTORY_SIZE'] = os.path.getsize(traj)
 
 dt = 0
 nsteps = 0
@@ -543,17 +541,29 @@ trj_length = Nframes * timestep
 sim['TRJLENGTH'] = trj_length
 
 #Read temperature from tpr
-file1 = str(dir_tmp) + '/tpr.txt'
+if sim['SOFTWARE'] == 'gromacs':
+    file1 = str(dir_tmp) + '/tpr.txt'
 
-print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
-os.system('echo System | gmx dump -s '+ tpr + ' > '+file1)
+    print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
+    os.system('echo System | gmx dump -s '+ top + ' > '+file1)
 
-with open(file1, 'rt') as tpr_info:
-    for line in tpr_info:
-        if 'ref-t' in line:
-            sim['TEMPERATURE']=float(line.split()[1])
-    
-
+    with open(file1, 'rt') as tpr_info:
+        for line in tpr_info:
+            if 'ref-t' in line:
+                sim['TEMPERATURE']=float(line.split()[1])
+#read temperature from xml or inp
+elif sim['SOFTWARE'] == 'openMM':
+#Use parser written by batuhan to read inp and xml files
+    for key in ['INP','XML']:
+        try:
+            file1 = str(dir_tmp) + '/' + sim[key][0][0]
+        except KeyError:
+            print(key + ' file does not exist')
+            continue
+        else:
+            type = key.lower()
+            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
+            break
 
 print("Parameters read from input files:")
 print("TEMPERATURE: " + str(sim['TEMPERATURE']))
@@ -567,7 +577,7 @@ number_of_atomsTRJ = len(u.atoms)
 number_of_atoms = 0
 for key_mol in all_molecules:
     try:
-        mapping_file = './mapping_files/'+sim['MAPPING_DICT'][key_mol]
+        mapping_file = './mapping_files/'+sim['COMPOSITION'][key_mol]['MAPPING']
     except:
         continue
     if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
@@ -581,7 +591,7 @@ for key_mol in all_molecules:
     else:
         mapping_file_length = len(open(mapping_file).readlines(  ))
     try:
-        number_of_atoms += np.sum(sim['N' + key_mol]) * mapping_file_length
+        number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
     except:
         continue
         
@@ -590,7 +600,7 @@ if number_of_atoms != number_of_atomsTRJ:
     stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
     # Do you still want to continue the analysis (y/n)?")
     #if stop == "n":
-    sys.exit("Interrupted because atomnumbers did not match")
+    os._exit("Interrupted because atomnumbers did not match")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))
@@ -603,16 +613,23 @@ sim['DATEOFRUNNING'] = today
 
 print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
-# BATUHAN: add openmm parser #
-# # Save to databank
+# Type of system is currently hard coded because only lipid bilayers are currently added.
+# When we go for other systems, this will be given by user.
+sim['TYPEOFSYSTEM'] = 'lipid bilayer'
 
 
 # Batuhan: Creating a nested directory structure as discussed on the Issue here https://github.com/NMRLipids/NMRlipidsVIpolarizableFFs/issues/3
-    
-head_dir = sim_hashes.get('TPR')[0][1][0:3]
-sub_dir1 = sim_hashes.get('TPR')[0][1][3:6]
-sub_dir2 = sim_hashes.get('TPR')[0][1]
-sub_dir3 = sim_hashes.get('TRJ')[0][1]
+
+if sim['SOFTWARE'] == 'gromacs':
+    head_dir = sim_hashes.get('TPR')[0][1][0:3]
+    sub_dir1 = sim_hashes.get('TPR')[0][1][3:6]
+    sub_dir2 = sim_hashes.get('TPR')[0][1]
+    sub_dir3 = sim_hashes.get('TRJ')[0][1] 
+elif sim['SOFTWARE'] == 'openMM':    
+    head_dir = sim_hashes.get('TRJ')[0][1][0:3]
+    sub_dir1 = sim_hashes.get('TRJ')[0][1][3:6]
+    sub_dir2 = sim_hashes.get('TRJ')[0][1]
+    sub_dir3 = sim_hashes.get('TRJ')[0][1]
 
 print("Creating databank directories.")
 os.system('mkdir ../../Data/Simulations/' + str(head_dir))

@@ -4,20 +4,22 @@ TRJ: md.xtc
 TPR: topol.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 100
-POPC: POPC
-SOL: SOL
-MAPPING_DICT: 
-    POPC: mappingPOPCslipids.txt
-    SOL:  mappingTIP3PCHARMMgui.txt
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-UNITEDATOM_DICT: 
-PUBLICATION: F. Grote and A. P. Lyubartsev, J. Phys. Chem. B 2020, 124, 8784-8793 
-AUTHORS_CONTACT: Fredrik Grote (fredrik.grote@mmk.su.se), Alexander Lyubartsev (alexander.lyubartsev@mmk.su.se) 
-SYSTEM: POPC bilayer 303 K 
-SOFTWARE_VERSION: GROMACS 2019 
+UNITEDATOM_DICT: null
+PUBLICATION: F. Grote and A. P. Lyubartsev, J. Phys. Chem. B 2020, 124, 8784-8793
+AUTHORS_CONTACT: Fredrik Grote (fredrik.grote@mmk.su.se), Alexander Lyubartsev (alexander.lyubartsev@mmk.su.se)
+SYSTEM: POPC bilayer 303 K
+SOFTWARE_VERSION: GROMACS 2019
 FF: Slipids2020
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/Downloads.html
 FF_DATE: ?/?/2020
-CPT:
-LOG:
+CPT: null
+LOG: null
 TOP: mix.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PCHARMMgui.txt
