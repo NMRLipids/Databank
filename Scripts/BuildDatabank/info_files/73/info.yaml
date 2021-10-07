@@ -8,14 +8,14 @@ TRJ: total_4_500_last.xtc
 TPR: md.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPG:
     NAME: PGR
     MAPPING: mappingPOPGlipid17.txt
   SOD:
     NAME: Na+
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingNA+.txt
   SOL:
     NAME: WAT
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Plipid17.txt
