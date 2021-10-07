@@ -51,7 +51,7 @@ M_G1C17H1_M  H16R       PA
 M_G1C17H2_M  H16S       PA
 M_G1C17H3_M  H16T       PA
 M_G2_M         C2       PC
-M_G2H1_M       HX	PC
+M_G2H1_M       HX       PC
 M_G2O1_M      O21       PC
 M_G2C2_M      C21       PC
 M_G2C2O1_M    O22       PC
@@ -119,7 +119,7 @@ M_G3C4H2_M        H1B     PC
 M_G3C5_M          C32     PC
 M_G3C5H1_M        H2A     PC
 M_G3C5H2_M        H2B     PC
-M_G3N6_M          N31	  PC
+M_G3N6_M          N31     PC
 M_G3N6C1_M        C35     PC
 M_G3N6C1H1_M      H5A     PC
 M_G3N6C1H2_M      H5B     PC
