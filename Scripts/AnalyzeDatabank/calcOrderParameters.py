@@ -21,18 +21,6 @@ for system in systems:
     Nlipid = 0
     path = system['path']
 
-    # This is temprorary because not all systems are converted to new format yet
-    # To be removed
-    try:    
-        for molecule in system['COMPOSITION']:
-            if molecule in lipids_dict:
-                Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    except:
-        notready = notready + 1
-        print(system['path'], ' not ready')
-        continue
-
-    
     for key in system['COMPOSITION']:
         outfilename = path + key + 'OrderParameters.json'
         #print(outfilename)
