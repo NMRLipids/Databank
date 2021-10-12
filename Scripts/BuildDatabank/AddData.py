@@ -593,7 +593,7 @@ if number_of_atoms != number_of_atomsTRJ:
     stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
     # Do you still want to continue the analysis (y/n)?")
     #if stop == "n":
-    sys.exit("Interrupted because atomnumbers did not match")
+    os._exit("Interrupted because atomnumbers did not match")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))
