@@ -421,16 +421,9 @@ elif sim['SOFTWARE'] == 'openMM':
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-try:
-    u = Universe(top, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-except:
-    conf = str(dir_tmp) + '/conf.gro'
-    print("Generating conf.gro because MDAnalysis cannot read tpr version")
-    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
-    u = Universe(conf, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-    
+u = Universe(top, traj)
+u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+
 gro = str(dir_tmp) + '/frame0.gro'
 
 u0 = Universe(gro)
@@ -613,13 +606,12 @@ sim['DATEOFRUNNING'] = today
 
 print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
 
-# Type of system is currently hard coded because only lipid bilayers are currently added.
-# When we go for other systems, this will be given by user.
-sim['TYPEOFSYSTEM'] = 'lipid bilayer'
+# BATUHAN: add openmm parser #
+# # Save to databank
 
 
 # Batuhan: Creating a nested directory structure as discussed on the Issue here https://github.com/NMRLipids/NMRlipidsVIpolarizableFFs/issues/3
-
+    
 if sim['SOFTWARE'] == 'gromacs':
     head_dir = sim_hashes.get('TPR')[0][1][0:3]
     sub_dir1 = sim_hashes.get('TPR')[0][1][3:6]
@@ -630,7 +622,7 @@ elif sim['SOFTWARE'] == 'openMM':
     sub_dir1 = sim_hashes.get('TRJ')[0][1][3:6]
     sub_dir2 = sim_hashes.get('TRJ')[0][1]
     sub_dir3 = sim_hashes.get('TRJ')[0][1]
-
+    
 print("Creating databank directories.")
 
 os.system('mkdir ../../Data/Simulations/' + str(head_dir))
