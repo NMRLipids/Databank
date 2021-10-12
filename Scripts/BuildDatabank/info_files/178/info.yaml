@@ -1,32 +1,25 @@
-DOI: 10.5281/zenodo.1288297
-SYSTEM: POPC10%DHMDMAB_T313K
+DOI: 10.5281/zenodo.3950029
 SOFTWARE: gromacs
-FF: CHARMM36
-FFSOL: TIP3P
-FF_SOURCE: NMRlipids IVa
-FF_DATE: ??
-TRJ: run30.xtc
-TPR: run30.tpr
+TRJ: dppc_358k.xtc
+TPR: dppc_358k.tpr
 PREEQTIME: 0
-TIMELEFTOUT: 20
-POPG: POPG
-POPS: POPS
-POPE: POPE
-CHOL: CHOL
-POT: K
-SOD: NA
-CAL: CA
+TIMELEFTOUT: 0
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: 10.1039/D0CP02058C
+AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Benzerara, Olivier; Marques, Carlos;
+  Thalmann, Fabrice
+SYSTEM: 212DPPC_29826SOL_358K
+SOFTWARE_VERSION: 2016.4
+FF: CHARMM36
+FF_SOURCE: null
+FF_DATE: June 2015
+CPT: null
+LOG: null
+TOP: null
 COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-  DHMDMAB:
-    NAME: T7H
-    MAPPING: mappingDHMDMABcharmm.txt
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
   SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-  CLA:
-    NAME: CLA
-    MAPPING: mappingCLA.txt
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
