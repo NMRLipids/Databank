@@ -88,15 +88,15 @@ def OPquality(OP_exp, OP_sim):
     
 # quality of molecule fragments
 
-def evaluated_percentage(fragment, exp_op_data):
+def evaluated_percentage(fragments, exp_op_data):
     count_value = 0
     fragment_size = 0
     for key, value in exp_op_data.items():
-        for f in fragment:
-            if f in key:
-                fragment_size += 1
-                if value[0][0] != 'nan':
-                    count_value += 1
+        for f in fragments:
+             if f in key:
+                 fragment_size += 1
+                 if value[0][0] != 'nan':
+                     count_value += 1
     if fragment_size != 0:
         return count_value / fragment_size
     else:
@@ -115,22 +115,24 @@ def carbonError(OP_sim, OP_exp):
 
 
 
-def fragmentQuality(fragment, exp_op_data, sim_op_data):
-    p_F = evaluated_percentage(fragment, exp_op_data)
+def fragmentQuality(fragments, exp_op_data, sim_op_data):
+    print("fragment quality")
+    p_F = evaluated_percentage(fragments, exp_op_data)
     #warning, hard coded experimental error
     exp_error=0.02
     E_sum = 0
     if p_F != 0:
-        for key_exp, value_exp in exp_op_data.items():
-            #  print(key_exp)
-            #  print(value_exp)
-            if fragment in key_exp and value_exp[0][0] != 'nan':
-                OP_exp = value_exp[0][0]
-               # print(OP_exp)
-                OP_sim = sim_op_data[key_exp][0]
-               # print(OP_sim)
-               # op_sim_STEM=sim_op_data[key_exp][0][2]
-                E_sum += carbonError(OP_exp, OP_sim)
+        for fr in fragments:
+            for key_exp, value_exp in exp_op_data.items():
+                print(key_exp)
+                print(value_exp[0][0])
+                if (fr in key_exp) and value_exp[0][0] != 'nan':
+                    OP_exp = value_exp[0][0]
+                   # print(OP_exp)
+                    OP_sim = sim_op_data[key_exp][0]
+                   # print(OP_sim)
+                   # op_sim_STEM=sim_op_data[key_exp][0][2]
+                    E_sum += carbonError(OP_exp, OP_sim)
                #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
                # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
         E_F = E_sum / p_F
@@ -211,6 +213,7 @@ for simulation in simulations:
         print(simulation.readme['EXPERIMENT'].values())
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
+            data_dict = {}
             for doi, path in experiments.items():
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/" + path
@@ -223,22 +226,22 @@ for simulation in simulations:
                     #print(experiment.readme)
                 yaml_file_exp.close()
 
+                exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
                 lipidExpOPdata = {}
                 try:
-                    exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
-                except FileNotFoundError:
-                    print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
-                    continue
-                else:
-                    #print(exp_OP_filepath)
                     with open(exp_OP_filepath) as json_file:
                         lipidExpOPdata = json.load(json_file)
                     json_file.close()
+                except FileNotFoundError:
+                    print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
+                    continue
+
+                    
             
-                    simulationREADMEsave = DATAdir + '/README.yaml'
-                    with open(simulationREADMEsave, 'w') as f:
-                        yaml.dump(simulation.readme,f, sort_keys=False)
-                    f.close()
+             #       simulationREADMEsave = DATAdir + '/README.yaml'
+             #       with open(simulationREADMEsave, 'w') as f:
+             #           yaml.dump(simulation.readme,f, sort_keys=False)
+             #       f.close()
 
                 exp_error = 0.02
            
@@ -261,16 +264,11 @@ for simulation in simulations:
                 
                     OP_qual_data[key] = OP_array    
                 
-                print(OP_qual_data)
-
-        # quality data should be written into the OrderParameters.json file of the simulation                  
-                outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
-        
-                with open(outfile, 'w') as f:
-                    json.dump(OP_qual_data,f)
-                f.close()
-            
-        # calculate quality for molecule fragments headgroup, sn-1, sn-2
+                #print(OP_qual_data)
+                
+                data_dict[doi] = OP_qual_data
+                
+                # calculate quality for molecule fragments headgroup, sn-1, sn-2
                 headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
                 sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
                 sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
@@ -292,7 +290,21 @@ for simulation in simulations:
                 with open(fragment_quality_file, 'w') as f:
                     json.dump(fragment_quality,f)
                 f.close()
+                
+                
+                
+                  ###ADD EXPERIMENTAL VALUES TO OUTPUT FILE      
+
+        #write into the OrderParameters_quality.json quality data file                  
+            outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
+      
+            with open(outfile, 'w') as f:
+                json.dump(data_dict,f)
+            f.close()
+
+            
         
+
         
         
      #   print(OP_qual_data)                        
