@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.259365
+SOFTWARE: gromacs
+TRJ: md0.xtc
+TPR: md0.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
+SOFTWARE_VERSION: 5.0
+FF: CHARMM36
+FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: md0.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+  CAL:
+    NAME: Cal
+    MAPPING: mappingCAL.txt
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
