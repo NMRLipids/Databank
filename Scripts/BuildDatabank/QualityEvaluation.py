@@ -140,7 +140,7 @@ def fragmentQuality(fragment, exp_op_data, sim_op_data):
         
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f40/bb6/f40bb6ab5d44402be07059e8df74b5a8200f031e/6774168dfec0a5a7377c8a46341eba603f320cf7'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -162,6 +162,7 @@ def loadSimulations():
                             for filename2 in files:
                                 if filename2.endswith('OrderParameters.json'):
                                     lipid_name = filename2.replace('OrderParameters.json', '')
+                                    print(lipid_name)
                                     dataPath = subdir + "/" + filename2
                                     with open(dataPath) as json_file:
                                         OPdata = json.load(json_file)
@@ -209,87 +210,88 @@ for simulation in simulations:
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
         
-        for lipid, doi, path in simulation.readme['EXPERIMENT'].items():
-          # get readme file of the experiment
-            experimentFilepath = "../../Data/experiments/" + value
-            print(experimentFilepath)
-            READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
-            experiment = Experiment()
-            with open(READMEfilepathExperiment) as yaml_file_exp:
-                readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-                experiment.readme = readmeExp
-                #print(experiment.readme)
-            yaml_file_exp.close()
+        for lipid, experiments in simulation.readme['EXPERIMENT'].items():
+            for doi, path in experiments.items():
+            # get readme file of the experiment
+                experimentFilepath = "../../Data/experiments/" + path
+                print(experimentFilepath)
+                READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
+                experiment = Experiment()
+                with open(READMEfilepathExperiment) as yaml_file_exp:
+                    readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+                    experiment.readme = readmeExp
+                    #print(experiment.readme)
+                yaml_file_exp.close()
 
-            lipidExpOPdata = {}
-            try:
-                exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
-            except FileNotFoundError:
-                print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
-                continue
-            else:
-                #print(exp_OP_filepath)
-                with open(exp_OP_filepath) as json_file:
-                    lipidExpOPdata = json.load(json_file)
-                json_file.close()
-            
-                simulationREADMEsave = DATAdir + '/README.yaml'
-                with open(simulationREADMEsave, 'w') as f:
-                    yaml.dump(simulation.readme,f, sort_keys=False)
-                f.close()
-
-            exp_error = 0.02
-            
-            for key in OP_data_lipid.keys():
-                OP_array = OP_data_lipid[key]
+                lipidExpOPdata = {}
                 try:
-                    OP_exp = lipidExpOPdata[key][0][0]
-                except KeyError:
-                    OP_array.append('NaN')
+                    exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
+                except FileNotFoundError:
+                    print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
                     continue
                 else:
-                    if lipidExpOPdata[key][0][0] is not 'NaN':
-                        OP_sim = OP_array[0]
-                        op_sim_STEM = OP_array[2]
-                        #changing to use shitness(TM) scale. This code needs to be cleaned
-                        op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                        OP_array.append(op_quality)
-                    else:
+                    #print(exp_OP_filepath)
+                    with open(exp_OP_filepath) as json_file:
+                        lipidExpOPdata = json.load(json_file)
+                    json_file.close()
+            
+                    simulationREADMEsave = DATAdir + '/README.yaml'
+                    with open(simulationREADMEsave, 'w') as f:
+                        yaml.dump(simulation.readme,f, sort_keys=False)
+                    f.close()
+
+                exp_error = 0.02
+           
+                for key in OP_data_lipid.keys():
+                    OP_array = OP_data_lipid[key]
+                    try:
+                        OP_exp = lipidExpOPdata[key][0][0]
+                    except KeyError:
                         OP_array.append('NaN')
+                        continue
+                    else:
+                        if lipidExpOPdata[key][0][0] is not 'NaN':
+                            OP_sim = OP_array[0]
+                            op_sim_STEM = OP_array[2]
+                            #changing to use shitness(TM) scale. This code needs to be cleaned
+                            op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                            OP_array.append(op_quality)
+                        else:
+                            OP_array.append('NaN')
                 
-                OP_qual_data[key] = OP_array    
+                    OP_qual_data[key] = OP_array    
                 
-            print(OP_qual_data)
+                print(OP_qual_data)
 
         # quality data should be written into the OrderParameters.json file of the simulation                  
-            outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
+                outfile = DATAdir + '/' + lipid1 + '_OrderParameters.json'
         
-            with open(outfile, 'w') as f:
-                json.dump(OP_qual_data,f)
-            f.close()
+                with open(outfile, 'w') as f:
+                    json.dump(OP_qual_data,f)
+                f.close()
             
         # calculate quality for molecule fragments headgroup, sn-1, sn-2
-            headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
-            sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
-            sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
+                headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
+                sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
+                sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
             
-            fragment_quality = {}
-            fragment_quality['headgroup'] = headgroup
-            fragment_quality['sn-1'] = sn1
-            fragment_quality['sn-2'] = sn2
+                fragment_quality = {}
+                fragment_quality['headgroup'] = headgroup
+                fragment_quality['sn-1'] = sn1
+                fragment_quality['sn-2'] = sn2
            
-            print('headgroup ')
-            print(headgroup)
-            print('sn1 ') 
-            print(sn1)
-            print('sn2 ') 
-            print(sn2) 
+                print('headgroup ')
+                print(headgroup)
+                print('sn1 ') 
+                print(sn1)
+                print('sn2 ') 
+                print(sn2) 
             
-            fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+                fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
             
-            with open(fragment_quality_file, 'w') as f:
-                json.dump(fragment_quality,f)
-            f.close()
+                with open(fragment_quality_file, 'w') as f:
+                    json.dump(fragment_quality,f)
+                f.close()
         
         
         
