@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.4352287
+SOFTWARE: gromacs
+TRJ:
+- - purepopccent.xtc
+TPR:
+- - purepopc.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Antila, Hanne
+SYSTEM: 122POPC_4880SOL_303K
+SOFTWARE_VERSION: 2020.1
+FF: Slipids
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 61
+    - 61
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 4880
+TRAJECTORY_SIZE: 13623499200
+TRJLENGTH: 1200010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 30988
+DATEOFRUNNING: 12/10/2021
+TYPEOFSYSTEM: lipid bilayer
