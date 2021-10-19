@@ -262,7 +262,7 @@ for simulation in simulations:
                     #  print(simulation.indexingPath)
                     pairs.append([simulation, experiment])
                    # print(simulation.readme['SYSTEM'])
-                   # print(simulation.indexingPath)
+                    print(simulation.indexingPath)
                    # print(experiment.dataPath)
                     
                     #Add path to experiment into simulation README.yaml
@@ -286,6 +286,7 @@ print("Found " + str(len(pairs)) + " pairs")
 #    print(pair[1].readme)                        
 
         
+                
                 
                 
             
