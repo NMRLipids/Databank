@@ -124,8 +124,8 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
     if p_F != 0:
         for fr in fragments:
             for key_exp, value_exp in exp_op_data.items():
-                print(key_exp)
-                print(value_exp[0][0])
+            #    print(key_exp)
+            #    print(value_exp[0][0])
                 if (fr in key_exp) and value_exp[0][0] != 'nan':
                     OP_exp = value_exp[0][0]
                    # print(OP_exp)
@@ -164,7 +164,7 @@ def loadSimulations():
                             for filename2 in files:
                                 if filename2.endswith('OrderParameters.json'):
                                     lipid_name = filename2.replace('OrderParameters.json', '')
-                                    print(lipid_name)
+                                  #  print(lipid_name)
                                     dataPath = subdir + "/" + filename2
                                     with open(dataPath) as json_file:
                                         OPdata = json.load(json_file)
@@ -207,14 +207,16 @@ for simulation in simulations:
             OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
             OP_data_lipid[key] = OP_array
             
-        OP_qual_data = {}
+        
         
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
+            fragment_qual_dict = {}
             for doi, path in experiments.items():
+                OP_qual_data = {}
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/" + path
                 print(experimentFilepath)
@@ -236,35 +238,34 @@ for simulation in simulations:
                     print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
                     continue
 
-                    
-            
-             #       simulationREADMEsave = DATAdir + '/README.yaml'
-             #       with open(simulationREADMEsave, 'w') as f:
-             #           yaml.dump(simulation.readme,f, sort_keys=False)
-             #       f.close()
 
                 exp_error = 0.02
            
                 for key in OP_data_lipid.keys():
-                    OP_array = OP_data_lipid[key]
+                    OP_array = OP_data_lipid[key].copy()
                     try:
                         OP_exp = lipidExpOPdata[key][0][0]
                     except KeyError:
-                        OP_array.append('NaN')
+     #                   OP_array.append('NaN')
+     #                   OP_qual_data[key] = OP_array
                         continue
                     else:
-                        if lipidExpOPdata[key][0][0] is not 'NaN':
+                        if OP_exp is not 'NaN':
                             OP_sim = OP_array[0]
                             op_sim_STEM = OP_array[2]
                             #changing to use shitness(TM) scale. This code needs to be cleaned
                             op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                            OP_array.append(OP_exp)
+                            OP_array.append(exp_error)   #hardcoded!!!! 0.02 for all experiments
                             OP_array.append(op_quality)
-                        else:
-                            OP_array.append('NaN')
+                      #  else:
+                        #    OP_array.append(OP_exp)
+                        #    OP_array.append(exp_error)  #hardcoded!!!! 0.02 for all experiments
+                       #     OP_array.append('NaN')
                 
                     OP_qual_data[key] = OP_array    
                 
-                #print(OP_qual_data)
+                print(OP_qual_data)
                 
                 data_dict[doi] = OP_qual_data
                 
@@ -277,27 +278,28 @@ for simulation in simulations:
                 fragment_quality['headgroup'] = headgroup
                 fragment_quality['sn-1'] = sn1
                 fragment_quality['sn-2'] = sn2
-           
-                print('headgroup ')
-                print(headgroup)
-                print('sn1 ') 
-                print(sn1)
-                print('sn2 ') 
-                print(sn2) 
+                
+                fragment_qual_dict[doi] = fragment_quality
+              #  print('headgroup ')
+              #  print(headgroup)
+              #  print('sn1 ') 
+              #  print(sn1)
+              #  print('sn2 ') 
+              #  print(sn2) 
             
                 fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
             
                 with open(fragment_quality_file, 'w') as f:
-                    json.dump(fragment_quality,f)
+                    json.dump(fragment_qual_dict,f)
                 f.close()
                 
                 
                 
-                  ###ADD EXPERIMENTAL VALUES TO OUTPUT FILE      
+        
 
         #write into the OrderParameters_quality.json quality data file                  
             outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
-      
+        #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
             with open(outfile, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
