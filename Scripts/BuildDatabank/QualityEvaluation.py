@@ -142,37 +142,45 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
         
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
             if filepath.endswith("README.yaml"):
                 READMEfilepathSimulation = subdir + '/README.yaml'
+                readmeSim = {}
                 with open(READMEfilepathSimulation) as yaml_file_sim:
                     readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
-                    indexingPath = "/".join(filepath.split("/")[4:8])
-                    print(indexingPath)
-                    print(filepath)
-                    try:
-                        experiments = readmeSim['EXPERIMENT']
-                    except KeyError:
-                        # print("No matching experimental data for system " + readmeSim['SYSTEM'] + " in directory " + indexingPath)
-                        continue
-                    else:
-                         if experiments: #if experiments is not empty
-                            simOPdata = {} #order parameter files for each type of lipid
-                            for filename2 in files:
-                                if filename2.endswith('OrderParameters.json'):
-                                    lipid_name = filename2.replace('OrderParameters.json', '')
-                                  #  print(lipid_name)
-                                    dataPath = subdir + "/" + filename2
-                                    with open(dataPath) as json_file:
-                                        OPdata = json.load(json_file)
-                                        simOPdata[lipid_name] = OPdata
-                                    json_file.close()
+                yaml_file_sim.close()    
+                indexingPath = "/".join(filepath.split("/")[4:8])
+                print(indexingPath)
+                print(filepath)
+                print(readmeSim)
+                try:
+                    experiments = readmeSim['EXPERIMENT']
+                except KeyError:
+                    # print("No matching experimental data for system " + readmeSim['SYSTEM'] + " in directory " + indexingPath)
+                    continue
+                else:
+                    if any(experiments.values()): #if experiments is not empty
+                        print(any(experiments))
+                        simOPdata = {} #order parameter files for each type of lipid
+                        for filename2 in files:
+                            if filename2.endswith('OrderParameters.json'):
+                                lipid_name = filename2.replace('OrderParameters.json', '')
+                             #  print(lipid_name)
+                                dataPath = subdir + "/" + filename2
+                                OPdata = {}
+                                with open(dataPath) as json_file:
+                                    OPdata = json.load(json_file)
+                                json_file.close()
+                                simOPdata[lipid_name] = OPdata
                                     
-                            simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
-                yaml_file_sim.close()
+                        simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                    else:
+                        print("The simulation does not have experimental data.")
+                        continue
+                
                     
     return simulations
 
@@ -211,6 +219,7 @@ for simulation in simulations:
         
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
+        exit()
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
@@ -225,10 +234,11 @@ for simulation in simulations:
                 with open(READMEfilepathExperiment) as yaml_file_exp:
                     readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
                     experiment.readme = readmeExp
-                    #print(experiment.readme)
+                    print(experiment.readme)
                 yaml_file_exp.close()
 
                 exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
+                print(exp_OP_filepath)
                 lipidExpOPdata = {}
                 try:
                     with open(exp_OP_filepath) as json_file:
