@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.35193
+SOFTWARE: gromacs
+TRJ:
+- - 1000.xtc
+TPR:
+- - 1000.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_162SOD_162CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids, Kohagen for NaCl
+FF_SOURCE: http://mmkluster.fos.su.se/slipids/ and https://bitbucket.org/hseara/ions/
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP:
+- - 1000.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 9000
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 162
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 162
+TRAJECTORY_SIZE: 200831400
+TRJLENGTH: 100100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 54124
+DATEOFRUNNING: 12/10/2021
+TYPEOFSYSTEM: lipid bilayer
