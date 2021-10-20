@@ -1,66 +1,71 @@
-DOI: 10.5281/zenodo.4651415
-SOFTWARE: gromacs
-TRJ:
-- - DMPC_PI.xtc
-TPR:
-- - DMPC_PI.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 500
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
+FF_DATE: null
+SYSTEM: DMPC/liverPI bilayer
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 303.15
 UNITEDATOM_DICT: null
 PUBLICATION: null
-AUTHORS_CONTACT: Matti Javanainen (), Hector Martinez-Seara ()
-SYSTEM: DMPC/liverPI bilayer
-SOFTWARE_VERSION: null
-FF: CHARMM36
 FFSOL: TIP3P
+NUMBER_OF_ATOMS: 70516
+EXPERIMENT:
+  DMPC: {}
+  POPI: {}
+  SAPI: {}
+  SLPI: {}
 FF_SOURCE: CHARMM-GUI
-FF_DATE: null
-CPT:
-- - DMPC_PI.cpt
-LOG: null
-TOP:
-- - topol.top
 COMPOSITION:
   DMPC:
     NAME: DMPC
+    COUNT:
+    - 90
+    - 90
     MAPPING: mappingDMPCcharmm.txt
-    COUNT:
-    - 90
-    - 90
-  POPI:
-    NAME: POPI
-    MAPPING: mappingPOPIcharmm.txt
-    COUNT:
-    - 8
-    - 8
-  SAPI:
-    NAME: SAPI
-    MAPPING: mappingSAPIcharmm.txt
-    COUNT:
-    - 23
-    - 23
-  SLPI:
-    NAME: SLPI
-    MAPPING: mappingSLPIcharmm.txt
-    COUNT:
-    - 7
-    - 7
-  SOD:
-    NAME: SOD
-    MAPPING: mappingSOD.txt
-    COUNT: 104
   CLA:
     NAME: CLA
-    MAPPING: mappingCLA.txt
     COUNT: 28
+    MAPPING: mappingCLA.txt
+  SAPI:
+    NAME: SAPI
+    COUNT:
+    - 23
+    - 23
+    MAPPING: mappingSAPIcharmm.txt
+  SOD:
+    NAME: SOD
+    COUNT: 104
+    MAPPING: mappingSOD.txt
+  POPI:
+    NAME: POPI
+    COUNT:
+    - 8
+    - 8
+    MAPPING: mappingPOPIcharmm.txt
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
     COUNT: 12800
+    MAPPING: mappingTIP3PCHARMMgui.txt
+  SLPI:
+    NAME: SLPI
+    COUNT:
+    - 7
+    - 7
+    MAPPING: mappingSLPIcharmm.txt
+TIMELEFTOUT: 500
+CPT:
+- - DMPC_PI.cpt
+TPR:
+- - DMPC_PI.tpr
 TRAJECTORY_SIZE: 5194468496
-TRJLENGTH: 2000100.0
-TEMPERATURE: 303.15
-NUMBER_OF_ATOMS: 70516
+SOFTWARE_VERSION: null
+FF: CHARMM36
+TOP:
+- - topol.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.4651415
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TRJLENGTH: 2000100.0
+TRJ:
+- - DMPC_PI.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

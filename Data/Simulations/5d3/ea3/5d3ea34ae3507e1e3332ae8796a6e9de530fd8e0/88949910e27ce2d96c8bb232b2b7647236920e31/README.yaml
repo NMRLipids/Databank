@@ -1,36 +1,38 @@
-DOI: 10.5281/zenodo.164203
-SOFTWARE: gromacs
-TRJ:
-- - md_CHARMM36_GMX506_POPC_10A-switch_v2_skip10.xtc
-TPR:
-- - for-md_CHARMM36_GMX506_POPC_10A-switch_v2.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Piggot, Thomas
-SYSTEM: 128POPC_4040SOL_10A-switch_v2
-SOFTWARE_VERSION: 5.0.6
-FF: CHARMM36
-FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs
 FF_DATE: null
-CPT: null
-LOG: null
-TOP: null
+SYSTEM: 128POPC_4040SOL_10A-switch_v2
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 303.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 29272
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 64
     - 64
+    MAPPING: mappingPOPCcharmm.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
     COUNT: 4040
-TRAJECTORY_SIZE: 1091892540
+    MAPPING: mappingSPCwater.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 500050.0
-TEMPERATURE: 303.0
-NUMBER_OF_ATOMS: 29272
+TRAJECTORY_SIZE: 1091892540
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36
+TOP: null
+PREEQTIME: 0
+DOI: 10.5281/zenodo.164203
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - for-md_CHARMM36_GMX506_POPC_10A-switch_v2.tpr
+TRJ:
+- - md_CHARMM36_GMX506_POPC_10A-switch_v2_skip10.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

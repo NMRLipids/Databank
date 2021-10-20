@@ -1,46 +1,48 @@
-DOI: 10.5281/zenodo.1009027
-SOFTWARE: gromacs
-TRJ:
-- - DPPC_512_NaCl_150mM_322K_v-rescale_md.xtc
-TPR:
-- - DPPC_512_NaCl_150mM_322K_v-rescale_md.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Martinez-Seara, Hector
-SYSTEM: DPPC_512_NaCl_150mM_322K_v-rescale
-SOFTWARE_VERSION: 5.0.4
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.6
 FF_DATE: null
-CPT:
-- - DPPC_512_NaCl_150mM_322K_v-rescale_md.cpt
-LOG: null
-TOP:
-- - DPPC_512_NaCl_150mM_322K_v-rescale_md.top
+SYSTEM: DPPC_512_NaCl_150mM_322K_v-rescale
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 322.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 128110
+EXPERIMENT:
+  DPPC: {}
+FF_SOURCE: CHARMM-GUI v1.6
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
     COUNT:
     - 256
     - 256
-  SOL:
-    NAME: SOL
-    MAPPING: mappingSPCwater.txt
-    COUNT: 20480
+    MAPPING: mappingDPPCcharmm.txt
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
     COUNT: 55
+    MAPPING: mappingNA.txt
+  SOL:
+    NAME: SOL
+    COUNT: 20480
+    MAPPING: mappingSPCwater.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
     COUNT: 55
-TRAJECTORY_SIZE: 3355274848
+    MAPPING: mappingCL.txt
+TIMELEFTOUT: 0
+CPT:
+- - DPPC_512_NaCl_150mM_322K_v-rescale_md.cpt
 TRJLENGTH: 700100.0
-TEMPERATURE: 322.0
-NUMBER_OF_ATOMS: 128110
+TRAJECTORY_SIZE: 3355274848
+SOFTWARE_VERSION: 5.0.4
+FF: CHARMM36
+TOP:
+- - DPPC_512_NaCl_150mM_322K_v-rescale_md.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.1009027
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - DPPC_512_NaCl_150mM_322K_v-rescale_md.tpr
+TRJ:
+- - DPPC_512_NaCl_150mM_322K_v-rescale_md.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

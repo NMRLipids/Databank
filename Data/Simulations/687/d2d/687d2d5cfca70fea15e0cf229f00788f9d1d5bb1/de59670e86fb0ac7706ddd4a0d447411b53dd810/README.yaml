@@ -1,45 +1,47 @@
-DOI: 10.5281/zenodo.51185
-SOFTWARE: gromacs
-TRJ:
-- - md_last100ns.xtc
-TPR:
-- - md.tpr
-PREEQTIME: 1900
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
-SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
-SOFTWARE_VERSION: null
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - topol.top
+SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.15
+PUBLICATION: null
+NUMBER_OF_ATOMS: 54019
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
+  SOL:
+    NAME: SOL
+    COUNT: 9000
+    MAPPING: mappingTIP3Pwater.txt
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 100
     - 100
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
-    COUNT: 9000
+    MAPPING: mappingPOPCcharmm.txt
   CAL:
     NAME: Cal
-    MAPPING: mappingCAL.txt
     COUNT: 73
+    MAPPING: mappingCAL.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
     COUNT: 146
-TRAJECTORY_SIZE: 200297764
+    MAPPING: mappingCL.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 100100.0
-TEMPERATURE: 310.15
-NUMBER_OF_ATOMS: 54019
+TRAJECTORY_SIZE: 200297764
+SOFTWARE_VERSION: null
+FF: CHARMM36
+TOP:
+- - topol.top
+PREEQTIME: 1900
+DOI: 10.5281/zenodo.51185
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - md.tpr
+TRJ:
+- - md_last100ns.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

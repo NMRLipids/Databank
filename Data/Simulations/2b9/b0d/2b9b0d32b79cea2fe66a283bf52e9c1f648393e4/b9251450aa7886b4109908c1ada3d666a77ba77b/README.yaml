@@ -1,40 +1,44 @@
-DOI: 10.5281/zenodo.3997154
-SYSTEM: POPC:POPG(4:1)_T298K
-SOFTWARE: gromacs
-FF: lipid17ecc
-FF_SOURCE: NMRlipidsIV
 FF_DATE: ?/?/2020
-TRJ:
-- - 100-400ns.xtc
-TPR:
-- - run_400ns.tpr
-PREEQTIME: 100
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPClipid17ecc_POPCres.txt
-    COUNT:
-    - 175
-    - 175
-  POPG:
-    NAME: POPG
-    MAPPING: mappingPOPGlipid17ecc.txt
-    COUNT:
-    - 44
-    - 44
-  SOD:
-    NAME: NA
-    MAPPING: mappingSODecc.txt
-    COUNT: 88
-  SOL:
-    NAME: SOL
-    MAPPING: mappingSPCwater.txt
-    COUNT: 26265
-TRAJECTORY_SIZE: 7607903024
-TRJLENGTH: 300020.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC:POPG(4:1)_T298K
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 136959
+EXPERIMENT:
+  POPG: {}
+  POPC:
+    10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/4
+FF_SOURCE: NMRlipidsIV
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    COUNT:
+    - 44
+    - 44
+    MAPPING: mappingPOPGlipid17ecc.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 175
+    - 175
+    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+  SOL:
+    NAME: SOL
+    COUNT: 26265
+    MAPPING: mappingSPCwater.txt
+  SOD:
+    NAME: NA
+    COUNT: 88
+    MAPPING: mappingSODecc.txt
+TIMELEFTOUT: 0
+TRJLENGTH: 300020.0
 DATEOFRUNNING: 05/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: lipid17ecc
+SOFTWARE: gromacs
+PREEQTIME: 100
+DOI: 10.5281/zenodo.3997154
+TRAJECTORY_SIZE: 7607903024
+TPR:
+- - run_400ns.tpr
+TRJ:
+- - 100-400ns.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

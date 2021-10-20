@@ -1,48 +1,51 @@
-DOI: 10.5281/zenodo.3613573
-SYSTEM: POPC_POPG_1:1_1000mMCaCL2
-SOFTWARE: gromacs
-FF: Slipids
-FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/,  https://bitbucket.org/hseara/ions/
 FF_DATE: ??
-TRJ:
-- - PCPG_CA1000_extend.xtc
-TPR:
-- - PCPG_CA1000.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 500
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
-    COUNT:
-    - 64
-    - 64
-  POPG:
-    NAME: POPG
-    MAPPING: mappingPOPGslipids.txt
-    COUNT:
-    - 64
-    - 64
-  SOD:
-    NAME: NA
-    MAPPING: mappingSOD.txt
-    COUNT: 128
-  CAL:
-    NAME: CA
-    MAPPING: mappingCAL.txt
-    COUNT: 230
-  CLA:
-    NAME: CL
-    MAPPING: mappingCLA.txt
-    COUNT: 460
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
-    COUNT: 12800
-TRAJECTORY_SIZE: 2715109772
-TRJLENGTH: 1000100.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC_POPG_1:1_1000mMCaCL2
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 72626
+EXPERIMENT:
+  POPG: {}
+  POPC: {}
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/,  https://bitbucket.org/hseara/ions/
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPGslipids.txt
+  CLA:
+    NAME: CL
+    COUNT: 460
+    MAPPING: mappingCLA.txt
+  CAL:
+    NAME: CA
+    COUNT: 230
+    MAPPING: mappingCAL.txt
+  SOD:
+    NAME: NA
+    COUNT: 128
+    MAPPING: mappingSOD.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPCslipids.txt
+  SOL:
+    NAME: SOL
+    COUNT: 12800
+    MAPPING: mappingTIP3Pwater.txt
+TIMELEFTOUT: 500
+TRJLENGTH: 1000100.0
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: Slipids
+SOFTWARE: gromacs
+PREEQTIME: 0
+DOI: 10.5281/zenodo.3613573
+TRAJECTORY_SIZE: 2715109772
+TPR:
+- - PCPG_CA1000.tpr
+TRJ:
+- - PCPG_CA1000_extend.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

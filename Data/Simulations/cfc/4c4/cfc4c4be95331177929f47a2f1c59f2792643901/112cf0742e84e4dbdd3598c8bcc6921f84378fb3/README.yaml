@@ -1,48 +1,51 @@
-DOI: 10.5281/zenodo.3997184
-SYSTEM: POPC:POPG(4:1)_T298K_1MCaCl
-SOFTWARE: gromacs
-FF: lipid17ecc
-FF_SOURCE: NMRlipidsIV
 FF_DATE: ?/?/2020
-TRJ:
-- - 100-400ns.xtc
-TPR:
-- - run_400ns.tpr
-PREEQTIME: 100
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: PC
-    MAPPING: mappingPOPClipid17ecc.txt
-    COUNT:
-    - 175
-    - 175
-  POPG:
-    NAME: PGR
-    MAPPING: mappingPOPGlipid17ecc.txt
-    COUNT:
-    - 44
-    - 44
-  SOD:
-    NAME: NA
-    MAPPING: mappingSODecc.txt
-    COUNT: 88
-  CAL:
-    NAME: CA
-    MAPPING: mappingCALecc.txt
-    COUNT: 475
-  CLA:
-    NAME: CL
-    MAPPING: mappingCLAecc.txt
-    COUNT: 950
-  SOL:
-    NAME: SOL
-    MAPPING: mappingSPCwater.txt
-    COUNT: 24840
-TRAJECTORY_SIZE: 7486025608
-TRJLENGTH: 300020.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC:POPG(4:1)_T298K_1MCaCl
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 134109
+EXPERIMENT:
+  POPG: {}
+  POPC: {}
+FF_SOURCE: NMRlipidsIV
+COMPOSITION:
+  POPG:
+    NAME: PGR
+    COUNT:
+    - 44
+    - 44
+    MAPPING: mappingPOPGlipid17ecc.txt
+  CLA:
+    NAME: CL
+    COUNT: 950
+    MAPPING: mappingCLAecc.txt
+  CAL:
+    NAME: CA
+    COUNT: 475
+    MAPPING: mappingCALecc.txt
+  SOD:
+    NAME: NA
+    COUNT: 88
+    MAPPING: mappingSODecc.txt
+  POPC:
+    NAME: PC
+    COUNT:
+    - 175
+    - 175
+    MAPPING: mappingPOPClipid17ecc.txt
+  SOL:
+    NAME: SOL
+    COUNT: 24840
+    MAPPING: mappingSPCwater.txt
+TIMELEFTOUT: 0
+TRJLENGTH: 300020.0
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: lipid17ecc
+SOFTWARE: gromacs
+PREEQTIME: 100
+DOI: 10.5281/zenodo.3997184
+TRAJECTORY_SIZE: 7486025608
+TPR:
+- - run_400ns.tpr
+TRJ:
+- - 100-400ns.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

@@ -1,48 +1,51 @@
-DOI: 10.5281/zenodo.3613573
-SYSTEM: POPCPOPG(1_1)_slipids
-SOFTWARE: gromacs
-FF: Slipids
-FF_SOURCE: null
 FF_DATE: ??
-TRJ:
-- - PCPG_CA100_extend.xtc
-TPR:
-- - PCPG_CA100.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 500
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCslipidsECCions.txt
-    COUNT:
-    - 64
-    - 64
-  POPG:
-    NAME: POPG
-    MAPPING: mappingPOPGslipids.txt
-    COUNT:
-    - 64
-    - 64
-  CAL:
-    NAME: CA
-    MAPPING: mappingCALecc.txt
-    COUNT: 23
-  CLA:
-    NAME: CL
-    MAPPING: mappingCLAecc.txt
-    COUNT: 46
-  SOD:
-    NAME: NA
-    MAPPING: mappingSODecc.txt
-    COUNT: 128
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
-    COUNT: 12800
-TRAJECTORY_SIZE: 2683317644
-TRJLENGTH: 1000100.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPCPOPG(1_1)_slipids
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 72005
+EXPERIMENT:
+  POPG: {}
+  POPC: {}
+FF_SOURCE: null
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPGslipids.txt
+  CLA:
+    NAME: CL
+    COUNT: 46
+    MAPPING: mappingCLAecc.txt
+  CAL:
+    NAME: CA
+    COUNT: 23
+    MAPPING: mappingCALecc.txt
+  SOD:
+    NAME: NA
+    COUNT: 128
+    MAPPING: mappingSODecc.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPCslipidsECCions.txt
+  SOL:
+    NAME: SOL
+    COUNT: 12800
+    MAPPING: mappingTIP3PwaterSlipids.txt
+TIMELEFTOUT: 500
+TRJLENGTH: 1000100.0
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: Slipids
+SOFTWARE: gromacs
+PREEQTIME: 0
+DOI: 10.5281/zenodo.3613573
+TRAJECTORY_SIZE: 2683317644
+TPR:
+- - PCPG_CA100.tpr
+TRJ:
+- - PCPG_CA100_extend.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

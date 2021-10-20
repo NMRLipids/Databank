@@ -1,40 +1,44 @@
-DOI: 10.5281/zenodo.3693681
-SYSTEM: POPC:POPG(4:1)_T298K
-SOFTWARE: gromacs
-FF: lipid17
-FF_SOURCE: 10.5281/zenodo.2585523
 FF_DATE: ??
-TRJ:
-- - trajSKIP.xtc
-TPR:
-- - topol.tpr
-PREEQTIME: 50
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: PC
-    MAPPING: mappingPOPClipid17.txt
-    COUNT:
-    - 175
-    - 175
-  POPG:
-    NAME: PGR
-    MAPPING: mappingPOPGlipid17.txt
-    COUNT:
-    - 44
-    - 44
-  SOD:
-    NAME: NA
-    MAPPING: mappingSODlipid17.txt
-    COUNT: 88
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
-    COUNT: 26265
-TRAJECTORY_SIZE: 4438480544
-TRJLENGTH: 350040.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC:POPG(4:1)_T298K
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 136959
+EXPERIMENT:
+  POPG: {}
+  POPC:
+    10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/4
+FF_SOURCE: 10.5281/zenodo.2585523
+COMPOSITION:
+  POPG:
+    NAME: PGR
+    COUNT:
+    - 44
+    - 44
+    MAPPING: mappingPOPGlipid17.txt
+  POPC:
+    NAME: PC
+    COUNT:
+    - 175
+    - 175
+    MAPPING: mappingPOPClipid17.txt
+  SOL:
+    NAME: SOL
+    COUNT: 26265
+    MAPPING: mappingTIP3Pwater.txt
+  SOD:
+    NAME: NA
+    COUNT: 88
+    MAPPING: mappingSODlipid17.txt
+TIMELEFTOUT: 0
+TRJLENGTH: 350040.0
 DATEOFRUNNING: 03/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: lipid17
+SOFTWARE: gromacs
+PREEQTIME: 50
+DOI: 10.5281/zenodo.3693681
+TRAJECTORY_SIZE: 4438480544
+TPR:
+- - topol.tpr
+TRJ:
+- - trajSKIP.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

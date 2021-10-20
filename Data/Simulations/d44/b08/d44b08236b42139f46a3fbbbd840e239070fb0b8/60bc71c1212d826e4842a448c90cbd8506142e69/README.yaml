@@ -1,37 +1,39 @@
-DOI: 10.5281/zenodo.4522359
-SOFTWARE: gromacs
-TRJ:
-- - dppc_64.xtc
-TPR:
-- - dppc_64.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: 10.1016/j.bbamem.2021.183714
 AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara,
   Olivier; Thalmann, Fabrice
-SYSTEM: 64DPPC_10623SOL
-SOFTWARE_VERSION: 2016.4
-FF: CHARMM36
-FF_SOURCE: null
 FF_DATE: June 2015
-CPT: null
-LOG: null
-TOP: null
+SYSTEM: 64DPPC_10623SOL
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 288.0
+PUBLICATION: 10.1016/j.bbamem.2021.183714
+NUMBER_OF_ATOMS: 40189
+EXPERIMENT:
+  DPPC: {}
+FF_SOURCE: null
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
     COUNT:
     - 32
     - 32
+    MAPPING: mappingDPPCcharmm.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
     COUNT: 10623
-TRAJECTORY_SIZE: 1465101144
+    MAPPING: mappingTIP3Pwater.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 50005.0
-TEMPERATURE: 288.0
-NUMBER_OF_ATOMS: 40189
+TRAJECTORY_SIZE: 1465101144
+SOFTWARE_VERSION: 2016.4
+FF: CHARMM36
+TOP: null
+PREEQTIME: 0
+DOI: 10.5281/zenodo.4522359
 DATEOFRUNNING: 05/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - dppc_64.tpr
+TRJ:
+- - dppc_64.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

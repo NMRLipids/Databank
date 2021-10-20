@@ -1,40 +1,42 @@
-DOI: 10.5281/zenodo.3237657
-SYSTEM: POPC_T310K
-SOFTWARE: gromacs
-FF: lipid17
-FF_SOURCE: ??
 FF_DATE: ??
-TRJ:
-- - total_4_500.xtc
-TPR:
-- - md_0.tpr
-PREEQTIME: 400
-TIMELEFTOUT: 0
 POPG: system2
+SYSTEM: POPC_T310K
+TYPEOFSYSTEM: lipid bilayer
 POPS: POPS
-POPE: POPE
-POT: K
-CLA: CL
-CAL: CA
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+NUMBER_OF_ATOMS: 142000
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: ??
 COMPOSITION:
   POPC:
     NAME: system1
-    MAPPING: mappingPOPClipid17.txt
     COUNT:
     - 250
     - 250
+    MAPPING: mappingPOPClipid17.txt
   SOL:
     NAME: WAT
-    MAPPING: mappingTIP3Pwater.txt
     COUNT: 25000
+    MAPPING: mappingTIP3Pwater.txt
   SOD:
     NAME: NA+
-    MAPPING: mappingSOD.txt
     COUNT: 0
-TRAJECTORY_SIZE: 5255703444
-TRJLENGTH: 100010.0
-TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 142000
+    MAPPING: mappingSOD.txt
+TRJ:
+- - total_4_500.xtc
+TIMELEFTOUT: 0
+POPE: POPE
+CLA: CL
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: lipid17
+SOFTWARE: gromacs
+PREEQTIME: 400
+DOI: 10.5281/zenodo.3237657
+TRAJECTORY_SIZE: 5255703444
+TPR:
+- - md_0.tpr
+POT: K
+TEMPERATURE: 310.0
+CAL: CA
+TRJLENGTH: 100010.0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

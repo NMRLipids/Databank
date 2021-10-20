@@ -1,42 +1,45 @@
-DOI: 10.5281/zenodo.1306821
-SOFTWARE: gromacs
-TRJ:
-- - md_dt100_OK_centered.xtc
-TPR:
-- - md.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 50
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Papadopoulos, Chris and Fuchs, Patrick F.J.
-SYSTEM: 128POPC_128POPE_9102SOL_300K
-SOFTWARE_VERSION: null
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT: null
-LOG: null
-TOP: null
+SYSTEM: 128POPC_128POPE_9102SOL_300K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 300.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 60458
+EXPERIMENT:
+  POPC: {}
+  POPE: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
   POPC:
     NAME: POPC
+    COUNT:
+    - 64
+    - 64
     MAPPING: mappingPOPCcharmm.txt
-    COUNT:
-    - 64
-    - 64
-  POPE:
-    NAME: POPE
-    MAPPING: mappingPOPEcharmm.txt
-    COUNT:
-    - 64
-    - 64
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
     COUNT: 9102
-TRAJECTORY_SIZE: 668002264
+    MAPPING: mappingTIP3PCHARMMgui.txt
+  POPE:
+    NAME: POPE
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPEcharmm.txt
+TIMELEFTOUT: 50
+CPT: null
 TRJLENGTH: 300100.0
-TEMPERATURE: 300.0
-NUMBER_OF_ATOMS: 60458
+TRAJECTORY_SIZE: 668002264
+SOFTWARE_VERSION: null
+FF: CHARMM36
+TOP: null
+PREEQTIME: 0
+DOI: 10.5281/zenodo.1306821
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - md.tpr
+TRJ:
+- - md_dt100_OK_centered.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

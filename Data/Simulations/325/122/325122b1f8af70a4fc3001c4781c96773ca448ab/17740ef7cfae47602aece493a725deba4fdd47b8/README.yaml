@@ -1,45 +1,47 @@
-DOI: 10.5281/zenodo.32570
-SOFTWARE: gromacs
-TRJ:
-- - traj80-200ns.xtc
-TPR:
-- - popcRUN3.tpr
-PREEQTIME: 80
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Ollila, Samuli
-SYSTEM: 72POPC_2164SOL_26CAL_52CLA_303K
-SOFTWARE_VERSION: 4.5
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - popc.top
+SYSTEM: 72POPC_2164SOL_26CAL_52CLA_303K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 303.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 16218
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
+  SOL:
+    NAME: SOL
+    COUNT: 2164
+    MAPPING: mappingTIP3Pwater.txt
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 36
     - 36
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
-    COUNT: 2164
+    MAPPING: mappingPOPCcharmm.txt
   CAL:
     NAME: Cal
-    MAPPING: mappingCAL.txt
     COUNT: 26
+    MAPPING: mappingCAL.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCLA.txt
     COUNT: 52
-TRAJECTORY_SIZE: 722320064
+    MAPPING: mappingCLA.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 120010.0
-TEMPERATURE: 303.0
-NUMBER_OF_ATOMS: 16218
+TRAJECTORY_SIZE: 722320064
+SOFTWARE_VERSION: 4.5
+FF: CHARMM36
+TOP:
+- - popc.top
+PREEQTIME: 80
+DOI: 10.5281/zenodo.32570
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - popcRUN3.tpr
+TRJ:
+- - traj80-200ns.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
