@@ -16,7 +16,7 @@ db_data = databank(path)
 systems = db_data.get_systems()
 
 ready = 0
-notready = 0
+skipped = 0
 for system in systems:
     Nlipid = 0
     path = system['path']
@@ -31,6 +31,7 @@ for system in systems:
             continue
 
     if FileFound:
+        skipped += 1
         continue
 
     print('Analyzing: ', system['path'])
@@ -181,5 +182,6 @@ for system in systems:
 
     ready = ready + 1
         
-print('ready',ready)
-print('notready',notready)
+print('Order parameters calculated for ', ready , 'systems.')
+print('Already calculated order parameters found for', skipped , 'systems.')
+
