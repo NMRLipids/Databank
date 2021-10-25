@@ -6,18 +6,6 @@ TPR:
 - - dppc_256_CharmmGUI.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: 10.1016/j.bbamem.2021.183714
-AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara,
-  Olivier; Thalmann, Fabrice
-SYSTEM: 256DPPC_42642SOL
-SOFTWARE_VERSION: 2016.4
-FF: CHARMM36
-FF_SOURCE: null
-FF_DATE: June 2015
-CPT: null
-LOG: null
-TOP: null
 COMPOSITION:
   DPPC:
     NAME: DPPC
@@ -29,9 +17,21 @@ COMPOSITION:
     NAME: SOL
     MAPPING: mappingTIP3Pwater.txt
     COUNT: 42642
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1016/j.bbamem.2021.183714
+AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara,
+  Olivier; Thalmann, Fabrice
+SYSTEM: 256DPPC_42642SOL_288K
+SOFTWARE_VERSION: 2016.4
+FF: CHARMM36
+FF_SOURCE: null
+FF_DATE: June 2015
+CPT: null
+LOG: null
+TOP: null
 TRAJECTORY_SIZE: 5967921544
 TRJLENGTH: 50005.0
 TEMPERATURE: 288.0
 NUMBER_OF_ATOMS: 161206
-DATEOFRUNNING: 05/10/2021
+DATEOFRUNNING: 23/10/2021
 TYPEOFSYSTEM: lipid bilayer
