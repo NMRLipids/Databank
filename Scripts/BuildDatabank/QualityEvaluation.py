@@ -219,7 +219,6 @@ for simulation in simulations:
         
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
-        exit()
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
