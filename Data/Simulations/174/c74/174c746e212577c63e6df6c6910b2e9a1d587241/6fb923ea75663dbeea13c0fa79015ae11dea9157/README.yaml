@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.16254
+SOFTWARE: gromacs
+TRJ:
+- - DPPC_512_325K_md_part0.xtc
+TPR:
+- - DPPC_512_325K_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Martinez-Seara, Hector; Javanainen, Matti; Rissanen, Sami; Lolicato,
+  Fabio
+SYSTEM: 512DPPC_20480SOL_325K
+SOFTWARE_VERSION: 5.0.4
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT:
+- - DPPC_512_325K_md.cpt
+LOG: null
+TOP:
+- - DPPC_512_325K_md.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+    COUNT:
+    - 256
+    - 256
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 20480
+TRAJECTORY_SIZE: 1914769252
+TRJLENGTH: 400000.0
+TEMPERATURE: 325.0
+NUMBER_OF_ATOMS: 128000
+DATEOFRUNNING: 05/10/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  DPPC: {}

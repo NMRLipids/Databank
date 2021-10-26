@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.1009607
+SOFTWARE: gromacs
+TRJ:
+- - DPPC_72_325K_rmcomm_leaflets_md.xtc
+TPR:
+- - DPPC_72_325K_rmcomm_leaflets_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Martinez-Seara, Hector
+SYSTEM: 72DPPC_2880SOL_325K_rmcomm_leaflets
+SOFTWARE_VERSION: 5.0.4
+FF: CHARMM36 (center of mass removed independently for upper leaflet, lower leaflet
+  and water+ions)
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT:
+- - DPPC_72_325K_rmcomm_leaflets_md.cpt
+LOG: null
+TOP:
+- - DPPC_72_325K_rmcomm_leaflets_md.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.txt
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 2880
+TRAJECTORY_SIZE: 332189196
+TRJLENGTH: 500100.0
+TEMPERATURE: 325.0
+NUMBER_OF_ATOMS: 18000
+DATEOFRUNNING: 12/10/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  DPPC: {}

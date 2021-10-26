@@ -246,7 +246,7 @@ for simulation in simulations:
                     json_file.close()
                 except FileNotFoundError:
                     print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
-                    continue
+                    break
 
 
                 exp_error = 0.02

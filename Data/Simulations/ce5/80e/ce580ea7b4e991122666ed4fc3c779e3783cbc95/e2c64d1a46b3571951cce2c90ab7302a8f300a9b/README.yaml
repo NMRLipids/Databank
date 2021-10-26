@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1129441
+SOFTWARE: gromacs
+TRJ:
+- - md-Slipids_LJ-PME_POPS_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 128POPS_4880SOL_128SOD_298K_v1
+SOFTWARE_VERSION: null
+FF: Slipids
+FF_SOURCE: starting structure from CHARMM-GUI
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSslipids.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 4480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 128
+TRAJECTORY_SIZE: 221912104
+TRJLENGTH: 100050.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 29824
+DATEOFRUNNING: 12/10/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPS:
+    10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+    10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
