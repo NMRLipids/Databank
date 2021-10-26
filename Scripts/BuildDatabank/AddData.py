@@ -424,6 +424,17 @@ leaflet2 = 0 #total number of lipids in lower leaflet
 u = Universe(top, traj)
 u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
+try:
+    u = Universe(top, traj)
+    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+except:
+    conf = str(dir_tmp) + '/conf.gro'
+    print("Generating conf.gro because MDAnalysis cannot read tpr version")
+    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
+    u = Universe(conf, traj)
+    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+
+
 gro = str(dir_tmp) + '/frame0.gro'
 
 u0 = Universe(gro)
@@ -605,6 +616,10 @@ today = date.today().strftime("%d/%m/%Y")
 sim['DATEOFRUNNING'] = today
 
 print("Date of adding to the databank: " + sim['DATEOFRUNNING'])
+
+# Type of system is currently hard coded because only lipid bilayers are currently added.
+# When we go for other systems, this will be given by user.
+sim['TYPEOFSYSTEM'] = 'lipid bilayer'
 
 # BATUHAN: add openmm parser #
 # # Save to databank
