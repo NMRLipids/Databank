@@ -102,16 +102,16 @@ def evaluated_percentage(fragments, exp_op_data):
     else:
         return 0
     
-def carbonError(OP_sim, OP_exp):
+#def carbonError(OP_sim, OP_exp):
     
-    E_i = 0
-    quality = OPquality(OP_exp, OP_sim)
+#    E_i = 0
+#    quality = OPquality(OP_exp, OP_sim)
 
-    if quality > 0.02:
-        E_i = quality - 0.02
-    else:
-        E_i = 0
-    return E_i  
+#    if quality > 0.02:
+#        E_i = quality - 0.02
+#    else:
+#        E_i = 0
+#    return E_i  
 
 
 
@@ -131,10 +131,10 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                    # print(OP_exp)
                     OP_sim = sim_op_data[key_exp][0]
                    # print(OP_sim)
-                   # op_sim_STEM=sim_op_data[key_exp][0][2]
-                    E_sum += carbonError(OP_exp, OP_sim)
+                    op_sim_STEM=sim_op_data[key_exp][0][2]
+                    
                #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
-               # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                    E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
         E_F = E_sum / p_F
         return E_F
     else:
