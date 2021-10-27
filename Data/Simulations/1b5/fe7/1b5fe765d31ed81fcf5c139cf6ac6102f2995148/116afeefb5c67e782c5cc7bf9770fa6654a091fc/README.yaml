@@ -38,6 +38,7 @@ TOP:
 PREEQTIME: 100
 DOI: 10.5281/zenodo.35160
 DATEOFRUNNING: 01/10/2021
+
 TPR:
 - - 067M_CaCl2_POPC_CRM36.tpr
 TRJ:
@@ -46,3 +47,8 @@ LOG:
 - - md.log
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPC: {}
+

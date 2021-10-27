@@ -39,6 +39,7 @@ TOP:
 PREEQTIME: 0
 DOI: 10.5281/zenodo.1009027
 DATEOFRUNNING: 04/10/2021
+
 TPR:
 - - DPPC_512_NaCl_150mM_322K_v-rescale_md.tpr
 TRJ:
@@ -46,3 +47,8 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  DPPC: {}
+

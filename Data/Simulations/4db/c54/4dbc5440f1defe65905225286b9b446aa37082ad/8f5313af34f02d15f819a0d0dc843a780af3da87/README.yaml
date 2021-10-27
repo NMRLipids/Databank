@@ -32,6 +32,7 @@ TOP:
 PREEQTIME: 0
 DOI: 10.5281/zenodo.1009607
 DATEOFRUNNING: 12/10/2021
+
 TPR:
 - - POPC_72_310K_rmcomm_leaflets_low_hydration_md.tpr
 TRJ:
@@ -39,3 +40,8 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /usr/home/bort/Databank
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPC: {}
+

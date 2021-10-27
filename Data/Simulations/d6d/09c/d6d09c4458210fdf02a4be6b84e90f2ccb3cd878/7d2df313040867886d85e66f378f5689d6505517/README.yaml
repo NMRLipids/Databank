@@ -33,6 +33,7 @@ TOP: null
 PREEQTIME: 400
 DOI: 10.5281/zenodo.1182654
 DATEOFRUNNING: 04/10/2021
+
 TPR:
 - - for-md-CHARMM36_POPS_K_298K_10A-switch_v2.tpr
 TRJ:
@@ -40,3 +41,8 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPS: {}
+
