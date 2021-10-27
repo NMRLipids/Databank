@@ -14,7 +14,9 @@ def convertFile(info_file):
         new_info_file['COMPOSITION'][key]['NAME'] = mol_name
         new_info_file['COMPOSITION'][key]['MAPPING'] = mapping_name
         del new_info_file[key]
+
     new_info_file['DIR_WRK'] = '/media/osollila/Data/tmp/DATABANK/'
+
     return new_info_file
     
 #def addWRKdir(info_file):
