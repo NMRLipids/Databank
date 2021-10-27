@@ -45,6 +45,7 @@ TOP:
 PREEQTIME: 0
 DOI: 10.5281/zenodo.3483785
 DATEOFRUNNING: 01/10/2021
+
 TPR:
 - - step7_1.tpr
 TRJ:
@@ -52,3 +53,9 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPC: {}
+  POPG: {}
+

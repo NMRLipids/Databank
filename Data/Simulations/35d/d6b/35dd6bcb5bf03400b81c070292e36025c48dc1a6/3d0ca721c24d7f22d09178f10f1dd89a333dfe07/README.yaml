@@ -31,6 +31,7 @@ SOFTWARE: gromacs
 PREEQTIME: 400
 DOI: 10.5281/zenodo.3247435
 DATEOFRUNNING: 01/10/2021
+
 TPR:
 - - md_0.tpr
 TRJ:
@@ -38,3 +39,8 @@ TRJ:
 TOP:
 - - topol.top
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPC: {}
+

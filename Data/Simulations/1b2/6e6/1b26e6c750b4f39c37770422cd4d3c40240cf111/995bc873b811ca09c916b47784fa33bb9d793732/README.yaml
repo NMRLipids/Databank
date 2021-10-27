@@ -26,6 +26,7 @@ COMPOSITION:
 TIMELEFTOUT: 0
 TRJLENGTH: 100050.0
 DATEOFRUNNING: 01/10/2021
+
 FF: CHARMM36
 SOFTWARE: gromacs
 PREEQTIME: 400
@@ -36,3 +37,10 @@ TPR:
 TRJ:
 - - md-CHARMM36_10A-switch_POPS_v2_400-500ns_skip10.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  POPS:
+    10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+    10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
+
