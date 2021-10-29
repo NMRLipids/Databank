@@ -121,6 +121,7 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
     #warning, hard coded experimental error
     exp_error=0.02
     E_sum = 0
+    AV_sum = 0
     if p_F != 0:
         for fr in fragments:
             for key_exp, value_exp in exp_op_data.items():
@@ -136,12 +137,23 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
                     # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
 
-                    op_sim_STEM=sim_op_data[key_exp][0][2]
+                    #print(sim_op_data[key_exp])
+                    op_sim_STEM=sim_op_data[key_exp][2]
                     
                     #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
-                    E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                    #if OP_exp != 'NaN':
+                    QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                    #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
+                    if QE >0: # 0! = 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
+                        if QE == float("inf"): #'Infinity' or QE == 'inf':
+                            E_sum += 300
+                            AV_sum += 1
+                        else:
+                            print(QE)
+                            E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                            AV_sum += 1
 
-        E_F = E_sum / p_F
+        E_F = (E_sum / AV_sum) / p_F
         return E_F
     else:
         return 'nan'
@@ -159,15 +171,11 @@ def loadSimulations():
                     readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
                 yaml_file_sim.close()    
                 indexingPath = "/".join(filepath.split("/")[4:8])
-<<<<<<< HEAD
+
                 #print(indexingPath)
                 print(filepath)
                 #print(readmeSim)
-=======
-                print(indexingPath)
-                print(filepath)
-                print(readmeSim)
->>>>>>> 590777c718951211d91712cac8b6575786a5eda8
+
                 try:
                     experiments = readmeSim['EXPERIMENT']
                 except KeyError:
@@ -195,25 +203,16 @@ def loadSimulations():
                 
                     
     return simulations
-<<<<<<< HEAD
 
-    
+
+
 ###################################################################################################
 simulations = loadSimulations()
 
-if (not os.path.isdir('../../Data/QualityEvaluation/')): 
-    os.system('mkdir ../../Data/QualityEvaluation/')
+#if (not os.path.isdir('../../Data/QualityEvaluation/')): 
+#    os.system('mkdir ../../Data/QualityEvaluation/')
 
-=======
 
-    
-###################################################################################################
-simulations = loadSimulations()
-
-if (not os.path.isdir('../../Data/QualityEvaluation/')): 
-    os.system('mkdir ../../Data/QualityEvaluation/')
-
->>>>>>> 590777c718951211d91712cac8b6575786a5eda8
 for simulation in simulations:
     sub_dirs = simulation.indexingPath.split("/")
    # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
@@ -242,11 +241,9 @@ for simulation in simulations:
         
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
-<<<<<<< HEAD
+
         #exit()
-=======
-        exit()
->>>>>>> 590777c718951211d91712cac8b6575786a5eda8
+
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
@@ -307,83 +304,42 @@ for simulation in simulations:
                 data_dict[doi] = OP_qual_data
                 
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
+
+                fragment_quality = {}
+                
                 headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
                 sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
                 sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
-<<<<<<< HEAD
-            
-                fragment_quality = {}
+                if lipid1 == 'CHOL':
+                    cholQ = fragmentQuality(['M_C'], lipidExpOPdata, OP_data_lipid)
+                    fragment_quality['cholesterol'] = cholQ
+
                 fragment_quality['headgroup'] = headgroup
                 fragment_quality['sn-1'] = sn1
                 fragment_quality['sn-2'] = sn2
                 
                 fragment_qual_dict[doi] = fragment_quality
-              #  print('headgroup ')
-              #  print(headgroup)
-              #  print('sn1 ') 
-              #  print(sn1)
-              #  print('sn2 ') 
-              #  print(sn2) 
+                #  print('headgroup ')
+                #  print(headgroup)
+                #  print('sn1 ') 
+                #  print(sn1)
+                #  print('sn2 ') 
+                #  print(sn2) 
             
                 fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
             
                 with open(fragment_quality_file, 'w') as f:
                     json.dump(fragment_qual_dict,f)
                 f.close()
+
                 
                 
                 
         
 
-        #write into the OrderParameters_quality.json quality data file                  
+            #write into the OrderParameters_quality.json quality data file                  
             outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
-        #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-            with open(outfile, 'w') as f:
-                json.dump(data_dict,f)
-            f.close()
-
-            
-        
-
-        
-        
-     #   print(OP_qual_data)                        
-                
-                
-                
-                
-                
-                
-                
-=======
-            
-                fragment_quality = {}
-                fragment_quality['headgroup'] = headgroup
-                fragment_quality['sn-1'] = sn1
-                fragment_quality['sn-2'] = sn2
-                
-                fragment_qual_dict[doi] = fragment_quality
-              #  print('headgroup ')
-              #  print(headgroup)
-              #  print('sn1 ') 
-              #  print(sn1)
-              #  print('sn2 ') 
-              #  print(sn2) 
-            
-                fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
-            
-                with open(fragment_quality_file, 'w') as f:
-                    json.dump(fragment_qual_dict,f)
-                f.close()
->>>>>>> 590777c718951211d91712cac8b6575786a5eda8
-                
-                
-                
-        
-
-        #write into the OrderParameters_quality.json quality data file                  
-            outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
-        #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
+            #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
             with open(outfile, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
