@@ -39,7 +39,6 @@ COMPOSITION:
 TIMELEFTOUT: 500
 TRJLENGTH: 1000100.0
 DATEOFRUNNING: 01/10/2021
-
 FF: Slipids
 SOFTWARE: gromacs
 PREEQTIME: 0
@@ -50,9 +49,3 @@ TPR:
 TRJ:
 - - PCPG_CA1000_extend.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-  POPG: {}
-

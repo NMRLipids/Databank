@@ -31,7 +31,6 @@ TOP:
 PREEQTIME: 0
 DOI: 10.5281/zenodo.1010083
 DATEOFRUNNING: 01/10/2021
-
 TPR:
 - - POPC_512_310K_md.tpr
 TRJ:
@@ -39,8 +38,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-

@@ -30,14 +30,8 @@ SOFTWARE: gromacs
 PREEQTIME: 0
 DOI: 10.5281/zenodo.4537207
 DATEOFRUNNING: 01/10/2021
-
 TPR:
 - - protonated.tpr
 TRJ:
 - - prottraj.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-

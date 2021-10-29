@@ -29,7 +29,6 @@ TOP: null
 PREEQTIME: 0
 DOI: 10.5281/zenodo.164206
 DATEOFRUNNING: 04/10/2021
-
 TPR:
 - - for-md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v3.tpr
 TRJ:
@@ -37,8 +36,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-

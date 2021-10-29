@@ -30,7 +30,6 @@ TOP: null
 PREEQTIME: 0
 DOI: 10.5281/zenodo.3950029
 DATEOFRUNNING: 05/10/2021
-
 TPR:
 - - dppc_308k.tpr
 TRJ:
@@ -38,8 +37,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  DPPC: {}
-

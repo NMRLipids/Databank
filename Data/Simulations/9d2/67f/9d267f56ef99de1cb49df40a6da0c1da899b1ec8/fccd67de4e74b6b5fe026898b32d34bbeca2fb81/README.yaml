@@ -38,7 +38,6 @@ TOP:
 PREEQTIME: 0
 DOI: 10.5281/zenodo.2653735
 DATEOFRUNNING: 06/10/2021
-
 TPR:
 - - DAPC_AA_CHOL10_CORE_298.tpr
 TRJ:
@@ -47,9 +46,3 @@ LOG:
 - - DAPC_AA_CHOL10_CORE_298.log
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  DAPC: {}
-  CHOL: {}
-

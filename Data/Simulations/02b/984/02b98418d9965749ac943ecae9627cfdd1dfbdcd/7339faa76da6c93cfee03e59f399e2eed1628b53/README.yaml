@@ -7,8 +7,8 @@ PUBLICATION: null
 NUMBER_OF_ATOMS: 29824
 EXPERIMENT:
   POPS:
-    10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
     10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+    10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
 FF_SOURCE: starting structure from CHARMM-GUI
 COMPOSITION:
   POPS:
@@ -35,7 +35,6 @@ TOP: null
 PREEQTIME: 400
 DOI: 10.5281/zenodo.1129441
 DATEOFRUNNING: 12/10/2021
-
 TPR:
 - - for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v2.tpr
 TRJ:
@@ -43,10 +42,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /usr/home/bort/Databank
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPS:
-    10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
-    10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
-

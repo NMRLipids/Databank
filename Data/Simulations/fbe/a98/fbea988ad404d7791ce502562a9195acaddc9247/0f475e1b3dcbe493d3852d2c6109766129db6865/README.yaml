@@ -37,7 +37,6 @@ TOP: null
 PREEQTIME: 0
 DOI: 10.5281/zenodo.3228177
 DATEOFRUNNING: 12/10/2021
-
 TPR:
 - - 01-POPC_512_NaCl_150mM_310K_md.tpr
 TRJ:
@@ -45,8 +44,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /usr/home/bort/Databank
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-

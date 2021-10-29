@@ -38,7 +38,6 @@ TOP:
 PREEQTIME: 1900
 DOI: 10.5281/zenodo.51182
 DATEOFRUNNING: 12/10/2021
-
 TPR:
 - - md.tpr
 TRJ:
@@ -46,8 +45,3 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /usr/home/bort/Databank
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-

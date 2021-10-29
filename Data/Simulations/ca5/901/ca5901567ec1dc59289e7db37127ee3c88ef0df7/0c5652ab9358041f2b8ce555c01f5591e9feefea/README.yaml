@@ -39,7 +39,6 @@ COMPOSITION:
 TIMELEFTOUT: 0
 TRJLENGTH: 400020.0
 DATEOFRUNNING: 05/10/2021
-
 FF: lipid17ecc
 SOFTWARE: gromacs
 PREEQTIME: 200
@@ -50,9 +49,3 @@ TPR:
 TRJ:
 - - traj.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPC: {}
-  POPG: {}
-

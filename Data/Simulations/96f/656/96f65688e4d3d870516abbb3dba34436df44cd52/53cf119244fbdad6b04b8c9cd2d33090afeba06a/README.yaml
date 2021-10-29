@@ -24,7 +24,6 @@ COMPOSITION:
 TIMELEFTOUT: 0
 TRJLENGTH: 100010.0
 DATEOFRUNNING: 07/10/2021
-
 FF: lipid17
 SOFTWARE: gromacs
 PREEQTIME: 400
@@ -35,8 +34,3 @@ TPR:
 TRJ:
 - - total_4_500_last.xtc
 DIR_WRK: /usr/home/bort/Databank
-
-TYPEOFSYSTEM: lipid bilayer
-EXPERIMENT:
-  POPG: {}
-
