@@ -1,46 +1,48 @@
-DOI: 10.5281/zenodo.45008
-SOFTWARE: gromacs
-TRJ:
-- - md.xtc
-TPR:
-- - md.tpr
-PREEQTIME: 700
-TIMELEFTOUT: 0
-DIR_WRK: /usr/home/bort/Databank
-PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
+FF_DATE: null
 SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
-SOFTWARE_VERSION: 5.0
-FF: CHARMM36 with ECC-scaled ions
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.15
+PUBLICATION: null
+NUMBER_OF_ATOMS: 54019
+EXPERIMENT:
+  POPC: {}
 FF_SOURCE: http://www.charmm-gui.org for lipids and https://bitbucket.org/hseara/ions/
   for ions
-FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - topol.top
 COMPOSITION:
+  SOL:
+    NAME: TIP3
+    COUNT: 9000
+    MAPPING: mappingTIP3PCHARMMgui.txt
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 100
     - 100
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 9000
+    MAPPING: mappingPOPCcharmm.txt
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
     COUNT: 73
+    MAPPING: mappingCA.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
     COUNT: 146
-TRAJECTORY_SIZE: 200283872
+    MAPPING: mappingCL.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 100100.0
-TEMPERATURE: 310.15
-NUMBER_OF_ATOMS: 54019
+TRAJECTORY_SIZE: 200283872
+SOFTWARE_VERSION: 5.0
+FF: CHARMM36 with ECC-scaled ions
+TOP:
+- - topol.top
+PREEQTIME: 700
+DOI: 10.5281/zenodo.45008
 DATEOFRUNNING: 12/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - md.tpr
+TRJ:
+- - md.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /usr/home/bort/Databank

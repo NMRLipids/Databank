@@ -1,37 +1,39 @@
-DOI: 10.5281/zenodo.13944
-SOFTWARE: gromacs
-TRJ:
-- - popcRUN2-3.trr
-TPR:
-- - popcRUN2.tpr
-PREEQTIME: 10
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: 10.1021/acs.jpcb.5b04878
 AUTHORS_CONTACT: Ollila O. H. Samuli and Miettinen, Markus
-SYSTEM: 72POPC_2242SOL_303K
-SOFTWARE_VERSION: 4.5
-FF: CHARMM36
-FF_SOURCE: null
 FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - popc.top
+SYSTEM: 72POPC_2242SOL_303K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 303.0
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+NUMBER_OF_ATOMS: 16374
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: null
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 36
     - 36
+    MAPPING: mappingPOPCcharmm.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
     COUNT: 2242
-TRAJECTORY_SIZE: 1572777096
+    MAPPING: mappingSPCwater.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 20005.0
-TEMPERATURE: 303.0
-NUMBER_OF_ATOMS: 16374
+TRAJECTORY_SIZE: 1572777096
+SOFTWARE_VERSION: 4.5
+FF: CHARMM36
+TOP:
+- - popc.top
+PREEQTIME: 10
+DOI: 10.5281/zenodo.13944
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - popcRUN2.tpr
+TRJ:
+- - popcRUN2-3.trr
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

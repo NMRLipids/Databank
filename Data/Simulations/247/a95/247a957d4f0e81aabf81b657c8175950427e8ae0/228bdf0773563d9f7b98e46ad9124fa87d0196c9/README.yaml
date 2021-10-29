@@ -1,56 +1,59 @@
-DOI: 10.5281/zenodo.3371327
-SOFTWARE: gromacs
-TRJ:
-- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.xtc
-TPR:
-- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 135
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Nencini, Ricky
-SYSTEM: 250POPC_50POPS_11190SOL_50SOD_28CAL_56CLA_320K
-SOFTWARE_VERSION: 2018.6
-FF: CHARMM36 with NBFIX for calcium ions
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT:
-- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.cpt
-LOG: null
-TOP:
-- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.top
+SYSTEM: 250POPC_50POPS_11190SOL_50SOD_28CAL_56CLA_320K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 320.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 73554
+EXPERIMENT:
+  POPS: {}
+  POPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-    COUNT:
-    - 125
-    - 125
-  POPS:
-    NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
-    COUNT:
-    - 25
-    - 25
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 11190
-  SOD:
-    NAME: SOD
-    MAPPING: mappingSOD.txt
-    COUNT: 50
-  CAL:
-    NAME: CAL
-    MAPPING: mappingCAL.txt
-    COUNT: 28
   CLA:
     NAME: CLA
-    MAPPING: mappingCLA.txt
     COUNT: 56
-TRAJECTORY_SIZE: 1192376312
+    MAPPING: mappingCLA.txt
+  CAL:
+    NAME: CAL
+    COUNT: 28
+    MAPPING: mappingCAL.txt
+  SOD:
+    NAME: SOD
+    COUNT: 50
+    MAPPING: mappingSOD.txt
+  POPS:
+    NAME: POPS
+    COUNT:
+    - 25
+    - 25
+    MAPPING: mappingPOPScharmm.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 125
+    - 125
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 11190
+    MAPPING: mappingTIP3PCHARMMgui.txt
+TIMELEFTOUT: 135
+CPT:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.cpt
 TRJLENGTH: 434500.0
-TEMPERATURE: 320.0
-NUMBER_OF_ATOMS: 73554
+TRAJECTORY_SIZE: 1192376312
+SOFTWARE_VERSION: 2018.6
+FF: CHARMM36 with NBFIX for calcium ions
+TOP:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.3371327
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.tpr
+TRJ:
+- - popc_pops_250_50_contra_sodium_150mM_CaCl_nbfix_han.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

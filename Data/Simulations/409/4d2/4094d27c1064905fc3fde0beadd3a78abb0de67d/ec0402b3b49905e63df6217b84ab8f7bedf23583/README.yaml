@@ -1,47 +1,49 @@
-DOI: 10.5281/zenodo.3592499
-SOFTWARE: gromacs
-TRJ:
-- - dopc.xtc
-TPR:
-- - dopc.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Matti Javanainen
-SYSTEM: 200DOPC_10000SOL_23SOD_23CLA
-SOFTWARE_VERSION: 2019
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT:
-- - dopc.cpt
-LOG:
-- - dopc.log
-TOP:
-- - dopc.top
+SYSTEM: 200DOPC_10000SOL_23SOD_23CLA
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 57646
+EXPERIMENT:
+  DOPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
+  CLA:
+    NAME: CLA
+    COUNT: 23
+    MAPPING: mappingCLA.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 10000
+    MAPPING: mappingTIP3PCHARMMgui.txt
   DOPC:
     NAME: DOPC
-    MAPPING: mappingDOPCcharmm.txt
     COUNT:
     - 100
     - 100
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 10000
+    MAPPING: mappingDOPCcharmm.txt
   SOD:
     NAME: SOD
+    COUNT: 23
     MAPPING: mappingSOD.txt
-    COUNT: 23
-  CLA:
-    NAME: CLA
-    MAPPING: mappingCLA.txt
-    COUNT: 23
-TRAJECTORY_SIZE: 1062313368
+TIMELEFTOUT: 0
+CPT:
+- - dopc.cpt
 TRJLENGTH: 500100.0
-TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 57646
+TRAJECTORY_SIZE: 1062313368
+SOFTWARE_VERSION: 2019
+FF: CHARMM36
+TOP:
+- - dopc.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.3592499
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - dopc.tpr
+TRJ:
+- - dopc.xtc
+LOG:
+- - dopc.log
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

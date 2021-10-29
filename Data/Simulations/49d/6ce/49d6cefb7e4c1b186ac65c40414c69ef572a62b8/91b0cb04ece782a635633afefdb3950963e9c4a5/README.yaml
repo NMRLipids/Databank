@@ -1,45 +1,47 @@
-DOI: 10.5281/zenodo.51182
-SOFTWARE: gromacs
-TRJ:
-- - md_last100ns.xtc
-TPR:
-- - md.tpr
-PREEQTIME: 1900
-TIMELEFTOUT: 0
-DIR_WRK: /usr/home/bort/Databank
-PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
-SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
-SOFTWARE_VERSION: null
-FF: Slipids for lipids, amber for CaCl_2 (default amber ion parameters type C0)
-FF_SOURCE: http://mmkluster.fos.su.se/slipids/
 FF_DATE: pre-2020
-CPT: null
-LOG: null
-TOP:
-- - topol.top
+SYSTEM: 200POPC_9000SOL_73CAL_146CLA_310K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 54019
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: http://mmkluster.fos.su.se/slipids/
 COMPOSITION:
+  SOL:
+    NAME: SOL
+    COUNT: 9000
+    MAPPING: mappingTIP3PwaterSlipids.txt
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
     COUNT:
     - 100
     - 100
-  SOL:
-    NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
-    COUNT: 9000
+    MAPPING: mappingPOPCslipids.txt
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
     COUNT: 73
+    MAPPING: mappingCA.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
     COUNT: 146
-TRAJECTORY_SIZE: 200302168
+    MAPPING: mappingCL.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 100100.0
-TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 54019
+TRAJECTORY_SIZE: 200302168
+SOFTWARE_VERSION: null
+FF: Slipids for lipids, amber for CaCl_2 (default amber ion parameters type C0)
+TOP:
+- - topol.top
+PREEQTIME: 1900
+DOI: 10.5281/zenodo.51182
 DATEOFRUNNING: 12/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - md.tpr
+TRJ:
+- - md_last100ns.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /usr/home/bort/Databank

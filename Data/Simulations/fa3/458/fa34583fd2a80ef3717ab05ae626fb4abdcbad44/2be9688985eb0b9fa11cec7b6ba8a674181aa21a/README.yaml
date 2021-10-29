@@ -1,48 +1,51 @@
-DOI: 10.5281/zenodo.3997037
-SYSTEM: POPC:POPG(4:1)+1MCaCl_T298K
-SOFTWARE: gromacs
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI
 FF_DATE: ?/?/2020
-TRJ:
-- - 100-400ns.xtc
-TPR:
-- - run_400ns.tpr
-PREEQTIME: 100
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-    COUNT:
-    - 175
-    - 175
-  POPG:
-    NAME: POPG
-    MAPPING: mappingPOPGcharmm.txt
-    COUNT:
-    - 44
-    - 44
-  SOD:
-    NAME: SOD
-    MAPPING: mappingSOD.txt
-    COUNT: 88
-  CAL:
-    NAME: CAL
-    MAPPING: mappingCAL.txt
-    COUNT: 451
-  CLA:
-    NAME: CLA
-    MAPPING: mappingCLA.txt
-    COUNT: 902
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 24927
-TRAJECTORY_SIZE: 7226671760
-TRJLENGTH: 289260.0
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC:POPG(4:1)+1MCaCl_T298K
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 134298
+EXPERIMENT:
+  POPG: {}
+  POPC: {}
+FF_SOURCE: CHARMM-GUI
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    COUNT:
+    - 44
+    - 44
+    MAPPING: mappingPOPGcharmm.txt
+  CLA:
+    NAME: CLA
+    COUNT: 902
+    MAPPING: mappingCLA.txt
+  CAL:
+    NAME: CAL
+    COUNT: 451
+    MAPPING: mappingCAL.txt
+  SOD:
+    NAME: SOD
+    COUNT: 88
+    MAPPING: mappingSOD.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 175
+    - 175
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 24927
+    MAPPING: mappingTIP3PCHARMMgui.txt
+TIMELEFTOUT: 0
+TRJLENGTH: 289260.0
 DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+FF: CHARMM36
+SOFTWARE: gromacs
+PREEQTIME: 100
+DOI: 10.5281/zenodo.3997037
+TRAJECTORY_SIZE: 7226671760
+TPR:
+- - run_400ns.tpr
+TRJ:
+- - 100-400ns.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

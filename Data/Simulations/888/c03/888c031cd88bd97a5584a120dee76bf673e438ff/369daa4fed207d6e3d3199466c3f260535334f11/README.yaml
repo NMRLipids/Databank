@@ -1,36 +1,38 @@
-DOI: 10.5281/zenodo.4300706
-SOFTWARE: gromacs
-TRJ:
-- - dppc_gel.xtc
-TPR:
-- - dppc_gel.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: 10.1002/jcc.26508
 AUTHORS_CONTACT: Vivien Walter; Celine Ruscher; Olivier Benzerara; Fabrice Thalmann
-SYSTEM: 192DPPC_318692SOL_288K
-SOFTWARE_VERSION: 2020
-FF: CHARMM36
-FF_SOURCE: null
 FF_DATE: June 2015
-CPT: null
-LOG: null
-TOP: null
+SYSTEM: 192DPPC_318692SOL_288K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 288.0
+PUBLICATION: 10.1002/jcc.26508
+NUMBER_OF_ATOMS: 160756
+EXPERIMENT:
+  DPPC: {}
+FF_SOURCE: null
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
     COUNT:
     - 128
     - 128
+    MAPPING: mappingDPPCcharmm.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
     COUNT: 42492
-TRAJECTORY_SIZE: 2979241284
+    MAPPING: mappingTIP3Pwater.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 25005.0
-TEMPERATURE: 288.0
-NUMBER_OF_ATOMS: 160756
+TRAJECTORY_SIZE: 2979241284
+SOFTWARE_VERSION: 2020
+FF: CHARMM36
+TOP: null
+PREEQTIME: 0
+DOI: 10.5281/zenodo.4300706
 DATEOFRUNNING: 05/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - dppc_gel.tpr
+TRJ:
+- - dppc_gel.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

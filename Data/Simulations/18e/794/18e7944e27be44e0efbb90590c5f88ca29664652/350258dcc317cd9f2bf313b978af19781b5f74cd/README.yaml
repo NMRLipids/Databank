@@ -1,47 +1,50 @@
-DOI: 10.5281/zenodo.2542164
-SOFTWARE: gromacs
-TRJ:
-- - run.wrapped.xtc
-TPR:
-- - step7_1.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 20
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Jesper J. Madsen
-SYSTEM: 150POPC_150POPS_150POT_298K_71655Atoms
-SOFTWARE_VERSION: null
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - topol.top
+SYSTEM: 150POPC_150POPS_150POT_298K_71655Atoms
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 298.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 71655
+EXPERIMENT:
+  POPS: {}
+  POPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-    COUNT:
-    - 75
-    - 75
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
     COUNT:
     - 75
     - 75
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 10785
+    MAPPING: mappingPOPScharmm.txt
   POT:
     NAME: POT
-    MAPPING: mappingPOT.txt
     COUNT: 150
-TRAJECTORY_SIZE: 534969816
+    MAPPING: mappingPOT.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 75
+    - 75
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 10785
+    MAPPING: mappingTIP3PCHARMMgui.txt
+TIMELEFTOUT: 20
+CPT: null
 TRJLENGTH: 200100.0
-TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 71655
+TRAJECTORY_SIZE: 534969816
+SOFTWARE_VERSION: null
+FF: CHARMM36
+TOP:
+- - topol.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.2542164
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - step7_1.tpr
+TRJ:
+- - run.wrapped.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

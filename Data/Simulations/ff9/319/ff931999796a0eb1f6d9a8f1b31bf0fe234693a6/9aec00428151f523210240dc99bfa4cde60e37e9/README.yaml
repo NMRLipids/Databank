@@ -1,45 +1,47 @@
-DOI: 10.5281/zenodo.35193
-SOFTWARE: gromacs
-TRJ:
-- - 300.xtc
-TPR:
-- - 300.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /usr/home/bort/Databank
-PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
-SYSTEM: 200POPC_9000SOL_49SOD_49CLA_310K
-SOFTWARE_VERSION: 4.6
-FF: Slipids for lipids, Kohagen for NaCl
-FF_SOURCE: http://mmkluster.fos.su.se/slipids/ and https://bitbucket.org/hseara/ions/
 FF_DATE: pre-2020
-CPT: null
-LOG: null
-TOP:
-- - 300.top
+SYSTEM: 200POPC_9000SOL_49SOD_49CLA_310K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 53898
+EXPERIMENT:
+  POPC: {}
+FF_SOURCE: http://mmkluster.fos.su.se/slipids/ and https://bitbucket.org/hseara/ions/
 COMPOSITION:
+  CLA:
+    NAME: CL
+    COUNT: 49
+    MAPPING: mappingCL.txt
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
     COUNT:
     - 100
     - 100
+    MAPPING: mappingPOPCslipids.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
     COUNT: 9000
+    MAPPING: mappingTIP3PwaterSlipids.txt
   SOD:
     NAME: NA
+    COUNT: 49
     MAPPING: mappingNA.txt
-    COUNT: 49
-  CLA:
-    NAME: CL
-    MAPPING: mappingCL.txt
-    COUNT: 49
-TRAJECTORY_SIZE: 198354276
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 100100.0
-TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 53898
+TRAJECTORY_SIZE: 198354276
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids, Kohagen for NaCl
+TOP:
+- - 300.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.35193
 DATEOFRUNNING: 12/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - 300.tpr
+TRJ:
+- - 300.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /usr/home/bort/Databank

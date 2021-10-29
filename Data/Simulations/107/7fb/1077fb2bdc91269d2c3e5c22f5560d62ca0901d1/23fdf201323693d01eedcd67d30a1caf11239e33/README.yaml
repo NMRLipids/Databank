@@ -1,51 +1,54 @@
-DOI: 10.5281/zenodo.1493241
-SOFTWARE: gromacs
-TRJ:
-- - traj.xtc
-TPR:
-- - topol.tpr
-PREEQTIME: 50
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Ollila, O. H. S.
-SYSTEM: 110POPC_22POPS_4929SOL_62POT_40CLA_298K
-SOFTWARE_VERSION: null
-FF: CHARMM36
-FF_SOURCE: CHARM-GUI v1.7
 FF_DATE: null
-CPT: null
-LOG: null
-TOP:
-- - topol.top
+SYSTEM: 110POPC_22POPS_4929SOL_62POT_40CLA_298K
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 298.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 32423
+EXPERIMENT:
+  POPS: {}
+  POPC: {}
+FF_SOURCE: CHARM-GUI v1.7
 COMPOSITION:
-  POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
-    COUNT:
-    - 55
-    - 55
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
     COUNT:
     - 11
     - 11
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 4929
+    MAPPING: mappingPOPScharmm.txt
   POT:
     NAME: POT
-    MAPPING: mappingPOT.txt
     COUNT: 62
+    MAPPING: mappingPOT.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 55
+    - 55
+    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 4929
+    MAPPING: mappingTIP3PCHARMMgui.txt
   CLA:
     NAME: CLA
-    MAPPING: mappingCLA.txt
     COUNT: 40
-TRAJECTORY_SIZE: 1808432868
+    MAPPING: mappingCLA.txt
+TIMELEFTOUT: 0
+CPT: null
 TRJLENGTH: 150010.0
-TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 32423
+TRAJECTORY_SIZE: 1808432868
+SOFTWARE_VERSION: null
+FF: CHARMM36
+TOP:
+- - topol.top
+PREEQTIME: 50
+DOI: 10.5281/zenodo.1493241
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - topol.tpr
+TRJ:
+- - traj.xtc
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

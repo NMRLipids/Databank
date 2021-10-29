@@ -1,47 +1,49 @@
-DOI: 10.5281/zenodo.3592499
-SOFTWARE: gromacs
-TRJ:
-- - dlpc.xtc
-TPR:
-- - dlpc.tpr
-PREEQTIME: 0
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-PUBLICATION: null
 AUTHORS_CONTACT: Matti Javanainen
-SYSTEM: 200DLPC_10000SOL_23SOD_23CLA
-SOFTWARE_VERSION: 2019
-FF: CHARMM36
-FF_SOURCE: CHARMM-GUI v1.7
 FF_DATE: null
-CPT:
-- - dlpc.cpt
-LOG:
-- - dlpc.log
-TOP:
-- - dlpc.top
+SYSTEM: 200DLPC_10000SOL_23SOD_23CLA
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 310.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 51246
+EXPERIMENT:
+  DLPC: {}
+FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
   DLPC:
     NAME: DLPC
-    MAPPING: mappingDLPCcharmm.txt
     COUNT:
     - 100
     - 100
-  SOL:
-    NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
-    COUNT: 10000
+    MAPPING: mappingDLPCcharmm.txt
   SOD:
     NAME: SOD
-    MAPPING: mappingSOD.txt
     COUNT: 23
+    MAPPING: mappingSOD.txt
+  SOL:
+    NAME: TIP3
+    COUNT: 10000
+    MAPPING: mappingTIP3PCHARMMgui.txt
   CLA:
     NAME: CLA
-    MAPPING: mappingCLA.txt
     COUNT: 23
-TRAJECTORY_SIZE: 934589544
+    MAPPING: mappingCLA.txt
+TIMELEFTOUT: 0
+CPT:
+- - dlpc.cpt
 TRJLENGTH: 500100.0
-TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 51246
+TRAJECTORY_SIZE: 934589544
+SOFTWARE_VERSION: 2019
+FF: CHARMM36
+TOP:
+- - dlpc.top
+PREEQTIME: 0
+DOI: 10.5281/zenodo.3592499
 DATEOFRUNNING: 01/10/2021
-TYPEOFSYSTEM: lipid bilayer
+TPR:
+- - dlpc.tpr
+TRJ:
+- - dlpc.xtc
+LOG:
+- - dlpc.log
+SOFTWARE: gromacs
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/

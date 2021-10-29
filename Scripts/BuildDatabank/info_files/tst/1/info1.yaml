@@ -1,0 +1,26 @@
+DOI: 10.5281/zenodo.163333
+SOFTWARE: openMM
+TRJ: step8_1.dcd
+PDB: step5_charmm2omm.pdb
+INP: step8_production_joe.inp
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK
+PUBLICATION: ??
+AUTHORS_CONTACT: ??
+SYSTEM: POPC_84_CHOL_36_T303K_openMM
+SOFTWARE_VERSION: v7
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: ??/??/????
+TOP: step5_charmm2omm.psf
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.txt
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3Pwater.txt

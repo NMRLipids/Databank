@@ -1,36 +1,41 @@
-DOI: 10.5281/zenodo.159434
-SYSTEM: POPC:CHOL(1:1)_T298K
-SOFTWARE: gromacs
-SOFTWARE_VERSION: 4.6.3
-FF: slipids
-TRJ:
-- - popc50_T298_every100ps.xtc
-TPR:
-- - popc50_T298_every100ps.tpr
-PREEQTIME: 70
-TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 AUTHORS_CONTACT: Fernando Favela
-COMPOSITION:
+TYPEOFSYSTEM: lipid bilayer
+SYSTEM: POPC:CHOL(1:1)_T298K
+TEMPERATURE: 298.0
+DATEOFRUNNING: 04/10/2021
+NUMBER_OF_ATOMS: 114250
+EXPERIMENT:
+  CHOL:
+    10.1039/c2cp42738a: 10.1039/c2cp42738a/5
   POPC:
-    NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
-    COUNT:
-    - 128
-    - 128
+    10.1039/c2cp42738a: 10.1039/c2cp42738a/5
+COMPOSITION:
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLslipid.txt
     COUNT:
     - 128
     - 128
+    MAPPING: mappingCHOLESTEROLslipid.txt
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 128
+    - 128
+    MAPPING: mappingPOPCslipids.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
     COUNT: 20334
-TRAJECTORY_SIZE: 425433616
+    MAPPING: mappingTIP3Pwater.txt
+TIMELEFTOUT: 0
 TRJLENGTH: 100100.0
-TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 114250
-DATEOFRUNNING: 04/10/2021
-TYPEOFSYSTEM: lipid bilayer
+SOFTWARE_VERSION: 4.6.3
+FF: slipids
+SOFTWARE: gromacs
+PREEQTIME: 70
+DOI: 10.5281/zenodo.159434
+TRAJECTORY_SIZE: 425433616
+TPR:
+- - popc50_T298_every100ps.tpr
+TRJ:
+- - popc50_T298_every100ps.xtc
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
