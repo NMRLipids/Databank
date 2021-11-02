@@ -7,9 +7,9 @@ import numpy as np
 import yaml
 import json
 
-data_file ="/media/osollila/Data/NMRlipids/Databank/Data/experiments/10.1039/c2cp42738a/5/POPC_Order_Parameters.dat"
+data_file ="/media/osollila/Data/NMRlipids/Databank/Data/experiments/10.1039/c2cp42738a/5/CHOL_Order_Parameters.dat"
 
-save_dir = "/media/osollila/Data/NMRlipids/Databank/Data/experiments/10.1039/c2cp42738a/5"
+save_dir = "/media/osollila/Data/NMRlipids/Databank/Data/experiments/10.1039/c2cp42738a/5/"
 
 #experiment information
 
@@ -27,7 +27,7 @@ save_dir = "/media/osollila/Data/NMRlipids/Databank/Data/experiments/10.1039/c2c
 
 #write data in json
 
-outfile = save_dir + "/POPC_Order_Parameters.json"
+outfile = save_dir + "CHOL_Order_Parameters.json"
 data = {}
 
 with open(data_file) as OPfile:
