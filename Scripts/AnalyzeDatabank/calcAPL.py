@@ -8,7 +8,7 @@ import urllib.request
 import yaml
 
 sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, molecule_numbers_dict,databank
+from databankLibrary import download_link, lipids_dict, databank
 
 path = '../../Data/Simulations/'
 db_data = databank(path)
