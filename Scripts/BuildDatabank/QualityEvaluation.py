@@ -45,6 +45,15 @@ class Simulation:
                 lipids.append(key)
         return lipids
         
+    def molarFraction(self, molecule,molecules=lipid_numbers_list): #only for lipids
+        sum_lipids = 0
+        number = sum(self.readme['COMPOSITION'][molecule]['COUNT']) 
+        
+        for key in self.readme['COMPOSITION'].keys():
+            if key in molecules:
+                sum_lipids += sum(self.readme['COMPOSITION'][key]['COUNT'])
+
+        return number / sum_lipids
 class Experiment:
     pass
 
@@ -158,6 +167,97 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
     else:
         return 'nan'
         
+def fragmentQualityAvg(lipid,fragment_qual_dict):
+    if lipid != 'CHOL':
+        headgroup_sum = 0
+        sn1_sum = 0
+        sn2_sum = 0
+
+        headgroup_c = 0
+        sn1_c = 0
+        sn2_c = 0
+
+        for doi in fragment_qual_dict.keys():
+            #print(doi)
+            for key in fragment_qual_dict[doi].keys():
+                if key == 'headgroup' and fragment_qual_dict[doi][key] != 'nan':
+                    headgroup_sum += fragment_qual_dict[doi][key]
+                    headgroup_c += 1
+                elif key == 'sn-1' and fragment_qual_dict[doi][key] != 'nan':
+                    sn1_sum += fragment_qual_dict[doi][key]
+                    sn1_c += 1
+                elif key == 'sn-2' and fragment_qual_dict[doi][key] != 'nan':
+                    sn2_sum += fragment_qual_dict[doi][key]
+                    sn2_c += 1
+
+        if headgroup_sum != 0:
+            headgroup_avg = headgroup_sum / headgroup_c
+        else:
+            headgroup_avg = 'nan'
+
+        if sn1_sum != 0:
+            sn1_avg = sn1_sum / sn1_c
+        else:
+            sn1_avg = 'nan'
+
+        if sn2_sum != 0:
+            sn2_avg = sn2_sum / sn2_c
+        else:
+            sn2_avg = 'nan'
+
+        total_quality = 0
+        if headgroup_avg != 'nan' and sn1_avg != 'nan' and sn2_avg != 'nan':
+            total_quality = (headgroup_avg + sn1_avg + sn2_avg) / 3
+        else:
+            total_quality = 'nan'
+
+        return  headgroup_avg, sn1_avg, sn2_avg, total_quality
+
+    else:
+        qual_sum = 0
+        chol_c = 0
+        for doi in fragment_qual_dict.keys():
+            qual_sum += fragment_qual_dict[doi]['cholesterol']
+            chol_c += 1
+        total_quality = qual_sum / chol_c
+        return total_quality
+        
+
+def systemQuality(system_quality):
+    out_dict = {}
+    headgroup = []
+    sn1 = []
+    sn2 = []
+    total = []
+
+    for lipid in system_quality.keys():
+        w = simulation.molarFraction(lipid)
+        if lipid != 'CHOL':
+            for key, value in system_quality[lipid].items():
+                if value != 'nan':
+                    if key == 'headgroup':
+                        headgroup.append(w * value)
+                    elif key == 'sn-1':
+                        sn1.append(w * value)
+                    elif key == 'sn-2':
+                        sn2.append(w * value)
+                    elif key == 'total':
+                        total.append(w * value)
+                else:
+                    continue
+        else:
+            for key, value in system_quality[lipid].items():
+                 if value != 'nan':
+                     if key == 'total':
+                         total.append(w * value)
+
+    out_dict['headgroup'] = sum(headgroup)
+    out_dict['sn-1'] = sum(sn1)
+    out_dict['sn-2'] = sum(sn2)
+    out_dict['total'] = sum(total)
+
+    return out_dict
+
 def loadSimulations():
     simulations = []
     for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
@@ -242,9 +342,7 @@ for simulation in simulations:
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
 
-        #exit()
-
-        
+        system_quality = {}
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
             fragment_qual_dict = {}
@@ -306,31 +404,39 @@ for simulation in simulations:
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
 
                 fragment_quality = {}
-                
-                headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
-                sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
-                sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
+
                 if lipid1 == 'CHOL':
                     cholQ = fragmentQuality(['M_C'], lipidExpOPdata, OP_data_lipid)
                     fragment_quality['cholesterol'] = cholQ
+                else:
+                    headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
+                    sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
+                    sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
 
-                fragment_quality['headgroup'] = headgroup
-                fragment_quality['sn-1'] = sn1
-                fragment_quality['sn-2'] = sn2
-                
+                    fragment_quality['headgroup'] = headgroup
+                    fragment_quality['sn-1'] = sn1
+                    fragment_quality['sn-2'] = sn2
+
                 fragment_qual_dict[doi] = fragment_quality
-                #  print('headgroup ')
-                #  print(headgroup)
-                #  print('sn1 ') 
-                #  print(sn1)
-                #  print('sn2 ') 
-                #  print(sn2) 
+                
+            fragment_quality_output = {}
+            if lipid1 != 'CHOL':
+                headgroup_avg, sn1_avg, sn2_avg, total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
+                fragment_quality_output['headgroup'] = headgroup_avg
+                fragment_quality_output['sn-1'] = sn1_avg
+                fragment_quality_output['sn-2'] = sn2_avg
+                fragment_quality_output['total'] = total_qual
+            else:
+                total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
+                fragment_quality_output['total'] = total_qual
             
-                fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+            system_quality[lipid1] = fragment_quality_output
+
+            fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
             
-                with open(fragment_quality_file, 'w') as f:
-                    json.dump(fragment_qual_dict,f)
-                f.close()
+            with open(fragment_quality_file, 'w') as f:
+                json.dump(fragment_quality_output,f)
+            f.close()
 
                 
                 
@@ -338,13 +444,21 @@ for simulation in simulations:
         
 
             #write into the OrderParameters_quality.json quality data file                  
-            outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
+            outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
             #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-            with open(outfile, 'w') as f:
+            with open(outfile1, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
-
-            
+        
+        #calculate system quality
+        system_qual_output = systemQuality(system_quality)
+#        print('system')
+#        print(system_qual_output)
+        #make system quality file
+        outfile2 = DATAdir + '/SYSTEM_quality.json'
+        with open(outfile2, 'w') as f:
+            json.dump(system_qual_output,f)
+        f.close() 
         
 
         
