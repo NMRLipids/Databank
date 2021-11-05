@@ -232,7 +232,7 @@ def systemQuality(system_quality):
 
     for lipid in system_quality.keys():
         w = simulation.molarFraction(lipid)
-        if lipid != 'CHOL':
+        if lipid != 'CHOL':    # SHOULD BE CHANGED TO WORK ALSO WITH OTHER LIPIDS WITHOUT HEAD AND TAILS THAN CHOLESTEROL
             for key, value in system_quality[lipid].items():
                 if value != 'nan':
                     if key == 'headgroup':
