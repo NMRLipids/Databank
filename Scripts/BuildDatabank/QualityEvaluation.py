@@ -54,22 +54,12 @@ class Simulation:
                 sum_lipids += sum(self.readme['COMPOSITION'][key]['COUNT'])
 
         return number / sum_lipids
+        
 class Experiment:
     pass
 
-#class Data:
-#    def __init__(self, molecule, data_path):
-#        self.molecule = molecule
-#        self.data = {}
-#        self.__load_data__(data_path)
-#    
-#    def __load_data__(self,data_path):
-#        with open(data_path) as json_file:
-#            self.data = json.load(json_file)
-#        json_file.close()
 
 #Quality evaluation of simulated data
-
 
 def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
@@ -89,11 +79,6 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #print("difference of two prec logs",float(foo)+math.log10(P_S))
 
     return float(precise_log)
-
-
-def OPquality(OP_exp, OP_sim):
-    quality = np.absolute(OP_exp - OP_sim)
-    return quality
     
 # quality of molecule fragments
 
@@ -110,18 +95,6 @@ def evaluated_percentage(fragments, exp_op_data):
         return count_value / fragment_size
     else:
         return 0
-    
-#def carbonError(OP_sim, OP_exp):
-    
-#    E_i = 0
-#    quality = OPquality(OP_exp, OP_sim)
-
-#    if quality > 0.02:
-#        E_i = quality - 0.02
-#    else:
-#        E_i = 0
-#    return E_i  
-
 
 
 def fragmentQuality(fragments, exp_op_data, sim_op_data):
@@ -141,10 +114,6 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     # print(OP_exp)
                     OP_sim = sim_op_data[key_exp][0]
                     # print(OP_sim)
-                    # op_sim_STEM=sim_op_data[key_exp][0][2]
-                    # E_sum += carbonError(OP_exp, OP_sim)
-                    #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
-                    # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
 
                     #print(sim_op_data[key_exp])
                     op_sim_STEM=sim_op_data[key_exp][2]
@@ -260,7 +229,7 @@ def systemQuality(system_quality):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/8cb/989/8cb989e1813b93d1144d731ffbbc04a5cfcfb6a6/2db4e1d512355edd21cedbc0d28a45659dd6faa9/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -324,7 +293,7 @@ for simulation in simulations:
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
    # print(DATAdir)
      
-
+    system_quality = {}
     for lipid1 in simulation.getLipids():
         #print(lipid1)
         print(simulation.indexingPath)
@@ -342,7 +311,7 @@ for simulation in simulations:
         # go through file paths in simulation.readme['EXPERIMENT']
         print(simulation.readme['EXPERIMENT'].values())
 
-        system_quality = {}
+        
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
             fragment_qual_dict = {}
@@ -397,7 +366,7 @@ for simulation in simulations:
                 
                     OP_qual_data[key] = OP_array    
                 
-                print(OP_qual_data)
+                #print(OP_qual_data)
                 
                 data_dict[doi] = OP_qual_data
                 
@@ -427,6 +396,7 @@ for simulation in simulations:
                 fragment_quality_output['sn-2'] = sn2_avg
                 fragment_quality_output['total'] = total_qual
             else:
+                print("kolesteroli toimii")
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
@@ -450,10 +420,12 @@ for simulation in simulations:
                 json.dump(data_dict,f)
             f.close()
         
+        print('input to system quality')
+        print(system_quality)
         #calculate system quality
         system_qual_output = systemQuality(system_quality)
-#        print('system')
-#        print(system_qual_output)
+        print('system')
+        print(system_qual_output)
         #make system quality file
         outfile2 = DATAdir + '/SYSTEM_quality.json'
         with open(outfile2, 'w') as f:
