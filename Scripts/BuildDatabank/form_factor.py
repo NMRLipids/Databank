@@ -9,20 +9,36 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 nav = 6.02214129e+23
-    
+import json
+from json import JSONEncoder
 import time
 import gc
 gc.collect()
 
+from databankLibrary import lipids_dict
+
 
 # In[2]:
 
+# to write data in numpy arrays into json file
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+        
+def getLipids(readme, molecules=lipids_dict.keys()):
+    lipids = 'resname '
+        
+    for key in readme['COMPOSITION'].keys():
+        if key in molecules:
+            lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
+    lipids = lipids[:-12]
+    print(lipids)
+    return lipids
 
 #for testing purposes to safe time for loading trajectory and creating dictonary
 #the electron.dat will be decripted in the future as the values will be used from the universal mapping file
-
-
-# In[ ]:
 
 def temporary_mapping_dictionary(readme):
     mapping_dictonary={}
@@ -72,7 +88,7 @@ class FormFactor:
     Examination of FF error spikes is needed!
     
     """
-    def __init__(self, path, conf,traj,nbin,output,center,readme,density_type="electron"):
+    def __init__(self, path, conf,traj,nbin,output,readme,density_type="electron"):
         self.path = path
         self.conf = conf
         self.traj = traj
@@ -90,7 +106,7 @@ class FormFactor:
         #transform of final FF will be used instead
 
         self.output = path + output
-        self.center = center
+        self.center = getLipids(readme)
         
         self.density_type = density_type
         
@@ -139,9 +155,9 @@ class FormFactor:
                 name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
                 if name2 == 'G':
                     name2 = 'C'
-                print(name2)                
+               # print(name2)                
                 wght[i]=electron_dictionary[name2] #get number of electrons
-                print(wght[i])
+               # print(wght[i])
             self.wght=wght
         if self.density_type=="number":
             self.wght=np.ones(self.u.atoms.names.shape[0])
@@ -158,10 +174,14 @@ class FormFactor:
         
         
         box_z = self.u.dimensions[2] # + 10 if fails
+        print(box_z)
         d =  box_z/ 10/self.nbin #     # bin width
         boxH = box_z/10
+        print(boxH)
         x = np.linspace(-boxH,boxH,self.nbin+1)[:-1] + d/2
-        fx = np.zeros(self.nbin)
+        density_z_centered = np.zeros(self.nbin)
+        
+        density_z_no_center = np.zeros(self.nbin)
         
         #for running FF - not needed now
         #fa=[]
@@ -190,6 +210,8 @@ class FormFactor:
             
             #reads the coordinates of all of the atoms
             crds = self.u.atoms.positions
+            crds_no_center = c.atoms.positions[:,2]/10
+            lipid_wght=np.ones(c.atoms.names.shape[0])
             
             #calculates the center of mass of the selected atoms that the density should be centered around and 
             #takes the z-coordinate value
@@ -242,27 +264,28 @@ class FormFactor:
          
 
             """calculates the total density profile; keep for now"""
-            fx += np.histogram(crds,bins=self.nbin,range=(-boxH,boxH),weights=self.wght/vbin)[0]
+            density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.wght/vbin)[0]
+            density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=lipid_wght/vbin)[0]
 
         print("Calculating the density takes {:10.6f} s".format(time.time()-start_time))
 
 
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         """ Normalizing the profiles """
-        fx /= (frame) 
-        
+        density_z_centered /= (frame) 
+        density_z_no_center /= frame
         
 
         """ Symmetrizing profile if necessary """
         #if args.symmetrize :
-        #    fx += fx[::-1]
-        #    fx /=2
+        #    density_z_centered += density_z_centered[::-1]
+        #    density_z_centered /=2
 
 
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         """ Post-processign data and writing to file """
-        density_data = np.vstack((x,fx)).transpose()
-        
+        density_data = np.vstack((x,density_z_centered)).transpose()
+        density_data_no_center = np.vstack((x,density_z_no_center)).transpose()
         
         """Post-processing of FF data from individual runs""" # running FF
         
@@ -303,6 +326,9 @@ class FormFactor:
         #minimum box size density
         with open(str(self.output)+".finalDensity", 'wb') as f:
             np.savetxt(f, density_data[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
+            
+        with open(str(self.output)+".finalDensity_no_center", 'wb') as f:
+            np.savetxt(f, density_data_no_center[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
         
         # density of the whole thing
         #with open(self.output, 'wb') as f:
@@ -314,6 +340,18 @@ class FormFactor:
         #this is the important file form factors
         with open(str(self.output)+".fourierFromFinalDensity", 'wb') as f:
             np.savetxt(f, fourrier_data2,fmt='%8.4f  %.8f')
+            
+        """ write output in json """
+        
+        with open(str(self.output)+".finalDensity.json", 'w') as f:
+            json.dump(density_data[final_FF_start+1:final_FF_end-1,:],f, cls=NumpyArrayEncoder)
+            
+
+            
+        with open(str(self.output)+".fourierFromFinalDensity.json", 'w') as f:
+            json.dump(fourrier_data2,f,cls=NumpyArrayEncoder)
+            
+
   
         
         
