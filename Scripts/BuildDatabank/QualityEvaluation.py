@@ -229,7 +229,7 @@ def systemQuality(system_quality):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/8cb/989/8cb989e1813b93d1144d731ffbbc04a5cfcfb6a6/2db4e1d512355edd21cedbc0d28a45659dd6faa9/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
