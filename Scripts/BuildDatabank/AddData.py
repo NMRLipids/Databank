@@ -54,7 +54,7 @@ import buildH_calcOP_test
 import openmm_parser
 
 #import databank dictionaries
-from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
+from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
 
 # Download link
@@ -421,8 +421,8 @@ elif sim['SOFTWARE'] == 'openMM':
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(top, traj)
-u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
+#u = Universe(top, traj)
+#u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
 try:
     u = Universe(top, traj)
@@ -437,7 +437,7 @@ except:
 
 gro = str(dir_tmp) + '/frame0.gro'
 
-u0 = Universe(gro)
+#u0 = Universe(gro)
 lipids = []
 
 # select lipids 
@@ -458,15 +458,15 @@ for key_mol in lipids_dict:
                    break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
-    molecules = u0.select_atoms(selection)
+    molecules = u.select_atoms(selection)
     #print("molecules")
     #print(molecules)
     if molecules.n_residues > 0:
-        lipids.append(u0.select_atoms(selection))
+        lipids.append(u.select_atoms(selection))
         #print(lipids) 
 # join all the selected the lipids together to make a selection of the entire membrane and calculate the
 # z component of the centre of mass of the membrane
-membrane = u0.select_atoms("")
+membrane = u.select_atoms("")
 R_membrane_z = 0
 if lipids!= []:
     for i in range(0,len(lipids)):
@@ -496,7 +496,7 @@ for key_mol in lipids_dict:
                     break
     selection = selection.rstrip(' or ')
     #   print(selection)
-    molecules = u0.select_atoms(selection)
+    molecules = u.select_atoms(selection)
     #print(molecules.residues)
 
     if molecules.n_residues > 0:
@@ -525,7 +525,7 @@ for key_mol in molecules_dict:
     except KeyError:
         continue
     else:
-        mol_number = u0.select_atoms("resname " + mol_name).n_residues
+        mol_number = u.select_atoms("resname " + mol_name).n_residues
         sim['COMPOSITION'][key_mol]['COUNT'] = mol_number
         print("Number of " + key_mol  + ": " + str(sim['COMPOSITION'][key_mol]['COUNT']))   
 

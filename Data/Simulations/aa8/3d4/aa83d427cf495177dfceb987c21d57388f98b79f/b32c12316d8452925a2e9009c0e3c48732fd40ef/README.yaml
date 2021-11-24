@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.495510
+SOFTWARE: gromacs
+TRJ:
+- - md50ns_chunk02.xtc
+TPR:
+- - md50ns_chunk01.tpr
+PREEQTIME: 150
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Favela-Rosales, Fernando
+SYSTEM: 288DOPS_11232SOL_288SOD_303K
+SOFTWARE_VERSION: 5.0.4
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  DOPS:
+    NAME: DOPS
+    MAPPING: mappingDOPSslipids.txt
+    COUNT:
+    - 144
+    - 144
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 11232
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 288
+TRAJECTORY_SIZE: 668567244
+TRJLENGTH: 50020.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 71712
+DATEOFRUNNING: 01/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  DOPS: {}

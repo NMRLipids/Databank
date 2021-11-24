@@ -8,7 +8,7 @@ import urllib.request
 import yaml
 
 sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, molecule_numbers_dict,databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
+from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
 import buildH_calcOP_test
 
 path = '../../Data/Simulations/'
@@ -62,8 +62,9 @@ for system in systems:
 
     if 'gromacs' in software:
          xtcwhole= path + '/whole.xtc'
-         print("Make molecules whole in the trajectory")
-         os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+         if (not os.path.isfile(xtcwhole)):
+             print("Make molecules whole in the trajectory")
+             os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     else:
         print('Order parameter calculation for other gromacs is yet to be implemented.')
         continue
@@ -150,17 +151,28 @@ for system in systems:
         os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
                     
         for key in system['COMPOSITION']:
-            if key in lipids_dict.keys(): 
+            if key in lipids_dict.keys():
+                print('Calculating ', key,' order parameters')
                 mapping_file = system['COMPOSITION'][key]['MAPPING']
                 resname = system['COMPOSITION'][key]['NAME']
-                OrdParam=find_OP('../BuildDatabank/mapping_files/'+mapping_file,gro,xtcwhole,resname)
+                outfilename = path + key + 'OrderParameters.dat'
+                outfilename2 = path + key + 'OrderParameters.json'
+                if (os.path.isfile(outfilename2)):
+                    print('Order parameter file already found')
+                    continue
+                outfile=open(outfilename,'w')
 
-                outfile=open(path + key + 'OrderParameters.dat','w')
+                try:
+                    OrdParam=find_OP('../BuildDatabank/mapping_files/'+mapping_file,tpr_name,xtcwhole,resname)
+                except:
+                    print('Using tpr did not work, trying with gro')
+                    OrdParam=find_OP('../BuildDatabank/mapping_files/'+mapping_file,gro,xtcwhole,resname)
+                    
                 line1="Atom     Average OP     OP stem"+'\n'
                 outfile.write(line1)
     
                 data = {}
-                outfile2=path + key + 'OrderParameters.json' 
+                outfile2 = outfilename2 
 
                 for i,op in enumerate(OrdParam):
                     resops =op.get_op_res
