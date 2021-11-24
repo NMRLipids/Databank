@@ -149,20 +149,28 @@ class FormFactor:
                 name = self.u.atoms.names[i]
                 residue = self.u.atoms.resnames[i]
                 temporary_mapping = temporary_mapping_dictionary(self.readme) #dictionary made of mapping file
-                m_name = temporary_mapping[residue][name]
-                #print(m_name)
-                name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
-                name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
-                if name2 == 'G':
-                    name2 = 'C'
-               # print(name2)                
-                wght[i]=electron_dictionary[name2] #get number of electrons
+                try:
+                    m_name = temporary_mapping[residue][name]
+                except KeyError:
+                    #print(m_name)
+                    print(residue)
+                    print(name)
+                else:
+                    name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
+                    name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
+                    if name2 == 'G':
+                        name2 = 'C'
+                    #print(name2)                
+                    wght[i]=electron_dictionary[name2] #get number of electrons
                # print(wght[i])
             self.wght=wght
         if self.density_type=="number":
             self.wght=np.ones(self.u.atoms.names.shape[0])
         if self.density_type=="mass":
             self.wght=self.u.atoms.masses
+        
+        print(self.center)
+        print(self.u.atoms.resnames)
             
         print("Creating the electron mapping dictonary takes {:10.6f} s".format(time.time()-start_time))
 
@@ -171,7 +179,7 @@ class FormFactor:
         
         c = self.u.select_atoms(self.center)
 
-        
+        print(c)
         
         box_z = self.u.dimensions[2] # + 10 if fails
         print(box_z)

@@ -113,5 +113,6 @@ for system in systems:
         
     if download_failed == False:
         with open("system_already_run_17_11_21.out","a") as f:
-            f.write(system_path+"\n")    
-        form_factor.FormFactor(system_path, tpr_name, trj_name, 200, output_name,  system)
+            f.write(system_path+"\n")   
+        if (not os.path.isfile(system_path + "/form_factors.fourierFromFinalDensity"):     
+            form_factor.FormFactor(system_path, tpr_name, trj_name, 200, output_name,  system)
