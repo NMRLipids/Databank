@@ -14,6 +14,7 @@ from json import JSONEncoder
 import time
 import gc
 gc.collect()
+import os
 
 from databankLibrary import lipids_dict
 
@@ -29,13 +30,28 @@ class NumpyArrayEncoder(JSONEncoder):
         
 def getLipids(readme, molecules=lipids_dict.keys()):
     lipids = 'resname '
-        
+
     for key in readme['COMPOSITION'].keys():
         if key in molecules:
-            lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
+            m_file = readme['COMPOSITION'][key]['MAPPING']
+            with open('./mapping_files/'+m_file,"r") as f:
+                for line in f:
+                    if len(line.split()) > 2 and "Individual atoms" not in line:
+                        if line.split()[2] not in lipids:
+                            lipids = lipids + line.split()[2] + ' or resname '
+                    elif "Individual atoms" in line:
+                        continue
+                    else:
+                        lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
+                        break    
     lipids = lipids[:-12]
     print(lipids)
     return lipids
+
+def getWater(readme, molecules=lipids_dict.keys()):
+    waters = 'resname ' + readme['COMPOSITION']['SOL']['NAME']
+    return waters
+
 
 #for testing purposes to safe time for loading trajectory and creating dictonary
 #the electron.dat will be decripted in the future as the values will be used from the universal mapping file
@@ -70,7 +86,7 @@ def temporary_mapping_dictionary(readme):
 electron_dictionary={"H":1,"He":2,"Li":3,"Be":4,"B":5,"C":6,"N":7,"O":8,"F":9,"Ne":10,
                    "Na":11,"Mg":12,"Al":13,"Si":14,"P":15,"S":16,"Cl":17,"Ar":18,
                    "K":19,"Ca":20,"Sc":21,"Ti":22,"V":23,"Cr":24,"Mn":25,"Fe":26,"Co":27,"Ni":28,
-                   "Cu":29,"Zn":30,"Ga":31,"Ge":32}
+                     "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0}
 	
 
 
@@ -94,7 +110,15 @@ class FormFactor:
         self.traj = traj
         self.readme = readme
         start_time=time.time()
-        self.u = mda.Universe(self.conf,self.traj)
+        try:
+            self.u = mda.Universe(self.conf,self.traj)
+        except:
+            gro = self.path + '/conf.gro'
+            print("Generating conf.gro because MDAnalysis cannot read tpr version")
+            os.system('echo System | gmx trjconv -s '+ self.conf + ' -f '+ self.traj + ' -dump 0 -o ' + gro)
+            self.conf = gro
+            self.u = mda.Universe(self.conf,self.traj)
+            
         print("Loading the trajectory takes {:10.6f} s".format(time.time()-start_time))
         
         
@@ -106,7 +130,8 @@ class FormFactor:
         #transform of final FF will be used instead
 
         self.output = path + output
-        self.center = getLipids(readme)
+        self.lipids = getLipids(readme)
+        self.waters = getWater(readme)
         
         self.density_type = density_type
         
@@ -149,19 +174,19 @@ class FormFactor:
                 name = self.u.atoms.names[i]
                 residue = self.u.atoms.resnames[i]
                 temporary_mapping = temporary_mapping_dictionary(self.readme) #dictionary made of mapping file
-                try:
-                    m_name = temporary_mapping[residue][name]
-                except KeyError:
-                    #print(m_name)
-                    print(residue)
-                    print(name)
-                else:
-                    name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
-                    name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
-                    if name2 == 'G':
-                        name2 = 'C'
-                    #print(name2)                
-                    wght[i]=electron_dictionary[name2] #get number of electrons
+                #try:
+                m_name = temporary_mapping[residue][name]
+                #except KeyError:
+                #    #print(m_name)
+                #    print(residue)
+                #    print(name)
+                #else:
+                name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
+                name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
+                if name2 == 'G':
+                    name2 = 'C'
+                #print(name2)                
+                wght[i]=electron_dictionary[name2] #get number of electrons
                # print(wght[i])
             self.wght=wght
         if self.density_type=="number":
@@ -169,7 +194,7 @@ class FormFactor:
         if self.density_type=="mass":
             self.wght=self.u.atoms.masses
         
-        print(self.center)
+        print(self.lipids)
         print(self.u.atoms.resnames)
             
         print("Creating the electron mapping dictonary takes {:10.6f} s".format(time.time()-start_time))
@@ -177,7 +202,7 @@ class FormFactor:
     def calculate_density(self):
 
         
-        c = self.u.select_atoms(self.center)
+        c = self.u.select_atoms(self.lipids)
 
         print(c)
         
@@ -188,8 +213,9 @@ class FormFactor:
         print(boxH)
         x = np.linspace(-boxH,boxH,self.nbin+1)[:-1] + d/2
         density_z_centered = np.zeros(self.nbin)
-        
         density_z_no_center = np.zeros(self.nbin)
+        density_lipids_center = np.zeros(self.nbin)
+        density_waters_center = np.zeros(self.nbin)
         
         #for running FF - not needed now
         #fa=[]
@@ -203,7 +229,7 @@ class FormFactor:
             #count the index of the frame, numbered from 0, used to be used for the density profile averaging
             #posible not needed now
             frame += 1 #ts.frame
-            
+            #print(frame)
       
             
 
@@ -218,6 +244,8 @@ class FormFactor:
             
             #reads the coordinates of all of the atoms
             crds = self.u.atoms.positions
+
+            
             crds_no_center = c.atoms.positions[:,2]/10
             lipid_wght=np.ones(c.atoms.names.shape[0])
             
@@ -227,6 +255,13 @@ class FormFactor:
             
             #moves the center of mass of the selected centering group into box/2
             crds[:,2] += box_z/2 - ctom
+
+            #clipids_center += box_z/2 - ctom
+            #cwaters_center += box_z/2 - ctom            
+
+            #clipids_center /= 10
+            #cwaters_center /= 10            
+           
             
             """shifts the coordinates in the universe by the value of the center of mass"""
             self.u.atoms.positions = crds
@@ -234,12 +269,20 @@ class FormFactor:
             """puts the atoms back to the original box dimension; it possibly does not take PBC into account
             #therefore it may brake some of the water molecules; try it, come to the issue later"""
             self.u.atoms.pack_into_box()
+
+            clipids = self.u.select_atoms(self.lipids)
+            cwaters = self.u.select_atoms(self.waters)
+
             
             """shif the coordinates so that the center in z-dimention is in 0; 
             #divide by 10 to get the coordinates in nm, since now the crds are only the z coordinates"""
             crds = (self.u.atoms.positions[:,2] - box_z/2)/10
-            
-            
+            clipids_center = (clipids.atoms.positions[:,2] - box_z/2)/10
+            cwaters_center = (cwaters.atoms.positions[:,2] - box_z/2)/10
+
+
+
+            water_wght=np.ones(cwaters.atoms.names.shape[0])
             
             """calculates the volume of the bin; d- the "height" of a bin; assumes in [nm] """
             # ts.dimension[0], ts.dimension[1] - the x and y dimension; in [A] --> devides by 100
@@ -274,6 +317,8 @@ class FormFactor:
             """calculates the total density profile; keep for now"""
             density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.wght/vbin)[0]
             density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=lipid_wght/vbin)[0]
+            density_lipids_center += np.histogram(clipids_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=lipid_wght/vbin)[0]
+            density_waters_center += np.histogram(cwaters_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=water_wght/vbin)[0]
 
         print("Calculating the density takes {:10.6f} s".format(time.time()-start_time))
 
@@ -282,6 +327,8 @@ class FormFactor:
         """ Normalizing the profiles """
         density_z_centered /= (frame) 
         density_z_no_center /= frame
+        density_lipids_center /= frame
+        density_waters_center /= frame
         
 
         """ Symmetrizing profile if necessary """
@@ -294,6 +341,8 @@ class FormFactor:
         """ Post-processign data and writing to file """
         density_data = np.vstack((x,density_z_centered)).transpose()
         density_data_no_center = np.vstack((x,density_z_no_center)).transpose()
+        density_lipids_center = np.vstack((x,density_lipids_center)).transpose()
+        density_waters_center = np.vstack((x,density_waters_center)).transpose()        
         
         """Post-processing of FF data from individual runs""" # running FF
         
@@ -332,12 +381,20 @@ class FormFactor:
         
         """Save data into files"""
         #minimum box size density
-        with open(str(self.output)+".finalDensity", 'wb') as f:
+        with open(str(self.output)+"TotalDensity.dat", 'wb') as f:
             np.savetxt(f, density_data[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
             
-        with open(str(self.output)+".finalDensity_no_center", 'wb') as f:
+        with open(str(self.output)+"LipidDensity_no_center.dat", 'wb') as f:
             np.savetxt(f, density_data_no_center[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
-        
+
+        with open(str(self.output)+"LipidDensity.dat", 'wb') as f:
+            np.savetxt(f, density_lipids_center[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
+
+        with open(str(self.output)+"WaterDensity.dat", 'wb') as f:
+            np.savetxt(f, density_waters_center[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
+
+            
+            
         # density of the whole thing
         #with open(self.output, 'wb') as f:
         #    np.savetxt(f, density_data,fmt='%8.4f  %.8f')
@@ -346,17 +403,21 @@ class FormFactor:
         #    np.savetxt(f, fourrier_data,fmt='%8.4f  %.8f %.8f')
         
         #this is the important file form factors
-        with open(str(self.output)+".fourierFromFinalDensity", 'wb') as f:
+        with open(str(self.output)+"FormFactor.dat", 'wb') as f:
             np.savetxt(f, fourrier_data2,fmt='%8.4f  %.8f')
             
         """ write output in json """
         
-        with open(str(self.output)+".finalDensity.json", 'w') as f:
+        with open(str(self.output)+"TotalDensity.json", 'w') as f:
             json.dump(density_data[final_FF_start+1:final_FF_end-1,:],f, cls=NumpyArrayEncoder)
-            
 
-            
-        with open(str(self.output)+".fourierFromFinalDensity.json", 'w') as f:
+        with open(str(self.output)+"LipidDensity.json", 'w') as f:
+            json.dump(density_lipids_center[final_FF_start+1:final_FF_end-1,:],f, cls=NumpyArrayEncoder)
+
+        with open(str(self.output)+"WaterDensity.json", 'w') as f:
+            json.dump(density_waters_center[final_FF_start+1:final_FF_end-1,:],f, cls=NumpyArrayEncoder)
+                     
+        with open(str(self.output)+"FormFactor.json", 'w') as f:
             json.dump(fourrier_data2,f,cls=NumpyArrayEncoder)
             
 

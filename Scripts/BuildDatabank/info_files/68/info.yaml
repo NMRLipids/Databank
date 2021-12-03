@@ -18,7 +18,7 @@ COMPOSITION:
     MAPPING: mappingPOPGlipid17.txt
   SOD:
     NAME: Na+
-    MAPPING: mappingSODlipid17.txt
+    MAPPING: mappingSODlipid17_2.txt
   SOL:
     NAME: WAT
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Plipid17.txt
