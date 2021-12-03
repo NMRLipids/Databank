@@ -23,11 +23,11 @@ COMPOSITION:
   SOL:
     NAME: WAT
     COUNT: 25000
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Plipid17.txt
   SOD:
     NAME: Na+
     COUNT: 150
-    MAPPING: mappingSODlipid17.txt
+    MAPPING: mappingSODlipid17_2.txt
 TIMELEFTOUT: 0
 TRJLENGTH: 100010.0
 DATEOFRUNNING: 01/10/2021
