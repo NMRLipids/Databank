@@ -123,6 +123,8 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                     #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
                     if QE >0: # 0! = 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
+                        #if QE == 'NaN':
+                        #    E_sum = E_sum
                         if QE == float("inf"): #'Infinity' or QE == 'inf':
                             E_sum += 300
                             AV_sum += 1
@@ -188,7 +190,10 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         for doi in fragment_qual_dict.keys():
             qual_sum += fragment_qual_dict[doi]['cholesterol']
             chol_c += 1
-        total_quality = qual_sum / chol_c
+        if chol_c > 0:
+            total_quality = qual_sum / chol_c
+        else:
+            total_quality = 0
         return total_quality
         
 
