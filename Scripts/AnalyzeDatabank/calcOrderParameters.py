@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import MDAnalysis
 import urllib.request
 import yaml
+import re
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
