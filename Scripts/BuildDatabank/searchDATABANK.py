@@ -31,7 +31,7 @@ class Data:
 class Simulation:
     def __init__(self, readme, data, indexingPath):
         self.readme = readme
-        self.data = data #object Data
+        self.data = {}      
         self.indexingPath = indexingPath
     
     def getLipids(self, molecules=lipid_numbers_list):
@@ -154,14 +154,22 @@ def loadSimulations():
                 with open(READMEfilepathSimulation) as yaml_file_sim:
                     readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
                     indexingPath = "/".join(filepath.split("/")[4:8])
+                   # print(indexingPath)
                     simOPdata = [] #order parameter files for each type of lipid
-                    for filename2 in files:
-                        if filename2.endswith('OrderParameters.json'):
+                    simData = {}
+                    for filename2 in files: 
+                        if filename2.endswith('fourierFromFinalDensity.json'):
+                            dataPath = subdir + '/' + filename2
+                            simData['FormFactors'] = Data("system",dataPath)
+                        elif filename2.endswith('OrderParameters.json'):
                             lipid_name = filename2.replace('OrderParameters.json', '')
                             dataPath = subdir + '/' + filename2
+                          #  print(dataPath)
                             op_data = Data(lipid_name, dataPath)
-                            simOPdata.append(op_data)
-                    simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                            simOPdata.append(op_data)  
+                             
+                    simData['OrderParameters'] = simOPdata
+                    simulations.append(Simulation(readmeSim, simData, indexingPath))
                     yaml_file_sim.close()    
     return simulations
  
@@ -170,9 +178,9 @@ def loadExperiments(experimentType):
     experiments = []
     dataFile = ""
     if experimentType == 'OrderParameters':
-        dataFile = 'Order_Parameters.json'
+        dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
-        dataFile = 'form_factors.fourierFromFinalDensity.json'
+        dataFile = '.json'
     
     path = r'../../Data/experiments/'+experimentType+'/'
     for exp_subdir, exp_dirs, exp_files in os.walk(path):
@@ -183,17 +191,22 @@ def loadExperiments(experimentType):
                 #print(READMEfilepathExperiment)
                 with open(READMEfilepathExperiment) as yaml_file_exp:
                     readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+                    opData = {}
+                    
                     for filename2 in exp_files:
                         if filename2.endswith(dataFile):
                             molecule_name = ""
                             dataPath = exp_subdir + '/' + filename2 #json!
-                            if dataFile == "OrderParameters":
+                            #print(dataPath)
+                            if experimentType == "OrderParameters":
                                 molecule_name = filename2.replace(dataFile,'')
-                            elif dataFile == "FormFactors": 
+                                #print(molecule_name)
+                                
+                            elif experimentType == "FormFactors": 
                                 molecule_name = 'system'   
                             #print(lipid_name)    
-                            expOPdata = Data(molecule_name, dataPath)
-                            experiments.append(Experiment(readmeExp, expOPdata, exp_subdir,experimentType))
+                            expData = Data(molecule_name, dataPath)
+                            experiments.append(Experiment(readmeExp, expData, exp_subdir,experimentType))
                 yaml_file_exp.close()
            
     return experiments
@@ -210,10 +223,10 @@ def findPairs(experiments):
         sim_molar_fractions = {}
         for lipid in sim_lipids:
             sim_molar_fractions[lipid] = simulation.molarFraction(lipid)
-        
+       # print(sim_molar_fractions)
         
         for experiment in experiments: 
-            # print(experiment.readme)
+            #print(experiment.readme)
             # check lipid composition matches the simulation
             exp_lipids = experiment.getLipids() 
             #  print(experiment.getLipids())
@@ -228,7 +241,8 @@ def findPairs(experiments):
             for molecule in ions_list:
                 sim_concentrations[molecule] = simulation.ionConcentration(molecule, exp_counter_ions)
 
-        
+            #print(sim_concentrations)
+            
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
                 # compare molar fractions
@@ -253,49 +267,65 @@ def findPairs(experiments):
                 if (type(exp_total_lipid_concentration) == float) and (type(sim_total_lipid_concentration) == float): 
                     if ((exp_total_lipid_concentration >= sim_total_lipid_concentration - 0.1) and (exp_total_lipid_concentration <= sim_total_lipid_concentration + 0.1)):
                         switch = 1
+
                 elif type(exp_total_lipid_concentration) == str and type(sim_total_lipid_concentration) == str:
                     if exp_total_lipid_concentration == sim_total_lipid_concentration:
                         switch = 1
                         
+               # print(switch)
+                        
                 if switch == 1:
-            
                     #check temperature +/- 2 degrees
                     t_exp = experiment.readme['TEMPERATURE']
+                    
                     if (mf_ok == len(sim_lipids)) and (c_ok == len(sim_ions)) and (t_exp >= float(t_sim) - 2.0) and (t_exp <= float(t_sim) + 2.0):
-                        #  print(simulation.indexingPath)
+                        #  print(simulation.indexingPath
                         pairs.append([simulation, experiment])
                         # print(simulation.readme['SYSTEM'])
-                        print(simulation.indexingPath)
-                        print(experiment.dataPath)
-                    
+                        #print(simulation.indexingPath)
+                        #print(experiment.dataPath)
+                        #print("matching works")
                     #Add path to experiment into simulation README.yaml
                     #many experiment entries can match to same simulation
                         exp_doi = experiment.readme['DOI'] 
+                        #print(experiment.dataPath)
                         exp_path = "/".join(experiment.dataPath.split("/")[5:8])
+                       # print(exp_path)
+                        #try:
+                        #    lipid = experiment.data.molecule
+                        #except AttributeError:
+                        #    print("ei toimi")
+                        #    print(experiment.readme)
+                        #print(lipid)
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.data.molecule
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
-                            print(simulation.readme['DOI'])
-                            print(simulation.readme['EXPERIMENT'])
-                            print('\n')
+                            #print(simulation.readme['DOI'])
+                            #print(simulation.readme['EXPERIMENT'])
+                            #print('\n')
                         elif experiment.exptype == "FormFactors":
                             simulation.readme['EXPERIMENT']['FORMFACTOR'][exp_doi]=exp_path
-                    
+                    else:
+                        continue
         outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
     
         with open(outfileDICT, 'w') as f:
             yaml.dump(simulation.readme,f, sort_keys=False)
         f.close()
         
-        return pairs
+    return pairs
                         
 ##############################################
 #loop over the simulations in the simulation databank and read simulation readme and order parameter files into objects
 simulations = loadSimulations()
 for simulation in simulations:
     simulation.readme['EXPERIMENT'] = {}
+    simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
+    simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
     for lipid in simulation.getLipids():
-        simulation.readme['EXPERIMENT'][lipid] = {}
+        simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
+    
+   # print(simulation.indexingPath)
         
     outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
     with open(outfileDICT, 'w') as f:
@@ -303,22 +333,26 @@ for simulation in simulations:
 
 #load experiments
 experimentsOrderParameters = loadExperiments('OrderParameters')
-#experimentsFormFactors = loadExperiments('FormFactors')
+experimentsFormFactors = loadExperiments('FormFactors')
 
-# make empty dictionary for saving paths to matching experimental data entries                
-
-                
-
-                   
 
 #Pair each simulation with an experiment with the closest matching temperature and composition
-pairs = findPairs(experimentsOrderParameters)
+pairsOP = findPairs(experimentsOrderParameters)
+pairsFF = findPairs(experimentsFormFactors)
+
+#print(experimentsOrderParameters)
+#print(len(simulations))
+
+print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
+print("Found form factor data for " + str(len(pairsFF)) + " pairs")
+for pair in pairsFF:
+    if "POPG" in pair[1].readme['MOLAR_FRACTIONS'].keys():
+        print('#################')
+        print(pair[0].readme)
+        print("#")
+        print(pair[1].readme)         
 
 
-print(len(experimentsOrderParameters))
-print(len(simulations))
-
-print("Found " + str(len(pairs)) + " pairs")  
-#for pair in pairs:
-#    print(pair[0].readme)
-#    print(pair[1].readme)                    
+#for exp in experimentsFormFactors:
+#    print(exp.readme)  
+#    print(exp.data.molecule)       
