@@ -34,6 +34,12 @@ for system in systems:
     system_path = system['path']
 
     print('Analyzing', system_path)
+
+    try:
+        if system['UNITEDATOM_DICT']:
+            continue
+    except:
+        pass
     
     output_name = ""
     
