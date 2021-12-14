@@ -211,7 +211,7 @@ class FormFactor:
         d =  box_z/ 10/self.nbin #     # bin width
         boxH = box_z/10
         print(boxH)
-        x = np.linspace(-boxH,boxH,self.nbin+1)[:-1] + d/2
+        x = np.linspace(-boxH/2,boxH/2,self.nbin+1)[:-1] + d/2
         density_z_centered = np.zeros(self.nbin)
         density_z_no_center = np.zeros(self.nbin)
         density_lipids_center = np.zeros(self.nbin)
