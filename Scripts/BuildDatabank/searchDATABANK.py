@@ -346,13 +346,10 @@ pairsFF = findPairs(experimentsFormFactors)
 print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
 print("Found form factor data for " + str(len(pairsFF)) + " pairs")
 for pair in pairsFF:
-    if "POPG" in pair[1].readme['MOLAR_FRACTIONS'].keys():
-        print('#################')
-        print(pair[0].readme)
-        print("#")
-        print(pair[1].readme)         
+    print('#################')
+    print(pair[0].readme)
+    print("#")
+    print(pair[1].readme)         
 
 
-#for exp in experimentsFormFactors:
-#    print(exp.readme)  
-#    print(exp.data.molecule)       
+
