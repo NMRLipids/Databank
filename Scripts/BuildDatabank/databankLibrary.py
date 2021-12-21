@@ -29,6 +29,9 @@ lipids_dict = {
             'DPPE' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DPPG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'DEPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -60,6 +63,9 @@ lipids_dict = {
                             "TYPE" : "string",
                         },
             'SLPI' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'CER' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
             'CHOL' : {"REQUIRED": False,
@@ -98,93 +104,9 @@ molecules_dict = {
                 }
 
 
+# Dictionary with molecule numbers was here but it is not needed anymore
 
 
-
-
-# Dictionary containing the number of molecules which are automatically calculated from input files
-# not needed anymore!!!!!              
-molecule_numbers_dict = {
-            'NPOPC' : {"REQUIRED": False,
-                              "TYPE": "array",
-                          },
-            'NPOPG' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                         },
-            'NPOPS' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-            'NPOPE' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDMPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDPPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDPPE' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDEPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDLPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDLIPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDDOPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPS' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDSPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDAPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NPOPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSAPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSLPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NCHOL' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
-            'NDCHOL' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
-            'NDHMDMAB' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-            'NPOT' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NSOD' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCLA' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCAL' : {"REQUIRED": False,
-                             "TYPE" : "integer",
-                         },
-            'NSOL' : {"REQIRED": False,
-                            "TYPE" : "integer",
-                        },
-    
-                }
 
 # Dictionary containing the force fields for molecules given by the contributor
 
@@ -199,6 +121,9 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFPOPE' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFDPPG' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFDMPC' : {"REQUIRED": False,
@@ -241,6 +166,9 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFSLPI' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFCER' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFCHOL' : {"REQUIRED": False,
@@ -1021,7 +949,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         selection = mol.select_atoms("resname {rnm} and name {atA} {atB}".format(
                                     rnm=op.resname, atA=op.atAname, atB=op.atBname)
                                     ).atoms.split("residue")
-    #    print(op.resname + " " + op.atAname + " " + op.atBname)
+        #print(op.resname + " " + op.atAname + " " + op.atBname)
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
             if res.n_atoms != 2:
@@ -1039,6 +967,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         Nres=len(op.selection)
 
     Nframes=len(mol.trajectory)
+    #print(Nres,Nframes)
     for op in ordPars:
         op.traj= [0]*Nres
 #        op.traj=[0]*Nres
@@ -1053,7 +982,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                 residue=op.selection[i]
 #                print(residue)
                 S = op.calc_OP(residue)
-#                print(S)
+                #print(S)
 #                    print(op.atAname + " " + op.atBname)
 #                    print(i)
 #                op.traj.append(S/Nframes)
@@ -1229,6 +1158,4 @@ def read_trj_PN_angles(molname,atoms, top_fname, traj_fname, gro_fname):
     return angles, resAverageAngles, totalAverage, totalSTDerror
     
 ###############################################################################################################
-
-
 
