@@ -29,7 +29,7 @@ COMPOSITION:
   CAL:
     NAME: Cal
     COUNT: 73
-    MAPPING: mappingCAL.txt
+    MAPPING: mappingCAL_2.txt
   CLA:
     NAME: CL
     COUNT: 146

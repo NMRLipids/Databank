@@ -26,14 +26,22 @@ db_data = databank(path)
 systems = db_data.get_systems()
 
 with open("system_already_run_17_11_21.out","w") as f:
-    f.write("Moi, tervetuloa hienoon koodiin. \nVoit oddottaa yllätäviä tuloksia. \n \n ")   
+    f.write("Listing analysed systems \n \n ")   
     
      
 for system in systems:
     #download trajectory and gro files
     system_path = system['path']
+
+    print('Analyzing', system_path)
+
+    try:
+        if system['UNITEDATOM_DICT']:
+            continue
+    except:
+        pass
     
-    output_name = "form_factors"
+    output_name = ""
     
     trj_name = system['path'] + system['TRJ'][0][0]
     tpr_name = system['path'] + system['TPR'][0][0]
@@ -109,10 +117,13 @@ for system in systems:
      
     if download_failed == True:
         with open("system_already_run_17_11_21.out","a") as f:
-            f.write(system_path+" Vakava epäonnistuminen !!!\n")    
+            f.write(system_path+" Download failed !!!\n")    
         
     if download_failed == False:
         with open("system_already_run_17_11_21.out","a") as f:
-            f.write(system_path+" Lataus onnistui\n")   
-        if (not os.path.isfile(system_path + "/form_factors.fourierFromFinalDensity"):     
-            form_factor.FormFactor(system_path, tpr_name, trj_name, 200, output_name,  system)
+            f.write(system_path+" download successfull \n")   
+        if (not os.path.isfile(system_path + "/FormFactor.json")):
+            try:
+                form_factor.FormFactor(system_path, tpr_name, trj_name, 200, output_name,  system)
+            except:
+                print(system_path,' Failed')

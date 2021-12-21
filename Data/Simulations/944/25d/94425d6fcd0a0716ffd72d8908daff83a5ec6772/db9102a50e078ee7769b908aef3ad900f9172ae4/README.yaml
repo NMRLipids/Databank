@@ -17,15 +17,15 @@ COMPOSITION:
   CLA:
     NAME: CL
     COUNT: 92
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLAecc.txt
   CAL:
     NAME: CA
     COUNT: 46
-    MAPPING: mappingCAL.txt
+    MAPPING: mappingCALecc.txt
   SOD:
     NAME: NA
     COUNT: 128
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSODecc.txt
   POPC:
     NAME: POPC
     COUNT:
@@ -35,7 +35,7 @@ COMPOSITION:
   SOL:
     NAME: SOL
     COUNT: 12800
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3PwaterSlipids.txt
 TIMELEFTOUT: 500
 TRJLENGTH: 1000100.0
 DATEOFRUNNING: 04/10/2021

@@ -98,7 +98,7 @@ def evaluated_percentage(fragments, exp_op_data):
 
 
 def fragmentQuality(fragments, exp_op_data, sim_op_data):
-    print("fragment quality")
+    #print("fragment quality")
     p_F = evaluated_percentage(fragments, exp_op_data)
     #warning, hard coded experimental error
     exp_error=0.02
@@ -123,11 +123,13 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                     #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
                     if QE >0: # 0! = 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
+                        #if QE == 'NaN':
+                        #    E_sum = E_sum
                         if QE == float("inf"): #'Infinity' or QE == 'inf':
                             E_sum += 300
                             AV_sum += 1
                         else:
-                            print(QE)
+                            #print(QE)
                             E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                             AV_sum += 1
 
@@ -188,7 +190,10 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         for doi in fragment_qual_dict.keys():
             qual_sum += fragment_qual_dict[doi]['cholesterol']
             chol_c += 1
-        total_quality = qual_sum / chol_c
+        if chol_c > 0:
+            total_quality = qual_sum / chol_c
+        else:
+            total_quality = 0
         return total_quality
         
 
@@ -212,14 +217,33 @@ def systemQuality(system_quality):
                         sn2.append(w * value)
                     elif key == 'total':
                         total.append(w * value)
-                else:
-                    continue
+                    else:
+                        continue
         else:
             for key, value in system_quality[lipid].items():
                  if value != 'nan':
                      if key == 'total':
                          total.append(w * value)
 
+
+    ## EXTREMELY DIRTY FIX FOR WORKSHOP, SHOULD BE IMPROVED LATER
+    for lipid in system_quality.keys():
+        w = simulation.molarFraction(lipid)
+        if lipid != 'CHOL':    
+            for key, value in system_quality[lipid].items():                        
+                if value == 'nan':
+                   if key == 'headgroup':
+                       headgroup[:] = [x / w for x in headgroup]
+                   elif key == 'sn-1':
+                       sn1[:] = [x / w for x in sn1] 
+                   elif key == 'sn-2':
+                       sn2[:] = [x / w for x in sn2] 
+                   elif key == 'total':
+                       total[:] = [x / w for x in total]
+                else:
+                    continue
+
+                         
     out_dict['headgroup'] = sum(headgroup)
     out_dict['sn-1'] = sum(sn1)
     out_dict['sn-2'] = sum(sn2)
@@ -242,7 +266,7 @@ def loadSimulations():
                 indexingPath = "/".join(filepath.split("/")[4:8])
 
                 #print(indexingPath)
-                print(filepath)
+                #print(filepath)
                 #print(readmeSim)
 
                 try:
@@ -252,7 +276,9 @@ def loadSimulations():
                     continue
                 else:
                     if any(experiments.values()): #if experiments is not empty
-                        print(any(experiments))
+                        #print(any(experiments))
+                        #print('Experiments found for' + filepath)
+                        #print(experiments)
                         simOPdata = {} #order parameter files for each type of lipid
                         for filename2 in files:
                             if filename2.endswith('OrderParameters.json'):
@@ -267,7 +293,7 @@ def loadSimulations():
                                     
                         simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
                     else:
-                        print("The simulation does not have experimental data.")
+                        #print("The simulation does not have experimental data.")
                         continue
                 
                     
@@ -292,11 +318,11 @@ for simulation in simulations:
     #save OP quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
    # print(DATAdir)
-     
+   
     system_quality = {}
     for lipid1 in simulation.getLipids():
         #print(lipid1)
-        print(simulation.indexingPath)
+        print('Simulation path ' + simulation.indexingPath)
         #print(simulation.data.keys())
         
         # OP_data_lipid = simulation.data[lipid1]
@@ -309,7 +335,7 @@ for simulation in simulations:
         
         
         # go through file paths in simulation.readme['EXPERIMENT']
-        print(simulation.readme['EXPERIMENT'].values())
+        #print(simulation.readme['EXPERIMENT'].values())
 
         
         for lipid, experiments in simulation.readme['EXPERIMENT'].items():
@@ -319,17 +345,17 @@ for simulation in simulations:
                 OP_qual_data = {}
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/" + path
-                print(experimentFilepath)
+                print('Experimental path ' + experimentFilepath)
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
                 with open(READMEfilepathExperiment) as yaml_file_exp:
                     readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
                     experiment.readme = readmeExp
-                    print(experiment.readme)
+                    #print(experiment.readme)
                 yaml_file_exp.close()
 
                 exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
-                print(exp_OP_filepath)
+                #print(exp_OP_filepath)
                 lipidExpOPdata = {}
                 try:
                     with open(exp_OP_filepath) as json_file:
@@ -419,7 +445,7 @@ for simulation in simulations:
             with open(outfile1, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
-        
+
         print('input to system quality')
         print(system_quality)
         #calculate system quality
@@ -432,7 +458,7 @@ for simulation in simulations:
             json.dump(system_qual_output,f)
         f.close() 
         
-
+        print('')
         
         
      #   print(OP_qual_data)                        
