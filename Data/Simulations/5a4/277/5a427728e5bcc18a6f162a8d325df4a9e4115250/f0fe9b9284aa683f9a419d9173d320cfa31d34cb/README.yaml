@@ -1,33 +1,30 @@
-FF_DATE: ??
-TYPEOFSYSTEM: lipid bilayer
+DOI: 10.5281/zenodo.166034
 SYSTEM: POPC_T298K
-TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 140437
-EXPERIMENT:
-  POPC:
-    10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+SOFTWARE: gromacs
+FF: Slipids
 FF_SOURCE: ??
+FF_DATE: ??
+TRJ:
+- - popc00_T298_every100ps.xtc
+TPR:
+- - popc00_T298_every100ps.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 70
+DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
     NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
     COUNT:
     - 256
     - 256
-    MAPPING: mappingPOPCslipids.txt
   SOL:
     NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
     COUNT: 23943
-    MAPPING: mappingTIP3PwaterSlipids.txt
-TIMELEFTOUT: 70
-TRJLENGTH: 100100.0
-DATEOFRUNNING: 01/10/2021
-FF: Slipids
-SOFTWARE: gromacs
-PREEQTIME: 0
-DOI: 10.5281/zenodo.166034
 TRAJECTORY_SIZE: 527345968
-TPR:
-- - popc00_T298_every100ps.tpr
-TRJ:
-- - popc00_T298_every100ps.xtc
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+TRJLENGTH: 100100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 140437
+DATEOFRUNNING: 21/12/2021
+TYPEOFSYSTEM: lipid bilayer

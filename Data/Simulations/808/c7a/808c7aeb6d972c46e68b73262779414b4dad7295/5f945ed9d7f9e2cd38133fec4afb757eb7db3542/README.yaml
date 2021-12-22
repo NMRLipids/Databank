@@ -1,47 +1,45 @@
-AUTHORS_CONTACT: Ollila, Samuli
-FF_DATE: null
-SYSTEM: 72POPC_2168SOL_37CLA_37NA_303K
-TYPEOFSYSTEM: lipid bilayer
-TEMPERATURE: 303.0
+DOI: 10.5281/zenodo.32498
+SOFTWARE: gromacs
+TRJ:
+- - popcRUN2-4.xtc
+TPR:
+- - popcRUN2.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
-NUMBER_OF_ATOMS: 16226
-EXPERIMENT:
-  POPC: {}
+AUTHORS_CONTACT: Ollila, Samuli
+SYSTEM: 72POPC_2168SOL_37CLA_37NA_303K
+SOFTWARE_VERSION: 4.5
+FF: CHARMM36
 FF_SOURCE: charmm2gmx.py
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc.top
 COMPOSITION:
-  CLA:
-    NAME: CL
-    COUNT: 37
-    MAPPING: mappingCLA.txt
   POPC:
     NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 36
     - 36
-    MAPPING: mappingPOPCcharmm.txt
   SOL:
     NAME: SOL
-    COUNT: 2168
     MAPPING: mappingSPCwater.txt
+    COUNT: 2168
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 37
   SOD:
     NAME: NA
+    MAPPING: mappingNA.txt
     COUNT: 37
-    MAPPING: mappingSOD.txt
-TIMELEFTOUT: 0
-CPT: null
-TRJLENGTH: 60010.0
 TRAJECTORY_SIZE: 359802172
-SOFTWARE_VERSION: 4.5
-FF: CHARMM36
-TOP:
-- - popc.top
-PREEQTIME: 20
-DOI: 10.5281/zenodo.32498
-DATEOFRUNNING: 01/10/2021
-TPR:
-- - popcRUN2.tpr
-TRJ:
-- - popcRUN2-4.xtc
-LOG: null
-SOFTWARE: gromacs
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+TRJLENGTH: 60010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 16226
+DATEOFRUNNING: 21/12/2021
+TYPEOFSYSTEM: lipid bilayer
