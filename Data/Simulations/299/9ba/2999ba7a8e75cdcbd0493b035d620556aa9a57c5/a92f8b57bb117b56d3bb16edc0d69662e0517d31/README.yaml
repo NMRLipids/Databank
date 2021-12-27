@@ -1,25 +1,14 @@
 DOI: 10.5281/zenodo.3237657
-SYSTEM: POPC_T310K
 SOFTWARE: gromacs
-FF: lipid17
-FF_SOURCE: ??
-FF_DATE: ??
 TRJ:
 - - total_4_500.xtc
 TPR:
 - - md_0.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-POPG: system2
-POPS: POPS
-POPE: POPE
-POT: K
-CLA: CL
-CAL: CA
-DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
-    NAME: system1
+    NAME: PC
     MAPPING: mappingPOPClipid17.txt
     COUNT:
     - 250
@@ -28,13 +17,21 @@ COMPOSITION:
     NAME: WAT
     MAPPING: mappingTIP3Plipid17.txt
     COUNT: 25000
-  SOD:
-    NAME: NA+
-    MAPPING: mappingSOD.txt
-    COUNT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
+SYSTEM: 500POPC_25000SOL_310K
+SOFTWARE_VERSION: 2018.3
+FF: Lipid17
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
 TRAJECTORY_SIZE: 5255703444
 TRJLENGTH: 100010.0
 TEMPERATURE: 310.0
 NUMBER_OF_ATOMS: 142000
-DATEOFRUNNING: 22/12/2021
+DATEOFRUNNING: 27/12/2021
 TYPEOFSYSTEM: lipid bilayer
