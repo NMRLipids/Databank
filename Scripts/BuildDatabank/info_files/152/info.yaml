@@ -4,7 +4,7 @@ TRJ: md10.xtc
 TPR: md10.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
 AUTHORS_CONTACT: Javanainen, Matti
 SYSTEM: 22CHOL_200POPC_9000SOL_73CAL_146CLA_310K
@@ -27,7 +27,7 @@ COMPOSITION:
     MAPPING: mappingTIP3Pwater.txt
   CAL:
     NAME: Cal
-    MAPPING: mappingCAL.txt
+    MAPPING: mappingCal.txt
   CLA:
     NAME: CL
     MAPPING: mappingCL.txt
