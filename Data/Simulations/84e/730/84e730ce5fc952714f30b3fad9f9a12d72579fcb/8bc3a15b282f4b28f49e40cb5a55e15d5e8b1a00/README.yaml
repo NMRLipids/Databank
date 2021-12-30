@@ -1,54 +1,51 @@
-AUTHORS_CONTACT: Javanainen, Matti
-FF_DATE: null
-SYSTEM: 22CHOL_200POPC_9000SOL_73CAL_146CLA_310K
-TYPEOFSYSTEM: lipid bilayer
-TEMPERATURE: 310.15
+DOI: 10.5281/zenodo.259365
+SOFTWARE: gromacs
+TRJ:
+- - md10.xtc
+TPR:
+- - md10.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
-NUMBER_OF_ATOMS: 55647
-EXPERIMENT:
-  CHOL: {}
-  POPC: {}
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 22CHOL_200POPC_9000SOL_73CAL_146CLA_310K
+SOFTWARE_VERSION: 5.0
+FF: CHARMM36
 FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - md10.top
 COMPOSITION:
   CHOL:
     NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.txt
     COUNT:
     - 13
     - 9
-    MAPPING: mappingCHOLESTEROLcharmm.txt
-  SOL:
-    NAME: SOL
-    COUNT: 9000
-    MAPPING: mappingTIP3Pwater.txt
   POPC:
     NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCcharmm.txt
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 9000
   CAL:
     NAME: Cal
+    MAPPING: mappingCal.txt
     COUNT: 73
-    MAPPING: mappingCAL.txt
   CLA:
     NAME: CL
-    COUNT: 146
     MAPPING: mappingCL.txt
-TIMELEFTOUT: 0
-CPT: null
-TRJLENGTH: 2000100.0
+    COUNT: 146
 TRAJECTORY_SIZE: 4124327284
-SOFTWARE_VERSION: 5.0
-FF: CHARMM36
-TOP:
-- - md10.top
-PREEQTIME: 0
-DOI: 10.5281/zenodo.259365
-DATEOFRUNNING: 05/10/2021
-TPR:
-- - md10.tpr
-TRJ:
-- - md10.xtc
-LOG: null
-SOFTWARE: gromacs
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+TRJLENGTH: 2000100.0
+TEMPERATURE: 310.15
+NUMBER_OF_ATOMS: 55647
+DATEOFRUNNING: 27/12/2021
+TYPEOFSYSTEM: lipid bilayer
