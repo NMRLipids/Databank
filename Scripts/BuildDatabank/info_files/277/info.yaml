@@ -4,7 +4,7 @@ TRJ: dppc-0-300.xtc
 TPR: dppc-0-300.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 0
-DIR_WRK: /usr/home/bort/Databank
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: 10.1038/s41598-017-01247-9
 AUTHORS_CONTACT: Javanainen, Matti; Martinez-Seara, Hector; Vattulainen, Ilpo
 SYSTEM: 1152DPPC_46440SOL_124SOD_124CLA_300K
