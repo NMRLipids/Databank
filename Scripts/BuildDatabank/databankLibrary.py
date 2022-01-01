@@ -77,6 +77,9 @@ lipids_dict = {
             'DHMDMAB' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DPPG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
                 }
 
 
@@ -102,10 +105,6 @@ molecules_dict = {
                             "TYPE" : "string",
                         },
                 }
-
-
-# Dictionary with molecule numbers was here but it is not needed anymore
-
 
 
 # Dictionary containing the force fields for molecules given by the contributor
@@ -180,6 +179,9 @@ molecule_ff_dict = {
                 'FFDHMDMAB' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
+                 'FFDPPG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                          },
 		'FFPOT' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
