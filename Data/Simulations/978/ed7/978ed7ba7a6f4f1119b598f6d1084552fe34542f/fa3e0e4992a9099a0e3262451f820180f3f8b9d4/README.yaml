@@ -6,8 +6,10 @@ TEMPERATURE: 310.15
 PUBLICATION: null
 NUMBER_OF_ATOMS: 57719
 EXPERIMENT:
-  CHOL: {}
-  POPC: {}
+  ORDERPARAMETER:
+    CHOL: {}
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml
 COMPOSITION:
   CHOL:

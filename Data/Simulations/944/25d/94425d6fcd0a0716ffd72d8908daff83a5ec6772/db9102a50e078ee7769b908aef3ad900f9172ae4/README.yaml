@@ -4,8 +4,10 @@ SYSTEM: POPCPOPG(1:1)200mMCaCl2
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 72074
 EXPERIMENT:
-  POPG: {}
-  POPC: {}
+  ORDERPARAMETER:
+    POPG: {}
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/,  https://bitbucket.org/hseara/ions/
 COMPOSITION:
   POPG:

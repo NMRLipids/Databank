@@ -6,7 +6,10 @@ TEMPERATURE: 303.0
 PUBLICATION: F. Grote and A. P. Lyubartsev, J. Phys. Chem. B 2020, 124, 8784-8793
 NUMBER_OF_ATOMS: 32512
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR:
+    10.1016/j.bbamem.2011.07.022: 10.1016/j.bbamem.2011.07.022/2
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/Downloads.html
 COMPOSITION:
   POPC:
