@@ -253,7 +253,7 @@ def systemQuality(system_quality):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/OrderParameters/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -302,6 +302,7 @@ def loadSimulations():
 
 
 ###################################################################################################
+print('start')
 simulations = loadSimulations()
 
 #if (not os.path.isdir('../../Data/QualityEvaluation/')): 
@@ -317,7 +318,7 @@ for simulation in simulations:
     
     #save OP quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-   # print(DATAdir)
+    print(DATAdir)
    
     system_quality = {}
     for lipid1 in simulation.getLipids():
@@ -338,13 +339,14 @@ for simulation in simulations:
         #print(simulation.readme['EXPERIMENT'].values())
 
         
-        for lipid, experiments in simulation.readme['EXPERIMENT'].items():
+        for lipid, experiments in simulation.readme['EXPERIMENT']['ORDERPARAMETER'].items():
+            print(lipid,experiments)
             data_dict = {}
             fragment_qual_dict = {}
             for doi, path in experiments.items():
                 OP_qual_data = {}
             # get readme file of the experiment
-                experimentFilepath = "../../Data/experiments/" + path
+                experimentFilepath = "../../Data/experiments/OrderParameters/" + path
                 print('Experimental path ' + experimentFilepath)
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
