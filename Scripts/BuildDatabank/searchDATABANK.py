@@ -345,7 +345,7 @@ pairsFF = findPairs(experimentsFormFactors)
 
 print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
 print("Found form factor data for " + str(len(pairsFF)) + " pairs")
-for pair in pairsFF:
+for pair in pairsOP:
     print('#################')
     print(pair[0].readme)
     print("#")
