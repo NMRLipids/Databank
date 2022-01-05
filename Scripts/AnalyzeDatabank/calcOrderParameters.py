@@ -115,7 +115,7 @@ for system in systems:
         lipidname = system['UNITEDATOM_DICT'][key]
         #    print(lipidname)
         #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
-        os.system('/home/osollila/.local/bin/buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + 'buildH' )
+        os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
         outfile=open(ordPfile,'w')
         line1="Atom     Average OP     OP stem"+'\n'
@@ -124,17 +124,16 @@ for system in systems:
         data = {}
         outfile2= path + key + 'OrderParameters.json'
         
-        with open(ordPfile + 'buildH') as OPfile:
+        with open(ordPfile + '.buildH') as OPfile:
             lines=OPfile.readlines()
             for line in lines:
                 if "#" in line:
                     continue
-                print(line.split())
-                line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
+                line2 = line.split()[0].replace('&',' ') + "  " + line.split()[4] + "  " + line.split()[5] + " " + line.split()[6] + "\n"
                 outfile.write(line2)
 
-                OPname = line.split()[0] + " " + line.split()[1]
-                OPvalues = [line.split()[5], line.split()[6] ,line.split()[7]]
+                OPname = line.split()[0].replace('&',' ') #line.split()[0] + " " + line.split()[1]
+                OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
                 data[str(OPname)]=[]
                 data[str(OPname)].append(OPvalues)
         
