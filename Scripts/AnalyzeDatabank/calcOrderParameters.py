@@ -99,7 +99,7 @@ for system in systems:
 
                         if atomH:
                             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-                            def_line = items[2] + " " + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
                             if def_line != previous_line:
                                 def_file.write(def_line)
                                 print(def_line)
@@ -114,7 +114,8 @@ for system in systems:
         
         lipidname = system['UNITEDATOM_DICT'][key]
         #    print(lipidname)
-        buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+        #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+        os.system('/home/osollila/.local/bin/buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + 'buildH' )
 
         outfile=open(ordPfile,'w')
         line1="Atom     Average OP     OP stem"+'\n'
@@ -123,11 +124,12 @@ for system in systems:
         data = {}
         outfile2= path + key + 'OrderParameters.json'
         
-        with open(ordPfile + '.jmelcr_style.out') as OPfile:
+        with open(ordPfile + 'buildH') as OPfile:
             lines=OPfile.readlines()
             for line in lines:
                 if "#" in line:
                     continue
+                print(line.split())
                 line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
                 outfile.write(line2)
 
