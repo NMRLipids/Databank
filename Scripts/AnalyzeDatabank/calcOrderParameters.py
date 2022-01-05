@@ -74,7 +74,8 @@ for system in systems:
     if unitedAtom:
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
-            def_file = open(path + key + '.def', 'w')
+            def_fileNAME = path + key + '.def' 
+            def_file = open(def_fileNAME, 'w')
 
             mapping_file = system['COMPOSITION'][key]['MAPPING']
             previous_line = ""
@@ -110,7 +111,7 @@ for system in systems:
                         
         os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
                          
-        deffile = path + key + '.def' 
+        
         lipidname = system['UNITEDATOM_DICT'][key]
         #    print(lipidname)
         buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
