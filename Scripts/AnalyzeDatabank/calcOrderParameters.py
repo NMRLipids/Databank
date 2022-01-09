@@ -74,7 +74,8 @@ for system in systems:
     if unitedAtom:
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
-            def_file = open(path + key + '.def', 'w')
+            def_fileNAME = path + key + '.def' 
+            def_file = open(def_fileNAME, 'w')
 
             mapping_file = system['COMPOSITION'][key]['MAPPING']
             previous_line = ""
@@ -98,7 +99,7 @@ for system in systems:
 
                         if atomH:
                             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-                            def_line = items[2] + " " + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
                             if def_line != previous_line:
                                 def_file.write(def_line)
                                 print(def_line)
@@ -110,10 +111,11 @@ for system in systems:
                         
         os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
                          
-        deffile = path + key + '.def' 
+        
         lipidname = system['UNITEDATOM_DICT'][key]
         #    print(lipidname)
-        buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+        #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+        os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
         outfile=open(ordPfile,'w')
         line1="Atom     Average OP     OP stem"+'\n'
@@ -122,16 +124,16 @@ for system in systems:
         data = {}
         outfile2= path + key + 'OrderParameters.json'
         
-        with open(ordPfile + '.jmelcr_style.out') as OPfile:
+        with open(ordPfile + '.buildH') as OPfile:
             lines=OPfile.readlines()
             for line in lines:
                 if "#" in line:
                     continue
-                line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
+                line2 = line.split()[0].replace('&',' ') + "  " + line.split()[4] + "  " + line.split()[5] + " " + line.split()[6] + "\n"
                 outfile.write(line2)
 
-                OPname = line.split()[0] + " " + line.split()[1]
-                OPvalues = [line.split()[5], line.split()[6] ,line.split()[7]]
+                OPname = line.split()[0].replace('&',' ') #line.split()[0] + " " + line.split()[1]
+                OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
                 data[str(OPname)]=[]
                 data[str(OPname)].append(OPvalues)
         

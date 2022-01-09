@@ -143,7 +143,7 @@ for key_sim, value_sim in sim.items():
             #print("NOT REQUIRED")
         continue
     #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_numbers_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
+    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
         print ("{0} NOT in {1}".format(key_sim, software_dict_name)) 
         wrong_key_entries += 1
 if wrong_key_entries:
