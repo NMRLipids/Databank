@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.32173
+SOFTWARE: gromacs
+TRJ:
+- - popcCACL_50-108ns.xtc
+TPR:
+- - popcCACL.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 7157
+  CAL:
+    NAME: CA
+    MAPPING: mappingCALecc.txt
+    COUNT: 44
+  CLA:
+    NAME: CL
+    MAPPING: mappingCLAecc.txt
+    COUNT: 88
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: Phys. Chem. Chem. Phys., 2016, 18, 32560--32569 (NMRlipids II)
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+SYSTEM: POPC_310K_with_CaCl
+SOFTWARE_VERSION: 4.5
+FF: Berger
+FF_SOURCE: J. Phys. Chem. B 2007, 111, 3139-3150
+FF_DATE: null
+TOP:
+- - popcCACL.top
+TRAJECTORY_SIZE: 597638764
+TRJLENGTH: 58010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 28259
+DATEOFRUNNING: 04/12/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
