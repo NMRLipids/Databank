@@ -431,10 +431,18 @@ for simulation in simulations:
             system_quality[lipid1] = fragment_quality_output
 
             fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
-            
-            with open(fragment_quality_file, 'w') as f:
-                json.dump(fragment_quality_output,f)
-            f.close()
+
+            FGout = False
+            for FG in fragment_quality_output:
+                #print(FG,fragment_quality_output[FG])
+                if fragment_quality_output[FG] == 'nan':
+                    continue
+                if fragment_quality_output[FG] > 0:
+                    FGout = True
+            if FGout:
+                with open(fragment_quality_file, 'w') as f:
+                    json.dump(fragment_quality_output,f)
+                f.close()
 
                 
                 
@@ -444,9 +452,10 @@ for simulation in simulations:
             #write into the OrderParameters_quality.json quality data file                  
             outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
             #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-            with open(outfile1, 'w') as f:
-                json.dump(data_dict,f)
-            f.close()
+            if(len(data_dict) > 0):
+                with open(outfile1, 'w') as f:
+                    json.dump(data_dict,f)
+                f.close()
 
         print('input to system quality')
         print(system_quality)
@@ -456,9 +465,14 @@ for simulation in simulations:
         print(system_qual_output)
         #make system quality file
         outfile2 = DATAdir + '/SYSTEM_quality.json'
-        with open(outfile2, 'w') as f:
-            json.dump(system_qual_output,f)
-        f.close() 
+        SQout = False
+        for SQ in system_qual_output:
+            if system_qual_output[SQ] > 0:
+                SQout = True
+        if SQout:
+            with open(outfile2, 'w') as f:
+                json.dump(system_qual_output,f)
+            f.close() 
         
         print('')
         
