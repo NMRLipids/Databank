@@ -424,20 +424,26 @@ leaflet2 = 0 #total number of lipids in lower leaflet
 #u = Universe(top, traj)
 #u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
-try:
-    u = Universe(top, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-except:
-    conf = str(dir_tmp) + '/conf.gro'
-    print("Generating conf.gro because MDAnalysis cannot read tpr version")
-    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
-    u = Universe(conf, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
-
 gro = str(dir_tmp) + '/frame0.gro'
 
-#u0 = Universe(gro)
+try:
+    u = Universe(top, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+except:
+    #conf = str(dir_tmp) + '/conf.gro'
+    print("Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version")
+    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + gro)
+    u = Universe(gro, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+
+
+try:
+    groFORu0 = str(dir_tmp) + '/' + sim['GRO'][0][0]
+    print(groFORu0)
+except:
+    groFORu0 = gro
+    
+u0 = Universe(groFORu0)
 lipids = []
 
 # select lipids 
@@ -458,15 +464,15 @@ for key_mol in lipids_dict:
                    break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
-    molecules = u.select_atoms(selection)
+    molecules = u0.select_atoms(selection)
     #print("molecules")
     #print(molecules)
     if molecules.n_residues > 0:
-        lipids.append(u.select_atoms(selection))
+        lipids.append(u0.select_atoms(selection))
         #print(lipids) 
 # join all the selected the lipids together to make a selection of the entire membrane and calculate the
 # z component of the centre of mass of the membrane
-membrane = u.select_atoms("")
+membrane = u0.select_atoms("")
 R_membrane_z = 0
 if lipids!= []:
     for i in range(0,len(lipids)):
@@ -495,9 +501,9 @@ for key_mol in lipids_dict:
                     selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                     break
     selection = selection.rstrip(' or ')
-    #   print(selection)
-    molecules = u.select_atoms(selection)
-    #print(molecules.residues)
+    print(selection)
+    molecules = u0.select_atoms(selection)
+    print(molecules.residues)
 
     if molecules.n_residues > 0:
         for mol in molecules.residues:
@@ -525,7 +531,7 @@ for key_mol in molecules_dict:
     except KeyError:
         continue
     else:
-        mol_number = u.select_atoms("resname " + mol_name).n_residues
+        mol_number = u0.select_atoms("resname " + mol_name).n_residues
         sim['COMPOSITION'][key_mol]['COUNT'] = mol_number
         print("Number of " + key_mol  + ": " + str(sim['COMPOSITION'][key_mol]['COUNT']))   
 
@@ -601,10 +607,11 @@ for key_mol in all_molecules:
         
 
 if number_of_atoms != number_of_atomsTRJ:
-    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
-    # Do you still want to continue the analysis (y/n)?")
-    #if stop == "n":
-    os._exit("Interrupted because atomnumbers did not match")
+    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names. \n If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?")
+    if stop == "n":
+        os._exit("Interrupted because atomnumbers did not match")
+    if stop == "y":
+        print("Progressed even thought that atom numbers did not math. CHECK RESULTS MANUALLY!")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))

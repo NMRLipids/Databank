@@ -72,6 +72,8 @@ for system in systems:
 
 
     if unitedAtom:
+        topfile = path + '/frame0.gro'
+        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
             def_fileNAME = path + key + '.def' 
@@ -100,48 +102,46 @@ for system in systems:
                         if atomH:
                             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
                             def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+                            #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
                             if def_line != previous_line:
                                 def_file.write(def_line)
                                 print(def_line)
                                 previous_line = def_line
             def_file.close()
-        #Add hydrogens to trajectory and calculate order parameters with buildH
-        ordPfile = path + key + 'OrderParameters.dat' 
-        topfile = path + '/frame0.gro'
-                        
-        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
+            #Add hydrogens to trajectory and calculate order parameters with buildH
+            ordPfile = path + key + 'OrderParameters.dat' 
                          
-        
-        lipidname = system['UNITEDATOM_DICT'][key]
-        #    print(lipidname)
-        #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
-        os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
+            #lipidname = system['UNITEDATOM_DICT'][key]
+            #    print(lipidname)
+            #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+            print(system['UNITEDATOM_DICT'][key])
+            os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
-        outfile=open(ordPfile,'w')
-        line1="Atom     Average OP     OP stem"+'\n'
-        outfile.write(line1)
+            outfile=open(ordPfile,'w')
+            line1="Atom     Average OP     OP stem"+'\n'
+            outfile.write(line1)
         
-        data = {}
-        outfile2= path + key + 'OrderParameters.json'
+            data = {}
+            outfile2= path + key + 'OrderParameters.json'
         
-        with open(ordPfile + '.buildH') as OPfile:
-            lines=OPfile.readlines()
-            for line in lines:
-                if "#" in line:
-                    continue
-                line2 = line.split()[0].replace('&',' ') + "  " + line.split()[4] + "  " + line.split()[5] + " " + line.split()[6] + "\n"
-                outfile.write(line2)
+            with open(ordPfile + '.buildH') as OPfile:
+                lines=OPfile.readlines()
+                for line in lines:
+                    if "#" in line:
+                        continue
+                    line2 = line.split()[0].replace('&',' ') + "  " + line.split()[4] + "  " + line.split()[5] + " " + line.split()[6] + "\n"
+                    outfile.write(line2)
 
-                OPname = line.split()[0].replace('&',' ') #line.split()[0] + " " + line.split()[1]
-                OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
-                data[str(OPname)]=[]
-                data[str(OPname)].append(OPvalues)
+                    OPname = line.split()[0].replace('&',' ') #line.split()[0] + " " + line.split()[1]
+                    OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
+                    data[str(OPname)]=[]
+                    data[str(OPname)].append(OPvalues)
         
             with open(outfile2, 'w') as f:
                 json.dump(data,f)
 
-        outfile.close()
-        outfile.close()
+            outfile.close()
+            #outfile2.close()
 
         # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
         # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
