@@ -60,7 +60,7 @@ class Experiment:
 
 
 #Quality evaluation of simulated data
-
+#Order parameters
 def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
     a = OP_exp - exp_error
@@ -250,6 +250,30 @@ def systemQuality(system_quality):
     out_dict['total'] = sum(total)
 
     return out_dict
+    
+#Form factors
+
+def calc_k_e(simFFdata,expFFdata):
+    sum1 = 0
+    sum2 = 0
+    for i in range(0,len(expFFdata)): #which one contains more data entries: simulation or experiment????
+        F_s = simFFdata[i][1]
+        F_e = expFFdata[i][1]
+        deltaF_e = expFFdata[i][2]
+        
+        sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+        sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+    
+    k_e = sum1 / sum2
+    
+    return k_e
+
+
+def formfactorQuality(simFFdata, expFFdata):
+    k_e = calc_k_e(simFFdata,expFFdata)
+    
+
+      
 
 def loadSimulations():
     simulations = []
@@ -311,15 +335,13 @@ simulations = loadSimulations()
 
 for simulation in simulations:
     sub_dirs = simulation.indexingPath.split("/")
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
     
-    #save OP quality here
+    #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-    print(DATAdir)
+    #print(DATAdir)
    
+   
+    #Order Parameters 
     system_quality = {}
     for lipid1 in simulation.getLipids():
         #print(lipid1)
@@ -479,6 +501,20 @@ for simulation in simulations:
         
      #   print(OP_qual_data)                        
                 
+                
+    #Form factor quality
+    
+    ffexpPath = "r" + "../../Data/experiments/FormFactors/" + path
+    expFFdata = {}
+    for files in os.walk(ffexpPath):
+        for filename in files:
+            if filename.endswith('.json'):
+                with open(filename, 'r') as json_file:
+                    expFFdata = json.load(json_file)
+                json_file.close()
+    
+
+          
                 
                 
                 
