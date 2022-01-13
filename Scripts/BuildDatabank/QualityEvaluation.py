@@ -18,23 +18,14 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
-import buildH_calcOP_test
-
-
-#order parameters or quality analysis
-parser = argparse.ArgumentParser(description="")
-parser.add_argument("-op",action='store_true', help="Calculate order parameters for simulations in data bank "
-                        "format.")
-parser.add_argument("-q",action='store_true', help="Quality evaluation of simulated order parameters "
-                        "format.")
-args = parser.parse_args()
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
 class Simulation:
-    def __init__(self, readme, data, indexingPath):
+    def __init__(self, readme, OPdata, FFdata,indexingPath):
         self.readme = readme
-        self.data = data #dictionary where key is the lipid type and value is order parameter file
+        self.OPdata = OPdata #dictionary where key is the lipid type and value is order parameter file
+        self.FFdata = FFdata
         self.indexingPath = indexingPath
         
     def getLipids(self, molecules=lipid_numbers_list):
@@ -251,27 +242,48 @@ def systemQuality(system_quality):
 
     return out_dict
     
-#Form factors
+#Form factor quality
 
 def calc_k_e(simFFdata,expFFdata):
     sum1 = 0
     sum2 = 0
-    for i in range(0,len(expFFdata)): #which one contains more data entries: simulation or experiment????
-        F_s = simFFdata[i][1]
-        F_e = expFFdata[i][1]
-        deltaF_e = expFFdata[i][2]
+    
+   # print("simulation:" + str(len(simFFdata)))
+   # print("experiment:" + str(len(expFFdata)))
+   
+    if len(expFFdata) <= len(simFFdata):
+        for i in range(0,len(expFFdata)): #
+            F_s = simFFdata[i][1]
+            F_e = expFFdata[i][1]
+            deltaF_e = expFFdata[i][2]
         
-        sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
-        sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
-    
+            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
     k_e = sum1 / sum2
-    
     return k_e
+    
+    else:
+        return ""
+    
+    
 
 
 def formfactorQuality(simFFdata, expFFdata):
     k_e = calc_k_e(simFFdata,expFFdata)
+    N = len(expFFdata)
     
+    sum1 = 0
+    
+    for i in range(0,len(expFFdata)): #which one contains more data entries: simulation or experiment????
+        F_s = simFFdata[i][1]
+        F_e = expFFdata[i][1]
+        deltaF_e = expFFdata[i][2] 
+        
+        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+    
+    khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+    
+    return khi2
 
       
 
@@ -304,6 +316,7 @@ def loadSimulations():
                         #print('Experiments found for' + filepath)
                         #print(experiments)
                         simOPdata = {} #order parameter files for each type of lipid
+                        simFFdata = {} # form factor data
                         for filename2 in files:
                             if filename2.endswith('OrderParameters.json'):
                                 lipid_name = filename2.replace('OrderParameters.json', '')
@@ -314,8 +327,14 @@ def loadSimulations():
                                     OPdata = json.load(json_file)
                                 json_file.close()
                                 simOPdata[lipid_name] = OPdata
+                                
+                            elif filename2 == "FormFactor.json":
+                                dataPath = subdir + "/" + filename2
+                                with open(dataPath) as json_file:
+                                    simFFdata = json.load(json_file)
+                                json_file.close()
                                     
-                        simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                        simulations.append(Simulation(readmeSim, simOPdata, simFFdata, indexingPath))
                     else:
                         #print("The simulation does not have experimental data.")
                         continue
@@ -346,13 +365,13 @@ for simulation in simulations:
     for lipid1 in simulation.getLipids():
         #print(lipid1)
         print('Simulation path ' + simulation.indexingPath)
-        #print(simulation.data.keys())
+        #print(simulation.OPdata.keys())
         
-        # OP_data_lipid = simulation.data[lipid1]
+        # OP_data_lipid = simulation.OPdata[lipid1]
         OP_data_lipid = {}
         #convert elements to float because in some files the elements are strings
-        for key, value in simulation.data[lipid1].items():
-            OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
+        for key, value in simulation.OPdata[lipid1].items():
+            OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]  
             OP_data_lipid[key] = OP_array
             
         
@@ -503,17 +522,29 @@ for simulation in simulations:
                 
                 
     #Form factor quality
-    
-    ffexpPath = "r" + "../../Data/experiments/FormFactors/" + path
+        
+    expFFpath = simulation.readme['EXPERIMENT']['FORMFACTOR']
+    #print(ffexpPath)
     expFFdata = {}
-    for files in os.walk(ffexpPath):
+    for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
         for filename in files:
-            if filename.endswith('.json'):
-                with open(filename, 'r') as json_file:
+            filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
+            if filename.endswith('_FormFactor.json'):
+                print(filename)
+                with open(filepath) as json_file:
                     expFFdata = json.load(json_file)
                 json_file.close()
     
-
+    
+    simFFdata = simulation.FFdata
+    
+    ffQuality = formfactorQuality(simFFdata, expFFdata)
+    
+    outfile3 = DATAdir + '/FormFactorQuality.json'
+    with open(outfile3,'w') as f:
+        json.dump(ffQuality,f)
+    f.close()
+    
           
                 
                 
