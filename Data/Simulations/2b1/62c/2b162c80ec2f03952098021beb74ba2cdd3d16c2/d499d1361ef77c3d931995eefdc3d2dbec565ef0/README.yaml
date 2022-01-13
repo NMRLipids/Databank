@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.1129425
+SOFTWARE: gromacs
+TRJ:
+- - md-berger_POPS_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-berger_POPS_298K_v1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPS: Berger_POPS
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSberger.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 4480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 128
+DIR_WRK: /media/osollila/disk1/tmp/DATABANK/
+PUBLICATION: http://dx.doi.org/10.1021/acs.jpcb.9b06091
+AUTHORS_CONTACT: Tom Piggot
+SYSTEM: POPS_298K_Berger
+SOFTWARE_VERSION: null
+FF: Berger
+FF_SOURCE: https://doi.org/10.1016/S0006-3495(04)74227-7
+FF_DATE: null
+TRAJECTORY_SIZE: 153482344
+TRJLENGTH: 100050.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 20608
+DATEOFRUNNING: 04/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS:
+      10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+      10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
+  FORMFACTOR:
+    10.1039/C4SM00066H: 10.1039/C4SM00066H/1

@@ -1,0 +1,56 @@
+DOI: 10.5281/zenodo.3540513
+SOFTWARE: gromacs
+TRJ:
+- - DPPC_20_310.xtc
+TPR:
+- - DPPC_20_310.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti; Martinez-Seara, Hector; Vattulainen, Ilpo
+SYSTEM: 912DPPC_240CHOL_46440SOL_124SOD_124CLA_310K
+SOFTWARE_VERSION: null
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT:
+- - DPPC_20_310.cpt
+LOG: null
+TOP: null
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.txt
+    COUNT:
+    - 456
+    - 456
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.txt
+    COUNT:
+    - 122
+    - 118
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 46440
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 124
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 124
+TRAJECTORY_SIZE: 3094182572
+TRJLENGTH: 300100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 275888
+DATEOFRUNNING: 18/12/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

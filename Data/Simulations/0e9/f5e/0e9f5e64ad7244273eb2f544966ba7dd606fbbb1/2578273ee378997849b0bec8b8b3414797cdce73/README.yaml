@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.3871008
+SOFTWARE: gromacs
+TRJ:
+- - run.total.xtc
+TPR:
+- - step7_production.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: PC
+    MAPPING: mappingPOPClipid14.txt
+    COUNT:
+    - 22
+    - 30
+  CHOL:
+    NAME: CHL
+    MAPPING: mappingCHOLESTEROLlipid14.txt
+    COUNT:
+    - 38
+    - 38
+  SOL:
+    NAME: WAT
+    MAPPING: mappingwaterlipid14.txt
+    COUNT: 3968
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Jesper J Madsen
+SYSTEM: 52POPC_76CHOL_3968SOL_303K
+SOFTWARE_VERSION: 5.0.4
+FF: Lipid14
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - md.top
+TRAJECTORY_SIZE: 180462252
+TRJLENGTH: 200100.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 24496
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

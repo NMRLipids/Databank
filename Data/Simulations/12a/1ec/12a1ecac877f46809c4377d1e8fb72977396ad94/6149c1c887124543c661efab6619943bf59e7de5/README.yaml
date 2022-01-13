@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.1487906
+SOFTWARE: gromacs
+TRJ:
+- - lipid17_ff99-ions_298K.xtc
+TPR:
+- - lipid17_ff99-ions_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSlipid17_POPSres.txt
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 3600
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 72
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 72POPS_3600SOL_72SOD_298K
+SOFTWARE_VERSION: 2018.0
+FF: Lipid17 and ff99 ions
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - lipid17_ff99-ions_298K.cpt
+LOG: null
+TOP:
+- - lipid17_ff99-ions_298K.top
+GRO:
+- - lipid17_ff99-ions_298K.gro
+TRAJECTORY_SIZE: 3652448252
+TRJLENGTH: 1000020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 20016
+DATEOFRUNNING: 10/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS:
+      10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+      10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
+  FORMFACTOR:
+    10.1039/C4SM00066H: 10.1039/C4SM00066H/1

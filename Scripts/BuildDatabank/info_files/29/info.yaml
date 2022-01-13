@@ -4,7 +4,7 @@ TRJ: popcRUN2-4.trr
 TPR: popcRUN2.tpr
 PREEQTIME: 20
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
 AUTHORS_CONTACT: Ollila, Samuli
 SYSTEM: 72POPC_2085SOL_13CLA_13NA_303K
@@ -24,7 +24,7 @@ COMPOSITION:
     MAPPING: mappingSPCwater.txt
   CLA:
     NAME: CL
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCL.txt
   SOD:
     NAME: NA
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingNA.txt

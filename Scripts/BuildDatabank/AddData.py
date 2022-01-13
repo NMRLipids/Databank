@@ -54,7 +54,7 @@ import buildH_calcOP_test
 import openmm_parser
 
 #import databank dictionaries
-from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
+from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
 
 # Download link
@@ -143,7 +143,7 @@ for key_sim, value_sim in sim.items():
             #print("NOT REQUIRED")
         continue
     #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_numbers_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
+    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
         print ("{0} NOT in {1}".format(key_sim, software_dict_name)) 
         wrong_key_entries += 1
 if wrong_key_entries:
@@ -421,23 +421,29 @@ elif sim['SOFTWARE'] == 'openMM':
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(top, traj)
-u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
-try:
-    u = Universe(top, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-except:
-    conf = str(dir_tmp) + '/conf.gro'
-    print("Generating conf.gro because MDAnalysis cannot read tpr version")
-    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
-    u = Universe(conf, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
+#u = Universe(top, traj)
+#u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
 gro = str(dir_tmp) + '/frame0.gro'
 
-u0 = Universe(gro)
+try:
+    u = Universe(top, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+except:
+    #conf = str(dir_tmp) + '/conf.gro'
+    print("Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version")
+    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + gro)
+    u = Universe(gro, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+
+
+try:
+    groFORu0 = str(dir_tmp) + '/' + sim['GRO'][0][0]
+    print(groFORu0)
+except:
+    groFORu0 = gro
+    
+u0 = Universe(groFORu0)
 lipids = []
 
 # select lipids 
@@ -495,9 +501,9 @@ for key_mol in lipids_dict:
                     selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
                     break
     selection = selection.rstrip(' or ')
-    #   print(selection)
+    print(selection)
     molecules = u0.select_atoms(selection)
-    #print(molecules.residues)
+    print(molecules.residues)
 
     if molecules.n_residues > 0:
         for mol in molecules.residues:
@@ -601,10 +607,11 @@ for key_mol in all_molecules:
         
 
 if number_of_atoms != number_of_atomsTRJ:
-    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
-    # Do you still want to continue the analysis (y/n)?")
-    #if stop == "n":
-    os._exit("Interrupted because atomnumbers did not match")
+    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names. \n If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?")
+    if stop == "n":
+        os._exit("Interrupted because atomnumbers did not match")
+    if stop == "y":
+        print("Progressed even thought that atom numbers did not math. CHECK RESULTS MANUALLY!")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))

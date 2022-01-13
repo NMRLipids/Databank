@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.1293813
+SOFTWARE: gromacs
+TRJ:
+- - md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2_100-200ns.xtc
+TPR:
+- - for-md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 336POPE_13460SOL_310K_v2
+SOFTWARE_VERSION: 5.0.6
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEslipids.txt
+    COUNT:
+    - 168
+    - 168
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 13460
+TRAJECTORY_SIZE: 1237208392
+TRJLENGTH: 100025.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 82380
+DATEOFRUNNING: 29/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE:
+      10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+  FORMFACTOR:
+    10.1021/jp511159q: 10.1021/jp511159q/1

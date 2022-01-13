@@ -1,0 +1,57 @@
+DOI: 10.5281/zenodo.259343
+SOFTWARE: gromacs
+TRJ:
+- - md10.xtc
+TPR:
+- - md10.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 22CHOL_200POPC_9000SOL_21SOD_21CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids with ECC-scaled ions (Kohagen)
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/ for lipids and https://bitbucket.org/hseara/ions/
+  for ions
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP:
+- - md10.top
+COMPOSITION:
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.txt
+    COUNT:
+    - 10
+    - 12
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 9000
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 21
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 21
+TRAJECTORY_SIZE: 411098200
+TRJLENGTH: 200100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 55470
+DATEOFRUNNING: 29/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    CHOL: {}
+    POPC: {}
+  FORMFACTOR: {}
