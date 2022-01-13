@@ -1,41 +1,47 @@
-DOI: 10.5281/zenodo.3832274
+DOI: 10.5281/zenodo.3241269
 SOFTWARE: gromacs
 TRJ:
-- - total_4_500_last.xtc
+- - total_4_500.xtc
 TPR:
-- - md.tpr
+- - md_0.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
 COMPOSITION:
+  POPE:
+    NAME: PE
+    MAPPING: mappingPOPElipid17.txt
+    COUNT:
+    - 187
+    - 187
   POPG:
     NAME: PGR
     MAPPING: mappingPOPGlipid17.txt
     COUNT:
-    - 250
-    - 250
+    - 63
+    - 63
   SOD:
     NAME: Na+
     MAPPING: mappingNA+.txt
-    COUNT: 500
+    COUNT: 126
   SOL:
     NAME: WAT
-    MAPPING: mappingwaterlipid14.txt
+    MAPPING: mappingTIP3Plipid17.txt
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
-AUTHORS_CONTACT: "Pe\xF3n, Antonio"
-SYSTEM: 500POPG_500SOD_25000SOL_310K
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
+SYSTEM: POPE_POPG_SOD_SOL_310K
 SOFTWARE_VERSION: 2018.3
-FF: Lipid17
+FF: Lipid17 for lipids and AMBER ff15ipq for ions
 FF_SOURCE: null
 FF_DATE: null
 CPT: null
 LOG: null
 TOP:
-- - popg_fix.top
-TRAJECTORY_SIZE: 5162978208
+- - topol.top
+TRAJECTORY_SIZE: 5105779360
 TRJLENGTH: 100010.0
 TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 139000
+NUMBER_OF_ATOMS: 137878
 DATEOFRUNNING: 03/01/2022
 TYPEOFSYSTEM: lipid bilayer
