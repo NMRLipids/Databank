@@ -9,8 +9,10 @@ PUBLICATION: Ferreira et al. Phys. Chem. Chem. Phys., 2013,15, 1976-1989
 FFSOL: SPC
 NUMBER_OF_ATOMS: 28526
 EXPERIMENT:
-  POPC:
-    10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: {}
 FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
 COMPOSITION:
   POPC:

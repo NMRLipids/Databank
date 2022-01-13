@@ -6,7 +6,9 @@ TEMPERATURE: 310.15
 PUBLICATION: null
 NUMBER_OF_ATOMS: 54019
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml
 COMPOSITION:
   SOL:

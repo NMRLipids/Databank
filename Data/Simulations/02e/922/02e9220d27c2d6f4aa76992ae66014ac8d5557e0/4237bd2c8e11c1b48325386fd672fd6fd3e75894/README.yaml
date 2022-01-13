@@ -6,7 +6,9 @@ TEMPERATURE: 310.15
 PUBLICATION: null
 NUMBER_OF_ATOMS: 54019
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://www.charmm-gui.org for lipids and https://bitbucket.org/hseara/ions/
   for ions
 COMPOSITION:
