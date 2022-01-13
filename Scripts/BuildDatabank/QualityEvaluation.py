@@ -253,7 +253,7 @@ def systemQuality(system_quality):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/c74/6ca/c746ca52b71d685e53a802e8046e1253baf6af2b/8850a90345eb033df4ae3228c3b9fa1fbbe40162'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -302,6 +302,7 @@ def loadSimulations():
 
 
 ###################################################################################################
+print('start')
 simulations = loadSimulations()
 
 #if (not os.path.isdir('../../Data/QualityEvaluation/')): 
@@ -317,7 +318,7 @@ for simulation in simulations:
     
     #save OP quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-   # print(DATAdir)
+    print(DATAdir)
    
     system_quality = {}
     for lipid1 in simulation.getLipids():
@@ -338,13 +339,14 @@ for simulation in simulations:
         #print(simulation.readme['EXPERIMENT'].values())
 
         
-        for lipid, experiments in simulation.readme['EXPERIMENT'].items():
+        for lipid, experiments in simulation.readme['EXPERIMENT']['ORDERPARAMETER'].items():
+            print(lipid,experiments)
             data_dict = {}
             fragment_qual_dict = {}
             for doi, path in experiments.items():
                 OP_qual_data = {}
             # get readme file of the experiment
-                experimentFilepath = "../../Data/experiments/" + path
+                experimentFilepath = "../../Data/experiments/OrderParameters/" + path
                 print('Experimental path ' + experimentFilepath)
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
@@ -429,10 +431,18 @@ for simulation in simulations:
             system_quality[lipid1] = fragment_quality_output
 
             fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
-            
-            with open(fragment_quality_file, 'w') as f:
-                json.dump(fragment_quality_output,f)
-            f.close()
+
+            FGout = False
+            for FG in fragment_quality_output:
+                #print(FG,fragment_quality_output[FG])
+                if fragment_quality_output[FG] == 'nan':
+                    continue
+                if fragment_quality_output[FG] > 0:
+                    FGout = True
+            if FGout:
+                with open(fragment_quality_file, 'w') as f:
+                    json.dump(fragment_quality_output,f)
+                f.close()
 
                 
                 
@@ -442,9 +452,10 @@ for simulation in simulations:
             #write into the OrderParameters_quality.json quality data file                  
             outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
             #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-            with open(outfile1, 'w') as f:
-                json.dump(data_dict,f)
-            f.close()
+            if(len(data_dict) > 0):
+                with open(outfile1, 'w') as f:
+                    json.dump(data_dict,f)
+                f.close()
 
         print('input to system quality')
         print(system_quality)
@@ -454,9 +465,14 @@ for simulation in simulations:
         print(system_qual_output)
         #make system quality file
         outfile2 = DATAdir + '/SYSTEM_quality.json'
-        with open(outfile2, 'w') as f:
-            json.dump(system_qual_output,f)
-        f.close() 
+        SQout = False
+        for SQ in system_qual_output:
+            if system_qual_output[SQ] > 0:
+                SQout = True
+        if SQout:
+            with open(outfile2, 'w') as f:
+                json.dump(system_qual_output,f)
+            f.close() 
         
         print('')
         

@@ -8,7 +8,7 @@ TRJ: pcpe_slipids.xtc
 TPR: pcpe_slipids.tpr
 PREEQTIME: 200
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
     NAME: POPC
@@ -18,4 +18,4 @@ COMPOSITION:
     MAPPING: mappingPOPEslipids.txt
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3PwaterSlipids.txt
