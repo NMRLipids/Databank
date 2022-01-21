@@ -109,7 +109,7 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     #print(sim_op_data[key_exp])
                     op_sim_STEM=sim_op_data[key_exp][2]
                     
-                    #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
+                    #change here if you want to use shitness(TM) scale for fragments. Warning big numbers will dominate
                     #if OP_exp != 'NaN':
                     QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                     #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
@@ -188,17 +188,19 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         return total_quality
         
 
-def systemQuality(system_quality):
+def systemQuality(system_fragment_qualities):
     out_dict = {}
     headgroup = []
     sn1 = []
     sn2 = []
     total = []
+     
+    w_nan = []
 
-    for lipid in system_quality.keys():
+    for lipid in system_fragment_qualities.keys():
         w = simulation.molarFraction(lipid)
         if lipid != 'CHOL':    # SHOULD BE CHANGED TO WORK ALSO WITH OTHER LIPIDS WITHOUT HEAD AND TAILS THAN CHOLESTEROL
-            for key, value in system_quality[lipid].items():
+            for key, value in system_fragment_qualities[lipid].items():
                 if value != 'nan':
                     if key == 'headgroup':
                         headgroup.append(w * value)
@@ -210,35 +212,41 @@ def systemQuality(system_quality):
                         total.append(w * value)
                     else:
                         continue
+                else:
+                    w_nan.append(1-w) # save 1 - w of a lipid into a list if the fragment quality is nan
         else:
-            for key, value in system_quality[lipid].items():
+            for key, value in system_fragment_qualities[lipid].items():
                  if value != 'nan':
                      if key == 'total':
                          total.append(w * value)
 
+    out_dict['headgroup'] = sum(headgroup) / np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
+    out_dict['sn-1'] = sum(sn1) / np.prod(w_nan)
+    out_dict['sn-2'] = sum(sn2) / np.prod(w_nan)
+    out_dict['total'] = sum(total) / np.prod(w_nan)
 
     ## EXTREMELY DIRTY FIX FOR WORKSHOP, SHOULD BE IMPROVED LATER
-    for lipid in system_quality.keys():
-        w = simulation.molarFraction(lipid)
-        if lipid != 'CHOL':    
-            for key, value in system_quality[lipid].items():                        
-                if value == 'nan':
-                   if key == 'headgroup':
-                       headgroup[:] = [x / w for x in headgroup]
-                   elif key == 'sn-1':
-                       sn1[:] = [x / w for x in sn1] 
-                   elif key == 'sn-2':
-                       sn2[:] = [x / w for x in sn2] 
-                   elif key == 'total':
-                       total[:] = [x / w for x in total]
-                else:
-                    continue
+#    for lipid in system_fragment_qualities.keys():
+#        w = simulation.molarFraction(lipid)
+#        if lipid != 'CHOL':    
+#            for key, value in system_fragment_qualities[lipid].items():                        
+#                if value == 'nan':
+#                   if key == 'headgroup':
+#                       headgroup[:] = [x / (1-w) for x in headgroup]
+#                   elif key == 'sn-1':
+#                       sn1[:] = [x / (1-w) for x in sn1] 
+#                   elif key == 'sn-2':
+#                       sn2[:] = [x / (1-w) for x in sn2] 
+#                   elif key == 'total':
+#                       total[:] = [x / (1-w) for x in total]
+#                else:
+#                    continue
 
                          
-    out_dict['headgroup'] = sum(headgroup)
-    out_dict['sn-1'] = sum(sn1)
-    out_dict['sn-2'] = sum(sn2)
-    out_dict['total'] = sum(total)
+#    out_dict['headgroup'] = sum(headgroup)
+#    out_dict['sn-1'] = sum(sn1)
+#    out_dict['sn-2'] = sum(sn2)
+#    out_dict['total'] = sum(total)
 
     return out_dict
     
@@ -246,7 +254,7 @@ def systemQuality(system_quality):
 
 
 def calc_k_e(simFFdata,expFFdata):
-    """Scaling factor as defined by Kučerka et al. 2008b """
+    """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
     sum1 = 0
     sum2 = 0
     
@@ -261,8 +269,8 @@ def calc_k_e(simFFdata,expFFdata):
         
             sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
             sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
-    k_e = sum1 / sum2
-    return k_e
+        k_e = sum1 / sum2
+        return k_e
     
     else:
         return ""
@@ -271,7 +279,7 @@ def calc_k_e(simFFdata,expFFdata):
 
 
 def formfactorQuality(simFFdata, expFFdata):
-    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010 """
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
     k_e = calc_k_e(simFFdata,expFFdata)
     N = len(expFFdata)
     
@@ -512,7 +520,7 @@ for simulation in simulations:
         print('system')
         print(system_qual_output)
         #make system quality file
-        outfile2 = DATAdir + '/SYSTEM_quality.json'
+        outfile2 = DATAdir + '/SYSTEM_quality_test.json'
         SQout = False
         for SQ in system_qual_output:
             if system_qual_output[SQ] > 0:
