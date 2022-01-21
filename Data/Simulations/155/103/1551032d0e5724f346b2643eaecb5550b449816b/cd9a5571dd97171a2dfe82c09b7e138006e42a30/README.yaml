@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.4386514
+SOFTWARE: gromacs
+TRJ:
+- - md_400_500.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17.txt
+    COUNT:
+    - 250
+    - 250
+  SOD:
+    NAME: Na+
+    MAPPING: mappingNA+.txt
+    COUNT: 549
+  CLA:
+    NAME: Cl-
+    MAPPING: mappingCL-.txt
+    COUNT: 49
+  SOL:
+    NAME: WAT
+    MAPPING: mappingwaterlipid14.txt
+    COUNT: 25000
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "Pe\xF3n, Antonio"
+SYSTEM: 500POPG_549SOD_49CLA_25000SOL_310K
+SOFTWARE_VERSION: 2020.1
+FF: Lipid17
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - amber.top
+TRAJECTORY_SIZE: 26110841472
+TRJLENGTH: 100002.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 139098
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer

@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.3997214
+SOFTWARE: gromacs
+TRJ:
+- - 100-400ns.xtc
+TPR:
+- - run_400ns.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17.txt
+    COUNT:
+    - 250
+    - 250
+  SOD:
+    NAME: Na+
+    MAPPING: mappingNA+.txt
+    COUNT: 500
+  SOL:
+    NAME: WAT
+    MAPPING: mappingwaterlipid14.txt
+    COUNT: 25000
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Kiirikki, M. Anne; Ollila O. H. Samuli
+SYSTEM: 500POPG_500SOD_25000SOL_310K
+SOFTWARE_VERSION: null
+FF: Lipid17
+FF_SOURCE: initial structure is taken from https://zenodo.org/record/3832274#.X0OlNxmEZGE
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popg_fix.top
+TRAJECTORY_SIZE: 7752609592
+TRJLENGTH: 300020.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 139000
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer

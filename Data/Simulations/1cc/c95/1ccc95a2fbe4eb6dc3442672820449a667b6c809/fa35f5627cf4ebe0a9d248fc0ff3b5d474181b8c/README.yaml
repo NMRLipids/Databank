@@ -1,0 +1,55 @@
+DOI: 10.5281/zenodo.3864993
+SOFTWARE: gromacs
+TRJ:
+- - traj.xtc
+TPR:
+- - run3.tpr
+PREEQTIME: 520
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: PC
+    MAPPING: mappingPOPClipid17.txt
+    COUNT:
+    - 75
+    - 75
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17.txt
+    COUNT:
+    - 76
+    - 74
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 29865
+  CAL:
+    NAME: CA
+    MAPPING: mappingCA.txt
+    COUNT: 569
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 1138
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.txt
+    COUNT: 150
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Virtanen, Salla; Ollila, O. H. Samuli
+SYSTEM: 150POPC_150POPG_29865SOL_569CAL_1138CLA_150SOD_298K
+SOFTWARE_VERSION: null
+FF: Lipid17
+FF_SOURCE: starting structure and lipid 17 parameters from https://zenodo.org/record/2585523#.Xbf0FC17FBx
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - gromacsFIXED.top
+TRAJECTORY_SIZE: 4855025880
+TRJLENGTH: 200020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 130602
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
