@@ -435,7 +435,7 @@ for simulation in simulations:
      #                   OP_qual_data[key] = OP_array
                         continue
                     else:
-                        if OP_exp is not 'NaN':
+                        if OP_exp != 'NaN':
                             OP_sim = OP_array[0]
                             op_sim_STEM = OP_array[2]
                             #changing to use shitness(TM) scale. This code needs to be cleaned
