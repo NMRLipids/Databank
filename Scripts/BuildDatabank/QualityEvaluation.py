@@ -244,7 +244,9 @@ def systemQuality(system_quality):
     
 #Form factor quality
 
+
 def calc_k_e(simFFdata,expFFdata):
+    """Scaling factor as defined by Kučerka et al. 2008b """
     sum1 = 0
     sum2 = 0
     
@@ -252,7 +254,7 @@ def calc_k_e(simFFdata,expFFdata):
    # print("experiment:" + str(len(expFFdata)))
    
     if len(expFFdata) <= len(simFFdata):
-        for i in range(0,len(expFFdata)): #
+        for i in range(0,len(expFFdata)): #experiment should contain less data points
             F_s = simFFdata[i][1]
             F_e = expFFdata[i][1]
             deltaF_e = expFFdata[i][2]
@@ -269,21 +271,26 @@ def calc_k_e(simFFdata,expFFdata):
 
 
 def formfactorQuality(simFFdata, expFFdata):
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010 """
     k_e = calc_k_e(simFFdata,expFFdata)
     N = len(expFFdata)
     
     sum1 = 0
     
-    for i in range(0,len(expFFdata)): #which one contains more data entries: simulation or experiment????
-        F_s = simFFdata[i][1]
-        F_e = expFFdata[i][1]
-        deltaF_e = expFFdata[i][2] 
+    if len(expFFdata) <= len(simFFdata):
+        for i in range(0,len(expFFdata)): #experiment should contain less data points
+            F_s = simFFdata[i][1]
+            F_e = expFFdata[i][1]
+            deltaF_e = expFFdata[i][2] 
         
-        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+            sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
     
-    khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+        khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
     
-    return khi2
+        return khi2
+    else:
+        
+        return ""
 
       
 
@@ -465,7 +472,7 @@ for simulation in simulations:
                 fragment_quality_output['sn-2'] = sn2_avg
                 fragment_quality_output['total'] = total_qual
             else:
-                print("kolesteroli toimii")
+               # print("Cholesterol works")
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
