@@ -329,10 +329,12 @@ for simulation in simulations:
         # OP_data_lipid = simulation.data[lipid1]
         OP_data_lipid = {}
         #convert elements to float because in some files the elements are strings
-        for key, value in simulation.data[lipid1].items():
-            OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
-            OP_data_lipid[key] = OP_array
-            
+        try:
+            for key, value in simulation.data[lipid1].items():
+                OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
+                OP_data_lipid[key] = OP_array
+        except:
+            continue
         
         
         # go through file paths in simulation.readme['EXPERIMENT']
