@@ -180,7 +180,7 @@ def loadExperiments(experimentType):
     if experimentType == 'OrderParameters':
         dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
-        dataFile = '.json'
+        dataFile = '_FormFactor.json'
     
     path = r'../../Data/experiments/'+experimentType+'/'
     for exp_subdir, exp_dirs, exp_files in os.walk(path):
@@ -304,7 +304,7 @@ def findPairs(experiments):
                             #print(simulation.readme['EXPERIMENT'])
                             #print('\n')
                         elif experiment.exptype == "FormFactors":
-                            simulation.readme['EXPERIMENT']['FORMFACTOR'][exp_doi]=exp_path
+                            simulation.readme['EXPERIMENT']['FORMFACTOR']=exp_path
                     else:
                         continue
         outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
@@ -321,7 +321,7 @@ simulations = loadSimulations()
 for simulation in simulations:
     simulation.readme['EXPERIMENT'] = {}
     simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
-    simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
+    #simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
     for lipid in simulation.getLipids():
         simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
     
@@ -348,6 +348,7 @@ print("Found form factor data for " + str(len(pairsFF)) + " pairs")
 for pair in pairsOP:
     print('#################')
     print(pair[0].readme)
+    print(pair[0].indexingPath)
     print("#")
     print(pair[1].readme)         
 
