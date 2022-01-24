@@ -18,23 +18,14 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
-import buildH_calcOP_test
-
-
-#order parameters or quality analysis
-parser = argparse.ArgumentParser(description="")
-parser.add_argument("-op",action='store_true', help="Calculate order parameters for simulations in data bank "
-                        "format.")
-parser.add_argument("-q",action='store_true', help="Quality evaluation of simulated order parameters "
-                        "format.")
-args = parser.parse_args()
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
 class Simulation:
-    def __init__(self, readme, data, indexingPath):
+    def __init__(self, readme, OPdata, FFdata,indexingPath):
         self.readme = readme
-        self.data = data #dictionary where key is the lipid type and value is order parameter file
+        self.OPdata = OPdata #dictionary where key is the lipid type and value is order parameter file
+        self.FFdata = FFdata
         self.indexingPath = indexingPath
         
     def getLipids(self, molecules=lipid_numbers_list):
@@ -60,7 +51,7 @@ class Experiment:
 
 
 #Quality evaluation of simulated data
-
+#Order parameters
 def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
     a = OP_exp - exp_error
@@ -118,7 +109,7 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     #print(sim_op_data[key_exp])
                     op_sim_STEM=sim_op_data[key_exp][2]
                     
-                    #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
+                    #change here if you want to use shitness(TM) scale for fragments. Warning big numbers will dominate
                     #if OP_exp != 'NaN':
                     QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                     #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
@@ -197,17 +188,19 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         return total_quality
         
 
-def systemQuality(system_quality):
+def systemQuality(system_fragment_qualities):
     out_dict = {}
     headgroup = []
     sn1 = []
     sn2 = []
     total = []
+     
+    w_nan = []
 
-    for lipid in system_quality.keys():
+    for lipid in system_fragment_qualities.keys():
         w = simulation.molarFraction(lipid)
         if lipid != 'CHOL':    # SHOULD BE CHANGED TO WORK ALSO WITH OTHER LIPIDS WITHOUT HEAD AND TAILS THAN CHOLESTEROL
-            for key, value in system_quality[lipid].items():
+            for key, value in system_fragment_qualities[lipid].items():
                 if value != 'nan':
                     if key == 'headgroup':
                         headgroup.append(w * value)
@@ -219,37 +212,95 @@ def systemQuality(system_quality):
                         total.append(w * value)
                     else:
                         continue
+                else:
+                    w_nan.append(1-w) # save 1 - w of a lipid into a list if the fragment quality is nan
         else:
-            for key, value in system_quality[lipid].items():
+            for key, value in system_fragment_qualities[lipid].items():
                  if value != 'nan':
                      if key == 'total':
                          total.append(w * value)
 
+    out_dict['headgroup'] = sum(headgroup) / np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
+    out_dict['sn-1'] = sum(sn1) / np.prod(w_nan)
+    out_dict['sn-2'] = sum(sn2) / np.prod(w_nan)
+    out_dict['total'] = sum(total) / np.prod(w_nan)
 
     ## EXTREMELY DIRTY FIX FOR WORKSHOP, SHOULD BE IMPROVED LATER
-    for lipid in system_quality.keys():
-        w = simulation.molarFraction(lipid)
-        if lipid != 'CHOL':    
-            for key, value in system_quality[lipid].items():                        
-                if value == 'nan':
-                   if key == 'headgroup':
-                       headgroup[:] = [x / w for x in headgroup]
-                   elif key == 'sn-1':
-                       sn1[:] = [x / w for x in sn1] 
-                   elif key == 'sn-2':
-                       sn2[:] = [x / w for x in sn2] 
-                   elif key == 'total':
-                       total[:] = [x / w for x in total]
-                else:
-                    continue
+#    for lipid in system_fragment_qualities.keys():
+#        w = simulation.molarFraction(lipid)
+#        if lipid != 'CHOL':    
+#            for key, value in system_fragment_qualities[lipid].items():                        
+#                if value == 'nan':
+#                   if key == 'headgroup':
+#                       headgroup[:] = [x / (1-w) for x in headgroup]
+#                   elif key == 'sn-1':
+#                       sn1[:] = [x / (1-w) for x in sn1] 
+#                   elif key == 'sn-2':
+#                       sn2[:] = [x / (1-w) for x in sn2] 
+#                   elif key == 'total':
+#                       total[:] = [x / (1-w) for x in total]
+#                else:
+#                    continue
 
                          
-    out_dict['headgroup'] = sum(headgroup)
-    out_dict['sn-1'] = sum(sn1)
-    out_dict['sn-2'] = sum(sn2)
-    out_dict['total'] = sum(total)
+#    out_dict['headgroup'] = sum(headgroup)
+#    out_dict['sn-1'] = sum(sn1)
+#    out_dict['sn-2'] = sum(sn2)
+#    out_dict['total'] = sum(total)
 
     return out_dict
+    
+#Form factor quality
+
+
+def calc_k_e(simFFdata,expFFdata):
+    """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
+    sum1 = 0
+    sum2 = 0
+    
+   # print("simulation:" + str(len(simFFdata)))
+   # print("experiment:" + str(len(expFFdata)))
+   
+    if len(expFFdata) <= len(simFFdata):
+        for i in range(0,len(expFFdata)): #experiment should contain less data points
+            F_s = simFFdata[i][1]
+            F_e = expFFdata[i][1]
+            deltaF_e = expFFdata[i][2]
+        
+            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+        k_e = sum1 / sum2
+        return k_e
+    
+    else:
+        return ""
+    
+    
+
+
+def formfactorQuality(simFFdata, expFFdata):
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
+    k_e = calc_k_e(simFFdata,expFFdata)
+    N = len(expFFdata)
+    
+    sum1 = 0
+    
+    if len(expFFdata) <= len(simFFdata):
+        for i in range(0,len(expFFdata)): #experiment should contain less data points
+            F_s = simFFdata[i][1]
+            F_e = expFFdata[i][1]
+            deltaF_e = expFFdata[i][2] 
+        
+            sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+    
+        khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+    
+        return khi2
+    else:
+        
+        return ""
+
+      
 
 def loadSimulations():
     simulations = []
@@ -280,6 +331,7 @@ def loadSimulations():
                         #print('Experiments found for' + filepath)
                         #print(experiments)
                         simOPdata = {} #order parameter files for each type of lipid
+                        simFFdata = {} # form factor data
                         for filename2 in files:
                             if filename2.endswith('OrderParameters.json'):
                                 lipid_name = filename2.replace('OrderParameters.json', '')
@@ -290,8 +342,14 @@ def loadSimulations():
                                     OPdata = json.load(json_file)
                                 json_file.close()
                                 simOPdata[lipid_name] = OPdata
+                                
+                            elif filename2 == "FormFactor.json":
+                                dataPath = subdir + "/" + filename2
+                                with open(dataPath) as json_file:
+                                    simFFdata = json.load(json_file)
+                                json_file.close()
                                     
-                        simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                        simulations.append(Simulation(readmeSim, simOPdata, simFFdata, indexingPath))
                     else:
                         #print("The simulation does not have experimental data.")
                         continue
@@ -311,30 +369,29 @@ simulations = loadSimulations()
 
 for simulation in simulations:
     sub_dirs = simulation.indexingPath.split("/")
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
     
-    #save OP quality here
+    #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-    print(DATAdir)
+    #print(DATAdir)
    
+   
+    #Order Parameters 
     system_quality = {}
     for lipid1 in simulation.getLipids():
         #print(lipid1)
         print('Simulation path ' + simulation.indexingPath)
-        #print(simulation.data.keys())
+        #print(simulation.OPdata.keys())
         
-        # OP_data_lipid = simulation.data[lipid1]
+        # OP_data_lipid = simulation.OPdata[lipid1]
         OP_data_lipid = {}
         #convert elements to float because in some files the elements are strings
         try:
-            for key, value in simulation.data[lipid1].items():
-                OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
+            for key, value in simulation.OPdata[lipid1].items():
+                OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]  
                 OP_data_lipid[key] = OP_array
         except:
             continue
+
         
         
         # go through file paths in simulation.readme['EXPERIMENT']
@@ -381,7 +438,7 @@ for simulation in simulations:
      #                   OP_qual_data[key] = OP_array
                         continue
                     else:
-                        if OP_exp is not 'NaN':
+                        if OP_exp != 'NaN':
                             OP_sim = OP_array[0]
                             op_sim_STEM = OP_array[2]
                             #changing to use shitness(TM) scale. This code needs to be cleaned
@@ -426,7 +483,7 @@ for simulation in simulations:
                 fragment_quality_output['sn-2'] = sn2_avg
                 fragment_quality_output['total'] = total_qual
             else:
-                print("kolesteroli toimii")
+               # print("Cholesterol works")
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
@@ -466,7 +523,7 @@ for simulation in simulations:
         print('system')
         print(system_qual_output)
         #make system quality file
-        outfile2 = DATAdir + '/SYSTEM_quality.json'
+        outfile2 = DATAdir + '/SYSTEM_quality_test.json'
         SQout = False
         for SQ in system_qual_output:
             if system_qual_output[SQ] > 0:
@@ -481,6 +538,32 @@ for simulation in simulations:
         
      #   print(OP_qual_data)                        
                 
+                
+    #Form factor quality
+        
+    expFFpath = simulation.readme['EXPERIMENT']['FORMFACTOR']
+    #print(ffexpPath)
+    expFFdata = {}
+    for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
+        for filename in files:
+            filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
+            if filename.endswith('_FormFactor.json'):
+                print(filename)
+                with open(filepath) as json_file:
+                    expFFdata = json.load(json_file)
+                json_file.close()
+    
+    
+    simFFdata = simulation.FFdata
+    
+    ffQuality = formfactorQuality(simFFdata, expFFdata)
+    
+    outfile3 = DATAdir + '/FormFactorQuality.json'
+    with open(outfile3,'w') as f:
+        json.dump(ffQuality,f)
+    f.close()
+    
+          
                 
                 
                 
