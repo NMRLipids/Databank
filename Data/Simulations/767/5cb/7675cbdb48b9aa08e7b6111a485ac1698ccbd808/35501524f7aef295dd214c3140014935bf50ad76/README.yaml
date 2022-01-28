@@ -1,9 +1,9 @@
-DOI: 10.5281/zenodo.3364460
+DOI: 10.5281/zenodo.2579224
 SOFTWARE: gromacs
 TRJ:
-- - total_4_500.xtc
+- - m_400_500_PG_PE_1_3_slipid.xtc
 TPR:
-- - md_1.tpr
+- - md_02.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
 COMPOSITION:
@@ -11,8 +11,14 @@ COMPOSITION:
     NAME: POG
     MAPPING: mappingPOPGslipids.txt
     COUNT:
-    - 250
-    - 250
+    - 63
+    - 63
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEslipids.txt
+    COUNT:
+    - 187
+    - 187
   SOL:
     NAME: SOL
     MAPPING: mappingTIP3PwaterSlipids.txt
@@ -20,12 +26,16 @@ COMPOSITION:
   SOD:
     NAME: NA
     MAPPING: mappingNA.txt
-    COUNT: 500
+    COUNT: 176
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 50
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
 AUTHORS_CONTACT: Peon, Antonio
-SYSTEM: 500POPG_25000SOL_50SOD_310K
-SOFTWARE_VERSION: 2018.3
+SYSTEM: 126POPG_374POPE_25000SOL_176SOD_50CLA_310K
+SOFTWARE_VERSION: 5.1.2
 FF: Slipids
 FF_SOURCE: null
 FF_DATE: null
@@ -33,11 +43,10 @@ CPT: null
 LOG: null
 TOP:
 - - topol.top
-GRO:
-- - conf.gro
-TRAJECTORY_SIZE: 5149467936
+GRO: null
+TRAJECTORY_SIZE: 5164250664
 TRJLENGTH: 100010.0
 TEMPERATURE: 310.0
-NUMBER_OF_ATOMS: 139000
+NUMBER_OF_ATOMS: 137978
 DATEOFRUNNING: 27/01/2022
 TYPEOFSYSTEM: lipid bilayer
