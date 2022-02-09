@@ -7,6 +7,7 @@ import MDAnalysis
 import urllib.request
 import yaml
 import re
+import buildh
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
@@ -115,7 +116,8 @@ for system in systems:
             #    print(lipidname)
             #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
             print(system['UNITEDATOM_DICT'][key])
-            os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
+            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+            #os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
             outfile=open(ordPfile,'w')
             line1="Atom     Average OP     OP stem"+'\n'
