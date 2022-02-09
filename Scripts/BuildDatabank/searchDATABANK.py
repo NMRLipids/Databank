@@ -181,6 +181,7 @@ def loadExperiments(experimentType):
         dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
         dataFile = '_FormFactor.json'
+        #dataFile = '.json'
     
     path = r'../../Data/experiments/'+experimentType+'/'
     for exp_subdir, exp_dirs, exp_files in os.walk(path):
@@ -321,7 +322,7 @@ simulations = loadSimulations()
 for simulation in simulations:
     simulation.readme['EXPERIMENT'] = {}
     simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
-    #simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
+    simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
     for lipid in simulation.getLipids():
         simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
     
