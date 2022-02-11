@@ -9,6 +9,7 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPE:
       10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
   FORMFACTOR: 10.1021/jp511159q/1
 FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:

@@ -103,7 +103,10 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                 if (fr in key_exp) and value_exp[0][0] != 'nan':
                     OP_exp = value_exp[0][0]
                     # print(OP_exp)
-                    OP_sim = sim_op_data[key_exp][0]
+                    try:
+                        OP_sim = sim_op_data[key_exp][0]
+                    except:
+                        continue
                     # print(OP_sim)
 
                     #print(sim_op_data[key_exp])
@@ -219,7 +222,7 @@ def systemQuality(system_fragment_qualities):
                  if value != 'nan':
                      if key == 'total':
                          total.append(w * value)
-
+    print(headgroup,sum(headgroup), np.prod(w_nan), w_nan)
     out_dict['headgroup'] = sum(headgroup) / np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
     out_dict['sn-1'] = sum(sn1) / np.prod(w_nan)
     out_dict['sn-2'] = sum(sn2) / np.prod(w_nan)
@@ -385,10 +388,13 @@ for simulation in simulations:
         # OP_data_lipid = simulation.OPdata[lipid1]
         OP_data_lipid = {}
         #convert elements to float because in some files the elements are strings
-        for key, value in simulation.OPdata[lipid1].items():
-            OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]  
-            OP_data_lipid[key] = OP_array
-            
+        try:
+            for key, value in simulation.OPdata[lipid1].items():
+                OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]  
+                OP_data_lipid[key] = OP_array
+        except:
+            continue
+
         
         
         # go through file paths in simulation.readme['EXPERIMENT']
@@ -520,7 +526,7 @@ for simulation in simulations:
         print('system')
         print(system_qual_output)
         #make system quality file
-        outfile2 = DATAdir + '/SYSTEM_quality_test.json'
+        outfile2 = DATAdir + '/SYSTEM_quality.json'
         SQout = False
         for SQ in system_qual_output:
             if system_qual_output[SQ] > 0:
@@ -541,24 +547,30 @@ for simulation in simulations:
     expFFpath = simulation.readme['EXPERIMENT']['FORMFACTOR']
     #print(ffexpPath)
     expFFdata = {}
-    for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
-        for filename in files:
-            filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
-            if filename.endswith('_FormFactor.json'):
-                print(filename)
-                with open(filepath) as json_file:
-                    expFFdata = json.load(json_file)
-                json_file.close()
+    if len(expFFpath) > 0:
+        for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
+            for filename in files:
+                filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
+                #if filename.endswith('_FormFactor.json'):
+                if filename.endswith('.json'):
+                    print(filename)
+                    with open(filepath) as json_file:
+                        expFFdata = json.load(json_file)
+                    json_file.close()
     
     
     simFFdata = simulation.FFdata
-    
-    ffQuality = formfactorQuality(simFFdata, expFFdata)
-    
-    outfile3 = DATAdir + '/FormFactorQuality.json'
-    with open(outfile3,'w') as f:
-        json.dump(ffQuality,f)
-    f.close()
+
+    if len(expFFpath) > 0:
+        ffQuality = formfactorQuality(simFFdata, expFFdata)
+        outfile3 = DATAdir + '/FormFactorQuality.json'
+        with open(outfile3,'w') as f:
+            json.dump(ffQuality,f)
+        f.close()
+    else:
+        ffQuality = 0
+        
+
     
           
                 
