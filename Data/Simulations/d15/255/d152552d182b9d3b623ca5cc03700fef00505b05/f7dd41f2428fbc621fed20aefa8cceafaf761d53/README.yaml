@@ -9,7 +9,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     CHOL: {}
     POPC: {}
-  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI (http://www.charmm-gui.org)
 COMPOSITION:
   CHOL:

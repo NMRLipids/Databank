@@ -8,8 +8,7 @@ NUMBER_OF_ATOMS: 32512
 EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
-  FORMFACTOR:
-    10.1016/j.bbamem.2011.07.022: 10.1016/j.bbamem.2011.07.022/2
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/Downloads.html
 COMPOSITION:
   POPC:
