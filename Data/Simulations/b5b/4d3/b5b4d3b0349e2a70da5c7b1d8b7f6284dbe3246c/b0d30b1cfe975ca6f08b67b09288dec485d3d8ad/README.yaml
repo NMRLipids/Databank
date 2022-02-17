@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.3434100
+SOFTWARE: gromacs
+TRJ:
+- - ECC-POPC_28mM.xtc
+TPR:
+- - ECC-POPC_28mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.txt
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.txt
+    COUNT: 9000
+  CAL:
+    NAME: CA
+    MAPPING: mappingCA.txt
+    COUNT: 4
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.txt
+    COUNT: 8
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 200POPC_9000SOL_4CAL_8CLA_313K
+SOFTWARE_VERSION: null
+FF: ECC-lipids
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - ECC-POPC_28mM.cpt
+LOG:
+- - ECC-POPC_28mM.log
+TOP:
+- - ECC-POPC_28mM.top
+GRO:
+- - ECC-POPC_28mM.gro
+TRAJECTORY_SIZE: 2989940288
+TRJLENGTH: 300020.0
+TEMPERATURE: 313.0
+NUMBER_OF_ATOMS: 53812
+DATEOFRUNNING: 17/02/2022
+TYPEOFSYSTEM: lipid bilayer
