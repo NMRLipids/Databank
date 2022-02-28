@@ -7,9 +7,20 @@ import numpy as np
 import yaml
 import json
 
-data_file ="/media/akiirikk/DATADRIVE1/tietokanta/NMRLipids_Databank/Databank/Data/experiments/OrderParameters/10.1039/c2cp42738a/4/POPC_Order_Parameters.dat"
+import sys
 
-save_dir = "/media/akiirikk/DATADRIVE1/tietokanta/NMRLipids_Databank/Databank/Data/experiments/OrderParameters/10.1039/c2cp42738a/4/"
+#with open(sys.argv[1], 'r') as f:
+#    contents = f.read()
+#print(contents)
+
+data_file = sys.argv[1]
+print(data_file)
+outfile = data_file.replace(".dat",".json")
+print(outfile)
+
+#data_file ="/media/akiirikk/DATADRIVE1/tietokanta/NMRLipids_Databank/Databank/Data/experiments/OrderParameters/10.1039/c2cp42738a/4/POPC_Order_Parameters.dat"
+
+#save_dir = "/media/akiirikk/DATADRIVE1/tietokanta/NMRLipids_Databank/Databank/Data/experiments/OrderParameters/10.1039/c2cp42738a/4/"
 
 #experiment information
 
@@ -27,7 +38,7 @@ save_dir = "/media/akiirikk/DATADRIVE1/tietokanta/NMRLipids_Databank/Databank/Da
 
 #write data in json
 
-outfile = save_dir + "POPC_Order_Parameters.json"
+#outfile = save_dir + "POPC_Order_Parameters.json"
 data = {}
 
 with open(data_file) as OPfile:
