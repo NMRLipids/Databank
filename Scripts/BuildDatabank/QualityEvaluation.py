@@ -333,6 +333,7 @@ def formfactorQuality(simFFdata, expFFdata):
     #print(SimExpData)
 
     #k_e = calc_k_e(simFFdata,expFFdata)
+    #print(len(SimExpData))
     k_e = calc_k_e(SimExpData)
     
     sum1 = 0            
