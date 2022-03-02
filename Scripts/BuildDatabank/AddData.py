@@ -44,12 +44,12 @@ from OrderParameter import *
 import warnings
 #from corrtimes import *
 import subprocess
-import mdtraj
+
 import json
 import sys
 
 #for building hydrogens to united atom simulations 
-import buildH_calcOP_test
+
 
 import openmm_parser
 
