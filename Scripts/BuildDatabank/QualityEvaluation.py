@@ -63,6 +63,11 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     if math.isnan(P_S) :
      return P_S
 
+ 
+    if op_sim_sd > exp_error:
+        #print('Float nan:', float("NaN"))
+        return float("inf")
+ 
     #this is an attempt to deal with precision, max set manually to 70
     dc.getcontext().prec=70
     precise_log=-dc.Decimal(P_S).log10()
@@ -95,6 +100,7 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
     exp_error=0.02
     E_sum = 0
     AV_sum = 0
+    #print(p_F)
     if p_F != 0:
         for fr in fragments:
             for key_exp, value_exp in exp_op_data.items():
@@ -127,10 +133,16 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                             E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
                             AV_sum += 1
 
-        E_F = (E_sum / AV_sum) / p_F
-        return E_F
+        if AV_sum > 0:
+            E_F = (E_sum / AV_sum) / p_F
+            return E_F
+        else:
+            return float('nan')
+
+        #E_F = (E_sum / AV_sum) / p_F
+        #return E_F
     else:
-        return 'nan'
+        return float('nan')
         
 def fragmentQualityAvg(lipid,fragment_qual_dict):
     if lipid != 'CHOL':
@@ -222,7 +234,7 @@ def systemQuality(system_fragment_qualities):
                  if value != 'nan':
                      if key == 'total':
                          total.append(w * value)
-    print(headgroup,sum(headgroup), np.prod(w_nan), w_nan)
+    #print(headgroup,sum(headgroup), np.prod(w_nan), w_nan)
     out_dict['headgroup'] = sum(headgroup) / np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
     out_dict['sn-1'] = sum(sn1) / np.prod(w_nan)
     out_dict['sn-2'] = sum(sn2) / np.prod(w_nan)
@@ -256,52 +268,108 @@ def systemQuality(system_fragment_qualities):
 #Form factor quality
 
 
-def calc_k_e(simFFdata,expFFdata):
+# SAMULI: This one did not work because simulation and experimental data does not start at the same x-axis value.
+#         I have commented out. A new version is below. It reads a array which already has a correct array of simulation and experimental data.
+
+
+
+#def calc_k_e(simFFdata,expFFdata):
+#    """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
+#    sum1 = 0
+#    sum2 = 0
+    
+#   # print("simulation:" + str(len(simFFdata)))
+#   # print("experiment:" + str(len(expFFdata)))
+   
+#    if len(expFFdata) <= len(simFFdata):
+#        for i in range(0,len(expFFdata)): #experiment should contain less data points
+#            F_s = simFFdata[i][1]
+#            F_e = expFFdata[i][1]
+#            deltaF_e = expFFdata[i][2]
+        
+#            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+#            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+#        k_e = sum1 / sum2
+#        return k_e
+    
+#    else:
+#        return ""
+
+
+
+
+def calc_k_e(SimExpData):
+    
     """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
     sum1 = 0
     sum2 = 0
     
-   # print("simulation:" + str(len(simFFdata)))
-   # print("experiment:" + str(len(expFFdata)))
-   
-    if len(expFFdata) <= len(simFFdata):
-        for i in range(0,len(expFFdata)): #experiment should contain less data points
-            F_s = simFFdata[i][1]
-            F_e = expFFdata[i][1]
-            deltaF_e = expFFdata[i][2]
+    for data in SimExpData:
+        F_e = data[1]
+        deltaF_e = data[2]
+        F_s = data[3]
         
-            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
-            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+        sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+        sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
         k_e = sum1 / sum2
+
+    if len(SimExpData) > 0:
         return k_e
-    
     else:
         return ""
-    
+
     
 
 
 def formfactorQuality(simFFdata, expFFdata):
     """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
-    k_e = calc_k_e(simFFdata,expFFdata)
-    N = len(expFFdata)
+
+    # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
+    SimExpData = []   
+    for SimValues in simFFdata:
+        for ExpValues in expFFdata:
+            if np.abs(SimValues[0]-ExpValues[0]) < 0.0005: # and ExpValues[0] < 0.41:
+                SimExpData.append([ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]])
+    #print(SimExpData)
+
+    #k_e = calc_k_e(simFFdata,expFFdata)
+    #print(len(SimExpData))
+    k_e = calc_k_e(SimExpData)
     
-    sum1 = 0
-    
-    if len(expFFdata) <= len(simFFdata):
-        for i in range(0,len(expFFdata)): #experiment should contain less data points
-            F_s = simFFdata[i][1]
-            F_e = expFFdata[i][1]
-            deltaF_e = expFFdata[i][2] 
+    sum1 = 0            
+    N = len(SimExpData)
+    for i in range(0,len(SimExpData)):
+        F_e = SimExpData[i][1]
+        deltaF_e = expFFdata[i][2] 
+        F_s = SimExpData[i][3]
+        #print(SimExpData[i])
         
-            sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
     
         khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
-    
-        return khi2
+
+    if N > 0:
+        return khi2, k_e
     else:
-        
         return ""
+    
+    #N = len(expFFdata)
+    
+    #sum1 = 0            
+    #if len(expFFdata) <= len(simFFdata):
+    #    for i in range(0,len(expFFdata)): #experiment should contain less data points
+    #        F_s = simFFdata[i][1]
+    #        F_e = expFFdata[i][1]
+    #        deltaF_e = expFFdata[i][2] 
+        
+    #        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+    
+    #    khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+    
+    #    return khi2, k_e
+    #else:
+        
+    #    return ""
 
       
 
@@ -363,11 +431,14 @@ def loadSimulations():
 
 
 ###################################################################################################
-print('start')
+# print('start')
 simulations = loadSimulations()
 
 #if (not os.path.isdir('../../Data/QualityEvaluation/')): 
 #    os.system('mkdir ../../Data/QualityEvaluation/')
+
+EvaluatedOPs = 0
+EvaluatedFFs = 0
 
 
 for simulation in simulations:
@@ -375,14 +446,14 @@ for simulation in simulations:
     
     #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-    #print(DATAdir)
+    print('Analyzing: ', DATAdir)
    
    
     #Order Parameters 
     system_quality = {}
     for lipid1 in simulation.getLipids():
         #print(lipid1)
-        print('Simulation path ' + simulation.indexingPath)
+        #print('Evaluating order parameter quality of simulation data in ' + simulation.indexingPath)
         #print(simulation.OPdata.keys())
         
         # OP_data_lipid = simulation.OPdata[lipid1]
@@ -402,14 +473,14 @@ for simulation in simulations:
 
         
         for lipid, experiments in simulation.readme['EXPERIMENT']['ORDERPARAMETER'].items():
-            print(lipid,experiments)
+            #print('Evaluating ', lipid, ' lipid using experimental data from ', experiments)
             data_dict = {}
             fragment_qual_dict = {}
             for doi, path in experiments.items():
                 OP_qual_data = {}
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/OrderParameters/" + path
-                print('Experimental path ' + experimentFilepath)
+                #print('Experimental data available at ' + experimentFilepath)
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
                 with open(READMEfilepathExperiment) as yaml_file_exp:
@@ -519,12 +590,12 @@ for simulation in simulations:
                     json.dump(data_dict,f)
                 f.close()
 
-        print('input to system quality')
-        print(system_quality)
+        #print('input to system quality')
+        #print(system_quality)
         #calculate system quality
         system_qual_output = systemQuality(system_quality)
-        print('system')
-        print(system_qual_output)
+        #print('system')
+        #print(system_qual_output)
         #make system quality file
         outfile2 = DATAdir + '/SYSTEM_quality.json'
         SQout = False
@@ -535,9 +606,10 @@ for simulation in simulations:
             with open(outfile2, 'w') as f:
                 json.dump(system_qual_output,f)
             f.close() 
-        
-        print('')
-        
+            #print('Evaluating order parameter quality of simulation data in ' + simulation.indexingPath)
+            print('Order parameter quality evaluated for '  + simulation.indexingPath)
+            EvaluatedOPs += 1
+            #print('')
         
      #   print(OP_qual_data)                        
                 
@@ -553,7 +625,7 @@ for simulation in simulations:
                 filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
                 #if filename.endswith('_FormFactor.json'):
                 if filename.endswith('.json'):
-                    print(filename)
+                    #print('Evaluating form factor quality of ', filename)
                     with open(filepath) as json_file:
                         expFFdata = json.load(json_file)
                     json_file.close()
@@ -567,9 +639,16 @@ for simulation in simulations:
         with open(outfile3,'w') as f:
             json.dump(ffQuality,f)
         f.close()
+        EvaluatedFFs += 1
+        print('Form factor quality evaluated for ', DATAdir)
+        #print('')
     else:
         ffQuality = 0
-        
+
+
+print('The number of systems with evaluated order parameters:', EvaluatedOPs)
+print('The number of systems with evaluated form factors:', EvaluatedFFs)
+
 
     
           
