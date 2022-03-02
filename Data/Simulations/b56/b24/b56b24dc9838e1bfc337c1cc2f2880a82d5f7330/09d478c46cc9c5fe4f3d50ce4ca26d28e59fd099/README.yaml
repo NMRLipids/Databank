@@ -41,7 +41,7 @@ TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
     POPG:
-      10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
       unpublished/ferreiraPOPG: unpublished/ferreiraPOPG/1
+      10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
   FORMFACTOR: {}
 
