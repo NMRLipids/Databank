@@ -137,12 +137,13 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
             E_F = (E_sum / AV_sum) / p_F
             return E_F
         else:
-            return float('nan')
-
+    #        return float('nan')
+            return 'nan'
         #E_F = (E_sum / AV_sum) / p_F
         #return E_F
     else:
-        return float('nan')
+        #return float('nan')
+        return 'nan'
         
 def fragmentQualityAvg(lipid,fragment_qual_dict):
     if lipid != 'CHOL':
@@ -157,15 +158,20 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         for doi in fragment_qual_dict.keys():
             #print(doi)
             for key in fragment_qual_dict[doi].keys():
-                if key == 'headgroup' and fragment_qual_dict[doi][key] != 'nan':
-                    headgroup_sum += fragment_qual_dict[doi][key]
-                    headgroup_c += 1
-                elif key == 'sn-1' and fragment_qual_dict[doi][key] != 'nan':
-                    sn1_sum += fragment_qual_dict[doi][key]
-                    sn1_c += 1
-                elif key == 'sn-2' and fragment_qual_dict[doi][key] != 'nan':
-                    sn2_sum += fragment_qual_dict[doi][key]
-                    sn2_c += 1
+                if fragment_qual_dict[doi][key] != 'nan':
+                    if key == 'headgroup':# and fragment_qual_dict[doi][key] != 'nan':
+                        headgroup_sum += fragment_qual_dict[doi][key]
+                        headgroup_c += 1
+                    elif key == 'sn-1':# and fragment_qual_dict[doi][key] != 'nan':
+                        print("sn-1")
+                        print(fragment_qual_dict[doi][key])
+                        sn1_sum += fragment_qual_dict[doi][key]
+                        sn1_c += 1
+                    elif key == 'sn-2':# and fragment_qual_dict[doi][key] != 'nan':
+                        print("sn-2")
+                        print(fragment_qual_dict[doi][key])
+                        sn2_sum += fragment_qual_dict[doi][key]
+                        sn2_c += 1
 
         if headgroup_sum != 0:
             headgroup_avg = headgroup_sum / headgroup_c
@@ -375,7 +381,7 @@ def formfactorQuality(simFFdata, expFFdata):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/b56/b24/b56b24dc9838e1bfc337c1cc2f2880a82d5f7330/09d478c46cc9c5fe4f3d50ce4ca26d28e59fd099/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -480,13 +486,14 @@ for simulation in simulations:
                 OP_qual_data = {}
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/OrderParameters/" + path
-                #print('Experimental data available at ' + experimentFilepath)
+                print('Experimental data available at ' + experimentFilepath)
+                
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
                 with open(READMEfilepathExperiment) as yaml_file_exp:
                     readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
                     experiment.readme = readmeExp
-                    #print(experiment.readme)
+                    print(experiment.readme)
                 yaml_file_exp.close()
 
                 exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
@@ -532,7 +539,8 @@ for simulation in simulations:
                 data_dict[doi] = OP_qual_data
                 
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
-
+                
+                #SHOULD THIS BE MOVED OUT OF THIS FOR doi, path in experiments.items(): LOOP??????
                 fragment_quality = {}
 
                 if lipid1 == 'CHOL':
@@ -550,6 +558,9 @@ for simulation in simulations:
                 fragment_qual_dict[doi] = fragment_quality
                 
             fragment_quality_output = {}
+            print("Fragment_qual_dict:")
+            print(fragment_qual_dict) #CHECK CONTENTS
+            
             if lipid1 != 'CHOL':
                 headgroup_avg, sn1_avg, sn2_avg, total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['headgroup'] = headgroup_avg
@@ -560,6 +571,9 @@ for simulation in simulations:
                # print("Cholesterol works")
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
+            
+            print("fragment_quality_output")
+            print(fragment_quality_output)
             
             system_quality[lipid1] = fragment_quality_output
 
