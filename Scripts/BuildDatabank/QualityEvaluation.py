@@ -79,15 +79,23 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
 # quality of molecule fragments
 
 def evaluated_percentage(fragments, exp_op_data):
-    count_value = 0
+    count_value = 0 #how many bonds in a fragment have a measured experimental value
     fragment_size = 0
-    for key, value in exp_op_data.items():
-        for f in fragments:
+    for f in fragments:
+        for key, value in exp_op_data.items():
+        #for f in fragments:
              if f in key:
                  fragment_size += 1
-                 if value[0][0] != 'nan':
+                 #if value[0][0] != 'nan':
+                 if not math.isnan(value[0][0]):
                      count_value += 1
     if fragment_size != 0:
+        #print("fragment_size")
+        #print(fragment_size)
+        #print("count_value")
+        #print(count_value)
+        #print("evaluated_percentage")
+        #print(count_value / fragment_size)
         return count_value / fragment_size
     else:
         return 0
@@ -551,8 +559,8 @@ for simulation in simulations:
                 fragment_qual_dict[doi] = fragment_quality
                 
             fragment_quality_output = {}
-            print("Fragment_qual_dict:")
-            print(fragment_qual_dict) #CHECK CONTENTS
+#            print("Fragment_qual_dict:")
+#            print(fragment_qual_dict) #CHECK CONTENTS
             
             if lipid1 != 'CHOL':
                 headgroup_avg, sn1_avg, sn2_avg, total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
@@ -565,8 +573,8 @@ for simulation in simulations:
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
-            print("fragment_quality_output")
-            print(fragment_quality_output)
+         #   print("fragment_quality_output")
+         #   print(fragment_quality_output)
             
             system_quality[lipid1] = fragment_quality_output
 
