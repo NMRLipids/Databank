@@ -79,15 +79,23 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
 # quality of molecule fragments
 
 def evaluated_percentage(fragments, exp_op_data):
-    count_value = 0
+    count_value = 0 #how many bonds in a fragment have a measured experimental value
     fragment_size = 0
-    for key, value in exp_op_data.items():
-        for f in fragments:
+    for f in fragments:
+        for key, value in exp_op_data.items():
+        #for f in fragments:
              if f in key:
                  fragment_size += 1
-                 if value[0][0] != 'nan':
+                 #if value[0][0] != 'nan':
+                 if not math.isnan(value[0][0]):
                      count_value += 1
     if fragment_size != 0:
+        #print("fragment_size")
+        #print(fragment_size)
+        #print("count_value")
+        #print(count_value)
+        #print("evaluated_percentage")
+        #print(count_value / fragment_size)
         return count_value / fragment_size
     else:
         return 0
@@ -137,12 +145,12 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
             E_F = (E_sum / AV_sum) / p_F
             return E_F
         else:
-            return float('nan')
+            return 'nan'
 
         #E_F = (E_sum / AV_sum) / p_F
         #return E_F
     else:
-        return float('nan')
+        return 'nan'
         
 def fragmentQualityAvg(lipid,fragment_qual_dict):
     if lipid != 'CHOL':
@@ -157,15 +165,16 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
         for doi in fragment_qual_dict.keys():
             #print(doi)
             for key in fragment_qual_dict[doi].keys():
-                if key == 'headgroup' and fragment_qual_dict[doi][key] != 'nan':
-                    headgroup_sum += fragment_qual_dict[doi][key]
-                    headgroup_c += 1
-                elif key == 'sn-1' and fragment_qual_dict[doi][key] != 'nan':
-                    sn1_sum += fragment_qual_dict[doi][key]
-                    sn1_c += 1
-                elif key == 'sn-2' and fragment_qual_dict[doi][key] != 'nan':
-                    sn2_sum += fragment_qual_dict[doi][key]
-                    sn2_c += 1
+                if fragment_qual_dict[doi][key] != 'nan':
+                    if key == 'headgroup':
+                        headgroup_sum += fragment_qual_dict[doi][key]
+                        headgroup_c += 1
+                    elif key == 'sn-1':
+                        sn1_sum += fragment_qual_dict[doi][key]
+                        sn1_c += 1
+                    elif key == 'sn-2':
+                        sn2_sum += fragment_qual_dict[doi][key]
+                        sn2_c += 1
 
         if headgroup_sum != 0:
             headgroup_avg = headgroup_sum / headgroup_c
@@ -552,6 +561,9 @@ for simulation in simulations:
                 fragment_qual_dict[doi] = fragment_quality
                 
             fragment_quality_output = {}
+#            print("Fragment_qual_dict:")
+#            print(fragment_qual_dict) #CHECK CONTENTS
+            
             if lipid1 != 'CHOL':
                 headgroup_avg, sn1_avg, sn2_avg, total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['headgroup'] = headgroup_avg
@@ -563,6 +575,9 @@ for simulation in simulations:
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
                 #print(total_qual)
+            
+         #   print("fragment_quality_output")
+         #   print(fragment_quality_output)
             
             system_quality[lipid1] = fragment_quality_output
 
