@@ -279,7 +279,7 @@ def findPairs(experiments):
                     #check temperature +/- 2 degrees
                     t_exp = experiment.readme['TEMPERATURE']
                     
-                    if (mf_ok == len(sim_lipids)) and (c_ok == len(sim_ions)) and (t_exp >= float(t_sim) - 3.0) and (t_exp <= float(t_sim) + 3.0):
+                    if (mf_ok == len(sim_lipids)) and (c_ok == len(sim_ions)) and (t_exp >= float(t_sim) - 2.0) and (t_exp <= float(t_sim) + 2.0):
                         #  print(simulation.indexingPath
                         pairs.append([simulation, experiment])
                         # print(simulation.readme['SYSTEM'])
