@@ -506,8 +506,10 @@ for simulation in simulations:
                 for key in OP_data_lipid.keys():
                     OP_array = OP_data_lipid[key].copy()
                     try:
+                        #print(lipidExpOPdata)
                         OP_exp = lipidExpOPdata[key][0][0]
                     except KeyError:
+                        #print('Key error', DATAdir, key)
      #                   OP_array.append('NaN')
      #                   OP_qual_data[key] = OP_array
                         continue
@@ -560,6 +562,7 @@ for simulation in simulations:
                # print("Cholesterol works")
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
+                #print(total_qual)
             
             system_quality[lipid1] = fragment_quality_output
 
@@ -600,6 +603,7 @@ for simulation in simulations:
         outfile2 = DATAdir + '/SYSTEM_quality.json'
         SQout = False
         for SQ in system_qual_output:
+            #print(system_qual_output[SQ])
             if system_qual_output[SQ] > 0:
                 SQout = True
         if SQout:
