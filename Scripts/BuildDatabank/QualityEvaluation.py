@@ -146,9 +146,6 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
             return E_F
         else:
             return 'nan'
-
-        #E_F = (E_sum / AV_sum) / p_F
-        #return E_F
     else:
         return 'nan'
         
@@ -173,6 +170,7 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
                         sn1_sum += fragment_qual_dict[doi][key]
                         sn1_c += 1
                     elif key == 'sn-2':
+
                         sn2_sum += fragment_qual_dict[doi][key]
                         sn2_c += 1
 
@@ -489,7 +487,8 @@ for simulation in simulations:
                 OP_qual_data = {}
             # get readme file of the experiment
                 experimentFilepath = "../../Data/experiments/OrderParameters/" + path
-                #print('Experimental data available at ' + experimentFilepath)
+                print('Experimental data available at ' + experimentFilepath)
+                
                 READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
                 experiment = Experiment()
                 with open(READMEfilepathExperiment) as yaml_file_exp:
@@ -541,7 +540,8 @@ for simulation in simulations:
                 data_dict[doi] = OP_qual_data
                 
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
-
+                
+                #SHOULD THIS BE MOVED OUT OF THIS FOR doi, path in experiments.items(): LOOP??????
                 fragment_quality = {}
 
                 if lipid1 == 'CHOL':
@@ -573,8 +573,10 @@ for simulation in simulations:
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
-         #   print("fragment_quality_output")
-         #   print(fragment_quality_output)
+
+        #   print("fragment_quality_output")
+        #   print(fragment_quality_output)
+
             
             system_quality[lipid1] = fragment_quality_output
 
