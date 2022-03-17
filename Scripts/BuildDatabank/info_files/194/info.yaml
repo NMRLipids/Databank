@@ -18,10 +18,10 @@ TOP: DAPC_AA_CHOL40.top
 COMPOSITION:
   DAPC:
     NAME: DAPC
-    MAPPING: mappingDAPCcharmm.txt
+    MAPPING: mappingDAPCcharmm.yaml
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

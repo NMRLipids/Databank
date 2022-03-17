@@ -8,23 +8,23 @@ TRJ: 100-400ns.xtc
 TPR: run_400ns.tpr
 PREEQTIME: 100
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/tmp_6-935999/
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid17ecc.txt
+    MAPPING: mappingPOPClipid17ecc.yaml
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17ecc.txt
+    MAPPING: mappingPOPGlipid17ecc.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingSODecc.txt
+    MAPPING: mappingSODecc.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCALecc.txt
+    MAPPING: mappingCALecc.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCLAecc.txt
+    MAPPING: mappingCLAecc.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

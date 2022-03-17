@@ -18,10 +18,10 @@ TOP: null
 COMPOSITION:
   DPPG:
     NAME: DPPG
-    MAPPING: mappingDPPGslipids.txt
+    MAPPING: mappingDPPGslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
