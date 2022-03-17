@@ -19,16 +19,16 @@ TOP: md30.top
 COMPOSITION:
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLslipid.txt
+    MAPPING: mappingCHOLESTEROLslipid.yaml
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml

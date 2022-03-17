@@ -18,7 +18,7 @@ TOP: null
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml

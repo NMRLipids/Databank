@@ -18,10 +18,10 @@ TOP: topol.top
 COMPOSITION:
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGcharmm.txt
+    MAPPING: mappingPOPGcharmm.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
