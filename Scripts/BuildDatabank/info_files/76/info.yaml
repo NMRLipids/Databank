@@ -8,14 +8,14 @@ TRJ: md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc
 TPR: for-md-CHARMM36_POPS_298K_v1.tpr
 PREEQTIME: 400
 TIMELEFTOUT: 0
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
   SOD:
     NAME: SOD
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

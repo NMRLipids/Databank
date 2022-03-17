@@ -18,10 +18,10 @@ TOP: null
 COMPOSITION:
   DOPS:
     NAME: DOPS
-    MAPPING: mappingDOPSslipids.txt
+    MAPPING: mappingDOPSslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml

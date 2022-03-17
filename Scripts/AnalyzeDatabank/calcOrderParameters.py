@@ -13,7 +13,7 @@ sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
 import buildH_calcOP_test
 
-path = '../../Data/Simulations/cfc/4c4/cfc4c4be95331177929f47a2f1c59f2792643901/112cf0742e84e4dbdd3598c8bcc6921f84378fb3'
+path = '../../Data/Simulations/'
 db_data = databank(path)
 systems = db_data.get_systems()
 
