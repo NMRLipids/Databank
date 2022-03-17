@@ -9,16 +9,16 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPG:
   NAME: POG
-  MAPPING: mappingPOPGslipids.txt 
+  MAPPING: mappingPOPGslipids.yaml 
  POPE:
   NAME: POPE
-  MAPPING: mappingPOPEslipids.txt
+  MAPPING: mappingPOPEslipids.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingTIP3PwaterSlipids.txt
+  MAPPING: mappingTIP3PwaterSlipids.yaml
  SOD:
   NAME: NA
-  MAPPING: mappingNA.txt
+  MAPPING: mappingNA.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

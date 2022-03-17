@@ -88,6 +88,12 @@ def evaluated_percentage(fragments, exp_op_data):
                  if value[0][0] != 'nan':
                      count_value += 1
     if fragment_size != 0:
+        #print("fragment_size")
+        #print(fragment_size)
+        #print("count_value")
+        #print(count_value)
+        #print("evaluated_percentage")
+        #print(count_value / fragment_size)
         return count_value / fragment_size
     else:
         return 0
@@ -163,13 +169,9 @@ def fragmentQualityAvg(lipid,fragment_qual_dict):
                         headgroup_sum += fragment_qual_dict[doi][key]
                         headgroup_c += 1
                     elif key == 'sn-1':# and fragment_qual_dict[doi][key] != 'nan':
-                        print("sn-1")
-                        print(fragment_qual_dict[doi][key])
                         sn1_sum += fragment_qual_dict[doi][key]
                         sn1_c += 1
                     elif key == 'sn-2':# and fragment_qual_dict[doi][key] != 'nan':
-                        print("sn-2")
-                        print(fragment_qual_dict[doi][key])
                         sn2_sum += fragment_qual_dict[doi][key]
                         sn2_c += 1
 
@@ -381,7 +383,7 @@ def formfactorQuality(simFFdata, expFFdata):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/b56/b24/b56b24dc9838e1bfc337c1cc2f2880a82d5f7330/09d478c46cc9c5fe4f3d50ce4ca26d28e59fd099/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -493,7 +495,7 @@ for simulation in simulations:
                 with open(READMEfilepathExperiment) as yaml_file_exp:
                     readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
                     experiment.readme = readmeExp
-                    print(experiment.readme)
+                    #print(experiment.readme)
                 yaml_file_exp.close()
 
                 exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
@@ -558,8 +560,8 @@ for simulation in simulations:
                 fragment_qual_dict[doi] = fragment_quality
                 
             fragment_quality_output = {}
-            print("Fragment_qual_dict:")
-            print(fragment_qual_dict) #CHECK CONTENTS
+#            print("Fragment_qual_dict:")
+#            print(fragment_qual_dict) #CHECK CONTENTS
             
             if lipid1 != 'CHOL':
                 headgroup_avg, sn1_avg, sn2_avg, total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
@@ -572,8 +574,8 @@ for simulation in simulations:
                 total_qual = fragmentQualityAvg(lipid1,fragment_qual_dict)
                 fragment_quality_output['total'] = total_qual
             
-            print("fragment_quality_output")
-            print(fragment_quality_output)
+        #   print("fragment_quality_output")
+        #   print(fragment_quality_output)
             
             system_quality[lipid1] = fragment_quality_output
 

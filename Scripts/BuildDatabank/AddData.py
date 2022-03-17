@@ -281,9 +281,8 @@ socket.setdefaulttimeout(15)
 download_failed = False
 
 # Create temporary directory where to download files and analyze them
-#dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
 
-dir_tmp = "/media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/tmp_6-935999"
 print("The data will be processed in directory path " + dir_tmp)
 
 if (not os.path.isdir(dir_tmp)): 
@@ -347,16 +346,13 @@ if download_failed:
 #dir_tmp = os.path.join(dir_wrk, "tmp/")
 sim_hashes = deepcopy(sim)
 
-#for sim in sims_hashes:
-# print("ID {0}".format(sim["ID"]), flush=True)
 software_sim = software_dict[sim['SOFTWARE'].upper()]
-# dir_sim = os.path.join(dir_tmp, str(sim["ID"])) 
     
 #list_containing the sha1 sums for all required files
 sha1_list_requied = []
     
 # Make empty dataframe with the desired columns
-df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'])
+df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'],dtype=object)
     
 for key_sim, value_sim in sim_hashes.items():
         #print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
