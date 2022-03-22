@@ -66,7 +66,11 @@ for system in systems:
          xtcwhole= path + '/whole.xtc'
          if (not os.path.isfile(xtcwhole)):
              print("Make molecules whole in the trajectory")
-             os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+             if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
+                 print("United atom trajectry larger than 15 Gb. Using only every third frame to reduce memory usage.")
+                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
+             else:
+                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     else:
         print('Order parameter calculation for other gromacs is yet to be implemented.')
         continue
