@@ -11,7 +11,8 @@ import decimal as dc
 from random import randint
 
 from matplotlib import cm
-from scipy.stats import norm
+#from scipy.stats import norm
+import scipy.stats
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
@@ -58,15 +59,18 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     b = OP_exp + exp_error
     #P_S = norm.cdf(b, loc=OP_sim, scale=op_sim_sd) - norm.cdf(a, loc=OP_sim, scale=op_sim_sd)
     #changing to survival function to increase precision, note scaling. Must be recoded to increase precision still
-    P_S = -norm.sf(b, loc=OP_sim, scale=op_sim_sd) + norm.sf(a, loc=OP_sim, scale=op_sim_sd)
+    #
+    #
+    #P_S = -scipy.stats.norm.sf(b, loc=OP_sim, scale=op_sim_sd) + scipy.stats.norm.sf(a, loc=OP_sim, scale=op_sim_sd)
+    P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
 
     if math.isnan(P_S) :
      return P_S
 
  
-    if op_sim_sd > exp_error:
-        #print('Float nan:', float("NaN"))
-        return float("inf")
+    #if op_sim_sd > exp_error:
+    #    #print('Float nan:', float("NaN"))
+    #    return float("inf")
  
     #this is an attempt to deal with precision, max set manually to 70
     dc.getcontext().prec=70
@@ -74,7 +78,8 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
 
     #print("difference of two prec logs",float(foo)+math.log10(P_S))
 
-    return float(precise_log)
+    #return float(precise_log)
+    return float(P_S)
     
 # quality of molecule fragments
 
@@ -114,7 +119,7 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
             for key_exp, value_exp in exp_op_data.items():
             #    print(key_exp)
             #    print(value_exp[0][0])
-                if (fr in key_exp) and value_exp[0][0] != 'nan':
+                if (fr in key_exp) and not np.isnan(value_exp[0][0]): # != 'nan':
                     OP_exp = value_exp[0][0]
                     # print(OP_exp)
                     try:
@@ -129,20 +134,38 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
                     #change here if you want to use shitness(TM) scale for fragments. Warning big numbers will dominate
                     #if OP_exp != 'NaN':
                     QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                    #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
-                    if QE >0: # 0! = 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
+                    print(OP_exp, OP_sim ,QE)
+                    #print(QE, 10**(-QE))
+
+                    #if QE == float("inf"):
+                    #    print(QE)
+
+
+                    #if QE != 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
+
+
                         #if QE == 'NaN':
                         #    E_sum = E_sum
-                        if QE == float("inf"): #'Infinity' or QE == 'inf':
-                            E_sum += 300
-                            AV_sum += 1
-                        else:
-                            #print(QE)
-                            E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                            AV_sum += 1
+
+                        
+                    #if QE == float("inf"): #'Infinity' or QE == 'inf':
+                    #    #print('tst')
+                    #    E_sum *= 5000
+                    #    AV_sum += 1
+                    #elif 10**(-QE) > 0.95 :
+                    #    #print(QE**10)
+                    #    E_sum *= -1*math.log(0.95,10)
+                    #    #print(E_sum)
+                    #    AV_sum += 1
+                    #else:
+
+                    E_sum += QE #prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                    AV_sum += 1
 
         if AV_sum > 0:
-            E_F = (E_sum / AV_sum) / p_F
+            E_F = (E_sum / AV_sum) * p_F # / p_F
+            #print(E_sum)
+            #E_F = (E_sum**(1 / AV_sum)) / p_F
             return E_F
         else:
             return 'nan'
@@ -244,10 +267,10 @@ def systemQuality(system_fragment_qualities):
                      if key == 'total':
                          total.append(w * value)
     #print(headgroup,sum(headgroup), np.prod(w_nan), w_nan)
-    out_dict['headgroup'] = sum(headgroup) / np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
-    out_dict['sn-1'] = sum(sn1) / np.prod(w_nan)
-    out_dict['sn-2'] = sum(sn2) / np.prod(w_nan)
-    out_dict['total'] = sum(total) / np.prod(w_nan)
+    out_dict['headgroup'] = sum(headgroup) * np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
+    out_dict['sn-1'] = sum(sn1) * np.prod(w_nan)
+    out_dict['sn-2'] = sum(sn2) * np.prod(w_nan)
+    out_dict['total'] = sum(total) * np.prod(w_nan)
 
     ## EXTREMELY DIRTY FIX FOR WORKSHOP, SHOULD BE IMPROVED LATER
 #    for lipid in system_fragment_qualities.keys():
@@ -456,7 +479,7 @@ for simulation in simulations:
     #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
     print('Analyzing: ', DATAdir)
-   
+    os.system('git rm ' + DATAdir + '/*uality.json')
    
     #Order Parameters 
     system_quality = {}
