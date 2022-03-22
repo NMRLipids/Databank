@@ -1,11 +1,11 @@
-DOI: 10.5281/zenodo.32173
+DOI: 10.5281/zenodo.13814
 SOFTWARE: gromacs
 TRJ:
-- - popcCACL_50-108ns.xtc
+- - popc7wPERpc.trr
 TPR:
-- - popcCACL.tpr
-PREEQTIME: 50
-TIMELEFTOUT: 0
+- - popc7wPERpc.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 10
 UNITEDATOM_DICT:
   POPC: Berger_PLA
 COMPOSITION:
@@ -13,39 +13,29 @@ COMPOSITION:
     NAME: PLA
     MAPPING: mappingPOPCberger.txt
     COUNT:
-    - 64
-    - 64
-  CAL:
-    NAME: CA
-    MAPPING: mappingCA.txt
-    COUNT: 44
-  CLA:
-    NAME: CL
-    MAPPING: mappingCL.txt
-    COUNT: 88
+    - 82
+    - 46
   SOL:
     NAME: SOL
     MAPPING: mappingSPCwater.txt
-    COUNT: 7157
+    COUNT: 896
 DIR_WRK: /home/lara/Databank
-PUBLICATION: null
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878
 AUTHORS_CONTACT: Ollila O. H. Samuli
-SYSTEM: 128POPC_44CAL_88CLA_7157SOL_298K_Berger
+SYSTEM: 128POPC_896SOL_298K_Berger
 SOFTWARE_VERSION: 4.5
 FF: Berger delivered by Peter Tieleman
-FFCAL: ffgmx parameters
-FFCLA: ffgmx parameters
 FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
 FF_DATE: null
 CPT: null
 LOG: null
 TOP:
-- - popcCACL.top
+- - popc7wPERpc.top
 GRO:
-- - popcCACL.gro
-TRAJECTORY_SIZE: 597638764
-TRJLENGTH: 58010.0
+- - popc7wPERpc.gro
+TRAJECTORY_SIZE: 2019360504
+TRJLENGTH: 60010.0
 TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 28259
+NUMBER_OF_ATOMS: 9344
 DATEOFRUNNING: 16/03/2022
 TYPEOFSYSTEM: lipid bilayer
