@@ -98,6 +98,7 @@ POT | potassium ion
 SOD | sodium ion 
 CLA | chloride ion
 CAL | calcium ion 
+CES | caesium ion
 SOL | water 
     
 
