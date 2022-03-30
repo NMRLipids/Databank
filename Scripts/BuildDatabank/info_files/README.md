@@ -83,6 +83,7 @@ DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
 DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DLIPC| 1,2-dilinoleoyl-sn-glycero-3-phosphocholine
 DOPC | 1,2-dioleoyl-sn-glycero-3-phosphocholine
+DOPE | 1,2-dioleoyl-sn-glycero-3-phosphoethanolamine
 DDOPC| 1,2-didocosahexaenoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
