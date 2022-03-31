@@ -115,12 +115,17 @@ for system in systems:
             def_file.close()
             #Add hydrogens to trajectory and calculate order parameters with buildH
             ordPfile = path + key + 'OrderParameters.dat' 
-                         
+
+            lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
+
+            if (not os.path.isfile(lipid_json_file[0])):
+                lipid_json_file = None
+            
             #lipidname = system['UNITEDATOM_DICT'][key]
             #    print(lipidname)
             #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
             print(system['UNITEDATOM_DICT'][key])
-            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], lipid_jsons=lipid_json_file, traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
             #os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
             outfile=open(ordPfile,'w')
