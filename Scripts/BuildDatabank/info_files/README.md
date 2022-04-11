@@ -74,7 +74,8 @@ POPC |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPG |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol
 POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
-PAzePC | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine
+PAzePCprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine protonated
+PAzePCdeprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine deprotonated
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
 DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
 DPPE | 1,2-dipalmitoyl-sn-glycero-3-phosphoethanolamine
