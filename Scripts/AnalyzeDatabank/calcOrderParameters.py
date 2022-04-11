@@ -105,7 +105,10 @@ for system in systems:
                             atomH = []
 
                         if atomH:
-                            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+                            try:
+                                items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+                            except:
+                                continue
                             def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
                             #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
                             if def_line != previous_line:
