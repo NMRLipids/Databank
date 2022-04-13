@@ -594,7 +594,7 @@ for key_mol in all_molecules:
         lines = open(mapping_file).readlines(  )
         mapping_file_length = 0
         for line in lines:
-            if 'H' in line:
+            if 'H' in line.split(" ")[0]:
                 continue
             else:
                 mapping_file_length += 1
