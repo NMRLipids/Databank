@@ -150,6 +150,7 @@ M_G1H2_M:
   FRAGMENT: glycerol backbone
 M_G1O1_M:
   ATOMNAME: O33
+  FRAGMENT: sn-1
 M_G1_M:
   ATOMNAME: C32
   FRAGMENT: glycerol backbone
@@ -314,6 +315,7 @@ M_G2H1_M:
   FRAGMENT: glycerol backbone
 M_G2O1_M:
   ATOMNAME: O14
+  FRAGMENT: sn-2
 M_G2_M:
   ATOMNAME: C13
   FRAGMENT: glycerol backbone
