@@ -9,7 +9,7 @@ import yaml
 for filename in os.scandir('./mapping_files/'):
     if filename.path.endswith('mappingDESCRIBE.txt') or filename.path.endswith('mappingPOPCulmschneider.txt') or filename.path == './mapping_files/mapping_files_yaml':
         continue
-#    elif filename.path.endswith('mappingPOPClipid17ecc.txt'):
+  #  if filename.path.endswith('mappingPOPClipid17ecc.txt'):
     #    if filename == 'mappingPOPCslipids.txt':
   #          print('toimii')
     else:
@@ -51,9 +51,9 @@ for filename in os.scandir('./mapping_files/'):
                         fragment = 'glycerol backbone'
                     elif 'M_G3' in generic_name:
                         fragment = 'headgroup'
-                    elif 'M_G1C' in generic_name:
+                    elif 'M_G1C' in generic_name or 'M_G1O' in generic_name:
                         fragment = 'sn-1'
-                    elif 'M_G2C' in generic_name:
+                    elif 'M_G2C' in generic_nameor 'M_G2O' in generic_name:
                         fragment = 'sn-2'
                 else:
                     fragment = ""
@@ -71,10 +71,11 @@ for filename in os.scandir('./mapping_files/'):
         print("####################")
         
         if len(mapping_dict.keys()) == linecount:
-            new_file = './mapping_files/mapping_files_yaml/' + fname + '.yaml'
+           # new_file = './mapping_files/mapping_files_yaml/' + fname + '.yaml'
+            new_file = './mapping_files/' + fname + '.yaml'
            # print(new_file)
         
             with open(new_file,'w') as f:
-                yaml.dump(mapping_dict, f)
+                yaml.dump(mapping_dict, f,sort_keys=False)
             f.close()
 

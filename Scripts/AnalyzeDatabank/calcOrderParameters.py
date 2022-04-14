@@ -81,7 +81,7 @@ for system in systems:
             mapping_file = system['COMPOSITION'][key]['MAPPING']
             # load mapping file into a dictionary
             mapping_dict = {}
-            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as f:
+            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as yaml_file:
                 mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
             yaml_file.close()
             
