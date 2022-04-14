@@ -12,19 +12,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: PLA
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 60
     - 60
   CHOL:
     NAME: CHOL
-    MAPPING: mappingCHOLESTEROLberger.txt
+    MAPPING: mappingCHOLESTEROLberger.yaml
     COUNT:
     - 4
     - 4
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 7290
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: 10.1039/c2cp42738a

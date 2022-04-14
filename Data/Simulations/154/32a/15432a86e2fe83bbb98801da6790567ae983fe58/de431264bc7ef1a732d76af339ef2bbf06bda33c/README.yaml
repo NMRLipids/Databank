@@ -11,17 +11,17 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSGROMOS-CKP.txt
+    MAPPING: mappingPOPSGROMOS-CKP.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4480
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 128
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

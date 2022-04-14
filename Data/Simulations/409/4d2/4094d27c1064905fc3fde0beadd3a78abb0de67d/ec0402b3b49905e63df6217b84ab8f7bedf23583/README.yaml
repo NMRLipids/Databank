@@ -14,21 +14,21 @@ COMPOSITION:
   CLA:
     NAME: CLA
     COUNT: 23
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLA.yaml
   SOL:
     NAME: TIP3
     COUNT: 10000
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   DOPC:
     NAME: DOPC
     COUNT:
     - 100
     - 100
-    MAPPING: mappingDOPCcharmm.txt
+    MAPPING: mappingDOPCcharmm.yaml
   SOD:
     NAME: SOD
     COUNT: 23
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
 TIMELEFTOUT: 0
 CPT:
 - - dopc.cpt

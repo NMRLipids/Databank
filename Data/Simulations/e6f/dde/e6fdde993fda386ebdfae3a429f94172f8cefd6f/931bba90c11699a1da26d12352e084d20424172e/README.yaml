@@ -14,21 +14,21 @@ COMPOSITION:
   CLA:
     NAME: CL
     COUNT: 55
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
   DSPC:
     NAME: DSPC
     COUNT:
     - 256
     - 256
-    MAPPING: mappingDSPCcharmm.txt
+    MAPPING: mappingDSPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   SOD:
     NAME: NA
     COUNT: 55
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DSPC_512_NaCl_150mM_338K_md.cpt

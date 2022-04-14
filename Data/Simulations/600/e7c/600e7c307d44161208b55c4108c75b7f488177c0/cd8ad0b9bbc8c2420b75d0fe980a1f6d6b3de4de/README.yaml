@@ -20,37 +20,37 @@ COMPOSITION:
     COUNT:
     - 90
     - 90
-    MAPPING: mappingDMPCcharmm.txt
+    MAPPING: mappingDMPCcharmm.yaml
   CLA:
     NAME: CLA
     COUNT: 28
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLA.yaml
   SAPI:
     NAME: SAPI
     COUNT:
     - 23
     - 23
-    MAPPING: mappingSAPIcharmm.txt
+    MAPPING: mappingSAPIcharmm.yaml
   SOD:
     NAME: SOD
     COUNT: 104
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   POPI:
     NAME: POPI
     COUNT:
     - 8
     - 8
-    MAPPING: mappingPOPIcharmm.txt
+    MAPPING: mappingPOPIcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 12800
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   SLPI:
     NAME: SLPI
     COUNT:
     - 7
     - 7
-    MAPPING: mappingSLPIcharmm.txt
+    MAPPING: mappingSLPIcharmm.yaml
 TIMELEFTOUT: 500
 CPT:
 - - DMPC_PI.cpt

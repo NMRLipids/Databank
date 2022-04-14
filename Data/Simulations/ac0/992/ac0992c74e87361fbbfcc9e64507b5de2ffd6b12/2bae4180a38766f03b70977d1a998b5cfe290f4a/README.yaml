@@ -15,31 +15,31 @@ COMPOSITION:
   CLA:
     NAME: CLA
     COUNT: 378
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLA.yaml
   CAL:
     NAME: CAL
     COUNT: 189
-    MAPPING: mappingCAL.txt
+    MAPPING: mappingCAL.yaml
   SOD:
     NAME: SOD
     COUNT: 50
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   POPS:
     NAME: POPS
     COUNT:
     - 25
     - 25
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 125
     - 125
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 11174
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
 TIMELEFTOUT: 137
 CPT:
 - - popc_pops_250_50_contra_sodium_940mM_CaCl_nbfix_han.cpt

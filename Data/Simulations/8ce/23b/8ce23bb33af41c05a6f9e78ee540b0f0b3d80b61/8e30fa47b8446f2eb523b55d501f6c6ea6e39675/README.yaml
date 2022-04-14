@@ -17,11 +17,11 @@ COMPOSITION:
     COUNT:
     - 106
     - 106
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 29826
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 49240.0

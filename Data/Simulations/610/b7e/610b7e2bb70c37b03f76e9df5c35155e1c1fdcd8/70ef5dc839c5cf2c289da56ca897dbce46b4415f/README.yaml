@@ -17,21 +17,21 @@ COMPOSITION:
     COUNT:
     - 25
     - 25
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 125
     - 125
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 11207
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   SOD:
     NAME: SOD
     COUNT: 50
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
 TIMELEFTOUT: 99
 CPT:
 - - popc_pops_250_50_contra_sodium_nbfix_han.cpt

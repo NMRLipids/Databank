@@ -16,19 +16,19 @@ COMPOSITION:
     COUNT:
     - 256
     - 256
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOD:
     NAME: NA
     COUNT: 55
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   CLA:
     NAME: CL
     COUNT: 55
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_512_NaCl_150mM_320K_md.cpt

@@ -11,21 +11,21 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: PLA
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 7157
   CAL:
     NAME: CA
-    MAPPING: mappingCALecc.txt
+    MAPPING: mappingCALecc.yaml
     COUNT: 44
   CLA:
     NAME: CL
-    MAPPING: mappingCLAecc.txt
+    MAPPING: mappingCLAecc.yaml
     COUNT: 88
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: Phys. Chem. Chem. Phys., 2016, 18, 32560--32569 (NMRlipids II)

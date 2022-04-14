@@ -9,23 +9,23 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPE:
     NAME: PE
-    MAPPING: mappingPOPElipid17.txt
+    MAPPING: mappingPOPElipid17.yaml
     COUNT:
     - 187
     - 187
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17.txt
+    MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 63
     - 63
   SOD:
     NAME: Na+
-    MAPPING: mappingNA+.txt
+    MAPPING: mappingNA+.yaml
     COUNT: 126
   SOL:
     NAME: WAT
-    MAPPING: mappingTIP3Plipid17.txt
+    MAPPING: mappingTIP3Plipid17.yaml
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

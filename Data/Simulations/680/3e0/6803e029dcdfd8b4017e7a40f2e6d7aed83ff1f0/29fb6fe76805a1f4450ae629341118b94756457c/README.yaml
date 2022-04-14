@@ -9,13 +9,13 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCgaff.txt
+    MAPPING: mappingPOPCgaff.yaml
     COUNT:
     - 63
     - 63
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 896
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: 10.1021/acs.jpcb.5b04878
