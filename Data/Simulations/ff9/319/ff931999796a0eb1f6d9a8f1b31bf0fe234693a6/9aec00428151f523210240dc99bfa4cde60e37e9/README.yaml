@@ -8,6 +8,7 @@ NUMBER_OF_ATOMS: 53898
 EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://mmkluster.fos.su.se/slipids/ and https://bitbucket.org/hseara/ions/
 COMPOSITION:
   CLA:

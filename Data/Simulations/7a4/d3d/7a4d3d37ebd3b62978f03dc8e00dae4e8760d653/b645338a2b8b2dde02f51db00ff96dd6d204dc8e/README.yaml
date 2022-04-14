@@ -9,6 +9,7 @@ EXPERIMENT:
   ORDERPARAMETER:
     CHOL: {}
     POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
 COMPOSITION:
   CHOL:

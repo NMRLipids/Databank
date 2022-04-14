@@ -7,6 +7,7 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPG: {}
     POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/,  https://bitbucket.org/hseara/ions/
 COMPOSITION:
   POPG:
