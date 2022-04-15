@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.1487761
+
+SOFTWARE: gromacs
+TRJ: lipid17_pure-POPS_298K.xtc
+TPR: lipid17_pure-POPS_298K.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSlipid17_POPSres.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 72POPS_3600SOL_72SOD_298K
+SOFTWARE_VERSION: 2018.0
+
+FF: Lipid17 and Dang ions
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: lipid17_pure-POPS_298K.top
+GRO: lipid17_pure-POPS_298K.gro

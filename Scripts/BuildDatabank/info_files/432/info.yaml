@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.3434100
+
+SOFTWARE: gromacs
+TRJ: ECC-POPC_4500mM.xtc
+TPR: ECC-POPC_4500mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Nencini, Ricky
+
+SYSTEM: 200POPC_9264SOL_496CAL_992CLA_313K
+SOFTWARE_VERSION:
+
+FF: ECC-lipids
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: ECC-POPC_4500mM.top
+GRO: ECC-POPC_4500mM.gro

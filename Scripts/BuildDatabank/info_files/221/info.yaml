@@ -1,0 +1,24 @@
+DOI: 10.5281/zenodo.13287
+SOFTWARE: gromacs
+TRJ: mdnew.xtc
+TPR: mdnew.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "M\xE4\xE4tt\xE4, Jukka"
+SYSTEM: 128DPPC_3840SOL_323K
+SOFTWARE_VERSION: 4.6.6
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: sample.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml

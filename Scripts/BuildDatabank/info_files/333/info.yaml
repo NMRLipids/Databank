@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.4424292
+
+SOFTWARE: gromacs
+TRJ: md_400_500.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPE:
+  NAME: PE
+  MAPPING: mappingPOPElipid17.yaml
+ SOL:
+  NAME: WAT
+  MAPPING: mappingTIP3Plipid17.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: PEÓN, Antonio
+
+SYSTEM: 500POPE_25000SOL_310K
+SOFTWARE_VERSION: 2020.1
+
+FF: Lipid17
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top

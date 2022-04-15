@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.3725670
+
+SOFTWARE: gromacs
+TRJ: md_OK_100.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEmacrogFUCHS.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Milan Rodriguez, Paula; Fuchs, Patrick F.J.
+
+SYSTEM: 128POPE_5120SOL_300K
+SOFTWARE_VERSION:
+
+FF: MacRog 
+FF_SOURCE: starting structure from CHARMM-GUI, the initial PDB file was modified to match MacRog nomenclature and atom order
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top

@@ -19,7 +19,7 @@ TOP: topol.top
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCgromos-ckp.txt
+    MAPPING: mappingPOPCgromos-ckp.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

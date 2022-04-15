@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.1020709
+
+SOFTWARE: gromacs
+TRJ: trajectory.xtc
+TPR: run.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila, O. H. Samuli
+
+SYSTEM: 72POPC_2234SOL_313K
+SOFTWARE_VERSION:
+
+FF: Lipid14
+FF_SOURCE:
+FF_DATE:
+
+CPT: run.cpt
+LOG: run.log
+TOP: popc.top

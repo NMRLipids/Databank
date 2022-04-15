@@ -12,10 +12,10 @@ DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
   SOD:
     NAME: SOD
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.1129425
+
+SOFTWARE: gromacs
+TRJ: md-berger_POPS_v2_400-500ns_skip10.xtc
+TPR: for-md-berger_POPS_298K_v2.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPS: Berger_POPS
+
+COMPOSITION:
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+PUBLICATION: http://dx.doi.org/10.1021/acs.jpcb.9b06091
+AUTHORS_CONTACT: Tom Piggot
+
+SYSTEM: POPS_298K_Berger
+SOFTWARE_VERSION: 
+
+FF: Berger
+FF_SOURCE: https://doi.org/10.1016/S0006-3495(04)74227-7
+FF_DATE:
+
+

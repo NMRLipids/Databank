@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.5592698
+
+SOFTWARE: gromacs
+TRJ: 035M_CaCl2_POPC_AMB_100_200ns.xtc
+TPR: 035M_CaCl2_POPC_AMB.tpr
+PREEQTIME: 105
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT:  Girych, Mykhailo; Ollila, Samuli 
+
+SYSTEM: 128POPC_6400SOL_35CAL_70CLA_298K
+SOFTWARE_VERSION: 5.0.3
+
+FF: Lipid14 for lipids and AMBER99SB-ILDN for ions
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP:

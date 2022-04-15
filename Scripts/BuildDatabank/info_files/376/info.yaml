@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.13497
+
+SOFTWARE: gromacs
+TRJ: md_100ps.xtc
+TPR: md.tpr
+PREEQTIME: 30
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCMaciejewskiRog3.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 288POPC_12600SOL_310K
+SOFTWARE_VERSION: 4.6.3
+
+FF: MacRog 
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP:

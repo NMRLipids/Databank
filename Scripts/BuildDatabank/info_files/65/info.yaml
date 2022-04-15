@@ -12,13 +12,13 @@ TOP: topol.top
 COMPOSITION:
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGcharmm.txt
+    MAPPING: mappingPOPGcharmm.yaml
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOD:
     NAME: SOD
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

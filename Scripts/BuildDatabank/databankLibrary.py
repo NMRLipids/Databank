@@ -29,6 +29,9 @@ lipids_dict = {
             'DPPE' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DPPG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'DEPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -62,6 +65,9 @@ lipids_dict = {
             'SLPI' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'CER' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'CHOL' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -69,6 +75,9 @@ lipids_dict = {
                             "TYPE" : "string",
                         },
             'DHMDMAB' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'DPPG' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
                 }
@@ -98,94 +107,6 @@ molecules_dict = {
                 }
 
 
-
-
-
-
-# Dictionary containing the number of molecules which are automatically calculated from input files
-# not needed anymore!!!!!              
-molecule_numbers_dict = {
-            'NPOPC' : {"REQUIRED": False,
-                              "TYPE": "array",
-                          },
-            'NPOPG' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                         },
-            'NPOPS' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-            'NPOPE' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDMPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDPPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDPPE' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDEPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDLPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDLIPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDDOPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDOPS' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDSPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NDAPC' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NPOPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSAPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NSLPI' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                        },
-            'NCHOL' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
-            'NDCHOL' : {"REQUIRED": False,
-                       "TYPE" : "array",
-                     },
-            'NDHMDMAB' : {"REQUIRED": False,
-                            "TYPE" : "array",
-                        },
-            'NPOT' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NSOD' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCLA' : {"REQUIRED": False,
-                            "TYPE" : "integer",
-                        },
-            'NCAL' : {"REQUIRED": False,
-                             "TYPE" : "integer",
-                         },
-            'NSOL' : {"REQIRED": False,
-                            "TYPE" : "integer",
-                        },
-    
-                }
-
 # Dictionary containing the force fields for molecules given by the contributor
 
 molecule_ff_dict = {
@@ -199,6 +120,9 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFPOPE' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFDPPG' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFDMPC' : {"REQUIRED": False,
@@ -243,6 +167,9 @@ molecule_ff_dict = {
                 'FFSLPI' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
+                'FFCER' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
                 'FFCHOL' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
@@ -252,6 +179,9 @@ molecule_ff_dict = {
                 'FFDHMDMAB' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
+                 'FFDPPG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                          },
 		'FFPOT' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -306,6 +236,10 @@ gromacs_dict = {
                'LOG' : {"REQUIRED": False,
                         "TYPE": "file",
                         "EXTENSION" :("log",),
+                       },
+               'GRO' : {"REQUIRED": False,
+                        "TYPE": "file",
+                        "EXTENSION" :("gro",),
                        },
                'FF'  : {"REQUIRED": False,
                         "TYPE" : "string",
@@ -1021,7 +955,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         selection = mol.select_atoms("resname {rnm} and name {atA} {atB}".format(
                                     rnm=op.resname, atA=op.atAname, atB=op.atBname)
                                     ).atoms.split("residue")
-    #    print(op.resname + " " + op.atAname + " " + op.atBname)
+#        print(op.resname + " " + op.atAname + " " + op.atBname)
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
             if res.n_atoms != 2:
@@ -1036,10 +970,12 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         op.selection = selection
 
     # go through trajectory frame-by-frame
-        Nres=len(op.selection)
-
+    #    #Nres=len(op.selection)
+    #Nres = len(op.selection)
     Nframes=len(mol.trajectory)
+    #print(Nres,Nframes)
     for op in ordPars:
+        Nres = len(op.selection)
         op.traj= [0]*Nres
 #        op.traj=[0]*Nres
 #        if len(op.traj) == 0:
@@ -1048,12 +984,13 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
 
     for frame in mol.trajectory:
         for op in ordPars:            #.values():
+            Nres = len(op.selection)
             for i in range(0,Nres):
 #             for i, op in enumerate(ordPars,1):
                 residue=op.selection[i]
 #                print(residue)
                 S = op.calc_OP(residue)
-#                print(S)
+                #print(S)
 #                    print(op.atAname + " " + op.atBname)
 #                    print(i)
 #                op.traj.append(S/Nframes)
@@ -1064,7 +1001,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
 #    for op in ordPars:
 #        op.traj=op.traj/Nframes
 
-def parse_op_input(fname,lipid_name):
+def parse_op_input(mapping_file,lipid_name):
     ordPars = []
     atomC = []
     atomH = []
@@ -1077,33 +1014,63 @@ def parse_op_input(fname,lipid_name):
 #                print(getline(f.name, ind + 1).split())
 #                resname = getline(f.name, ind + 1).split()[1]
 #                break
+
+    mapping_dict = {}
+    with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as yaml_file:
+        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    yaml_file.close()
     
-    with open(fname, "r") as f:
-        for line in f.readlines():
-            if not line.startswith("#"):
-                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
-                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                regexp2_C = re.compile(r'M_G[0-9]_M')
-                regexp3_C = re.compile(r'M_C[0-9]_M')
+    regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+    regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+    regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
+    regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+    regexp2_C = re.compile(r'M_G[0-9]_M')
+    regexp3_C = re.compile(r'M_C[0-9]_M')
+            
+    for mapping_key in mapping_dict.keys():
+        if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key) or regexp3_C.search(mapping_key):
+            atomC = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+#            print(atomC)
+            atomH = []
+        elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key) or regexp3_H.search(mapping_key):
+            atomH = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+#            print(atomH)
+        else:
+            atomC = []
+            atomH = []
 
-                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
-                    atomC = line.split()
-                    atomH = []
-                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
-                    atomH = line.split()
-                    if len(line.split())> 2:
-                        resname = line.split()[2]
-                else:
-                    atomC = []
-                    atomH = []
+        if atomH:
+            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#               print(resname + " " + atomH[1])
+            op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+            ordPars.append(op)
+    
+#    with open(fname, "r") as f:
+#        for line in f.readlines():
+#            if not line.startswith("#"):
+#                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+#                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+#                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
+#                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+#                regexp2_C = re.compile(r'M_G[0-9]_M')
+#                regexp3_C = re.compile(r'M_C[0-9]_M')
 
-                if atomH:
-                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
+#                    atomC = line.split()
+#                    atomH = []
+#                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
+#                    atomH = line.split()
+#                    if len(line.split())> 2:
+#                        resname = line.split()[2]
+#                else:
+#                    atomC = []
+#                    atomH = []
+
+#                if atomH:
+#                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
 #                    print(resname + " " + atomH[1])
-                    op = OrderParameter(resname, items[0], items[1], items[2], items[3])
-                    ordPars.append(op)
+#                    op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+#                    ordPars.append(op)
 #    except:
 #        inpf=opts.inp_fname
 #        raise RuntimeError("Couldn't read input file >> {inpf} <<")

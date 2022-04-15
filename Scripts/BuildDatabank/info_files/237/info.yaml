@@ -1,0 +1,27 @@
+DOI: 10.5281/zenodo.546133
+SOFTWARE: gromacs
+TRJ: md50ns_chunk03.xtc
+TPR: md50ns_chunk02.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Favela-Rosales, Fernando
+SYSTEM: 288POPG_10664SOL_288SOD_298K
+SOFTWARE_VERSION: 5.0.4
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml

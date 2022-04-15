@@ -44,17 +44,17 @@ from OrderParameter import *
 import warnings
 #from corrtimes import *
 import subprocess
-import mdtraj
+
 import json
 import sys
 
 #for building hydrogens to united atom simulations 
-import buildH_calcOP_test
+
 
 import openmm_parser
 
 #import databank dictionaries
-from databankLibrary import lipids_dict, molecules_dict, molecule_numbers_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
+from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, gromacs_dict, amber_dict, namd_dict, charmm_dict, openmm_dict, software_dict
 
 
 # Download link
@@ -143,7 +143,7 @@ for key_sim, value_sim in sim.items():
             #print("NOT REQUIRED")
         continue
     #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_numbers_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
+    if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
         print ("{0} NOT in {1}".format(key_sim, software_dict_name)) 
         wrong_key_entries += 1
 if wrong_key_entries:
@@ -236,7 +236,7 @@ for key_sim, value_sim in sim.items():
             for file_provided in value_sim:
                 #print("File={0}".format(file_provided[0]))
                 file_url = download_link(DOI, file_provided[0])
-                if file_url == "":                        
+                if file_url == "":
                     wrong_links += 1
                     continue
                 try:
@@ -282,6 +282,7 @@ download_failed = False
 
 # Create temporary directory where to download files and analyze them
 dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+
 print("The data will be processed in directory path " + dir_tmp)
 
 if (not os.path.isdir(dir_tmp)): 
@@ -345,16 +346,13 @@ if download_failed:
 #dir_tmp = os.path.join(dir_wrk, "tmp/")
 sim_hashes = deepcopy(sim)
 
-#for sim in sims_hashes:
-# print("ID {0}".format(sim["ID"]), flush=True)
 software_sim = software_dict[sim['SOFTWARE'].upper()]
-# dir_sim = os.path.join(dir_tmp, str(sim["ID"])) 
     
 #list_containing the sha1 sums for all required files
 sha1_list_requied = []
     
 # Make empty dataframe with the desired columns
-df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'])
+df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'],dtype=object)
     
 for key_sim, value_sim in sim_hashes.items():
         #print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
@@ -421,23 +419,29 @@ elif sim['SOFTWARE'] == 'openMM':
 leaflet1 = 0 #total number of lipids in upper leaflet
 leaflet2 = 0 #total number of lipids in lower leaflet
     
-u = Universe(top, traj)
-u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
-try:
-    u = Universe(top, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-except:
-    conf = str(dir_tmp) + '/conf.gro'
-    print("Generating conf.gro because MDAnalysis cannot read tpr version")
-    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + conf)
-    u = Universe(conf, traj)
-    u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
-
+#u = Universe(top, traj)
+#u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
 gro = str(dir_tmp) + '/frame0.gro'
 
-u0 = Universe(gro)
+try:
+    u = Universe(top, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+except:
+    #conf = str(dir_tmp) + '/conf.gro'
+    print("Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version")
+    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + gro)
+    u = Universe(gro, traj)
+    u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
+
+
+try:
+    groFORu0 = str(dir_tmp) + '/' + sim['GRO'][0][0]
+    print(groFORu0)
+except:
+    groFORu0 = gro
+    
+u0 = Universe(groFORu0)
 lipids = []
 
 # select lipids 
@@ -446,16 +450,26 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim['COMPOSITION'].keys():
        m_file = sim['COMPOSITION'][key_mol]['MAPPING']
-       with open('./mapping_files/'+m_file,"r") as f:
-           for line in f:
-               if len(line.split()) > 2 and "Individual atoms" not in line:
-                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
-               elif "Individual atoms" in line:
-                   continue
-               else:
-                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-                   #print(selection)
-                   break
+       mapping_dict = {}
+       with open('./mapping_files/'+m_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+       yaml_file.close()
+       for key in mapping_dict.keys():
+           if 'RESIDUE' in mapping_dict[key].keys():
+               selection = selection + "(resname " + mapping_dict[key]['RESIDUE'] + " and name " + mapping_dict[key]['ATOMNAME'] + ") or "
+           else:      
+               selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+               break
+#       with open('./mapping_files/'+m_file,"r") as f:
+#           for line in f:
+#               if len(line.split()) > 2 and "Individual atoms" not in line:
+#                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
+#               elif "Individual atoms" in line:
+#                   continue
+#               else:
+#                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+#                   #print(selection)
+#                   break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
     molecules = u0.select_atoms(selection)
@@ -485,19 +499,29 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim['COMPOSITION'].keys():
         m_file = sim['COMPOSITION'][key_mol]['MAPPING']
-        with open('./mapping_files/'+m_file,"r") as f:
-            for line in f:
-                if len(line.split()) > 2 and "Individual atoms" not in line:
-                    selection = selection + "resname " + line.split()[2] + " and name " + line.split()[1] + " or "
-                elif "Individual atoms" in line:
-                    continue
-                else:
-                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-                    break
+        with open('./mapping_files/'+m_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
+        for key in mapping_dict.keys():
+           if 'RESIDUE' in mapping_dict[key].keys():
+               selection = selection + "resname " + mapping_dict[key]['RESIDUE'] + " and name " + mapping_dict[key]['ATOMNAME'] + " or "
+           else:      
+               selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+               break
+        
+#        with open('./mapping_files/'+m_file,"r") as f:
+#            for line in f:
+#                if len(line.split()) > 2 and "Individual atoms" not in line:
+#                    selection = selection + "resname " + line.split()[2] + " and name " + line.split()[1] + " or "
+#                elif "Individual atoms" in line:
+#                    continue
+#                else:
+#                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+#                    break
     selection = selection.rstrip(' or ')
-    #   print(selection)
+    print(selection)
     molecules = u0.select_atoms(selection)
-    #print(molecules.residues)
+    print(molecules.residues)
 
     if molecules.n_residues > 0:
         for mol in molecules.residues:
@@ -580,31 +604,52 @@ number_of_atomsTRJ = len(u.atoms)
 
 number_of_atoms = 0
 for key_mol in all_molecules:
+    mapping_dict = {}
     try:
         mapping_file = './mapping_files/'+sim['COMPOSITION'][key_mol]['MAPPING']
     except:
         continue
+    else:
+        with open(mapping_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
     if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
-        lines = open(mapping_file).readlines(  )
         mapping_file_length = 0
-        for line in lines:
-            if 'H' in line:
+        
+        for key in mapping_dict.keys():
+            if 'H' in key:
                 continue
             else:
                 mapping_file_length += 1
     else:
-        mapping_file_length = len(open(mapping_file).readlines(  ))
-    try:
+        mapping_file_length = len(mapping_dict.keys())
+         
+    try: 
         number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
     except:
         continue
+#    if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
+#        lines = open(mapping_file).readlines(  )
+#        mapping_file_length = 0
+#        for line in lines:
+#            if 'H' in line:
+#                continue
+#            else:
+#                mapping_file_length += 1
+#    else:
+#        mapping_file_length = len(open(mapping_file).readlines(  ))
+#    try:
+#        number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
+#    except:
+#        continue
         
 
 if number_of_atoms != number_of_atomsTRJ:
-    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names.")
-    # Do you still want to continue the analysis (y/n)?")
-    #if stop == "n":
-    os._exit("Interrupted because atomnumbers did not match")
+    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names. \n If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?")
+    if stop == "n":
+        os._exit("Interrupted because atomnumbers did not match")
+    if stop == "y":
+        print("Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))
