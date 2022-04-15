@@ -11,9 +11,9 @@ Berger_POPC = {
         # residue name
         "resname": "POPC",
         # choline
-        "C1": ("CH3", "N4", "C5"),
-        "C2": ("CH3", "N4", "C5"),
-        "C3": ("CH3", "N4", "C5"),
+        #"C1": ("CH3", "N4", "C5"),
+        #"C2": ("CH3", "N4", "C5"),
+        #"C3": ("CH3", "N4", "C5"),
         "C5": ("CH2", "N4", "C6"),
         "C6": ("CH2", "C5", "O7"),
         # glycerol
@@ -38,7 +38,7 @@ Berger_POPC = {
         "C30": ("CH2", "C29", "C31"),
         "C31": ("CH2", "C30", "CA1"),
         "CA1": ("CH2", "C31", "CA2"),
-        "CA2": ("CH3", "CA1", "C31"), # helper1 is the first C connected to CH3, helper is 2 atoms away
+#        "CA2": ("CH3", "CA1", "C31"), # helper1 is the first C connected to CH3, helper is 2 atoms away
         # sn1
         "C36": ("CH2", "C34", "C37"),
         "C37": ("CH2", "C36", "C38"),
@@ -54,7 +54,7 @@ Berger_POPC = {
         "C47": ("CH2", "C46", "C48"),
         "C48": ("CH2", "C47", "C49"),
         "C49": ("CH2", "C48", "C50"),
-        "C50": ("CH3", "C49", "C48") # helper1 is the first C connected to CH3, helper is 2 atoms away
+#        "C50": ("CH3", "C49", "C48") # helper1 is the first C connected to CH3, helper is 2 atoms away
         }
 
 # Alternative name for POPC in Berger lipids.
@@ -214,9 +214,9 @@ GROMOS_CKP_POPC = {
         # residue name
         "resname": "POPC",
         # choline
-        "C1": ("CH3", "N4", "C5"),
-        "C2": ("CH3", "N4", "C5"),
-        "C3": ("CH3", "N4", "C5"),
+        #"C1": ("CH3", "N4", "C5"),
+        #"C2": ("CH3", "N4", "C5"),
+        #"C3": ("CH3", "N4", "C5"),
         "C5": ("CH2", "N4", "C6"),
         "C6": ("CH2", "C5", "O7"),
         # glycerol
@@ -241,7 +241,7 @@ GROMOS_CKP_POPC = {
         "C30": ("CH2", "C29", "C31"),
         "C31": ("CH2", "C30", "CA1"),
         "CA1": ("CH2", "C31", "CA2"),
-        "CA2": ("CH3", "CA1", "C31"), # helper1 is the first C connected to CH3, helper is 2 atoms away
+        #"CA2": ("CH3", "CA1", "C31"), # helper1 is the first C connected to CH3, helper is 2 atoms away
         # sn1
         "C36": ("CH2", "C34", "C37"),
         "C37": ("CH2", "C36", "C38"),
@@ -257,7 +257,7 @@ GROMOS_CKP_POPC = {
         "C47": ("CH2", "C46", "C48"),
         "C48": ("CH2", "C47", "C49"),
         "C49": ("CH2", "C48", "C50"),
-        "C50": ("CH3", "C49", "C48") # helper1 is the first C connected to CH3, helper is 2 atoms away
+        #"C50": ("CH3", "C49", "C48") # helper1 is the first C connected to CH3, helper is 2 atoms away
         }
 
 GROMOS_CKP_POPG = {
