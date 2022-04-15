@@ -9,8 +9,10 @@ PUBLICATION: Ferreira et al. Phys. Chem. Chem. Phys., 2013,15, 1976-1989
 FFSOL: SPC
 NUMBER_OF_ATOMS: 28526
 EXPERIMENT:
-  POPC:
-    10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
 FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
 COMPOSITION:
   POPC:
@@ -18,11 +20,11 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
   SOL:
     NAME: SOL
     COUNT: 7290
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 50010.0
 TRAJECTORY_SIZE: 3424404744

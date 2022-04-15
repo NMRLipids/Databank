@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.3540513
+SOFTWARE: gromacs
+TRJ: LT_TERNARY.xtc
+TPR: LT_TERNARY.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti; Martinez-Seara, Hector; Vattulainen, Ilpo
+SYSTEM: 204DPPC_52CHOL_166DOPC_16880SOL_46SOD_46CLA_293K
+SOFTWARE_VERSION: null
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.yaml
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

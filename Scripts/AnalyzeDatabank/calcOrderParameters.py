@@ -6,9 +6,11 @@ import matplotlib.pyplot as plt
 import MDAnalysis
 import urllib.request
 import yaml
+import re
+import buildh
 
 sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, molecule_numbers_dict,databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
+from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
 import buildH_calcOP_test
 
 path = '../../Data/Simulations/'
@@ -16,7 +18,7 @@ db_data = databank(path)
 systems = db_data.get_systems()
 
 ready = 0
-notready = 0
+skipped = 0
 for system in systems:
     Nlipid = 0
     path = system['path']
@@ -31,6 +33,7 @@ for system in systems:
             continue
 
     if FileFound:
+        skipped += 1
         continue
 
     print('Analyzing: ', system['path'])
@@ -61,82 +64,118 @@ for system in systems:
 
     if 'gromacs' in software:
          xtcwhole= path + '/whole.xtc'
-         print("Make molecules whole in the trajectory")
-         os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+         if (not os.path.isfile(xtcwhole)):
+             print("Make molecules whole in the trajectory")
+             os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     else:
         print('Order parameter calculation for other gromacs is yet to be implemented.')
         continue
 
 
     if unitedAtom:
+        topfile = path + '/frame0.gro'
+        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
+        
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
-            def_file = open(path + key + '.def', 'w')
-
             mapping_file = system['COMPOSITION'][key]['MAPPING']
+            # load mapping file into a dictionary
+            mapping_dict = {}
+            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as yaml_file:
+                mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+            yaml_file.close()
+            
+            def_fileNAME = path + key + '.def' 
+            def_file = open(def_fileNAME, 'w')
+
+            
             previous_line = ""
             
-            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as f:
-                for line in f.readlines():
-                    if not line.startswith("#"):
-                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                        regexp2_C = re.compile(r'M_G[0-9]_M')
+            regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+            regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+            regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+            regexp2_C = re.compile(r'M_G[0-9]_M')
+            
+            for mapping_key in mapping_dict.keys():
+                if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key):
+                    atomC = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+                    atomH = []
+                elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key):
+                    atomH = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+                else:
+                    atomC = []
+                    atomH = []
 
-                        if regexp1_C.search(line) or regexp2_C.search(line):
-                            atomC = line.split()
-                            atomH = []
-                        elif regexp1_H.search(line) or regexp2_H.search(line):
-                            atomH = line.split()
-                        else:
-                            atomC = []
-                            atomH = []
+                if atomH:
+                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+                    def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+                    #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
+                    if def_line != previous_line:
+                        def_file.write(def_line)
+                        #print(def_line)
+                        previous_line = def_line
+            def_file.close()            
+             
+#                for line in f.readlines():
+#                    if not line.startswith("#"):
+#                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+#                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+#                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+#                        regexp2_C = re.compile(r'M_G[0-9]_M')
+#
+#                        if regexp1_C.search(line) or regexp2_C.search(line):
+#                            atomC = line.split()
+#                            atomH = []
+#                        elif regexp1_H.search(line) or regexp2_H.search(line):
+#                            atomH = line.split()
+#                        else:
+#                            atomC = []
+#                            atomH = []
 
-                        if atomH:
-                            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-                            def_line = items[2] + " " + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-                            if def_line != previous_line:
-                                def_file.write(def_line)
-                                print(def_line)
-                                previous_line = def_line
-            def_file.close()
-        #Add hydrogens to trajectory and calculate order parameters with buildH
-        ordPfile = path + key + 'OrderParameters.dat' 
-        topfile = path + '/frame0.gro'
-                        
-        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
+#                        if atomH:
+#                            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+#                            #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
+#                            if def_line != previous_line:
+#                                def_file.write(def_line)
+#                                print(def_line)
+#                                previous_line = def_line
+#            def_file.close()
+            #Add hydrogens to trajectory and calculate order parameters with buildH
+            ordPfile = path + key + 'OrderParameters.dat' 
                          
-        deffile = path + key + '.def' 
-        lipidname = system['UNITEDATOM_DICT'][key]
-        #    print(lipidname)
-        buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+            #lipidname = system['UNITEDATOM_DICT'][key]
+            #    print(lipidname)
+            #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
+            print(system['UNITEDATOM_DICT'][key])
+            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+            #os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
-        outfile=open(ordPfile,'w')
-        line1="Atom     Average OP     OP stem"+'\n'
-        outfile.write(line1)
+            outfile=open(ordPfile,'w')
+            line1="Atom     Average OP     OP stem"+'\n'
+            outfile.write(line1)
         
-        data = {}
-        outfile2= path + key + 'OrderParameters.json'
+            data = {}
+            outfile2= path + key + 'OrderParameters.json'
         
-        with open(ordPfile + '.jmelcr_style.out') as OPfile:
-            lines=OPfile.readlines()
-            for line in lines:
-                if "#" in line:
-                    continue
-                line2 = line.split()[0] + " " + line.split()[1] + "  " + line.split()[5] + "  " + line.split()[6] + " " + line.split()[7] + "\n"
-                outfile.write(line2)
+            with open(ordPfile + '.buildH') as OPfile:
+                lines=OPfile.readlines()
+                for line in lines:
+                    if "#" in line:
+                        continue
+                    line2 = line.split()[0].replace('&',' ') + "  " + line.split()[4] + "  " + line.split()[5] + " " + line.split()[6] + "\n"
+                    outfile.write(line2)
 
-                OPname = line.split()[0] + " " + line.split()[1]
-                OPvalues = [line.split()[5], line.split()[6] ,line.split()[7]]
-                data[str(OPname)]=[]
-                data[str(OPname)].append(OPvalues)
+                    OPname = line.split()[0].replace('&',' ') #line.split()[0] + " " + line.split()[1]
+                    OPvalues = [line.split()[4], line.split()[5] ,line.split()[6]]
+                    data[str(OPname)]=[]
+                    data[str(OPname)].append(OPvalues)
         
             with open(outfile2, 'w') as f:
                 json.dump(data,f)
 
-        outfile.close()
-        outfile.close()
+            outfile.close()
+            #outfile2.close()
 
         # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
         # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
@@ -149,17 +188,28 @@ for system in systems:
         os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
                     
         for key in system['COMPOSITION']:
-            if key in lipids_dict.keys(): 
+            if key in lipids_dict.keys():
+                print('Calculating ', key,' order parameters')
                 mapping_file = system['COMPOSITION'][key]['MAPPING']
                 resname = system['COMPOSITION'][key]['NAME']
-                OrdParam=find_OP('../BuildDatabank/mapping_files/'+mapping_file,gro,xtcwhole,resname)
+                outfilename = path + key + 'OrderParameters.dat'
+                outfilename2 = path + key + 'OrderParameters.json'
+                if (os.path.isfile(outfilename2)):
+                    print('Order parameter file already found')
+                    continue
+                outfile=open(outfilename,'w')
 
-                outfile=open(path + key + 'OrderParameters.dat','w')
+                try:
+                    OrdParam=find_OP(mapping_file,tpr_name,xtcwhole,resname)
+                except:
+                    print('Using tpr did not work, trying with gro')
+                    OrdParam=find_OP(mapping_file,gro,xtcwhole,resname)
+                    
                 line1="Atom     Average OP     OP stem"+'\n'
                 outfile.write(line1)
     
                 data = {}
-                outfile2=path + key + 'OrderParameters.json' 
+                outfile2 = outfilename2 
 
                 for i,op in enumerate(OrdParam):
                     resops =op.get_op_res
@@ -181,5 +231,6 @@ for system in systems:
 
     ready = ready + 1
         
-print('ready',ready)
-print('notready',notready)
+print('Order parameters calculated for ', ready , 'systems.')
+print('Already calculated order parameters found for', skipped , 'systems.')
+

@@ -1,0 +1,27 @@
+DOI: 10.5281/zenodo.4349753
+SOFTWARE: gromacs
+TRJ: 50cholcent.xtc
+TPR: 50chol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Antila, Hanne
+SYSTEM: 122CHOL_122POPC_9760SOL_303K
+SOFTWARE_VERSION: 2020.1
+FF: Slipids
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: topol.top
+COMPOSITION:
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml

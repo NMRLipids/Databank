@@ -6,7 +6,9 @@ TEMPERATURE: 320.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 128110
 EXPERIMENT:
-  DPPC: {}
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI v1.6
 COMPOSITION:
   DPPC:
@@ -14,19 +16,19 @@ COMPOSITION:
     COUNT:
     - 256
     - 256
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOD:
     NAME: NA
     COUNT: 55
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   CLA:
     NAME: CL
     COUNT: 55
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_512_NaCl_150mM_320K_v-rescale_md.cpt

@@ -1,0 +1,27 @@
+DOI: 10.5281/zenodo.3243328
+SOFTWARE: gromacs
+TRJ: chol20_500ns.xtc
+TPR: chol20.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_50CHOL_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids
+FF_SOURCE: http://mmkluster.fos.su.se/slipids/
+FF_DATE: pre-2020
+CPT: chol20_500ns.cpt
+LOG: null
+TOP: chol20.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml

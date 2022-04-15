@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.3434100
+
+SOFTWARE: gromacs
+TRJ: 1-POPC512_ECC-lipid14-CaCL_978mM_md.xtc
+TPR: 1-POPC512_ECC-lipid14-CaCL_978mM_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Nencini, Ricky
+
+SYSTEM: 512POPC_24928SOL_440CAL_880CLA_313K
+SOFTWARE_VERSION:
+
+FF: ECC-lipids
+FF_SOURCE:
+FF_DATE:
+
+CPT: 1-POPC512_ECC-lipid14-CaCL_978mM_md.cpt
+LOG: 1-POPC512_ECC-lipid14-CaCL_978mM_md.log
+TOP: 1-POPC512_ECC-lipid14-CaCL_978mM_md.top
+GRO:

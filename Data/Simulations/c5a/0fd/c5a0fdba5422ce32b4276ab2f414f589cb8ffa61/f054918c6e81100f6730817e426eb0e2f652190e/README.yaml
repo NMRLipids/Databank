@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.3243328
+SOFTWARE: gromacs
+TRJ:
+- - chol20_500ns.xtc
+TPR:
+- - chol20.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_50CHOL_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids
+FF_SOURCE: http://mmkluster.fos.su.se/slipids/
+FF_DATE: pre-2020
+CPT:
+- - chol20_500ns.cpt
+LOG: null
+TOP:
+- - chol20.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 9000
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 26
+    - 24
+TRAJECTORY_SIZE: 1065513216
+TRJLENGTH: 500100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 57500
+DATEOFRUNNING: 22/10/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

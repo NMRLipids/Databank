@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.1283335
+SOFTWARE: gromacs
+TRJ:
+- - md-MacRog_POPS_fix_tails_298K_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-MacRog_POPS_fix_tails_298K_v1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSmacrog.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 4480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 128
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 128POPS_4480SOL_128SOD_298K_v1
+SOFTWARE_VERSION: null
+FF: MacRog
+FF_SOURCE: starting structure from CHARMM-GUI (correct PO tails and not OP tails)
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+TRAJECTORY_SIZE: 221997532
+TRJLENGTH: 100050.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 29824
+DATEOFRUNNING: 17/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS:
+      10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+      10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
+  FORMFACTOR: 10.1039/C4SM00066H/1

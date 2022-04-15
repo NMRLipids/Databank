@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.259335
+SOFTWARE: gromacs
+TRJ: md0_370.xtc
+TPR: md0_370.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_21SOD_21CLA_370K
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids and Smith & Dang for ions
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/ for lipids and https://bitbucket.org/hseara/ions/
+  for ions
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: md0_370.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

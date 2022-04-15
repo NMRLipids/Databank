@@ -3,11 +3,12 @@ FF_DATE: ?/?/2020
 SYSTEM: POPC bilayer 303 K
 TYPEOFSYSTEM: lipid bilayer
 TEMPERATURE: 303.0
-UNITEDATOM_DICT: null
 PUBLICATION: F. Grote and A. P. Lyubartsev, J. Phys. Chem. B 2020, 124, 8784-8793
 NUMBER_OF_ATOMS: 32512
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2
 FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/Downloads.html
 COMPOSITION:
   POPC:
@@ -15,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 5120
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
 TIMELEFTOUT: 100
 CPT: null
 TRJLENGTH: 268390.0

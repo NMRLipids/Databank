@@ -4,9 +4,11 @@ import yaml
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 import math
 import argparse
 import decimal as dc
+import re
 
 from random import randint
 
@@ -18,24 +20,15 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
-import buildH_calcOP_test
-
-
-#order parameters or quality analysis
-parser = argparse.ArgumentParser(description="")
-parser.add_argument("-op",action='store_true', help="Calculate order parameters for simulations in data bank "
-                        "format.")
-parser.add_argument("-q",action='store_true', help="Quality evaluation of simulated order parameters "
-                        "format.")
-args = parser.parse_args()
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
 class Simulation:
-    def __init__(self, readme, data, indexingPath):
+    def __init__(self, readme, OPdata, FFdata,indexingPath):
         self.readme = readme
-        self.data = data #dictionary where key is the lipid type and value is order parameter file
-        self.indexingPath = indexingPath
+        self.OPdata = OPdata #dictionary where key is the lipid type and value is order parameter file
+        self.FFdata = FFdata
+        self.indexingPath = indexingPath    
         
     def getLipids(self, molecules=lipid_numbers_list):
         lipids = []
@@ -45,22 +38,34 @@ class Simulation:
                 lipids.append(key)
         return lipids
         
+    def molarFraction(self, molecule,molecules=lipid_numbers_list): #only for lipids
+        sum_lipids = 0
+        number = sum(self.readme['COMPOSITION'][molecule]['COUNT']) 
+        
+        for key in self.readme['COMPOSITION'].keys():
+            if key in molecules:
+                sum_lipids += sum(self.readme['COMPOSITION'][key]['COUNT'])
+
+        return number / sum_lipids
+        
 class Experiment:
     pass
 
-#class Data:
-#    def __init__(self, molecule, data_path):
-#        self.molecule = molecule
-#        self.data = {}
-#        self.__load_data__(data_path)
-#    
-#    def __load_data__(self,data_path):
-#        with open(data_path) as json_file:
-#            self.data = json.load(json_file)
-#        json_file.close()
+################################
+
+def loadMappingFile(path_to_mapping_file):
+    # load mapping file into a dictionary
+    mapping_dict = {}
+    with open('./mapping_files/'+path_to_mapping_file, "r") as yaml_file:
+        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    yaml_file.close()
+    
+    return mapping_dict
+
+
 
 #Quality evaluation of simulated data
-
+#Order parameters
 
 def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #normal distribution N(s, OP_sim, op_sim_sd)
@@ -68,99 +73,370 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     b = OP_exp + exp_error
     #P_S = norm.cdf(b, loc=OP_sim, scale=op_sim_sd) - norm.cdf(a, loc=OP_sim, scale=op_sim_sd)
     #changing to survival function to increase precision, note scaling. Must be recoded to increase precision still
-    P_S = -norm.sf(b, loc=OP_sim, scale=op_sim_sd) + norm.sf(a, loc=OP_sim, scale=op_sim_sd)
+    #P_S = -norm.sf(b, loc=OP_sim, scale=op_sim_sd) + norm.sf(a, loc=OP_sim, scale=op_sim_sd)
+    
+    P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
 
     if math.isnan(P_S) :
-     return P_S
+        return P_S
 
+ 
+    #if op_sim_sd > exp_error:
+    #    #print('Float nan:', float("NaN"))
+    #    return float("inf")
+ 
     #this is an attempt to deal with precision, max set manually to 70
     dc.getcontext().prec=70
     precise_log=-dc.Decimal(P_S).log10()
 
     #print("difference of two prec logs",float(foo)+math.log10(P_S))
 
-    return float(precise_log)
-
-
-def OPquality(OP_exp, OP_sim):
-    quality = np.absolute(OP_exp - OP_sim)
-    return quality
+    #return float(precise_log)
+    return float(P_S)
     
 # quality of molecule fragments
-
-def evaluated_percentage(fragments, exp_op_data):
-    count_value = 0
-    fragment_size = 0
-    for key, value in exp_op_data.items():
-        for f in fragments:
-             if f in key:
-                 fragment_size += 1
-                 if value[0][0] != 'nan':
-                     count_value += 1
-    if fragment_size != 0:
-        return count_value / fragment_size
+def getFragments(mapping_file):
+    mapping_dict = loadMappingFile(mapping_file)
+  #  print(mapping_dict)
+        
+    fragments = {} 
+    
+    for key_m, value in mapping_dict.items():
+        key_f = value['FRAGMENT']
+        fragments.setdefault(key_f,[]).append(key_m)
+    
+                
+    # merge glycerol backbone fragment into headgroup fragment  
+    if 'glycerol backbone' in fragments.keys() and 'headgroup' in fragments.keys():
+        fragments['headgroup'] += fragments['glycerol backbone']
+        fragments.pop('glycerol backbone')
+            
+    #print(fragments.keys())
+ #   print(fragments.items())
+    
+    return fragments
+    
+    
+def filterCH(fragment_key, fragments):
+    
+    re_CH = re.compile(r'M_([GC0-9]*[A-Z0-9]*C[0-9]*H[0-9]*)*([GC0-9]*H[0-9]*)*_M')
+    
+    filtered = list(filter(re_CH.match, fragments[fragment_key]))
+    
+    return filtered
+    
+    
+def checkForCH(fragment_key, fragments):
+    filtered = filterCH(fragment_key, fragments)
+    
+    if filtered:
+        return True
     else:
-        return 0
-    
-#def carbonError(OP_sim, OP_exp):
-    
-#    E_i = 0
-#    quality = OPquality(OP_exp, OP_sim)
+        return False
 
-#    if quality > 0.02:
-#        E_i = quality - 0.02
-#    else:
-#        E_i = 0
-#    return E_i  
+    
+def evaluated_percentage(fragments, exp_op_data):
+    #C-H bonds only???
 
+    frag_percentage = dict.fromkeys(fragments,0)
+    
+    for fragment_key in fragments.keys(): #go through fragments
+     #   print(fragment_key)
+        count_value = 0
+        fragment_size = 0
+        for key, value in exp_op_data.items():
+             if key.split(' ')[0] in fragments[fragment_key]: #check if atom belongs to the fragment
+          #       print(key.split()[0])
+                 fragment_size += 1
+                 if not math.isnan(value[0][0]):
+       #          if value[0][0] != float("NaN") and value[0][0] != float("NaN"):
+                     count_value += 1
+        if fragment_size != 0:
+            frag_percentage[fragment_key] = count_value / fragment_size
+        else:
+            frag_percentage[fragment_key] = 0
+        
+    print('experiment data availability percentage')
+    print(frag_percentage)
+    
+    return frag_percentage
+    
 
 
 def fragmentQuality(fragments, exp_op_data, sim_op_data):
-    print("fragment quality")
-    p_F = evaluated_percentage(fragments, exp_op_data)
+    #print("fragment quality")
+    p_F = evaluated_percentage(fragments, exp_op_data) # depends on the experiment file what fragments are in this dictionary
+    #print(p_F)
     #warning, hard coded experimental error
     exp_error=0.02
-    E_sum = 0
-    AV_sum = 0
-    if p_F != 0:
-        for fr in fragments:
-            for key_exp, value_exp in exp_op_data.items():
-            #    print(key_exp)
-            #    print(value_exp[0][0])
-                if (fr in key_exp) and value_exp[0][0] != 'nan':
-                    OP_exp = value_exp[0][0]
-                    # print(OP_exp)
-                    OP_sim = sim_op_data[key_exp][0]
-                    # print(OP_sim)
-                    # op_sim_STEM=sim_op_data[key_exp][0][2]
-                    # E_sum += carbonError(OP_exp, OP_sim)
-                    #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
-                    # E_sum+= prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+    
 
-                    #print(sim_op_data[key_exp])
-                    op_sim_STEM=sim_op_data[key_exp][2]
-                    
-                    #change here if you want to use shitness(TM) scale for fragments. Warning big umbers will dominate
-                    #if OP_exp != 'NaN':
-                    QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                    #print(prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM))
-                    if QE >0: # 0! = 'nan': #QE > 0 and  QE != 'inf': # and  QE != 'nan'
-                        if QE == float("inf"): #'Infinity' or QE == 'inf':
-                            E_sum += 300
-                            AV_sum += 1
+    fragment_quality = dict.fromkeys(fragments.keys()) #empty dictionary with fragment names as keys
+    
+    for fragment_key in fragments.keys():
+        E_sum = 0
+        AV_sum = 0
+        #print(fragment_key)
+        try:
+            pF = p_F[fragment_key]
+        except KeyError: 
+            fragment_quality[fragment_key] = float("NaN")
+            continue
+        else:
+            if p_F[fragment_key] != 0:
+                for key_exp, value_exp in exp_op_data.items():
+                  #  print(key_exp)
+                  #  print(value_exp[0][0])
+                    if (key_exp.split()[0] in fragments[fragment_key]) and not math.isnan(value_exp[0][0]):
+                #    if (key_exp.split()[0] in fragments[fragment_key]) and value_exp[0][0] != 'nan':
+                        OP_exp = value_exp[0][0]
+                        # print(OP_exp)
+                        try:
+                            OP_sim = sim_op_data[key_exp][0]
+                        except:
+                            continue
                         else:
-                            print(QE)
-                            E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                            AV_sum += 1
+                        # print(OP_sim)
 
-        E_F = (E_sum / AV_sum) / p_F
-        return E_F
-    else:
-        return 'nan'
+                        #print(sim_op_data[key_exp])
+                            op_sim_STEM=sim_op_data[key_exp][2]
+                    
+                            #change here if you want to use shitness(TM) scale for fragments. Warning big numbers will dominate
+                            #if OP_exp != float("NaN"):
+                            QE = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                         #   print(OP_exp, OP_sim ,QE)
+                            #print(QE, 10**(-QE))
+                            
+                           # print('prob_S')
+                           # print(QE)
+                          #  if QE >0: 
+                                #if QE == float("NaN"):
+                                #    E_sum = E_sum
+                           #     if QE == float("inf"): #'Infinity' or QE == 'inf':
+                           #         E_sum += 300
+                           #         AV_sum += 1
+                           #     else:
+                                    #print(QE)
+                            #        E_sum += prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                            #        AV_sum += 1
+                            E_sum += QE
+                            AV_sum += 1
+                if AV_sum > 0:
+                    E_F = (E_sum / AV_sum)*p_F[fragment_key]  
+                    fragment_quality[fragment_key] = E_F
+                else:
+                    fragment_quality[fragment_key] = float("NaN")
+            else:
+                fragment_quality[fragment_key] = float("NaN")
+    
+    print('fragment quality')
+    print(fragment_quality)
+            
+    return fragment_quality
         
+def fragmentQualityAvg(lipid,fragment_qual_dict,fragments): # handles one lipid at a time
+    sums_dict = {}
+    
+    for doi in fragment_qual_dict.keys():
+        for key_fragment in fragment_qual_dict[doi].keys():
+            f_value = fragment_qual_dict[doi][key_fragment]
+            sums_dict.setdefault(key_fragment,[]).append(f_value)
+    
+    avg_total_quality = {}
+    
+    for key_fragment in sums_dict:
+        #remove nan values 
+        to_be_summed = [x for x in sums_dict[key_fragment] if not math.isnan(x)]
+        #print(to_be_summed)
+        if to_be_summed:
+            avg_value = sum(to_be_summed) / len(to_be_summed)
+          #  print(avg_value)
+        else:
+            avg_value = float("NaN")
+        avg_total_quality.setdefault(key_fragment,avg_value)
+    
+    
+    # if average fragment quality exists for all fragments that contain CH bonds then calculate total quality over all fragment quality averages
+    if [ x for x in avg_total_quality.keys() if (checkForCH(x, fragments) and not math.isnan(avg_total_quality[x])) or (not checkForCH(x, fragments)) ]:
+       # print(avg_total_quality.values())
+        list_values = [x for x in avg_total_quality.values() if not math.isnan(x)]
+        avg_total_quality['total'] = sum(list_values) / len(list_values)    
+    else:
+        avg_total_quality['total'] = float("NaN")
+
+    print("fragment avg")
+    print(avg_total_quality)    
+    
+    return avg_total_quality
+
+
+
+def systemQuality(system_fragment_qualities): # fragments is different for each lipid ---> need to make individual dictionaries
+    system_dict = {}
+    w_nan = []
+
+    for lipid in system_fragment_qualities.keys():
+        fragments = getFragments(simulation.readme['COMPOSITION'][lipid]['MAPPING'])
+        lipid_dict = dict.fromkeys(system_fragment_qualities[lipid].keys(),0) # copy keys to new dictionary
+        
+        w = simulation.molarFraction(lipid)
+        for key, value in system_fragment_qualities[lipid].items():
+            if not math.isnan(value):
+          #  if value != float("NaN"):
+                lipid_dict[key] += w*value
+            else:
+               # print('1-w')
+               # print(1-w)
+                w_nan.append(1-w) # save 1 - w of a lipid into a list if the fragment quality is nan
+   
+        system_dict[lipid] = lipid_dict
+        
+    system_quality = {}
+    
+    headgroup = 0
+    tails = 0
+    total = 0
+    
+    for lipid_key in system_dict:
+        for key, value in system_dict[lipid_key].items():
+            if key == 'total':
+                total += value
+            elif key == 'headgroup':
+                headgroup += value
+            else:
+               # print(key)
+               # print(value)
+                tails += value 
+    
+ #   print('w_nan')            
+ #   print(np.prod(w_nan))             
+    
+    if np.prod(w_nan) > 0:       
+        system_quality['headgroup'] = headgroup * np.prod(w_nan) # multiply all elements of w_nan and divide the sum by the product
+        system_quality['tails'] = tails * np.prod(w_nan) 
+        system_quality['total'] = total * np.prod(w_nan)
+    else:
+        system_quality['headgroup'] = headgroup
+        system_quality['tails'] = tails
+        system_quality['total'] = total
+        
+    print("system_quality")    
+    print(system_quality)
+     
+    return system_quality
+    
+ 
+#Form factor quality
+
+
+# SAMULI: This one did not work because simulation and experimental data does not start at the same x-axis value.
+#         I have commented out. A new version is below. It reads a array which already has a correct array of simulation and experimental data.
+
+
+
+#def calc_k_e(simFFdata,expFFdata):
+#    """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
+#    sum1 = 0
+#    sum2 = 0
+    
+#   # print("simulation:" + str(len(simFFdata)))
+#   # print("experiment:" + str(len(expFFdata)))
+   
+#    if len(expFFdata) <= len(simFFdata):
+#        for i in range(0,len(expFFdata)): #experiment should contain less data points
+#            F_s = simFFdata[i][1]
+#            F_e = expFFdata[i][1]
+#            deltaF_e = expFFdata[i][2]
+        
+#            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+#            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+#        k_e = sum1 / sum2
+#        return k_e
+    
+#    else:
+#        return ""
+
+
+
+
+def calc_k_e(SimExpData):
+    
+    """Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465  """
+    sum1 = 0
+    sum2 = 0
+    
+    for data in SimExpData:
+        F_e = data[1]
+        deltaF_e = data[2]
+        F_s = data[3]
+        
+        sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
+        sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
+        k_e = sum1 / sum2
+
+    if len(SimExpData) > 0:
+        return k_e
+    else:
+        return ""
+
+    
+
+
+def formfactorQuality(simFFdata, expFFdata):
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
+
+    # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
+    SimExpData = []   
+    for SimValues in simFFdata:
+        for ExpValues in expFFdata:
+            if np.abs(SimValues[0]-ExpValues[0]) < 0.0005: # and ExpValues[0] < 0.41:
+                SimExpData.append([ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]])
+    #print(SimExpData)
+
+    #k_e = calc_k_e(simFFdata,expFFdata)
+    #print(len(SimExpData))
+    k_e = calc_k_e(SimExpData)
+    
+    sum1 = 0            
+    N = len(SimExpData)
+    for i in range(0,len(SimExpData)):
+        F_e = SimExpData[i][1]
+        deltaF_e = expFFdata[i][2] 
+        F_s = SimExpData[i][3]
+        #print(SimExpData[i])
+        
+        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+    
+        khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+
+    if N > 0:
+        return khi2, k_e
+    else:
+        return ""
+    
+    #N = len(expFFdata)
+    
+    #sum1 = 0            
+    #if len(expFFdata) <= len(simFFdata):
+    #    for i in range(0,len(expFFdata)): #experiment should contain less data points
+    #        F_s = simFFdata[i][1]
+    #        F_e = expFFdata[i][1]
+    #        deltaF_e = expFFdata[i][2] 
+        
+    #        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+    
+    #    khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
+    
+    #    return khi2, k_e
+    #else:
+        
+    #    return ""
+
+      
+
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f62/739/f627391cd6cddf82078a7a12c4cd22767535b6fe/d9c93bb0ae93ede37c230593a348691012519efc'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -173,7 +449,7 @@ def loadSimulations():
                 indexingPath = "/".join(filepath.split("/")[4:8])
 
                 #print(indexingPath)
-                print(filepath)
+                #print(filepath)
                 #print(readmeSim)
 
                 try:
@@ -183,8 +459,11 @@ def loadSimulations():
                     continue
                 else:
                     if any(experiments.values()): #if experiments is not empty
-                        print(any(experiments))
+                        #print(any(experiments))
+                        #print('Experiments found for' + filepath)
+                        #print(experiments)
                         simOPdata = {} #order parameter files for each type of lipid
+                        simFFdata = {} # form factor data
                         for filename2 in files:
                             if filename2.endswith('OrderParameters.json'):
                                 lipid_name = filename2.replace('OrderParameters.json', '')
@@ -195,10 +474,16 @@ def loadSimulations():
                                     OPdata = json.load(json_file)
                                 json_file.close()
                                 simOPdata[lipid_name] = OPdata
+                                
+                            elif filename2 == "FormFactor.json":
+                                dataPath = subdir + "/" + filename2
+                                with open(dataPath) as json_file:
+                                    simFFdata = json.load(json_file)
+                                json_file.close()
                                     
-                        simulations.append(Simulation(readmeSim, simOPdata, indexingPath))
+                        simulations.append(Simulation(readmeSim, simOPdata, simFFdata, indexingPath))
                     else:
-                        print("The simulation does not have experimental data.")
+                        #print("The simulation does not have experimental data.")
                         continue
                 
                     
@@ -207,150 +492,220 @@ def loadSimulations():
 
 
 ###################################################################################################
+# print('start')
 simulations = loadSimulations()
 
 #if (not os.path.isdir('../../Data/QualityEvaluation/')): 
 #    os.system('mkdir ../../Data/QualityEvaluation/')
 
+EvaluatedOPs = 0
+EvaluatedFFs = 0
+
 
 for simulation in simulations:
     sub_dirs = simulation.indexingPath.split("/")
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1])
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2])    
-   # os.system('mkdir ../../Data/QualityEvaluation/' + sub_dirs[0] + '/' + sub_dirs[1] + '/' + sub_dirs[2] + '/' + sub_dirs[3])
     
-    #save OP quality here
+    #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
-   # print(DATAdir)
-     
-
+    print('Analyzing: ', DATAdir)
+   
+   
+    #Order Parameters 
+    system_quality = {}
     for lipid1 in simulation.getLipids():
-        #print(lipid1)
-        print(simulation.indexingPath)
-        #print(simulation.data.keys())
+      #  print(lipid1)
+        print('')
+        print('Evaluating order parameter quality of simulation data in ' + simulation.indexingPath)
+        #print(simulation.OPdata.keys())
         
-        # OP_data_lipid = simulation.data[lipid1]
+        # OP_data_lipid = simulation.OPdata[lipid1]
         OP_data_lipid = {}
         #convert elements to float because in some files the elements are strings
-        for key, value in simulation.data[lipid1].items():
-            OP_array = [float(x) for x in simulation.data[lipid1][key][0]]  
-            OP_data_lipid[key] = OP_array
+        try:
+            for key, value in simulation.OPdata[lipid1].items():
+                OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]  
+                OP_data_lipid[key] = OP_array
+        except:
+            continue
+
+        
+        
+        #go through file paths in simulation.readme['EXPERIMENT']
+        #print(simulation.readme['EXPERIMENT'].values())
+
+        for doi, path in simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid1].items():
+            print('Evaluating '+ lipid1 + ' lipid using experimental data from ' + doi + ' in ../../Data/experiments/OrderParameters/' + path)
+                
+            #load mapping file
+            mapping_file = simulation.readme['COMPOSITION'][lipid1]['MAPPING']
             
-        
-        
-        # go through file paths in simulation.readme['EXPERIMENT']
-        print(simulation.readme['EXPERIMENT'].values())
-
-        #exit()
-
-        
-        for lipid, experiments in simulation.readme['EXPERIMENT'].items():
             data_dict = {}
+            
+            # there can be more than one experiment for a lipid
+            # save fragment qualities of each experiment to a dictionary and take average later
             fragment_qual_dict = {}
-            for doi, path in experiments.items():
-                OP_qual_data = {}
+            
+            #  print('matching experiments')
+            #   print(experiments.items())
+            
+            print(doi)
+            OP_qual_data = {}
             # get readme file of the experiment
-                experimentFilepath = "../../Data/experiments/" + path
-                print(experimentFilepath)
-                READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
-                experiment = Experiment()
-                with open(READMEfilepathExperiment) as yaml_file_exp:
-                    readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-                    experiment.readme = readmeExp
-                    print(experiment.readme)
-                yaml_file_exp.close()
+            experimentFilepath = "../../Data/experiments/OrderParameters/" + path
+            print('Experimental data available at ' + experimentFilepath)
+                
+            READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
+            experiment = Experiment()
+            with open(READMEfilepathExperiment) as yaml_file_exp:
+                readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+                experiment.readme = readmeExp
+                #print(experiment.readme)
+            yaml_file_exp.close()
 
-                exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
-                print(exp_OP_filepath)
-                lipidExpOPdata = {}
-                try:
-                    with open(exp_OP_filepath) as json_file:
-                        lipidExpOPdata = json.load(json_file)
-                    json_file.close()
-                except FileNotFoundError:
-                    print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
-                    break
+            exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
+            #print(exp_OP_filepath)
+            lipidExpOPdata = {}
+            try:
+                with open(exp_OP_filepath) as json_file:
+                    lipidExpOPdata = json.load(json_file)
+                json_file.close()
+            except FileNotFoundError:
+                print("Experimental order parameter data do not exist for lipid " + lipid1 + ".")
+                continue
 
 
-                exp_error = 0.02
+            exp_error = 0.02
            
-                for key in OP_data_lipid.keys():
-                    OP_array = OP_data_lipid[key].copy()
-                    try:
-                        OP_exp = lipidExpOPdata[key][0][0]
-                    except KeyError:
-     #                   OP_array.append('NaN')
+            for key in OP_data_lipid.keys():
+                OP_array = OP_data_lipid[key].copy()
+                try:
+                    OP_exp = lipidExpOPdata[key][0][0]
+                except KeyError:
+     #                   OP_array.append(float("NaN"))
      #                   OP_qual_data[key] = OP_array
-                        continue
-                    else:
-                        if OP_exp is not 'NaN':
-                            OP_sim = OP_array[0]
-                            op_sim_STEM = OP_array[2]
-                            #changing to use shitness(TM) scale. This code needs to be cleaned
-                            op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
-                            OP_array.append(OP_exp)
-                            OP_array.append(exp_error)   #hardcoded!!!! 0.02 for all experiments
-                            OP_array.append(op_quality)
-                      #  else:
-                        #    OP_array.append(OP_exp)
-                        #    OP_array.append(exp_error)  #hardcoded!!!! 0.02 for all experiments
-                       #     OP_array.append('NaN')
-                
-                    OP_qual_data[key] = OP_array    
-                
-                print(OP_qual_data)
-                
-                data_dict[doi] = OP_qual_data
-                
-                # calculate quality for molecule fragments headgroup, sn-1, sn-2
+                    continue
+                else:
+                    if not math.isnan(OP_exp):
+                        OP_sim = OP_array[0]
+                        op_sim_STEM = OP_array[2]
+                        #changing to use shitness(TM) scale. This code needs to be cleaned
+                        op_quality = prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_STEM)
+                        OP_array.append(OP_exp)
+                        OP_array.append(exp_error)   #hardcoded!!!! 0.02 for all experiments
+                        OP_array.append(op_quality)
 
-                fragment_quality = {}
                 
-                headgroup = fragmentQuality(['M_G3','M_G1_','M_G2_'], lipidExpOPdata, OP_data_lipid)
-                sn1 = fragmentQuality(['M_G1C'], lipidExpOPdata, OP_data_lipid)
-                sn2 = fragmentQuality(['M_G2C'], lipidExpOPdata, OP_data_lipid)
-                if lipid1 == 'CHOL':
-                    cholQ = fragmentQuality(['M_C'], lipidExpOPdata, OP_data_lipid)
-                    fragment_quality['cholesterol'] = cholQ
+                OP_qual_data[key] = OP_array    
+                
+                #print(OP_qual_data)
+                
+            # save qualities of simulation compared to an experiment into a dictionary
+            data_dict[doi] = OP_qual_data
+                
+            # calculate quality for molecule fragments headgroup, sn-1, sn-2
+            fragments = getFragments(mapping_file)
+            fragment_qual_dict[doi] = fragmentQuality(fragments, lipidExpOPdata, OP_data_lipid)
+                
+    #    print("Fragment_qual_dict:")
+    #    print(fragment_qual_dict) #CHECK CONTENTS
 
-                fragment_quality['headgroup'] = headgroup
-                fragment_quality['sn-1'] = sn1
-                fragment_quality['sn-2'] = sn2
-                
-                fragment_qual_dict[doi] = fragment_quality
-                #  print('headgroup ')
-                #  print(headgroup)
-                #  print('sn1 ') 
-                #  print(sn1)
-                #  print('sn2 ') 
-                #  print(sn2) 
+           
+        fragment_quality_output = fragmentQualityAvg(lipid1,fragment_qual_dict,fragments)
             
-                fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+
+        #   print("fragment_quality_output")
+        #   print(fragment_quality_output)
+
             
-                with open(fragment_quality_file, 'w') as f:
-                    json.dump(fragment_qual_dict,f)
-                f.close()
+        system_quality[lipid1] = fragment_quality_output
 
-                
-                
-                
-        
+        fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
 
-            #write into the OrderParameters_quality.json quality data file                  
-            outfile = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
+        FGout = False
+        for FG in fragment_quality_output:
+            #print(FG,fragment_quality_output[FG])
+            if fragment_quality_output[FG] == float("NaN"):
+                continue
+            if fragment_quality_output[FG] > 0:
+                FGout = True
+        if FGout:
+            with open(fragment_quality_file, 'w') as f:  #write fragment qualities into a file for a molecule
+                 json.dump(fragment_quality_output,f)
+            f.close()
+
+ 
+
+        #write into the OrderParameters_quality.json quality data file   
+        outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'               
+          #  outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
             #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-            with open(outfile, 'w') as f:
+        if(len(data_dict) > 0):
+            with open(outfile1, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
 
-            
-        
-
-        
+        #print('input to system quality')
+        #print(system_quality)
+        #calculate system quality
+    system_qual_output = systemQuality(system_quality)
+        #print('system')
+        #print(system_qual_output)
+        #make system quality file
+    outfile2 = DATAdir + '/SYSTEM_quality.json'
+    SQout = False
+    for SQ in system_qual_output:
+        if system_qual_output[SQ] > 0:
+            SQout = True
+    if SQout:
+        with open(outfile2, 'w') as f:
+            json.dump(system_qual_output,f)
+        f.close() 
+            #print('Evaluating order parameter quality of simulation data in ' + simulation.indexingPath)
+        print('Order parameter quality evaluated for '  + simulation.indexingPath)
+        EvaluatedOPs += 1
+        print('')
         
      #   print(OP_qual_data)                        
                 
+###################################################################################################################                
+    #Form factor quality
+        
+    expFFpath = simulation.readme['EXPERIMENT']['FORMFACTOR']
+    #print(ffexpPath)
+    expFFdata = {}
+    if len(expFFpath) > 0:
+        for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
+            for filename in files:
+                filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
+                #if filename.endswith('_FormFactor.json'):
+                if filename.endswith('.json'):
+                    #print('Evaluating form factor quality of ', filename)
+                    with open(filepath) as json_file:
+                        expFFdata = json.load(json_file)
+                    json_file.close()
+    
+    
+    simFFdata = simulation.FFdata
+
+    if len(expFFpath) > 0:
+        ffQuality = formfactorQuality(simFFdata, expFFdata)
+        outfile3 = DATAdir + '/FormFactorQuality.json'
+        with open(outfile3,'w') as f:
+            json.dump(ffQuality,f)
+        f.close()
+        EvaluatedFFs += 1
+        print('Form factor quality evaluated for ', DATAdir)
+        #print('')
+    else:
+        ffQuality = 0
+
+
+print('The number of systems with evaluated order parameters:', EvaluatedOPs)
+print('The number of systems with evaluated form factors:', EvaluatedFFs)
+
+
+    
+          
                 
                 
                 

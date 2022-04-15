@@ -4,9 +4,11 @@ SYSTEM: POPC:POPG(1:1)_T298K
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 128895
 EXPERIMENT:
-  POPG: {}
-  POPC:
-    10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/5
+  ORDERPARAMETER:
+    POPG: {}
+    POPC:
+      10.1002/j.1460-2075.1987.tb02595.x: 10.1002/j.1460-2075.1987.tb02595.x/6
+  FORMFACTOR: {}
 FF_SOURCE: NMRlipidsIV
 COMPOSITION:
   POPG:
@@ -14,21 +16,21 @@ COMPOSITION:
     COUNT:
     - 76
     - 74
-    MAPPING: mappingPOPGlipid17ecc.txt
+    MAPPING: mappingPOPGlipid17ecc.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 75
     - 75
-    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    MAPPING: mappingPOPClipid17ecc_POPCres.yaml
   SOL:
     NAME: SOL
     COUNT: 29865
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   SOD:
     NAME: NA
     COUNT: 150
-    MAPPING: mappingSODecc.txt
+    MAPPING: mappingSODecc.yaml
 TIMELEFTOUT: 15
 TRJLENGTH: 347500.0
 DATEOFRUNNING: 05/10/2021

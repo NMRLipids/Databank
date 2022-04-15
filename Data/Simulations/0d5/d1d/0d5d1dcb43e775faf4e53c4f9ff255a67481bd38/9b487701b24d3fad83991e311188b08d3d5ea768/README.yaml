@@ -4,8 +4,11 @@ SYSTEM: POPG_T298K
 TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 27434
 EXPERIMENT:
-  POPG:
-    10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
+  ORDERPARAMETER:
+    POPG:
+      10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
+      unpublished/ferreiraPOPG: unpublished/ferreiraPOPG/1
+  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI
 COMPOSITION:
   POPG:
@@ -13,15 +16,15 @@ COMPOSITION:
     COUNT:
     - 59
     - 59
-    MAPPING: mappingPOPGcharmm.txt
+    MAPPING: mappingPOPGcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 4110
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   SOD:
     NAME: POT
     COUNT: 118
-    MAPPING: mappingPOT.txt
+    MAPPING: mappingPOT.yaml
 TIMELEFTOUT: 20
 TRJLENGTH: 100010.0
 DATEOFRUNNING: 01/10/2021

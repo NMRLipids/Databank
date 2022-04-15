@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.546133
+SOFTWARE: gromacs
+TRJ:
+- - md50ns_chunk03.xtc
+TPR:
+- - md50ns_chunk02.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Favela-Rosales, Fernando
+SYSTEM: 288POPG_10664SOL_288SOD_298K
+SOFTWARE_VERSION: 5.0.4
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGslipids.yaml
+    COUNT:
+    - 144
+    - 144
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 10664
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 288
+TRAJECTORY_SIZE: 642454772
+TRJLENGTH: 50020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 68856
+DATEOFRUNNING: 01/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPG:
+      10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
+      unpublished/ferreiraPOPG: unpublished/ferreiraPOPG/1
+  FORMFACTOR: {}

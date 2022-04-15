@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.3252052
+SOFTWARE: gromacs
+TRJ:
+- - chol10_500ns.xtc
+TPR:
+- - md_chol10.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 200
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCMaciejewskiRog2.yaml
+    COUNT:
+    - 57
+    - 57
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 6400
+  CHOL:
+    NAME: CHO
+    MAPPING: mappingCHOLESTEROLmacrog.yaml
+    COUNT:
+    - 7
+    - 7
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1039/C6CP04883H; 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Javanainen, Matti; Kulig, Waldemar
+SYSTEM: 114POPC_14CHOL_6400SOL_310K
+SOFTWARE_VERSION: 4.6
+FF: MacRog
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - chol10_500ns.cpt
+LOG: null
+TOP: null
+TRAJECTORY_SIZE: 653498968
+TRJLENGTH: 500100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 35512
+DATEOFRUNNING: 17/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

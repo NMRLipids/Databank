@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.2579061
+
+SOFTWARE: gromacs
+TRJ: m_400_500_PG_PE_1_3_lipid.xtc
+TPR: md_00.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPE:
+  NAME: PE
+  MAPPING: mappingPOPElipid17.yaml
+ POPG:
+  NAME: PGR
+  MAPPING: mappingPOPGlipid17.yaml
+ SOD:
+  NAME: Na+
+  MAPPING: mappingNA+.yaml
+ CLA:
+  NAME: Cl-
+  MAPPING: mappingCL-.yaml
+ SOL:
+  NAME: WAT
+  MAPPING: mappingTIP3Plipid17.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: PEÓN, Antonio
+
+SYSTEM: 371POPE_126POPG_176SOD_50CLA_25000SOL_310K
+SOFTWARE_VERSION: 5.1.2
+
+FF: Lipid17 for lipids and AMBER  ff15ipq for ions
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: gromacs.top

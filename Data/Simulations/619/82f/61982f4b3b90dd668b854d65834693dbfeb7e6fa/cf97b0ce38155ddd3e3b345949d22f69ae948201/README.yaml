@@ -1,0 +1,55 @@
+DOI: 10.5281/zenodo.1487906
+SOFTWARE: gromacs
+TRJ:
+- - lipid17_ff99-ions_5PC-1PS-mix_298K.xtc
+TPR:
+- - lipid17_ff99-ions_5PC-1PS-mix_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSlipid17_POPSres.yaml
+    COUNT:
+    - 6
+    - 6
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 30
+    - 30
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 3600
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 12
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 12POPS_60POPC_3600SOL_12SOD_298K
+SOFTWARE_VERSION: 2018.0
+FF: Lipid17 and ff99 ions
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - lipid17_ff99-ions_5PC-1PS-mix_298K.cpt
+LOG: null
+TOP:
+- - lipid17_ff99-ions_5PC-1PS-mix_298K.top
+GRO:
+- - lipid17_ff99-ions_5PC-1PS-mix_298K.gro
+TRAJECTORY_SIZE: 1578678268
+TRJLENGTH: 424660.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 20376
+DATEOFRUNNING: 13/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS: {}
+    POPC: {}
+  FORMFACTOR: {}

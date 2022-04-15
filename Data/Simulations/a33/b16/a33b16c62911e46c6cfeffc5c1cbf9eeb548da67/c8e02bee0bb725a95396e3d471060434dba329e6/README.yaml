@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.1488094
+SOFTWARE: gromacs
+TRJ:
+- - ECClipids_purePOPS_298K.xtc
+TPR:
+- - ECClipids_purePOPS_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 3600
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 72
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 72POPS_3600SOL_72SOD_298K_ECC-lipid
+SOFTWARE_VERSION: 2018.0
+FF: ECC-lipids, SPC water model, ECC-ions
+FF_SOURCE: https://github.com/jmelcr/ecc_lipids
+FF_DATE: null
+CPT:
+- - ECClipids_purePOPS_298K.cpt
+LOG: null
+TOP:
+- - ECClipids_purePOPS_298K.top
+GRO:
+- - ECClipids_purePOPS_298K.gro
+TRAJECTORY_SIZE: 3670357092
+TRJLENGTH: 1000020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 20016
+DATEOFRUNNING: 20/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS:
+      10.1021/acs.jctc.9b00824: 10.1021/acs.jctc.9b00824/1
+      10.1021/acs.jpcb.9b06091: 10.1021/acs.jpcb.9b06091/1
+  FORMFACTOR: 10.1039/C4SM00066H/1

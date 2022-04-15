@@ -7,7 +7,9 @@ TEMPERATURE: 325.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 128000
 EXPERIMENT:
-  DPPC: {}
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/4
 FF_SOURCE: CHARMM-GUI v1.6
 COMPOSITION:
   DPPC:
@@ -15,11 +17,11 @@ COMPOSITION:
     COUNT:
     - 256
     - 256
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_512_325K_md.cpt

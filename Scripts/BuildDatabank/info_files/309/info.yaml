@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.12767
+
+SOFTWARE: gromacs
+TRJ: popcRUN2.trr
+TPR: popcRUN2.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila O. H. Samuli; Retegan, Marius
+
+SYSTEM: 72POPC_2234SOL_303K
+SOFTWARE_VERSION: 4.5
+
+FF: Lipid14
+FF_SOURCE:
+FF_DATE:
+
+CPT: 
+LOG: 
+TOP: popc.top

@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.15550
+
+SOFTWARE: gromacs
+TRJ: dppcRUN.trr
+TPR: dppcRUN.tpr
+PREEQTIME: 40
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DPPC:
+  NAME: DPP
+  MAPPING: mappingDPPCGAFFlipid.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT:  Ollila Samuli; Retegan, Marius
+
+SYSTEM: 72DPPC_2197SOL_323K
+SOFTWARE_VERSION: 4.5
+
+FF: GAFFlipid
+FF_SOURCE: see http://dx.doi.org/10.1039/C2SM26007G
+FF_DATE:
+
+CPT:
+LOG:
+TOP: dppc.top

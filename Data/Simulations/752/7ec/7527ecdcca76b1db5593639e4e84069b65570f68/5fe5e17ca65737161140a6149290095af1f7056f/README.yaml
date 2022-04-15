@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.5734452
+SOFTWARE: gromacs
+TRJ:
+- - popcRUN4.trr
+TPR:
+- - popcRUN4.tpr
+PREEQTIME: 105
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCgaff.yaml
+    COUNT:
+    - 63
+    - 63
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 3948
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila O. H. Samuli; Retegan, Marius
+SYSTEM: 126POPC_3948SOL_303K
+SOFTWARE_VERSION: 4.5
+FF: GAFFlipid
+FF_SOURCE: see http://dx.doi.org/10.1039/C2SM26007G
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc4.top
+TRAJECTORY_SIZE: 2221175832
+TRJLENGTH: 32210.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 28728
+DATEOFRUNNING: 17/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2

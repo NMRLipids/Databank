@@ -1,0 +1,64 @@
+DOI: 10.5281/zenodo.259443
+SOFTWARE: gromacs
+TRJ:
+- - ternary_na_1M.xtc
+TPR:
+- - ternary_na_1M.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 204DPPC_52CHOL_166DOPC_16880SOL_304SOD_304CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids and Smith & Dang for ions
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/ and  https://bitbucket.org/hseara/ions/
+  for ions
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP:
+- - ternary_na_1M.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.yaml
+    COUNT:
+    - 102
+    - 102
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 25
+    - 27
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCslipids.yaml
+    COUNT:
+    - 83
+    - 83
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 16880
+  SOD:
+    NAME: NAs
+    MAPPING: mappingNA.yaml
+    COUNT: 304
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 304
+TRAJECTORY_SIZE: 773666636
+TRJLENGTH: 200100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 104524
+DATEOFRUNNING: 18/12/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+    CHOL: {}
+    DOPC: {}
+  FORMFACTOR: {}

@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.2574959
+
+SOFTWARE: gromacs
+TRJ: m_400_500_POPC_amber.xtc
+TPR: md_00.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: PC
+  MAPPING: mappingPOPClipid17.yaml
+ SOD:
+  NAME: Na+
+  MAPPING: mappingNA+.yaml
+ CLA:
+  NAME: Cl-
+  MAPPING: mappingCL-.yaml
+ SOL:
+  NAME: WAT
+  MAPPING: mappingwaterlipid14.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Peón, Antonio
+
+SYSTEM: 500POPC_48SOD_48CLA_25000SOL_310K
+SOFTWARE_VERSION: 5.1.2
+
+FF: Lipid17
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: gromacs.top

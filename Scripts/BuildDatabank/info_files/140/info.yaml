@@ -19,7 +19,7 @@ TOP: DPPC_512_325K_md.top
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

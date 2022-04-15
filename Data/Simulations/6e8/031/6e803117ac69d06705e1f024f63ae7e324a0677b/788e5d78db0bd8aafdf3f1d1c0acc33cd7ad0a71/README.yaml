@@ -6,8 +6,10 @@ POPS: POPS
 FFSOL: TIP3P
 NUMBER_OF_ATOMS: 30056
 EXPERIMENT:
-  CHOL: {}
-  POPC: {}
+  ORDERPARAMETER:
+    CHOL: {}
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: ??
 COMPOSITION:
   CHOL:
@@ -15,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 12
     - 12
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 50
     - 50
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 4960
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TRJ:
 - - POPC_20CHL.xtc
 TIMELEFTOUT: 100

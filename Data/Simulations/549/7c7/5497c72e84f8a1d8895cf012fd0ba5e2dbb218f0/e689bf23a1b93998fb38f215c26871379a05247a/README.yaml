@@ -1,0 +1,52 @@
+DOI: 10.5281/zenodo.3241269
+SOFTWARE: gromacs
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPE:
+    NAME: PE
+    MAPPING: mappingPOPElipid17.yaml
+    COUNT:
+    - 187
+    - 187
+  POPG:
+    NAME: PGR
+    MAPPING: mappingPOPGlipid17.yaml
+    COUNT:
+    - 63
+    - 63
+  SOD:
+    NAME: Na+
+    MAPPING: mappingNA+.yaml
+    COUNT: 126
+  SOL:
+    NAME: WAT
+    MAPPING: mappingTIP3Plipid17.yaml
+    COUNT: 25000
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "PE\xD3N, Antonio"
+SYSTEM: POPE_POPG_SOD_SOL_310K
+SOFTWARE_VERSION: 2018.3
+FF: Lipid17 for lipids and AMBER ff15ipq for ions
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 5105779360
+TRJLENGTH: 100010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 137878
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE: {}
+    POPG: {}
+  FORMFACTOR: {}
