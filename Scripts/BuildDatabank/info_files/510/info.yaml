@@ -8,7 +8,7 @@ TIMELEFTOUT: 100
 
 UNITEDATOM_DICT:
   POPC: Berger_POPC  
-  DOPE: Berger_DOPE
+  DOPE: BergerPF_DOPE
 
 COMPOSITION:
  POPC:
@@ -16,7 +16,7 @@ COMPOSITION:
   MAPPING: mappingPOPCberger.txt
  DOPE:
   NAME: DOPE
-  MAPPING: mappingDOPEberger.txt
+  MAPPING: mappingDOPEbergerPF.txt
  SOL:
   NAME: SOL 
   MAPPING: mappingSPCwater.txt 
