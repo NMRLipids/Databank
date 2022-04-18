@@ -102,6 +102,7 @@ def getFragments(mapping_file):
     fragments = {} 
     
     for key_m, value in mapping_dict.items():
+        #print(value)
         key_f = value['FRAGMENT']
         fragments.setdefault(key_f,[]).append(key_m)
     
@@ -273,6 +274,7 @@ def fragmentQualityAvg(lipid,fragment_qual_dict,fragments): # handles one lipid 
 
 def systemQuality(system_fragment_qualities): # fragments is different for each lipid ---> need to make individual dictionaries
     system_dict = {}
+    lipid_dict = {}
     w_nan = []
 
     for lipid in system_fragment_qualities.keys():
@@ -303,9 +305,11 @@ def systemQuality(system_fragment_qualities): # fragments is different for each 
                 total += value
             elif key == 'headgroup':
                 headgroup += value
+            elif key == 'sn-1' or key == 'sn-2':
+                tails += value/2
             else:
-               # print(key)
-               # print(value)
+                #print(key)
+                #print(value)
                 tails += value 
     
  #   print('w_nan')            
@@ -436,7 +440,8 @@ def formfactorQuality(simFFdata, expFFdata):
 
 def loadSimulations():
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f62/739/f627391cd6cddf82078a7a12c4cd22767535b6fe/d9c93bb0ae93ede37c230593a348691012519efc'): #
+#    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f62/739/f627391cd6cddf82078a7a12c4cd22767535b6fe/d9c93bb0ae93ede37c230593a348691012519efc/'): #
+    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
         for filename1 in files:
             filepath = subdir + os.sep + filename1
         
@@ -508,7 +513,10 @@ for simulation in simulations:
     #save OP quality and FF quality here
     DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
     print('Analyzing: ', DATAdir)
-   
+
+
+    #fragment_quality_output = {}
+    #system_qual_output = {}    
    
     #Order Parameters 
     system_quality = {}
@@ -533,17 +541,21 @@ for simulation in simulations:
         #go through file paths in simulation.readme['EXPERIMENT']
         #print(simulation.readme['EXPERIMENT'].values())
 
+        fragment_qual_dict = {}
+
+        data_dict = {}
+        
         for doi, path in simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid1].items():
             print('Evaluating '+ lipid1 + ' lipid using experimental data from ' + doi + ' in ../../Data/experiments/OrderParameters/' + path)
                 
             #load mapping file
             mapping_file = simulation.readme['COMPOSITION'][lipid1]['MAPPING']
             
-            data_dict = {}
+            
             
             # there can be more than one experiment for a lipid
             # save fragment qualities of each experiment to a dictionary and take average later
-            fragment_qual_dict = {}
+            #fragment_qual_dict = {}
             
             #  print('matching experiments')
             #   print(experiments.items())
@@ -609,15 +621,23 @@ for simulation in simulations:
     #    print("Fragment_qual_dict:")
     #    print(fragment_qual_dict) #CHECK CONTENTS
 
-           
-        fragment_quality_output = fragmentQualityAvg(lipid1,fragment_qual_dict,fragments)
+
+        try:
+            fragment_quality_output = fragmentQualityAvg(lipid1,fragment_qual_dict,fragments)
+        except:
+            print('no fragment quality')
+            fragment_quality_output = {}
             
 
         #   print("fragment_quality_output")
         #   print(fragment_quality_output)
 
-            
-        system_quality[lipid1] = fragment_quality_output
+        try:
+            system_quality[lipid1] = fragment_quality_output
+        except:
+            print('no system quality')
+            system_quality[lipid1] = {}
+
 
         fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
 
@@ -639,14 +659,19 @@ for simulation in simulations:
         outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'               
           #  outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
             #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-        if(len(data_dict) > 0):
+        #if data_dict and len(data_dict) > 0:
+        try:
             with open(outfile1, 'w') as f:
                 json.dump(data_dict,f)
             f.close()
+        except:
+            pass
 
         #print('input to system quality')
         #print(system_quality)
         #calculate system quality
+    #print(system_quality)
+    #if system_quality:
     system_qual_output = systemQuality(system_quality)
         #print('system')
         #print(system_qual_output)
