@@ -14,17 +14,17 @@ DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 COMPOSITION:
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGcharmm.txt
+    MAPPING: mappingPOPGcharmm.yaml
     COUNT:
     - 59
     - 59
   POT:
     NAME: POT
-    MAPPING: mappingPOT.txt
+    MAPPING: mappingPOT.yaml
     COUNT: 118
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
     COUNT: 4110
 TRAJECTORY_SIZE: 1012328064
 TRJLENGTH: 100010.0
