@@ -8,17 +8,17 @@ TRJ: PCPG_CA0.xtc
 TPR: PCPG_CA0.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 100
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGslipids.txt
+    MAPPING: mappingPOPGslipids.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingNA.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml

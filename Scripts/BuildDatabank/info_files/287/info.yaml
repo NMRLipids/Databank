@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.259443
+SOFTWARE: gromacs
+TRJ: ternary_na_150mM.xtc
+TPR: ternary_na_150mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 204DPPC_52CHOL_166DOPC_16880SOL_46SOD_46CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids and Smith & Dang for ions
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/ and  https://bitbucket.org/hseara/ions/
+  for ions
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: ternary_na_150mM.top
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.yaml
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  SOD:
+    NAME: NAs
+    MAPPING: mappingNA.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.4643862
+SOFTWARE: gromacs
+TRJ: traj.trr
+TPR: POPCchol5.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+  CHOL: Berger_CHOL
+COMPOSITION:
+ POPC:
+  NAME: PLA
+  MAPPING: mappingPOPCberger.yaml
+ CHOL:
+  NAME: CHOL
+  MAPPING: mappingCHOLESTEROLberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Ollila O. H. Samuli; Ferreira Tiago; Topgaard Daniel
+SYSTEM: 64CHOL_64POPC_10314SOL_298K_Berger
+SOFTWARE_VERSION: 4.5
+FF: Berger and Modified Höltje model for cholesterol
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads; http://dx.doi.org/10.1016/S0005-2736(01)00270-X for cholesterol
+FF_DATE:
+CPT:
+LOG:
+TOP: CHOLpopc.top

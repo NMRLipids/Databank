@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.4522359
+
+SOFTWARE: gromacs
+TRJ: dppc_256_CharmmGUI.xtc
+TPR: dppc_256_CharmmGUI.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION: 10.1016/j.bbamem.2021.183714
+AUTHORS_CONTACT:  Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara, Olivier; Thalmann, Fabrice
+
+SYSTEM: 256DPPC_42642SOL_288K
+SOFTWARE_VERSION: 2016.4
+
+FF: CHARMM36
+FF_SOURCE:
+FF_DATE: June 2015
+
+CPT:
+LOG:
+TOP:

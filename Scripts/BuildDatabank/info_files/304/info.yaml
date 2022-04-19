@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.32173
+
+SOFTWARE: gromacs
+TRJ: popcCACL_50-108ns.xtc
+TPR: popcCACL.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+
+COMPOSITION:
+ POPC:
+  NAME: PLA
+  MAPPING: mappingPOPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ CAL:
+  NAME: CA
+  MAPPING: mappingCALecc.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCLAecc.yaml
+
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+PUBLICATION: Phys. Chem. Chem. Phys., 2016, 18, 32560--32569 (NMRlipids II)
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+
+SYSTEM: POPC_310K_with_CaCl
+SOFTWARE_VERSION: 4.5
+
+FF: Berger
+FF_SOURCE: J. Phys. Chem. B 2007, 111, 3139-3150
+FF_DATE:
+
+TOP: popcCACL.top

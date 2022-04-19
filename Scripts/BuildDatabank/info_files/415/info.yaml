@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1488102
+
+SOFTWARE: gromacs
+TRJ: ECClipids_5PC-1PS-mix_05CaCl2_298K.xtc
+TPR: ECClipids_5PC-1PS-mix_05CaCl2_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPScharmm.yaml
+ POPC:
+  NAME: POPC 
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 12POPS_60POPC_3561SOL_5CAL_10CLA_12SOD_298K
+SOFTWARE_VERSION: 2018.0
+
+FF: ECC-lipids, SPC/E water model, ECC-ions
+FF_SOURCE: https://github.com/jmelcr/ecc_lipids
+FF_DATE:
+
+CPT: ECClipids_5PC-1PS-mix_05CaCl2_298K.cpt
+LOG:
+TOP: ECClipids_5PC-1PS-mix_05CaCl2_298K.top
+GRO: ECClipids_5PC-1PS-mix_05CaCl2_298K.gro

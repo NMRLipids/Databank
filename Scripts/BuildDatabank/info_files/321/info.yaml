@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.3864993
+
+SOFTWARE: gromacs
+TRJ: traj.xtc
+TPR: run3.tpr
+PREEQTIME: 520
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: PC
+  MAPPING: mappingPOPClipid17.yaml
+ POPG:
+  NAME: PGR
+  MAPPING: mappingPOPGlipid17.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Virtanen, Salla; Ollila, O. H. Samuli
+
+SYSTEM: 150POPC_150POPG_29865SOL_569CAL_1138CLA_150SOD_298K
+SOFTWARE_VERSION:
+
+FF: Lipid17
+FF_SOURCE: starting structure and lipid 17 parameters from https://zenodo.org/record/2585523#.Xbf0FC17FBx 
+FF_DATE:
+
+CPT:
+LOG:
+TOP: gromacsFIXED.top

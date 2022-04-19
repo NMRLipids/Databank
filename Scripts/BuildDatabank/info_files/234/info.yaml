@@ -1,0 +1,24 @@
+DOI: 10.5281/zenodo.13887
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 128POPC_5120SOL_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids
+FF_SOURCE: http://people.su.se/~jjm/Stockholm_Lipids/Downloads.html
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml

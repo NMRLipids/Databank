@@ -18,7 +18,7 @@ TOP: original_CHARMM_tip4p2005water_no_ions.top
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: water
-    MAPPING: mappingTIP4Pwater.txt
+    MAPPING: mappingTIP4Pwater.yaml

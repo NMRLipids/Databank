@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.259341
+SOFTWARE: gromacs
+TRJ: md0.xtc
+TPR: md0.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_162SOD_162CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids with ions by Smith & Dang
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/; ion parameters from https://bitbucket.org/hseara/ions/
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: md0.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  SOD:
+    NAME: NAs
+    MAPPING: mappingNAs.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

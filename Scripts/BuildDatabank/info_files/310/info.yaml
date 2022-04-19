@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.30898
+
+SOFTWARE: gromacs
+TRJ: 0m_popc_amb_100_200ns.xtc
+TPR: run_200ns_gpu.tpr
+PREEQTIME: 105
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT:  Girych Mykhailo; Ollila O. H. Samuli
+
+SYSTEM: 128POPC_5120SOL_298K
+SOFTWARE_VERSION: 5.0.3
+
+FF: Lipid14 with Verlet scheme
+FF_SOURCE:
+FF_DATE:
+
+CPT: 
+LOG: 
+TOP: topol.top

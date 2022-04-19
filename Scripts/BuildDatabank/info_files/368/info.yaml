@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.14976
+
+SOFTWARE: gromacs
+TRJ: 300mM_50ns_100ps.xtc
+TPR: 300.tpr
+PREEQTIME: 40
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCMaciejewskiRog1.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti; Tynkkynen, Joona
+
+SYSTEM: 288POPC_14446SOL_81SOD_81CLA_298K
+SOFTWARE_VERSION: 4.5
+
+FF: MacRog 
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP:

@@ -12,13 +12,13 @@ DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid17.txt
+    MAPPING: mappingPOPClipid17.yaml
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17.txt
+    MAPPING: mappingPOPGlipid17.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingSODlipid17.txt
+    MAPPING: mappingSODlipid17.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
