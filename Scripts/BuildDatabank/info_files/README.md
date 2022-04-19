@@ -74,6 +74,8 @@ POPC |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPG |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol
 POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
+PAzePCprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine protonated
+PAzePCdeprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine deprotonated
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
 DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
 DPPE | 1,2-dipalmitoyl-sn-glycero-3-phosphoethanolamine
@@ -82,6 +84,7 @@ DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
 DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DLIPC| 1,2-dilinoleoyl-sn-glycero-3-phosphocholine
 DOPC | 1,2-dioleoyl-sn-glycero-3-phosphocholine
+DOPE | 1,2-dioleoyl-sn-glycero-3-phosphoethanolamine
 DDOPC| 1,2-didocosahexaenoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
@@ -97,6 +100,7 @@ POT | potassium ion
 SOD | sodium ion 
 CLA | chloride ion
 CAL | calcium ion 
+CES | caesium ion
 SOL | water 
     
 
