@@ -8,12 +8,12 @@ TRJ: run2.xtc
 TPR: run2.tpr
 PREEQTIME: 0
 TIMELEFTOUT: 20
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 COMPOSITION:
   POPG:
     NAME: POPG
     MAPPING: mappingPOPGcharmm.txt
-  SOD:
+  POT:
     NAME: POT
     MAPPING: mappingPOT.txt
   SOL:
