@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.4537794
+SOFTWARE: gromacs
+TRJ:
+- - prod.xtc
+TPR:
+- - prod.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  CHOL: Berger_CHOL
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCberger.txt
+    COUNT:
+    - 128
+    - 128
+  CHOL:
+    NAME: CHOL
+    MAPPING: mappingCHOLESTEROLberger.txt
+    COUNT:
+    - 128
+    - 128
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.txt
+    COUNT: 20480
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Antila, Hanne
+SYSTEM: 256POPC_256CHOL_20480SOL_303K_Berger
+SOFTWARE_VERSION: Gpu-version 2020.1
+FF: Berger
+FF_SOURCE: https://zenodo.org/record/13285
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO: null
+TRAJECTORY_SIZE: 36993890772
+TRJLENGTH: 1200010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 82176
+DATEOFRUNNING: 17/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

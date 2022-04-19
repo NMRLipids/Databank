@@ -14,31 +14,31 @@ DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/tmp_6-935999/
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid17ecc.yaml
+    MAPPING: mappingPOPClipid17ecc.txt
     COUNT:
     - 175
     - 175
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17ecc.yaml
+    MAPPING: mappingPOPGlipid17ecc.txt
     COUNT:
     - 44
     - 44
   SOD:
     NAME: NA
-    MAPPING: mappingSODecc.yaml
+    MAPPING: mappingSODecc.txt
     COUNT: 88
   CAL:
     NAME: CA
-    MAPPING: mappingCALecc.yaml
+    MAPPING: mappingCALecc.txt
     COUNT: 475
   CLA:
     NAME: CL
-    MAPPING: mappingCLAecc.yaml
+    MAPPING: mappingCLAecc.txt
     COUNT: 950
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.yaml
+    MAPPING: mappingSPCwater.txt
     COUNT: 24840
 TRAJECTORY_SIZE: 7486025608
 TRJLENGTH: 300020.0

@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.1118980
+SOFTWARE: gromacs
+TRJ:
+- - sim_ECC-POPC_OPC3_noIons-ref_300K.xtc
+TPR:
+- - sim_ECC-POPC_OPC3_noIons-ref_300K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid14_POPCres.txt
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.txt
+    COUNT: 6400
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 128POPC_6400SOL_300K_OPC3model
+SOFTWARE_VERSION: 5.1.4
+FF: ECC-lipids
+FFSOL: OPC3
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - sim_ECC-POPC_OPC3_noIons-ref_300K.cpt
+LOG: null
+TOP:
+- - sim_ECC-POPC_OPC3_noIons-ref_300K.top
+GRO:
+- - sim_ECC-POPC_OPC3_noIons-ref_300K.gro
+TRAJECTORY_SIZE: 2018076352
+TRJLENGTH: 300000.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 36352
+DATEOFRUNNING: 10/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1

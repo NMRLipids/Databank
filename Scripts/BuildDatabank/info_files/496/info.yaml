@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.16319
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 60
+
+UNITEDATOM_DICT:
+  DPPC: Berger_DPPC
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCberger.txt
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.txt 
+ SOD:
+  NAME: Na
+  MAPPING: mappingNa.txt 
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCl.txt
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Määttä, Jukka
+
+SYSTEM: 72DPPC_2864SOL_8SOD_8CLA_323K
+SOFTWARE_VERSION: 5.0.4
+
+FF: Berger-DPPC-98
+FFSOD: Gromos
+FFCLA: Gromos
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: md.gro

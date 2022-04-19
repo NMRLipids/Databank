@@ -66,7 +66,11 @@ for system in systems:
          xtcwhole= path + '/whole.xtc'
          if (not os.path.isfile(xtcwhole)):
              print("Make molecules whole in the trajectory")
-             os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+             if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
+                 print("United atom trajectry larger than 15 Gb. Using only every third frame to reduce memory usage.")
+                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
+             else:
+                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     else:
         print('Order parameter calculation for other gromacs is yet to be implemented.')
         continue
@@ -91,6 +95,7 @@ for system in systems:
             
             previous_line = ""
             
+
             regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
             regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
             regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
@@ -141,14 +146,50 @@ for system in systems:
 #                                print(def_line)
 #                                previous_line = def_line
 #            def_file.close()
+
+#            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as f:
+#                for line in f.readlines():
+#                    if not line.startswith("#"):
+#                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+#                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+#                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+#                        regexp2_C = re.compile(r'M_G[0-9]_M')
+#
+#                        if regexp1_C.search(line) or regexp2_C.search(line):
+#                            atomC = line.split()
+#                            atomH = []
+#                        elif regexp1_H.search(line) or regexp2_H.search(line):
+#                            atomH = line.split()
+#                        else:
+#                            atomC = []
+#                            atomH = []
+#
+#                        if atomH:
+#                            try:
+#                                items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#                            except:
+#                                continue
+#                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
+#                            #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
+#                            if def_line != previous_line:
+#                                def_file.write(def_line)
+#                                print(def_line)
+#                                previous_line = def_line
+#            def_file.close()
+
             #Add hydrogens to trajectory and calculate order parameters with buildH
             ordPfile = path + key + 'OrderParameters.dat' 
-                         
+
+            lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
+
+            if (not os.path.isfile(lipid_json_file[0])):
+                lipid_json_file = None
+            
             #lipidname = system['UNITEDATOM_DICT'][key]
             #    print(lipidname)
             #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
             print(system['UNITEDATOM_DICT'][key])
-            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+            buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], lipid_jsons=lipid_json_file, traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
             #os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
             outfile=open(ordPfile,'w')
