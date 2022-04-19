@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.5734452
+
+SOFTWARE: gromacs
+TRJ: popcRUN4.trr
+TPR: popcRUN4.tpr
+PREEQTIME: 105
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCgaff.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila O. H. Samuli; Retegan, Marius
+
+SYSTEM: 126POPC_3948SOL_303K
+SOFTWARE_VERSION: 4.5
+
+FF: GAFFlipid
+FF_SOURCE: see http://dx.doi.org/10.1039/C2SM26007G
+FF_DATE:
+
+CPT:
+LOG:
+TOP: popc4.top

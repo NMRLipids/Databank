@@ -6,27 +6,29 @@ TEMPERATURE: 310.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 53842
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: http://mmkluster.fos.su.se/slipids/ and https://bitbucket.org/hseara/ions/
 COMPOSITION:
   CLA:
     NAME: CL
     COUNT: 21
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 9000
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
   SOD:
     NAME: NA
     COUNT: 21
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 100100.0

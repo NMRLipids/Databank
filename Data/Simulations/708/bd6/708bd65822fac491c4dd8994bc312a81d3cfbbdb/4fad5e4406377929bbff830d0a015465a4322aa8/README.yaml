@@ -1,0 +1,55 @@
+DOI: 10.5281/zenodo.1487761
+SOFTWARE: gromacs
+TRJ:
+- - lipid17_1PC-1PS_mix_SPCE_298K_KCl.xtc
+TPR:
+- - lipid17_1PC-1PS_mix_SPCE_298K_KCl.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 32
+    - 32
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSlipid17_POPSres.yaml
+    COUNT:
+    - 32
+    - 32
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 5253
+  POT:
+    NAME: K
+    MAPPING: mappingK.yaml
+    COUNT: 64
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 64POPC_64POPS_5253SOL_64POT_298K
+SOFTWARE_VERSION: 2018.0
+FF: Lipid17 and Dang ions
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - lipid17_1PC-1PS_mix_SPCE_298K_KCl.cpt
+LOG: null
+TOP:
+- - lipid17_1PC-1PS_mix_SPCE_298K_KCl.top
+GRO:
+- - lipid17_1PC-1PS_mix_SPCE_298K_KCl.gro
+TRAJECTORY_SIZE: 5952874240
+TRJLENGTH: 1000020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 32527
+DATEOFRUNNING: 13/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPS: {}
+  FORMFACTOR: {}

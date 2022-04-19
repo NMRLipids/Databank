@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.1020593
+
+SOFTWARE: gromacs
+TRJ: trajectory.xtc
+TPR: run.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ DHMDMAB:
+  NAME: T7H
+  MAPPING: mappingDHMDMABlipid14.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila, O. H. Samuli
+
+SYSTEM: 100POPC_28DHMDMAB_6214SOL_28CLA_313K
+SOFTWARE_VERSION:
+
+FF: Lipid14
+FF_SOURCE:
+FF_DATE:
+
+CPT: run.cpt
+LOG: run.log
+TOP: topol.top

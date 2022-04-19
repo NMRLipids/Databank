@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.3252052
+
+SOFTWARE: gromacs
+TRJ: chol50_500ns.xtc
+TPR: md_chol50.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 200
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCMaciejewskiRog2.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ CHOL:
+  NAME: CHO
+  MAPPING: mappingCHOLESTEROLmacrog.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1039/C6CP04883H; 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Javanainen, Matti; Kulig, Waldemar
+
+SYSTEM: 64POPC_64CHOL_6400SOL_310K
+SOFTWARE_VERSION: 4.6
+
+FF: MacRog 
+FF_SOURCE:
+FF_DATE:
+
+CPT: chol50_500ns.cpt
+LOG:
+TOP:

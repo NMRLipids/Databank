@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.1487906
+
+SOFTWARE: gromacs
+TRJ: lipid17_ff99-ions_5PC-1PS-mix_298K.xtc
+TPR: lipid17_ff99-ions_5PC-1PS-mix_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSlipid17_POPSres.yaml
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 12POPS_60POPC_3600SOL_12SOD_298K
+SOFTWARE_VERSION: 2018.0
+
+FF: Lipid17 and ff99 ions
+FF_SOURCE:
+FF_DATE:
+
+CPT: lipid17_ff99-ions_5PC-1PS-mix_298K.cpt
+LOG:
+TOP: lipid17_ff99-ions_5PC-1PS-mix_298K.top
+GRO: lipid17_ff99-ions_5PC-1PS-mix_298K.gro

@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.62026
+SOFTWARE: gromacs
+TRJ:
+- - popc30_T298_every100ps.xtc
+TPR:
+- - popc30_T298_every100ps.tpr
+PREEQTIME: 70
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Favela-Rosales, Fernando
+SYSTEM: 154CHOL_358POPC_21183SOL_298K
+SOFTWARE_VERSION: 4.6.3
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 76
+    - 78
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 179
+    - 179
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 21183
+TRAJECTORY_SIZE: 458213532
+TRJLENGTH: 100100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 122917
+DATEOFRUNNING: 01/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    CHOL: {}
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/4
+  FORMFACTOR: unpublished/NMRlipidsIII/7

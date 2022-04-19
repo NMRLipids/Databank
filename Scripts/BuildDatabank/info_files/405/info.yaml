@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.3235552
+
+SOFTWARE: gromacs
+TRJ: total_4_500.xtc
+TPR: md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCslipids.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Peon, Antonio
+
+SYSTEM: 500POPC_25000SOL_310K
+SOFTWARE_VERSION: 2018.3
+
+FF: Slipids
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: conf.gro

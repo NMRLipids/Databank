@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.14976
+SOFTWARE: gromacs
+TRJ:
+- - 200mM_50ns_100ps.xtc
+TPR:
+- - 200.tpr
+PREEQTIME: 40
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCMaciejewskiRog1.yaml
+    COUNT:
+    - 144
+    - 144
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 14500
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 54
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 54
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti; Tynkkynen, Joona
+SYSTEM: 288POPC_14500SOL_54SOD_54CLA_298K
+SOFTWARE_VERSION: 4.5
+FF: MacRog
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+TRAJECTORY_SIZE: 151702732
+TRJLENGTH: 50100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 82200
+DATEOFRUNNING: 17/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

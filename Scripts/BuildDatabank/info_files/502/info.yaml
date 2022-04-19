@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.5997385
+
+SOFTWARE: gromacs
+TRJ: run_150-500ns.xtc
+TPR: run.tpr
+PREEQTIME: 150
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: GROMOSCKP_POPC
+
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCgromos-ckp.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION: 
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+
+SYSTEM: POPC_298
+SOFTWARE_VERSION:
+
+FF: GROMOS-CKP
+FFSOL: SPC
+FF_SOURCE: Lipidbook
+FF_DATE: February 2022
+
+CPT: run.cpt
+TOP: topol.top
+GRO: run.gro
+

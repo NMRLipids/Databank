@@ -1,0 +1,33 @@
+DOI: 10.5281/zenodo.1423112
+SOFTWARE: gromacs
+TRJ: 01-CER160_9_POPC_512_NaCl_150mM_310K_md.xtc
+TPR: 01-CER160_9_POPC_512_NaCl_150mM_310K_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1021/acscentsci.7b00582
+AUTHORS_CONTACT: Hector Martinez-Seara
+SYSTEM: 512POPC_9CER_34258SOL_92SOD_92CLA_310K
+SOFTWARE_VERSION: 2016.5
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.6
+FF_DATE: null
+CPT: 01-CER160_9_POPC_512_NaCl_150mM_310K_md.cpt
+LOG: null
+TOP: 01-CER160_9_POPC_512_NaCl_150mM_310K_md.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+  CER:
+    NAME: CER160
+    MAPPING: mappingCERcharmm.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1487761
+
+SOFTWARE: gromacs
+TRJ: lipid17_5PC-1PS-mix_05CaCl2_298K.xtc
+TPR: lipid17_5PC-1PS-mix_05CaCl2_298K.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSlipid17_POPSres.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 60POPC_12POPS_3561SOL_5CAL_10CLA_12SOD_298K
+SOFTWARE_VERSION: 2018.0
+
+FF: Lipid17 and Dang ions
+FF_SOURCE:
+FF_DATE:
+
+CPT: lipid17_5PC-1PS-mix_05CaCl2_298K.cpt
+LOG:
+TOP: lipid17_5PC-1PS-mix_05CaCl2_298K.top
+GRO: lipid17_5PC-1PS-mix_05CaCl2_298K.gro

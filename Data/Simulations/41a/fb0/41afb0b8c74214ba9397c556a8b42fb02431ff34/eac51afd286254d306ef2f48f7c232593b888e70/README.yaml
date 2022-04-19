@@ -1,0 +1,57 @@
+DOI: 10.5281/zenodo.259335
+SOFTWARE: gromacs
+TRJ:
+- - md20.xtc
+TPR:
+- - md20.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 50CHOL_200POPC_9000SOL_21SOD_21CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids for lipids and Smith & Dang for ions
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/ for lipids and https://bitbucket.org/hseara/ions/
+  for ions
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP:
+- - md20.top
+COMPOSITION:
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 25
+    - 25
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 9000
+  SOD:
+    NAME: NAs
+    MAPPING: mappingNAs.yaml
+    COUNT: 21
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 21
+TRAJECTORY_SIZE: 426764732
+TRJLENGTH: 200100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 57542
+DATEOFRUNNING: 29/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    CHOL: {}
+    POPC: {}
+  FORMFACTOR: {}

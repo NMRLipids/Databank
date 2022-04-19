@@ -6,8 +6,10 @@ TEMPERATURE: 310.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 33408
 EXPERIMENT:
-  CHOL: {}
-  DPPC: {}
+  ORDERPARAMETER:
+    CHOL: {}
+    DPPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI v1.6
 COMPOSITION:
   CHOL:
@@ -15,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 16
     - 16
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   DPPC:
     NAME: DPPC
     COUNT:
     - 64
     - 64
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 4800
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_128_CHL1_32_310K_md.cpt

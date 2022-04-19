@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.5997385
+SOFTWARE: gromacs
+TRJ:
+- - run_150-500ns.xtc
+TPR:
+- - run.tpr
+PREEQTIME: 150
+TIMELEFTOUT: 250
+UNITEDATOM_DICT:
+  POPC: GROMOSCKP_POPC
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCgromos-ckp.yaml
+    COUNT:
+    - 250
+    - 250
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 25000
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Samuli Ollila (samuli.ollila@helsinki.fi)
+SYSTEM: POPC_298
+SOFTWARE_VERSION: null
+FF: GROMOS-CKP
+FFSOL: SPC
+FF_SOURCE: Lipidbook
+FF_DATE: February 2022
+CPT:
+- - run.cpt
+TOP:
+- - topol.top
+GRO:
+- - run.gro
+TRAJECTORY_SIZE: 13249485536
+TRJLENGTH: 350010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 101000
+DATEOFRUNNING: 08/02/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1

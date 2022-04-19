@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.3256490
+
+SOFTWARE: gromacs
+TRJ: total_4_500.xtc
+TPR: md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPG:
+  NAME: PGR
+  MAPPING: mappingPOPGlipid17.yaml 
+ POPE:
+  NAME: PE
+  MAPPING: mappingPOPElipid17.yaml
+ SOD:
+  NAME: Na+
+  MAPPING: mappingNA+.yaml
+ SOL:
+  NAME: WAT
+  MAPPING: mappingTIP3Plipid17.yaml
+ 
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: PEÓN, Antonio
+
+SYSTEM: POPG_POPE_25000SOL_374SOD_310K
+SOFTWARE_VERSION: 2018.3
+
+FF: Lipid17
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: gromacs.top

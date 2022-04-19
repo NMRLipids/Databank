@@ -1,0 +1,57 @@
+DOI: 10.5281/zenodo.1118682
+SOFTWARE: gromacs
+TRJ:
+- - sim_ECC-POPC_cat-surf-42p_SPCE.xtc
+TPR:
+- - sim_ECC-POPC_cat-surf-42p_SPCE.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid14_POPCres.yaml
+    COUNT:
+    - 50
+    - 50
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 6214
+  DHMDMAB:
+    NAME: T7H
+    MAPPING: mappingDHMDMABcharmm.yaml
+    COUNT:
+    - 34
+    - 36
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 70
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 100POPC_6214SOL_70DHMDMAB_70CLA_313K_SPCEmodel
+SOFTWARE_VERSION: 5.1.4
+FF: ECC-lipids
+FFSOL: SPCE
+FFCLA: ECC-ions
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - sim_ECC-POPC_cat-surf-42p_SPCE.cpt
+LOG: null
+TOP:
+- - sim_ECC-POPC_cat-surf-42p_SPCE.top
+GRO:
+- - sim_ECC-POPC_cat-surf-42p_SPCE.gro
+TRAJECTORY_SIZE: 1471925944
+TRJLENGTH: 200000.0
+TEMPERATURE: 313.0
+NUMBER_OF_ATOMS: 39602
+DATEOFRUNNING: 15/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    DHMDMAB: {}
+  FORMFACTOR: {}

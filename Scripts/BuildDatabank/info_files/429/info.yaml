@@ -1,0 +1,33 @@
+DOI: 10.5281/zenodo.3335503
+
+SOFTWARE: gromacs
+TRJ: sim_ECC-POPC_SPCE_noIons-ref_300K.xtc
+TPR: sim_ECC-POPC_SPCE_noIons-ref_300K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPClipid14_POPCres.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION: 10.1101/2020.11.09.374850
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 128POPC_6400SOL_300K
+SOFTWARE_VERSION: 5.1.4
+
+FF: ECC-lipids
+FFSOL: SPCE
+FF_SOURCE:
+FF_DATE:
+
+CPT: sim_ECC-POPC_SPCE_noIons-ref_300K.cpt
+LOG:
+TOP: sim_ECC-POPC_SPCE_noIons-ref_300K.top
+GRO: sim_ECC-POPC_SPCE_noIons-ref_300K.gro

@@ -6,7 +6,9 @@ TEMPERATURE: 303.0
 PUBLICATION: 10.1021/acs.jpcb.5b04878
 NUMBER_OF_ATOMS: 11160
 EXPERIMENT:
-  POPC: {}
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: null
 COMPOSITION:
   POPC:
@@ -14,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 36
     - 36
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 504
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 20005.0

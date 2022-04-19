@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.12767
+SOFTWARE: gromacs
+TRJ:
+- - popcRUN2.trr
+TPR:
+- - popcRUN2.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid14_POPCres.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 2234
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila O. H. Samuli; Retegan, Marius
+SYSTEM: 72POPC_2234SOL_303K
+SOFTWARE_VERSION: 4.5
+FF: Lipid14
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc.top
+TRAJECTORY_SIZE: 1962992520
+TRJLENGTH: 50010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 16350
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2

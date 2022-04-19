@@ -6,7 +6,9 @@ TEMPERATURE: 303.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 30336
 EXPERIMENT:
-  DOPS: {}
+  ORDERPARAMETER:
+    DOPS: {}
+  FORMFACTOR: {}
 FF_SOURCE: starting structure from CHARMM-GUI
 COMPOSITION:
   DOPS:
@@ -14,15 +16,15 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingDOPSslipids.txt
+    MAPPING: mappingDOPSslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 4480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   SOD:
     NAME: NA
     COUNT: 128
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 100050.0

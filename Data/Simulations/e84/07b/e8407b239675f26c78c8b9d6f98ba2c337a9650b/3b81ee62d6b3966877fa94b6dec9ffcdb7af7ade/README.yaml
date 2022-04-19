@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.30865
+SOFTWARE: gromacs
+TRJ:
+- - 1m_popc_amb_100_200ns.xtc
+TPR:
+- - run_200ns_gpu.tpr
+PREEQTIME: 105
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPClipid14_POPCres.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 5120
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 77
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 77
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Girych Mykhailo; Ollila O. H. Samuli
+SYSTEM: 128POPC_5120SOL_77SOD_77CLA_298K
+SOFTWARE_VERSION: 5.0.3
+FF: Lipid14 for lipids and AMBER99SB-ILDN for ions
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 1213143844
+TRJLENGTH: 100010.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 32666
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

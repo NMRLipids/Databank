@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1402411
+SOFTWARE: gromacs
+TRJ:
+- - md_dt100_OK_centered.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+UNITEDATOM_DICT:
+  DOPC: Berger_DOPC
+COMPOSITION:
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCberger.yaml
+    COUNT:
+    - 128
+    - 128
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 11096
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "Bacle Am\xE9lie; Fuchs Patrick F.J."
+SYSTEM: 256DOPC_11096SOL_300K_Berger
+SOFTWARE_VERSION: null
+FF: Berger
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO:
+- - start.gro
+TRAJECTORY_SIZE: 522786924
+TRJLENGTH: 300100.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 47112
+DATEOFRUNNING: 16/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPC: {}
+  FORMFACTOR: {}

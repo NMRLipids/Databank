@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1487895
+
+SOFTWARE: gromacs
+TRJ: lipid17_5PC-1PS-mix_174KCl_298K.xtc
+TPR: lipid17_5PC-1PS-mix_174KCl_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSlipid17_POPSres.yaml
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ POT:
+  NAME: K
+  MAPPING: mappingK.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 12POPS_60POPC_3213SOL_12SOD_174POT_174CLA_298K
+SOFTWARE_VERSION: 2018.0
+
+FF: Lipid17 and Dang ions
+FF_SOURCE:
+FF_DATE:
+
+CPT: lipid17_5PC-1PS-mix_174KCl_298K.cpt
+LOG:
+TOP: lipid17_5PC-1PS-mix_174KCl_298K.top
+GRO: lipid17_5PC-1PS-mix_174KCl_298K.gro

@@ -1,0 +1,22 @@
+#POPG T298K
+# Measured by Tiago Ferreira for NMRlipids IV, delivered by email
+# the sign for beta is positive, but value is not resolved
+# the sign for gamma seems negative, but value is not resolved
+#
+# 0 = gamma
+# 1 = beta
+# 2 = alpha
+# 3 = g3 
+# 4 = g2 
+# 5 = g1 
+#label    carbon      hydrogen     Order_parameter_1  error
+M_G3C6_M M_G3C6H1_M nan nan
+M_G3C6_M M_G3C6H2_M nan nan
+M_G3C5_M M_G3C5H1_M nan nan    
+M_G3C4_M M_G3C4H1_M 0.09 0.01
+M_G3C4_M M_G3C4H2_M 0.09 0.01
+M_G3_M M_G3H1_M -0.19 0.01
+M_G3_M M_G3H2_M -0.19 0.01
+M_G2_M M_G2H1_M -0.16 0.01
+M_G1_M M_G1H1_M -0.01 0.01 
+M_G1_M M_G1H2_M -0.11 0.01 

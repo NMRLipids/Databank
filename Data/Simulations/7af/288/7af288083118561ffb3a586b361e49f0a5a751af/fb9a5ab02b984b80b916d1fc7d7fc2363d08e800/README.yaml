@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.3235552
+SOFTWARE: gromacs
+TRJ:
+- - total_4_500.xtc
+TPR:
+- - md_0.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 250
+    - 250
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 25000
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Peon, Antonio
+SYSTEM: 500POPC_25000SOL_310K
+SOFTWARE_VERSION: 2018.3
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - conf.gro
+TRAJECTORY_SIZE: 5267898384
+TRJLENGTH: 100010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 142000
+DATEOFRUNNING: 27/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.13814
+SOFTWARE: gromacs
+TRJ:
+- - popc7wPERpc.trr
+TPR:
+- - popc7wPERpc.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 10
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 82
+    - 46
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 896
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Ollila O. H. Samuli
+SYSTEM: 128POPC_896SOL_298K_Berger
+SOFTWARE_VERSION: 4.5
+FF: Berger delivered by Peter Tieleman
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc7wPERpc.top
+GRO:
+- - popc7wPERpc.gro
+TRAJECTORY_SIZE: 2019360504
+TRJLENGTH: 60010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 9344
+DATEOFRUNNING: 16/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

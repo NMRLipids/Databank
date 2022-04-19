@@ -6,9 +6,11 @@ TEMPERATURE: 310.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 69102
 EXPERIMENT:
-  CHOL: {}
-  DDOPC: {}
-  DOPC: {}
+  ORDERPARAMETER:
+    CHOL: {}
+    DDOPC: {}
+    DOPC: {}
+  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
   CHOL:
@@ -16,23 +18,23 @@ COMPOSITION:
     COUNT:
     - 14
     - 14
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 10920
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   DDOPC:
     NAME: DDPC
     COUNT:
     - 0
     - 115
-    MAPPING: mappingDDOPCcharmm.txt
+    MAPPING: mappingDDOPCcharmm.yaml
   DOPC:
     NAME: DOPC
     COUNT:
     - 130
     - 0
-    MAPPING: mappingDOPCcharmm.txt
+    MAPPING: mappingDOPCcharmm.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DOPC_DDPC_AA_CHOL10_310.cpt

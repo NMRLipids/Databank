@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.3231342
+
+SOFTWARE: gromacs
+TRJ: pope_slipid_400_500_pbc.xtc
+TPR: topol.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEslipids.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Peon, Antonio
+
+SYSTEM: 500POPE_25000SOL_310K
+SOFTWARE_VERSION: 2018.3
+
+FF: Slipids
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: pope_slipid_500ns_pbc.gro

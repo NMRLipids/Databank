@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.5767451
+SOFTWARE: gromacs
+TRJ:
+- - CHOL13_medium.xtc
+TPR:
+- - CHOL13_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 200
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 128
+    - 128
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 52
+    - 52
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 18000
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 256POPC_104CHOL_18000SOL_298K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - CHOL13_medium.cpt
+LOG: null
+TOP:
+- - CHOL13_medium.top
+GRO:
+- - CHOL13_medium.gro
+TRAJECTORY_SIZE: 353230808
+TRJLENGTH: 1001000.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 96000
+DATEOFRUNNING: 11/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: unpublished/NMRlipidsIII/6

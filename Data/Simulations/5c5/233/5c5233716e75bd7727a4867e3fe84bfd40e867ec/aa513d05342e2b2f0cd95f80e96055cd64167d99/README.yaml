@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.259341
+SOFTWARE: gromacs
+TRJ:
+- - md0.xtc
+TPR:
+- - md0.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 200POPC_9000SOL_162SOD_162CLA_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids with ions by Smith & Dang
+FF_SOURCE: http://www.fos.su.se/~sasha/SLipids/; ion parameters from https://bitbucket.org/hseara/ions/
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP:
+- - md0.top
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 9000
+  SOD:
+    NAME: NAs
+    MAPPING: mappingNAs.yaml
+    COUNT: 162
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 162
+TRAJECTORY_SIZE: 401481132
+TRJLENGTH: 200100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 54124
+DATEOFRUNNING: 01/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

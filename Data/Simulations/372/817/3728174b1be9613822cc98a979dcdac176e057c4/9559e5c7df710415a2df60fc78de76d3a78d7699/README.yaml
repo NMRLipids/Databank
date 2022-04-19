@@ -6,8 +6,10 @@ TEMPERATURE: 300.0
 PUBLICATION: null
 NUMBER_OF_ATOMS: 60458
 EXPERIMENT:
-  POPC: {}
-  POPE: {}
+  ORDERPARAMETER:
+    POPC: {}
+    POPE: {}
+  FORMFACTOR: {}
 FF_SOURCE: CHARMM-GUI v1.7
 COMPOSITION:
   POPC:
@@ -15,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 9102
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   POPE:
     NAME: POPE
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPEcharmm.txt
+    MAPPING: mappingPOPEcharmm.yaml
 TIMELEFTOUT: 50
 CPT: null
 TRJLENGTH: 300100.0

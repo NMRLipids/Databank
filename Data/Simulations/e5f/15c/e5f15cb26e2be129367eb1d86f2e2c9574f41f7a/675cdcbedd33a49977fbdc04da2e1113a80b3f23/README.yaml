@@ -1,0 +1,57 @@
+DOI: 10.5281/zenodo.1475285
+SOFTWARE: gromacs
+TRJ:
+- - trajectory.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 40
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  POPS: Berger_POPS
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 51
+    - 51
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSberger.yaml
+    COUNT:
+    - 13
+    - 13
+  SOD:
+    NAME: Na
+    MAPPING: mappingNa.yaml
+    COUNT: 26
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 4290
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila O. H. Samuli
+SYSTEM: 102POPC_26POPS_26SOD_4290SOL_310K_Berger
+SOFTWARE_VERSION: null
+FF: Berger
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - run.gro
+TRAJECTORY_SIZE: 1463959460
+TRJLENGTH: 80004.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 19630
+DATEOFRUNNING: 24/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPS: {}
+  FORMFACTOR: {}

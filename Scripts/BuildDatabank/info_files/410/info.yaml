@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.2579224
+
+SOFTWARE: gromacs
+TRJ: m_400_500_PG_PE_1_3_slipid.xtc
+TPR: md_02.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPG:
+  NAME: POG
+  MAPPING: mappingPOPGslipids.yaml 
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEslipids.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ 
+DIR_WRK: /usr/home/bort/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Peon, Antonio
+
+SYSTEM: 126POPG_374POPE_25000SOL_176SOD_50CLA_310K
+SOFTWARE_VERSION: 5.1.2
+
+FF: Slipids
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO:

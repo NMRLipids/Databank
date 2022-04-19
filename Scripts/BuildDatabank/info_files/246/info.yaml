@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.3539129
+SOFTWARE: gromacs
+TRJ: dppc_310.xtc
+TPR: dppc_310.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti; Martinez-Seara, Hector; Vattulainen, Ilpo
+SYSTEM: 1152DPPC_46440SOL_124SOD_124CLA_310K
+SOFTWARE_VERSION: null
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: pre-2020
+CPT: dppc_310.cpt
+LOG: dppc_310.log
+TOP: null
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCslipid.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml

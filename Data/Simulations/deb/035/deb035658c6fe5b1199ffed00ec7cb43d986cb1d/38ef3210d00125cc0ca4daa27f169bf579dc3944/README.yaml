@@ -1,0 +1,52 @@
+DOI: 10.5281/zenodo.1402449
+SOFTWARE: gromacs
+TRJ:
+- - md_dt100_OK_centered.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  POPE: Berger_POPE
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 64
+    - 64
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEberger.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 11096
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "Bacle Am\xE9lie; Fuchs Patrick F.J."
+SYSTEM: 128POPC_128POPE_11096SOL_300K_Berger
+SOFTWARE_VERSION: null
+FF: Berger (modified to add a repulsive potential onto the ethanolamine hydrogens)
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO:
+- - start.gro
+TRAJECTORY_SIZE: 686422896
+TRJLENGTH: 400100.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 46600
+DATEOFRUNNING: 16/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPE: {}
+  FORMFACTOR: {}

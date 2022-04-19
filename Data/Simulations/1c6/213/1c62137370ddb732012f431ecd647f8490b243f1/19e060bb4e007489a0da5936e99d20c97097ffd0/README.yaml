@@ -1,0 +1,63 @@
+DOI: 10.5281/zenodo.1488102
+SOFTWARE: gromacs
+TRJ:
+- - ECClipids_5PC-1PS-mix_39CaCl2_298K.xtc
+TPR:
+- - ECClipids_5PC-1PS-mix_39CaCl2_298K.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.yaml
+    COUNT:
+    - 6
+    - 6
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 30
+    - 30
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 3483
+  CAL:
+    NAME: CA
+    MAPPING: mappingCA.yaml
+    COUNT: 39
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 78
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 12
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 12POPS_60POPC_3483SOL_39CAL_78CLA_12SOD_298K
+SOFTWARE_VERSION: 2018.0
+FF: ECC-lipids, SPC/E water model, ECC-ions
+FF_SOURCE: https://github.com/jmelcr/ecc_lipids
+FF_DATE: null
+CPT:
+- - ECClipids_5PC-1PS-mix_39CaCl2_298K.cpt
+LOG: null
+TOP:
+- - ECClipids_5PC-1PS-mix_39CaCl2_298K.top
+GRO:
+- - ECClipids_5PC-1PS-mix_39CaCl2_298K.gro
+TRAJECTORY_SIZE: 3044667956
+TRJLENGTH: 822860.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 20142
+DATEOFRUNNING: 31/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPS: {}
+    POPC: {}
+  FORMFACTOR: {}

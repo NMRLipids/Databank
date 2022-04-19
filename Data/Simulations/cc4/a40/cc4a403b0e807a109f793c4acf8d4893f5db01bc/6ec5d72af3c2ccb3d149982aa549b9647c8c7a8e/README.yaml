@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.13887
+SOFTWARE: gromacs
+TRJ:
+- - md.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 0
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 128POPC_5120SOL_310K
+SOFTWARE_VERSION: 4.6
+FF: Slipids
+FF_SOURCE: http://people.su.se/~jjm/Stockholm_Lipids/Downloads.html
+FF_DATE: pre-2020
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 5120
+TRAJECTORY_SIZE: 179655776
+TRJLENGTH: 150100.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 32512
+DATEOFRUNNING: 01/11/2021
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
