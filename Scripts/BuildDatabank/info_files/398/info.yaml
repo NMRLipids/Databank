@@ -12,13 +12,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
  POPS:
   NAME: POPS
-  MAPPING: mappingPOPSGROMOS-CKP.txt
+  MAPPING: mappingPOPSGROMOS-CKP.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
  SOD:
   NAME: NA
-  MAPPING: mappingNA.txt
+  MAPPING: mappingNA.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

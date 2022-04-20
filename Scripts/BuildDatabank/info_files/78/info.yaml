@@ -12,10 +12,10 @@ DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEslipids.txt
+    MAPPING: mappingPOPEslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml

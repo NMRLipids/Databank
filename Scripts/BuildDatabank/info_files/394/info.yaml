@@ -9,13 +9,13 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPS:
   NAME: POPS
-  MAPPING: mappingPOPScharmm.txt
+  MAPPING: mappingPOPScharmm.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
  SOD:
   NAME: NA
-  MAPPING: mappingNA.txt
+  MAPPING: mappingNA.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

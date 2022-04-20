@@ -18,7 +18,7 @@ TOP: null
 COMPOSITION:
   DPPE:
     NAME: DPPE
-    MAPPING: mappingDPPEslipids.txt
+    MAPPING: mappingDPPEslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml

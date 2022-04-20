@@ -18,7 +18,7 @@ TOP: dppc_c36.top
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

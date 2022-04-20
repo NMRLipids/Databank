@@ -9,13 +9,13 @@ TIMELEFTOUT: 200
 COMPOSITION:
  POPC:
   NAME: POPC
-  MAPPING: mappingPOPCMaciejewskiRog2.txt
+  MAPPING: mappingPOPCMaciejewskiRog2.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
  CHOL:
   NAME: CHO
-  MAPPING: mappingCHOLESTEROLmacrog.txt
+  MAPPING: mappingCHOLESTEROLmacrog.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 
