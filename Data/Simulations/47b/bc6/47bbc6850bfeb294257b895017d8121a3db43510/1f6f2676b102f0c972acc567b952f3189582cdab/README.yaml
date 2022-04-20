@@ -12,19 +12,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 128
     - 128
   CHOL:
     NAME: CHOL
-    MAPPING: mappingCHOLESTEROLberger.txt
+    MAPPING: mappingCHOLESTEROLberger.yaml
     COUNT:
     - 128
     - 128
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 20480
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 PUBLICATION: null

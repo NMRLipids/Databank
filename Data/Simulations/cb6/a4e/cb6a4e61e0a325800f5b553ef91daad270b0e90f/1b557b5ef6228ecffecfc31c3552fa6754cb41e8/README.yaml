@@ -12,23 +12,23 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCgromos-ckp.txt
+    MAPPING: mappingPOPCgromos-ckp.yaml
     COUNT:
     - 55
     - 55
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSGROMOS-CKP.txt
+    MAPPING: mappingPOPSGROMOS-CKP.yaml
     COUNT:
     - 11
     - 11
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4620
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 22
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

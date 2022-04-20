@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 36
     - 36
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 504
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 20005.0

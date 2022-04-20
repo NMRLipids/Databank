@@ -18,10 +18,10 @@ TOP: topol.top
 COMPOSITION:
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLslipid.txt
+    MAPPING: mappingCHOLESTEROLslipid.yaml
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml

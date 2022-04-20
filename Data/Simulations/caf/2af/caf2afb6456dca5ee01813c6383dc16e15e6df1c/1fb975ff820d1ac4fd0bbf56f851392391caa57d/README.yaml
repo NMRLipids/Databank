@@ -20,17 +20,17 @@ TOP: null
 COMPOSITION:
   DPPG:
     NAME: DPPG
-    MAPPING: mappingDPPGslipids.txt
+    MAPPING: mappingDPPGslipids.yaml
     COUNT:
     - 144
     - 144
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 11232
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 288
 TRAJECTORY_SIZE: 646307208
 TRJLENGTH: 50020.0

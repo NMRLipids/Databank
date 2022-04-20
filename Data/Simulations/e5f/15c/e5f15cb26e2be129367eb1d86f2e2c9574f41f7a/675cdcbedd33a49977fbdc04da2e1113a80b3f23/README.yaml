@@ -12,23 +12,23 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 51
     - 51
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSberger.txt
+    MAPPING: mappingPOPSberger.yaml
     COUNT:
     - 13
     - 13
   SOD:
     NAME: Na
-    MAPPING: mappingNa.txt
+    MAPPING: mappingNa.yaml
     COUNT: 26
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4290
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null

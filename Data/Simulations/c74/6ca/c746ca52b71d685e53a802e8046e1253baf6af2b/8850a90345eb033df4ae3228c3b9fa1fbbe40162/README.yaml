@@ -14,23 +14,23 @@ DIR_WRK: /usr/home/bort/Databank
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
     COUNT:
     - 64
     - 64
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGslipids.txt
+    MAPPING: mappingPOPGslipids.yaml
     COUNT:
     - 64
     - 64
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 128
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
     COUNT: 12800
 TRAJECTORY_SIZE: 1340011568
 TRJLENGTH: 500100.0

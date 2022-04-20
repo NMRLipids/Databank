@@ -18,15 +18,15 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPSslipids.txt
+    MAPPING: mappingPOPSslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 4480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
   SOD:
     NAME: NA
     COUNT: 128
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 100050.0

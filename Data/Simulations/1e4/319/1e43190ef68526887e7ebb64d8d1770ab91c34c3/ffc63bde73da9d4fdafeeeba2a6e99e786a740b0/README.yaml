@@ -11,21 +11,21 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4452
   CAL:
     NAME: XCA
-    MAPPING: mappingXCA.txt
+    MAPPING: mappingXCA.yaml
     COUNT: 8
   CLA:
     NAME: XCL
-    MAPPING: mappingXCL.txt
+    MAPPING: mappingXCL.yaml
     COUNT: 16
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK
 PUBLICATION: 10.1038/srep38035

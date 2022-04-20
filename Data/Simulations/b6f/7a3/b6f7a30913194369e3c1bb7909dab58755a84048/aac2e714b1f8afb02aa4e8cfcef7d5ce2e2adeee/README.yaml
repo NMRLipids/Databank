@@ -16,15 +16,15 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
   POT:
     NAME: POT
     COUNT: 128
-    MAPPING: mappingPOT.txt
+    MAPPING: mappingPOT.yaml
   SOL:
     NAME: TIP3
     COUNT: 4480
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 100050.0

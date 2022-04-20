@@ -9,17 +9,17 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSlipid17_POPSres.txt
+    MAPPING: mappingPOPSlipid17_POPSres.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 3600
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 72
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null

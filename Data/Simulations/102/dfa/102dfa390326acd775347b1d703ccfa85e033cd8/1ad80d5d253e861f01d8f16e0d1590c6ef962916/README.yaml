@@ -18,11 +18,11 @@ COMPOSITION:
     COUNT:
     - 128
     - 128
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
   SOL:
     NAME: SOL
     COUNT: 10342
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 100
 TRJLENGTH: 1200010.0
 TRAJECTORY_SIZE: 29078150944

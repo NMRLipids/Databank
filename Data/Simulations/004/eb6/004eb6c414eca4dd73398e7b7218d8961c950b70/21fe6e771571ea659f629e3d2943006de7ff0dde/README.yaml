@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEberger.txt
+    MAPPING: mappingPOPEberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 3552
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null

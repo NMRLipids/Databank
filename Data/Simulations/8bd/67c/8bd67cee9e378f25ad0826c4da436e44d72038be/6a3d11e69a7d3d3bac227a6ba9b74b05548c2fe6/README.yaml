@@ -16,17 +16,17 @@ COMPOSITION:
     COUNT:
     - 32
     - 32
-    MAPPING: mappingPOPCmacrogFUCHS.txt
+    MAPPING: mappingPOPCmacrogFUCHS.yaml
   SOL:
     NAME: SOL
     COUNT: 5120
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   POPE:
     NAME: POPE
     COUNT:
     - 32
     - 32
-    MAPPING: mappingPOPEmacrogFUCHS.txt
+    MAPPING: mappingPOPEmacrogFUCHS.yaml
 TIMELEFTOUT: 200
 TRJLENGTH: 500100.0
 DATEOFRUNNING: 01/10/2021

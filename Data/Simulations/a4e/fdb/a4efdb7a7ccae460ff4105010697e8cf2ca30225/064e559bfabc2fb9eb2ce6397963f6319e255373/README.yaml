@@ -12,27 +12,27 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 51
     - 51
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSberger.txt
+    MAPPING: mappingPOPSberger.yaml
     COUNT:
     - 13
     - 13
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4290
   POT:
     NAME: XK
-    MAPPING: mappingXK.txt
+    MAPPING: mappingXK.yaml
     COUNT: 106
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.txt
+    MAPPING: mappingCl.yaml
     COUNT: 80
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1016/j.bbamem.2011.11.033

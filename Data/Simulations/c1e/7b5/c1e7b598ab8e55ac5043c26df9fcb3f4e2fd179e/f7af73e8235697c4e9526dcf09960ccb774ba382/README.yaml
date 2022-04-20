@@ -14,21 +14,21 @@ COMPOSITION:
   CLA:
     NAME: CL
     COUNT: 157
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 9000
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   SOD:
     NAME: NA
     COUNT: 157
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 352300.0

@@ -9,13 +9,13 @@ TIMELEFTOUT: 0
 COMPOSITION:
   DPPC:
     NAME: DPP
-    MAPPING: mappingDPPCGAFFlipid.txt
+    MAPPING: mappingDPPCGAFFlipid.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 2197
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: 10.1021/acs.jpcb.5b04878

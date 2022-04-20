@@ -20,17 +20,17 @@ TOP: null
 COMPOSITION:
   POPG:
     NAME: POPG
-    MAPPING: mappingPOPGslipids.txt
+    MAPPING: mappingPOPGslipids.yaml
     COUNT:
     - 144
     - 144
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 10664
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 288
 TRAJECTORY_SIZE: 642454772
 TRJLENGTH: 50020.0

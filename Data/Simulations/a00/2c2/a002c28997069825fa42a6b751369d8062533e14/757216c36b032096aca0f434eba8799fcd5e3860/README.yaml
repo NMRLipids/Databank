@@ -12,11 +12,11 @@ COMPOSITION:
     COUNT:
     - 128
     - 128
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 42642
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: 10.1016/j.bbamem.2021.183714
 AUTHORS_CONTACT: Walter, Vivien; Ruscher, Celine; Gola, Adrien; Marques, Carlos; Benzerara,

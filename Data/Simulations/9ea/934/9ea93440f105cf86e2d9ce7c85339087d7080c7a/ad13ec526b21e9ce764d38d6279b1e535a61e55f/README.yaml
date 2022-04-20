@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCberger.txt
+    MAPPING: mappingDPPCberger.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 2880
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1021/acs.jpcb.5b04878

@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 256
     - 256
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - POPC_512_310K_md.cpt

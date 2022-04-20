@@ -17,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 128
     - 128
-    MAPPING: mappingCHOLESTEROLslipid.txt
+    MAPPING: mappingCHOLESTEROLslipid.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 128
     - 128
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 20334
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 100100.0
 SOFTWARE_VERSION: 4.6.3

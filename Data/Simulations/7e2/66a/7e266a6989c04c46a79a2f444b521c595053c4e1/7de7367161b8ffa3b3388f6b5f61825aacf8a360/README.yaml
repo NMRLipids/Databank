@@ -11,17 +11,17 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSberger.txt
+    MAPPING: mappingPOPSberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4480
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 128
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: http://dx.doi.org/10.1021/acs.jpcb.9b06091

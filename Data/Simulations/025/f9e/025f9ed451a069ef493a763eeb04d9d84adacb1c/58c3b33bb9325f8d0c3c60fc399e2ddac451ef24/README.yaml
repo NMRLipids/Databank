@@ -11,21 +11,21 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4308
   CAL:
     NAME: XCA
-    MAPPING: mappingXCA.txt
+    MAPPING: mappingXCA.yaml
     COUNT: 56
   CLA:
     NAME: XCl
-    MAPPING: mappingXCL.txt
+    MAPPING: mappingXCL.yaml
     COUNT: 112
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1038/srep38035

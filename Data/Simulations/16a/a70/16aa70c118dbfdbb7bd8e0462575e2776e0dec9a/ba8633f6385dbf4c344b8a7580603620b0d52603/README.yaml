@@ -17,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 40
     - 40
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 40
     - 40
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 4496
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TRJ:
 - - POPC_50CHL.xtc
 TIMELEFTOUT: 100
