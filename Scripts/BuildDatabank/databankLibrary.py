@@ -979,7 +979,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         selection = mol.select_atoms("resname {rnm} and name {atA} {atB}".format(
                                     rnm=op.resname, atA=op.atAname, atB=op.atBname)
                                     ).atoms.split("residue")
-        #print(op.resname + " " + op.atAname + " " + op.atBname)
+#        print(op.resname + " " + op.atAname + " " + op.atBname)
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
             if res.n_atoms != 2:
@@ -994,11 +994,12 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         op.selection = selection
 
     # go through trajectory frame-by-frame
-        Nres=len(op.selection)
-
+    #    #Nres=len(op.selection)
+    #Nres = len(op.selection)
     Nframes=len(mol.trajectory)
     #print(Nres,Nframes)
     for op in ordPars:
+        Nres = len(op.selection)
         op.traj= [0]*Nres
 #        op.traj=[0]*Nres
 #        if len(op.traj) == 0:
@@ -1007,6 +1008,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
 
     for frame in mol.trajectory:
         for op in ordPars:            #.values():
+            Nres = len(op.selection)
             for i in range(0,Nres):
 #             for i, op in enumerate(ordPars,1):
                 residue=op.selection[i]
@@ -1023,7 +1025,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
 #    for op in ordPars:
 #        op.traj=op.traj/Nframes
 
-def parse_op_input(fname,lipid_name):
+def parse_op_input(mapping_file,lipid_name):
     ordPars = []
     atomC = []
     atomH = []
@@ -1036,33 +1038,63 @@ def parse_op_input(fname,lipid_name):
 #                print(getline(f.name, ind + 1).split())
 #                resname = getline(f.name, ind + 1).split()[1]
 #                break
+
+    mapping_dict = {}
+    with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as yaml_file:
+        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    yaml_file.close()
     
-    with open(fname, "r") as f:
-        for line in f.readlines():
-            if not line.startswith("#"):
-                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
-                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                regexp2_C = re.compile(r'M_G[0-9]_M')
-                regexp3_C = re.compile(r'M_C[0-9]_M')
+    regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+    regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+    regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
+    regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+    regexp2_C = re.compile(r'M_G[0-9]_M')
+    regexp3_C = re.compile(r'M_C[0-9]_M')
+            
+    for mapping_key in mapping_dict.keys():
+        if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key) or regexp3_C.search(mapping_key):
+            atomC = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+#            print(atomC)
+            atomH = []
+        elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key) or regexp3_H.search(mapping_key):
+            atomH = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+#            print(atomH)
+        else:
+            atomC = []
+            atomH = []
 
-                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
-                    atomC = line.split()
-                    atomH = []
-                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
-                    atomH = line.split()
-                    if len(line.split())> 2:
-                        resname = line.split()[2]
-                else:
-                    atomC = []
-                    atomH = []
+        if atomH:
+            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#               print(resname + " " + atomH[1])
+            op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+            ordPars.append(op)
+    
+#    with open(fname, "r") as f:
+#        for line in f.readlines():
+#            if not line.startswith("#"):
+#                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
+#                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
+#                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
+#                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
+#                regexp2_C = re.compile(r'M_G[0-9]_M')
+#                regexp3_C = re.compile(r'M_C[0-9]_M')
 
-                if atomH:
-                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+#                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
+#                    atomC = line.split()
+#                    atomH = []
+#                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
+#                    atomH = line.split()
+#                    if len(line.split())> 2:
+#                        resname = line.split()[2]
+#                else:
+#                    atomC = []
+#                    atomH = []
+
+#                if atomH:
+#                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
 #                    print(resname + " " + atomH[1])
-                    op = OrderParameter(resname, items[0], items[1], items[2], items[3])
-                    ordPars.append(op)
+#                    op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+#                    ordPars.append(op)
 #    except:
 #        inpf=opts.inp_fname
 #        raise RuntimeError("Couldn't read input file >> {inpf} <<")
