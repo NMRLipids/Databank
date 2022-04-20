@@ -18,7 +18,7 @@ COMPOSITION:
     - 45
   PAzePCdeprot:
     NAME: PZPC
-    MAPPING: mappingPAZEPCberger.yaml
+    MAPPING: mappingPAZEPCbergerDEPROT.yaml
     COUNT:
     - 19
     - 19
