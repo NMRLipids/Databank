@@ -17,11 +17,11 @@ COMPOSITION:
     COUNT:
     - 128
     - 128
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 9767
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
 TRJ:
 - - md_dt100_OK_centered.xtc
 TIMELEFTOUT: 50

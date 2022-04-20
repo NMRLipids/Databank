@@ -20,13 +20,13 @@ TOP: null
 COMPOSITION:
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEslipids.txt
+    MAPPING: mappingPOPEslipids.yaml
     COUNT:
     - 168
     - 168
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 13460
 TRAJECTORY_SIZE: 1237168772
 TRJLENGTH: 100025.0

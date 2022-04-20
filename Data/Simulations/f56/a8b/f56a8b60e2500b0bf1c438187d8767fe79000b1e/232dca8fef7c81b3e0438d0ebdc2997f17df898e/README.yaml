@@ -9,23 +9,23 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPClipid14_POPCres.txt
+    MAPPING: mappingPOPClipid14_POPCres.yaml
     COUNT:
     - 50
     - 50
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 6214
   DHMDMAB:
     NAME: T7H
-    MAPPING: mappingDHMDMABcharmm.txt
+    MAPPING: mappingDHMDMABcharmm.yaml
     COUNT:
     - 20
     - 22
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 42
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -50,3 +50,8 @@ TEMPERATURE: 313.0
 NUMBER_OF_ATOMS: 36578
 DATEOFRUNNING: 15/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    DHMDMAB: {}
+  FORMFACTOR: {}

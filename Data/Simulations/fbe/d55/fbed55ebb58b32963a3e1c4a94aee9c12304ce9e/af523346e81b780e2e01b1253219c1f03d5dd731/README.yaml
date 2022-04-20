@@ -9,13 +9,13 @@ TIMELEFTOUT: 200
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 128
     - 128
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
     COUNT: 12800
 DIR_WRK: /media/osollila/disk1/tmp/DATABANK/
 PUBLICATION: null

@@ -15,21 +15,21 @@ COMPOSITION:
   SOL:
     NAME: TIP3
     COUNT: 9000
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   CAL:
     NAME: CA
     COUNT: 73
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
   CLA:
     NAME: CL
     COUNT: 146
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 100100.0

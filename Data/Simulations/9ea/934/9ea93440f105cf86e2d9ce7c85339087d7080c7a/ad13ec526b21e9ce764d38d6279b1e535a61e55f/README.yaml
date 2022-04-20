@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCberger.txt
+    MAPPING: mappingDPPCberger.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 2880
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1021/acs.jpcb.5b04878
@@ -39,3 +39,7 @@ TEMPERATURE: 323.0
 NUMBER_OF_ATOMS: 12240
 DATEOFRUNNING: 24/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/4

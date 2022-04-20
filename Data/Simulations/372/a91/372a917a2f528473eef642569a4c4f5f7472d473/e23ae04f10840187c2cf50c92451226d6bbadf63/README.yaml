@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DOPE:
     NAME: DOPE
-    MAPPING: mappingDOPEbergerTP.txt
+    MAPPING: mappingDOPEbergerTP.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4789
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -39,3 +39,7 @@ TEMPERATURE: 271.0
 NUMBER_OF_ATOMS: 21279
 DATEOFRUNNING: 14/04/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPE: {}
+  FORMFACTOR: {}

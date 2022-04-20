@@ -12,19 +12,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DOPC:
     NAME: DOPC
-    MAPPING: mappingDOPCberger.txt
+    MAPPING: mappingDOPCberger.yaml
     COUNT:
     - 64
     - 64
   DOPE:
     NAME: DOPE
-    MAPPING: mappingDOPEbergerPF.txt
+    MAPPING: mappingDOPEbergerPF.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 11096
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null

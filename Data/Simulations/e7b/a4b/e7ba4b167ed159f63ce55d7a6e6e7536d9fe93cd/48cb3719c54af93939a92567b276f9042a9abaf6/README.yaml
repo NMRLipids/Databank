@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCgromos-ckp.txt
+    MAPPING: mappingPOPCgromos-ckp.yaml
     COUNT:
     - 250
     - 250
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 25000
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 PUBLICATION: null

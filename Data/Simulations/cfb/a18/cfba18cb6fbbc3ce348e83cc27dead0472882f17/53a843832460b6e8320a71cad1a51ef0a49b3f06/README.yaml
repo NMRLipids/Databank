@@ -9,13 +9,13 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCMaciejewskiRog1.txt
+    MAPPING: mappingPOPCMaciejewskiRog1.yaml
     COUNT:
     - 143
     - 145
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 7200
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878

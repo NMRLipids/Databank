@@ -14,21 +14,21 @@ COMPOSITION:
   CLA:
     NAME: CL
     COUNT: 55
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 256
     - 256
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   SOD:
     NAME: NA
     COUNT: 55
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
 TIMELEFTOUT: 0
 CPT:
 - - POPC_512_NaCl_150mM_310K_tip3p_md.cpt

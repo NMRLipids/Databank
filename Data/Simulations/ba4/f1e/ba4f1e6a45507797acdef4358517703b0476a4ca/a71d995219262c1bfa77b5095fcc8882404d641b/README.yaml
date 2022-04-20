@@ -9,21 +9,21 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPClipid14_POPCres.txt
+    MAPPING: mappingPOPClipid14_POPCres.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP4Pwater.txt
+    MAPPING: mappingTIP4Pwater.yaml
     COUNT: 6232
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
     COUNT: 80
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 160
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null

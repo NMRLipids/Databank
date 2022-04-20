@@ -12,27 +12,27 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 52
     - 52
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSberger.txt
+    MAPPING: mappingPOPSberger.yaml
     COUNT:
     - 12
     - 12
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4306
   CAL:
     NAME: XCA
-    MAPPING: mappingXCA.txt
+    MAPPING: mappingXCA.yaml
     COUNT: 72
   CLA:
     NAME: XCl
-    MAPPING: mappingXCL.txt
+    MAPPING: mappingXCL.yaml
     COUNT: 112
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1038/srep38035
@@ -56,3 +56,8 @@ TEMPERATURE: 310.0
 NUMBER_OF_ATOMS: 19830
 DATEOFRUNNING: 27/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPS: {}
+  FORMFACTOR: {}

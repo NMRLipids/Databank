@@ -12,19 +12,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 64
     - 64
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEberger.txt
+    MAPPING: mappingPOPEberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 11096
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -45,3 +45,8 @@ TEMPERATURE: 300.0
 NUMBER_OF_ATOMS: 46600
 DATEOFRUNNING: 16/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPE: {}
+  FORMFACTOR: {}

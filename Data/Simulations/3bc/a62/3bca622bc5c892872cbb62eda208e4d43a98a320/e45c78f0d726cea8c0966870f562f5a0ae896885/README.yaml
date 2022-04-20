@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DOPC:
     NAME: DOPC
-    MAPPING: mappingDOPCberger.txt
+    MAPPING: mappingDOPCberger.yaml
     COUNT:
     - 128
     - 128
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 11096
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -38,3 +38,7 @@ TEMPERATURE: 300.0
 NUMBER_OF_ATOMS: 47112
 DATEOFRUNNING: 16/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPC: {}
+  FORMFACTOR: {}

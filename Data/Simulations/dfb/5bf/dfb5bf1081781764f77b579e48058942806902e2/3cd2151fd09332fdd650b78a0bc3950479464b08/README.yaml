@@ -12,19 +12,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: PLA
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 45
     - 45
   PAzePCprot:
     NAME: PZPC
-    MAPPING: mappingPAZEPCberger.txt
+    MAPPING: mappingPAZEPCberger.yaml
     COUNT:
     - 19
     - 19
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 7632
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1021/acs.langmuir.6b00788
@@ -47,3 +47,8 @@ TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 29324
 DATEOFRUNNING: 09/04/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    PAzePCprot: {}
+  FORMFACTOR: {}

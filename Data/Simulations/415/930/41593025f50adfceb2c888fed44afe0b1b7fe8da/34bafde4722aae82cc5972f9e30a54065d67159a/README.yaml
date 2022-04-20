@@ -9,13 +9,13 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEslipids.txt
+    MAPPING: mappingPOPEslipids.yaml
     COUNT:
     - 250
     - 250
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

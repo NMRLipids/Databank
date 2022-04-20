@@ -9,16 +9,16 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPE:
   NAME: PE
-  MAPPING: mappingPOPElipid17.txt
+  MAPPING: mappingPOPElipid17.yaml
  POPG:
   NAME: PGR
-  MAPPING: mappingPOPGlipid17.txt
+  MAPPING: mappingPOPGlipid17.yaml
  SOD:
   NAME: Na+
-  MAPPING: mappingNA+.txt
+  MAPPING: mappingNA+.yaml
  SOL:
   NAME: WAT
-  MAPPING: mappingTIP3Plipid17.txt
+  MAPPING: mappingTIP3Plipid17.yaml
 
 DIR_WRK: /usr/home/bort/Databank
 

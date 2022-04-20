@@ -9,17 +9,17 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSmacrog.txt
+    MAPPING: mappingPOPSmacrog.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4480
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 128
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

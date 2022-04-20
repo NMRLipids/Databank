@@ -14,13 +14,13 @@ COMPOSITION:
   SOL:
     NAME: TIP3
     COUNT: 5760
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   POPE:
     NAME: POPE
     COUNT:
     - 72
     - 72
-    MAPPING: mappingPOPEcharmm.txt
+    MAPPING: mappingPOPEcharmm.yaml
 TIMELEFTOUT: 50
 TRJLENGTH: 500100.0
 DATEOFRUNNING: 01/10/2021
