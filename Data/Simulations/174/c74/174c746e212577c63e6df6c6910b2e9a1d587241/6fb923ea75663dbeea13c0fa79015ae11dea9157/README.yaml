@@ -17,11 +17,11 @@ COMPOSITION:
     COUNT:
     - 256
     - 256
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 20480
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_512_325K_md.cpt

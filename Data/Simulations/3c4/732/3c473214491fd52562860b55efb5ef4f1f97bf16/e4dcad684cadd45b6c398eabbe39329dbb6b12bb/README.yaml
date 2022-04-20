@@ -9,19 +9,19 @@ TIMELEFTOUT: 200
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 128
     - 128
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
     COUNT:
     - 80
     - 80
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
     COUNT: 20800
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -49,4 +49,4 @@ EXPERIMENT:
     POPC:
       10.1039/c2cp42738a: 10.1039/c2cp42738a/4
     CHOL: {}
-  FORMFACTOR: unpublished/NMRlipidsIII/7
+  FORMFACTOR: unpublished/NMRlipidsIII/8

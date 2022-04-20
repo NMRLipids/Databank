@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 250
     - 250
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 25000
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TRJ:
 - - total_4_500.xtc
 TIMELEFTOUT: 0

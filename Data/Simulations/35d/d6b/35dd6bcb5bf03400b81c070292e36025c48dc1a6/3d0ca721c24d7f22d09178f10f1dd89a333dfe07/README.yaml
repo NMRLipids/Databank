@@ -19,11 +19,11 @@ COMPOSITION:
     COUNT:
     - 250
     - 250
-    MAPPING: mappingPOPCgromos-ckp.txt
+    MAPPING: mappingPOPCgromos-ckp.yaml
   SOL:
     NAME: SOL
     COUNT: 25000
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 100010.0
 TRAJECTORY_SIZE: 3738892988

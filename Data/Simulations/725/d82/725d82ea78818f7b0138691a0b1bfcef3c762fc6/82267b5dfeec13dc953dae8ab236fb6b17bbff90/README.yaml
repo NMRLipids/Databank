@@ -17,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 72
     - 72
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 11520
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   DAPC:
     NAME: DAPC
     COUNT:
     - 72
     - 72
-    MAPPING: mappingDAPCcharmm.txt
+    MAPPING: mappingDAPCcharmm.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DAPC_AA_CHOL50_310.cpt

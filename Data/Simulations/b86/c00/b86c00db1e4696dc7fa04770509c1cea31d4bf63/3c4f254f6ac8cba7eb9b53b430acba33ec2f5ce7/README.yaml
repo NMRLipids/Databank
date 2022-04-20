@@ -15,23 +15,23 @@ COMPOSITION:
   CLA:
     NAME: CLA
     COUNT: 88
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLA.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 50
     - 50
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 7966
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   DHMDMAB:
     NAME: T7H
     COUNT:
     - 44
     - 44
-    MAPPING: mappingDHMDMABcharmm.txt
+    MAPPING: mappingDHMDMABcharmm.yaml
 CHOL: CHOL
 TIMELEFTOUT: 20
 POPE: POPE

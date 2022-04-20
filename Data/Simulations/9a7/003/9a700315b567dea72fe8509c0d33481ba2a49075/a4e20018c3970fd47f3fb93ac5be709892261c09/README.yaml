@@ -9,21 +9,21 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCMaciejewskiRog1.txt
+    MAPPING: mappingPOPCMaciejewskiRog1.yaml
     COUNT:
     - 144
     - 144
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 14500
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 54
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 54
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

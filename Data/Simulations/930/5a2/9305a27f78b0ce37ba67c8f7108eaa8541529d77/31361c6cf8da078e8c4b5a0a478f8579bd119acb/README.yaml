@@ -22,27 +22,27 @@ TOP:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 255
     - 257
   CER:
     NAME: CER160
-    MAPPING: mappingCERcharmm.txt
+    MAPPING: mappingCERcharmm.yaml
     COUNT:
     - 9
     - 0
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 34258
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 92
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 92
 TRAJECTORY_SIZE: 19592444916
 TRJLENGTH: 3038900.0

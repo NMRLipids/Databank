@@ -9,10 +9,10 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPC:
   NAME: PC
-  MAPPING: mappingPOPClipid17.txt
+  MAPPING: mappingPOPClipid17.yaml
  SOL:
   NAME: WAT
-  MAPPING: mappingTIP3Plipid17.txt
+  MAPPING: mappingTIP3Plipid17.yaml
 
 DIR_WRK: /usr/home/bort/Databank
 

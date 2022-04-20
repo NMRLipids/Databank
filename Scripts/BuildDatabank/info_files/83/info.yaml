@@ -12,19 +12,19 @@ DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    MAPPING: mappingPOPClipid17ecc_POPCres.yaml
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17ecc.txt
+    MAPPING: mappingPOPGlipid17ecc.yaml
   SOD:
     NAME: NA
-    MAPPING: mappingSODecc.txt
+    MAPPING: mappingSODecc.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCALecc.txt
+    MAPPING: mappingCALecc.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCLAecc.txt
+    MAPPING: mappingCLAecc.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

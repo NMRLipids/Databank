@@ -22,21 +22,21 @@ TOP:
 COMPOSITION:
   DSPC:
     NAME: DSPC
-    MAPPING: mappingDSPCcharmm.txt
+    MAPPING: mappingDSPCcharmm.yaml
     COUNT:
     - 256
     - 256
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 20480
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 55
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 55
 TRAJECTORY_SIZE: 3219748828
 TRJLENGTH: 639800.0

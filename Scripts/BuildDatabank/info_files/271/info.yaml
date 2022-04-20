@@ -18,7 +18,7 @@ TOP: null
 COMPOSITION:
   POPE:
     NAME: POPE
-    MAPPING: mappingPOPEslipids.txt
+    MAPPING: mappingPOPEslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml

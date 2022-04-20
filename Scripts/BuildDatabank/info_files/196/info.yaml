@@ -18,10 +18,10 @@ TOP: DDPC_AA_CHOL10.top
 COMPOSITION:
   DDOPC:
     NAME: DDPC
-    MAPPING: mappingDDOPCcharmm.txt
+    MAPPING: mappingDDOPCcharmm.yaml
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

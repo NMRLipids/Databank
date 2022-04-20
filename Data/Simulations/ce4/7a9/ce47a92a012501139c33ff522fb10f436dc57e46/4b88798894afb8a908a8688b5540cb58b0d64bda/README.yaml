@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 900
     - 900
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 81000
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
 TIMELEFTOUT: 0
 CPT:
 - - md9.cpt

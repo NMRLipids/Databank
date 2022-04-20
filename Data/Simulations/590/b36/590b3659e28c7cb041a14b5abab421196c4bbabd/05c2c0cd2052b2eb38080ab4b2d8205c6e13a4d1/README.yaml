@@ -9,31 +9,31 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 30
     - 30
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSlipid17_POPSres.txt
+    MAPPING: mappingPOPSlipid17_POPSres.yaml
     COUNT:
     - 6
     - 6
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 3483
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 12
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
     COUNT: 39
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 78
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

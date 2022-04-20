@@ -9,19 +9,19 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid14.txt
+    MAPPING: mappingPOPClipid14.yaml
     COUNT:
     - 49
     - 35
   CHOL:
     NAME: CHL
-    MAPPING: mappingCHOLESTEROLlipid14.txt
+    MAPPING: mappingCHOLESTEROLlipid14.yaml
     COUNT:
     - 22
     - 22
   SOL:
     NAME: WAT
-    MAPPING: mappingwaterlipid14.txt
+    MAPPING: mappingwaterlipid14.yaml
     COUNT: 3968
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

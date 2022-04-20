@@ -11,21 +11,21 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCberger.txt
+    MAPPING: mappingDPPCberger.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 2778
   SOD:
     NAME: Na
-    MAPPING: mappingNa.txt
+    MAPPING: mappingNa.yaml
     COUNT: 51
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.txt
+    MAPPING: mappingCl.yaml
     COUNT: 51
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -49,3 +49,7 @@ TEMPERATURE: 323.0
 NUMBER_OF_ATOMS: 12036
 DATEOFRUNNING: 27/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: {}

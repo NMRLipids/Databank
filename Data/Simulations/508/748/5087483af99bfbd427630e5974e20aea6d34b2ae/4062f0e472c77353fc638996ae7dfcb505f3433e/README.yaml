@@ -15,29 +15,29 @@ COMPOSITION:
     COUNT:
     - 76
     - 74
-    MAPPING: mappingPOPGlipid17ecc.txt
+    MAPPING: mappingPOPGlipid17ecc.yaml
   CLA:
     NAME: CL
     COUNT: 108
-    MAPPING: mappingCLAecc.txt
+    MAPPING: mappingCLAecc.yaml
   CAL:
     NAME: CA
     COUNT: 54
-    MAPPING: mappingCALecc.txt
+    MAPPING: mappingCALecc.yaml
   SOD:
     NAME: NA
     COUNT: 150
-    MAPPING: mappingSODecc.txt
+    MAPPING: mappingSODecc.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 75
     - 75
-    MAPPING: mappingPOPClipid17ecc_POPCres.txt
+    MAPPING: mappingPOPClipid17ecc_POPCres.yaml
   SOL:
     NAME: SOL
     COUNT: 29865
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 300020.0
 DATEOFRUNNING: 05/10/2021
