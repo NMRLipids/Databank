@@ -19,13 +19,13 @@ TOP: dppc_gel_ca.top
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCslipid.txt
+    MAPPING: mappingDPPCslipid.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
