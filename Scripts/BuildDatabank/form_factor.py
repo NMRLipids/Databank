@@ -33,16 +33,36 @@ def getLipids(readme, molecules=lipids_dict.keys()):
 
     for key in readme['COMPOSITION'].keys():
         if key in molecules:
-            m_file = readme['COMPOSITION'][key]['MAPPING']
-            with open('./mapping_files/'+m_file,"r") as f:
-                for line in f:
-                    if len(line.split()) > 2 and "Individual atoms" not in line:
-                        if line.split()[2] not in lipids:
-                            lipids = lipids + line.split()[2] + ' or resname '
-                    elif "Individual atoms" in line:
-                        continue
-                    else:
-                        lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
+            mapping_dict = {}
+            mapping_file = readme['COMPOSITION'][key]['MAPPING']
+            with open('./mapping_files/'+mapping_file,"r") as yaml_file:
+                mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+            yaml_file.close()
+            
+            switch = 0
+            for key in mapping_dict:
+                try:
+                    res = mapping_dict[key]['RESIDUE']
+                except KeyError:
+                    switch = 1
+                    continue
+                else:
+                    if res not in lipids:
+                        lipids = lipids + res + ' or resname '
+            
+            if switch == 1:
+                lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
+            
+            
+ #           with open('./mapping_files/'+m_file,"r") as f:
+ #               for line in f:
+ #                   if len(line.split()) > 2 and "Individual atoms" not in line:
+ #                       if line.split()[2] not in lipids:
+ #                           lipids = lipids + line.split()[2] + ' or resname '
+ #                   elif "Individual atoms" in line:
+ #                       continue
+ #                   else:
+ #                       lipids = lipids + readme['COMPOSITION'][key]['NAME'] + ' or resname '
                         break    
     lipids = lipids[:-12]
     print(lipids)
@@ -58,28 +78,19 @@ def getWater(readme, molecules=lipids_dict.keys()):
 
 def temporary_mapping_dictionary(readme):
     mapping_dictonary={}
-    for key in readme["COMPOSITION"].keys():
-
-    
-        with open ("./mapping_files/"+readme["COMPOSITION"][key]["MAPPING"]) as f:
-            rawdata = f.read().split('\n')
-            lines= rawdata[0:len(rawdata)-1]
-    
-    
-            tmp_atoms = np.asarray([l.split() for l in lines])
-    
-            if np.shape(tmp_atoms)[1]==2:
-                key_lipid=readme["COMPOSITION"][key]["NAME"]
-                tmp_dict=dict([ (elem[1],elem[0]) for elem in tmp_atoms])
-                mapping_dictonary[key_lipid]=tmp_dict
+    for key1 in readme['COMPOSITION'].keys(): #
         
+        key2 = readme['COMPOSITION'][key]['NAME']
+        mapping_dict ={}
+    
+        with open('./mapping_files/'+mapping_file,"r") as yaml_file:
+            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
         
+        # put mapping files into a larger dictionary where molecule name is key and the 
+        # dictionary in the correponding mapping file is the value
+        mapping_dictionary[key2]= mapping_dict #try if this works
         
-            if np.shape(tmp_atoms)[1]==3:
-                for elem in tmp_atoms:
-                    mapping_dictonary[elem[2]]={}
-                for elem in tmp_atoms:
-                    mapping_dictonary[elem[2]][elem[1]]=elem[0] 
     return mapping_dictonary
 
 
@@ -170,29 +181,52 @@ class FormFactor:
           
                     
             ##########
-            for i in range(0,self.u.atoms.names.shape[0]):
-                name = self.u.atoms.names[i]
-                residue = self.u.atoms.resnames[i]
-                temporary_mapping = temporary_mapping_dictionary(self.readme) #dictionary made of mapping file
-                #try:
-                m_name = temporary_mapping[residue][name]
-                #except KeyError:
-                #    #print(m_name)
-                #    print(residue)
-                #    print(name)
-                #else:
-                name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
-                name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
-                if name2 == 'G':
+            #Assign electron weights to atoms of the system
+#RICKY
+#            for i in range(0,self.u.atoms.names.shape[0]):
+#                name = self.u.atoms.names[i] #names of atoms (names in gro or similar file)
+#                residue = self.u.atoms.resnames[i] #residue names (names in gro or similar file)
+#                temporary_mapping = temporary_mapping_dictionary(self.readme) #dictionary made of mapping files
+#                #try:
+#                #
+#                m_name = temporary_mapping[][] 
+#                #except KeyError:
+#                #    #print(m_name)
+#                #    print(residue)
+#                #    print(name)
+#                #else:
+#                name1 = re.sub(r'M_[0-9]*','',m_name[::-1])
+#                name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) #name of the atom extracted from mapping name
+#                if name2 == 'G':
+#                    name2 = 'C'
+#                #print(name2)                
+#                wght[i]=electron_dictionary[name2] #get number of electrons
+#               # print(wght[i])
+#            self.wght=wght
+#        if self.density_type=="number":
+#            self.wght=np.ones(self.u.atoms.names.shape[0])
+#        if self.density_type=="mass":
+#            self.wght=self.u.atoms.masses
+            
+#######ANNE
+        # combine all mapping files of the system to a single nested dictionary
+            temporary_mapping = temporary_mapping_dictionary(self.readme) #dictionary made of mapping files
+        
+            for molecule, mapping_name in temporary_mapping:
+                name1 = re.sub(r'M_[0-9]*','',mapping_name[::-1]) # removes numbers and '_M' from the end of string and reverses the string
+                name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) # name2 is the atom and electrons are assigned to this atom
+            
+                if name2 == 'G': # G is carbon so change G to C
                     name2 = 'C'
-                #print(name2)                
+                
+                #write number of electrons to the mapping dictionary of the whole system 
+                #temporary_mapping[molecule][mapping_name]['ELECTRONS'] = electron_dictionary[name2]
                 wght[i]=electron_dictionary[name2] #get number of electrons
-               # print(wght[i])
-            self.wght=wght
+                
         if self.density_type=="number":
             self.wght=np.ones(self.u.atoms.names.shape[0])
         if self.density_type=="mass":
-            self.wght=self.u.atoms.masses
+            self.wght=self.u.atoms.masses           
         
         print(self.lipids)
         print(self.u.atoms.resnames)
