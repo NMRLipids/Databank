@@ -12,10 +12,10 @@ UNITEDATOM_DICT:
 COMPOSITION:
  DPPC:
   NAME: DPPC
-  MAPPING: mappingDPPCbergerOPLSAA-compatible.txt
+  MAPPING: mappingDPPCbergerOPLSAA-compatible.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
 
 DIR_WRK: /home/lara/Databank
 
