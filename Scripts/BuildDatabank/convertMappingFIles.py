@@ -56,13 +56,13 @@ for filename in os.scandir('./mapping_files/mapping_files_txt/'):
                     elif 'M_G1' in generic_name:
                         fragment = 'sn-1'                        
                 elif 'PC' in filename.path or 'PE' in filename.path or 'PS' in filename.path or 'PG' in filename.path or 'PI' in filename.path: #phospholipids
-                    if 'M_G3_M' in generic_name or 'M_G3H' in generic_name or 'M_G1_M' in generic_name or 'M_G1O1_M' in generic_name or 'M_G1H' in generic_name or 'M_G2_M' in generic_name or 'M_G2H' in generic_name: 
+                    if 'M_G3_M' in generic_name or 'M_G3H' in generic_name or 'M_G3O1' in generic_name or 'M_G1_M' in generic_name or 'M_G1O1_M' in generic_name or 'M_G1H' in generic_name or 'M_G2_M' in generic_name or 'M_G2H' in generic_name  or 'M_G1O' in generic_name or 'M_G2O' in generic_name: 
                         fragment = 'glycerol backbone'
                     elif 'M_G3' in generic_name:
                         fragment = 'headgroup'
-                    elif 'M_G1C' in generic_name or 'M_G1O' in generic_name:
+                    elif 'M_G1C' in generic_name:
                         fragment = 'sn-1'
-                    elif 'M_G2C' in generic_name or 'M_G2O' in generic_name:
+                    elif 'M_G2C' in generic_name:
                         fragment = 'sn-2'
                 elif 'DHMDMAB' in filename.path:
                     if 'M_G1C' in generic_name:
