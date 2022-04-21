@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCbergerOPLSAA-compatible.txt
+    MAPPING: mappingDPPCbergerOPLSAA-compatible.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 2880
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null

@@ -11,17 +11,17 @@ UNITEDATOM_DICT:
 COMPOSITION:
   DOPS:
     NAME: DOPS
-    MAPPING: mappingDOPSberger.txt
+    MAPPING: mappingDOPSberger.yaml
     COUNT:
     - 64
     - 64
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 4480
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 128
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
