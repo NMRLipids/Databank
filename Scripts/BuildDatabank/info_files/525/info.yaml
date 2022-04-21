@@ -12,10 +12,10 @@ UNITEDATOM_DICT:
 COMPOSITION:
  DLPC:
   NAME: DPP
-  MAPPING: mappingDLPCberger.txt
+  MAPPING: mappingDLPCberger.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
 
 DIR_WRK: /home/lara/Databank
 

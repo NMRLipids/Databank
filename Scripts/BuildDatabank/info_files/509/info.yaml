@@ -13,13 +13,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
  DOPC:
   NAME: DOPC
-  MAPPING: mappingDOPCberger.txt
+  MAPPING: mappingDOPCberger.yaml
  DOPE:
   NAME: DOPE
-  MAPPING: mappingDOPEbergerPF.txt
+  MAPPING: mappingDOPEbergerPF.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
 
 DIR_WRK: /home/lara/Databank
 

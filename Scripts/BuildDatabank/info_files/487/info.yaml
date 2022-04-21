@@ -13,13 +13,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
  POPC:
   NAME: POPC
-  MAPPING: mappingPOPCberger.txt
+  MAPPING: mappingPOPCberger.yaml
  CHOL:
   NAME: CHOL
-  MAPPING: mappingCHOLESTEROLberger.txt
+  MAPPING: mappingCHOLESTEROLberger.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
 
 DIR_WRK:  /media/osollila/Data1/tmp/DATABANK/
 

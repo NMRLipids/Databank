@@ -12,13 +12,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
  DOPS:
   NAME: DOPS
-  MAPPING: mappingDOPSberger.txt
+  MAPPING: mappingDOPSberger.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
  SOD:
   NAME: NA
-  MAPPING: mappingNA.txt
+  MAPPING: mappingNA.yaml
 
 DIR_WRK: /home/lara/Databank
 
