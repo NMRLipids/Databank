@@ -8,6 +8,41 @@ The already existing info files in
 subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/)
 serve as useful examples when preparing the new entry files.
 
+key | description | type  
+----|--------|------
+DOI | DOI from where the raw data is found | user given (compulsory) 
+SOFTWARE | Software used to run the simulation (e.g. Gromacs, Amber, NAMD, etc.) | 
+    TRJ | Name of the trajectory file found from DOI | 
+    TPR | Name of the topology file found from DOI (trp file in the case of Gromacs) | 
+    PREEQTIME | Pre-equilibrate time simulated before the uploaded trajectory in nanoseconds. \tablefootnote{For example, if you upload 100-200 ns part of total 200 ns simulation, this should value should be 100.} | 
+    TIMELEFTOUT | Equilibration period in the uploaded trajectory that should be discarded in analyses. \tablefootnote{For example, if you upload 0-200 ns part of total 200 ns simulation where the first 100 ns should be considered as an equilibration, this value should be 100.} 
+    COMPOSITION | Molecules names used in the simulation and corresponding mapping files (see ??) | 
+    DIR\_WRK | Temporary working directory in your local computer. 
+    UNITEDATOM\_DICT | Information for constucting hydrogens for united atom simulations, empty for all atom simulations | 
+    TYPEOFSYSTEM | Lipid bilayer or something else | 
+    \hline
+    PUBLICATION | Give reference to a publication(s) related to the data. | User given (optional)
+    AUTHORS\_CONTACT | Name and email of the main author(s) of the data. | 
+    SYSTEM | System description on free text format | 
+    SOFTWARE\_VERSION | Version of the used software | 
+    FF | Name of the used force field | 
+    FF\_SOURCE | Source of the force field parameters, e.g, CHARMM-GUI, webpage, citation to a publication, etc. | 
+    FF\_DATE |  Date when force field parameters were accessed on the gives source (day/month/year). | 
+    FF{molename} | Molecule specific force field information, e.g., water model with FFSOL and sodium parameters with FFSOD. | 
+    CPT | Name of the Gromacs checkpoint file. | 
+    LOG | Name of the Gromacs log file. | 
+    TOP | Name of the Gromacs top file. | 
+    GRO | Name of the Gromacs gro file. | 
+    \hline
+    TRAJECTORY\_SIZE | Size of the trajectory file in bytes | automatically extracted data. 
+    TRJLENGTH | Lenght of the trajectory (ps). | 
+    TEMPERATURE | Temperature of the simulation. | 
+    NUMBER\_OF\_ATOMS | Number of atoms in the simulation. | 
+    DATEOFRUNNIG | Date when added into the databank | 
+    EXPERIMENT | Potentially connected experimental data | 
+    COMPOSITION | Numbers of lipid molecules (NPOPC, NPOPG, etc.) per membrane leaflet are calculated by determining on which side of the center of mass of the membrane the center of mass of the head group of each lipid molecule is located.
+    Numbers of other molecules such as solvent and ions (NSOL, NPOT, NSOD, etc.) are read from the topology file. | 
+
 #### DOI (compulsory)
 Give the DOI identity for the location of simulation files. 
 Current databank works only for the data in [Zenodo](www.zenodo.org), but other potential sources are may be implemented in the future. 
