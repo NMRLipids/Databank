@@ -24,7 +24,7 @@ COMPOSITION:
     MAPPING: mappingXCA.yaml
     COUNT: 8
   CLA:
-    NAME: XCL
+    NAME: XCl
     MAPPING: mappingXCL.yaml
     COUNT: 16
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK
