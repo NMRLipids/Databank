@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.3434396
+
+SOFTWARE: gromacs
+TRJ: NB-Fix-sodium_943mM.xtc
+TPR: NB-Fix-sodium_943mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSOD.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Nencini, Ricky
+
+SYSTEM: 200POPC_9000SOL_157SOD_157CLA_310K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FFSOL: TIP3P
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO:
