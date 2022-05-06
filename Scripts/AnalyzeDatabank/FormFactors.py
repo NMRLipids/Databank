@@ -20,7 +20,8 @@ from databankLibrary import download_link, lipids_dict, databank
 import form_factor
 
 
-path = '../../Data/Simulations/102/dfa/102dfa390326acd775347b1d703ccfa85e033cd8/1ad80d5d253e861f01d8f16e0d1590c6ef962916/'
+#path = '../../Data/Simulations/102/dfa/102dfa390326acd775347b1d703ccfa85e033cd8/1ad80d5d253e861f01d8f16e0d1590c6ef962916/'
+path = '../../Data/Simulations/'
 
 db_data = databank(path)
 systems = db_data.get_systems()
@@ -37,7 +38,8 @@ for system in systems:
 
     try:
         if system['UNITEDATOM_DICT']:
-            continue
+            #continue
+            print('United atom simulation')
     except:
         pass
     
