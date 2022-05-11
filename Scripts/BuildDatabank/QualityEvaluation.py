@@ -79,8 +79,14 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #
     #
     #P_S = -scipy.stats.norm.sf(b, loc=OP_sim, scale=op_sim_sd) + scipy.stats.norm.sf(a, loc=OP_sim, scale=op_sim_sd)
-    P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
-
+    #P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
+    #print(P_S)
+    
+    A = (OP_sim-a)/op_sim_sd
+    B = (OP_sim-b)/op_sim_sd
+    P_S = scipy.stats.t.sf(B, df=1, loc=0, scale=1) - scipy.stats.t.sf(A, df=1, loc=0, scale=1)
+    #print(A,B,P_S)
+    
     if math.isnan(P_S) :
         return P_S
 
