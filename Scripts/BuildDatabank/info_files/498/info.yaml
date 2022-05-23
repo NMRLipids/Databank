@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.17228
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 60
+
+UNITEDATOM_DICT:
+  DPPC: Berger_DPPC
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ SOD:
+  NAME: Na
+  MAPPING: mappingNa.yaml 
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCl.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Määttä, Jukka
+
+SYSTEM: 72DPPC_2778SOL_51SOD_51CLA_323K
+SOFTWARE_VERSION: 5.0.4
+
+FF: Berger-DPPC-98
+FFSOD: Gromos, scaled ion charges
+FFCLA: Gromos, scaled ion charges
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: md.gro

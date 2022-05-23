@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.13934
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 30
+
+UNITEDATOM_DICT:
+  DPPC: Berger_DPPC
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Määttä, Jukka
+
+SYSTEM: 72DPPC_2880SOL_323K_Berger
+SOFTWARE_VERSION: 4.6.6
+
+FF: Berger-DPPC-98
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: md.gro

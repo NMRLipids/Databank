@@ -9,17 +9,17 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPSlipid17_POPSres.txt
+    MAPPING: mappingPOPSlipid17_POPSres.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 3600
   POT:
     NAME: K
-    MAPPING: mappingK.txt
+    MAPPING: mappingK.yaml
     COUNT: 72
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
@@ -46,3 +46,5 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPS: {}
   FORMFACTOR: {}
+WARNINGS:
+  PBC: z-jumps

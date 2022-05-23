@@ -1,56 +1,56 @@
-AUTHORS_CONTACT: Jesper J. Madsen
-FF_DATE: null
-SYSTEM: 250POPG_250POPC_128CAL_6CLA_298K_127778Atoms
-TYPEOFSYSTEM: lipid bilayer
-TEMPERATURE: 298.0
+DOI: 10.5281/zenodo.3483789
+SOFTWARE: gromacs
+TRJ:
+- - run.wrapped.xtc
+TPR:
+- - step7_1.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+DIR_WRK: /home/lara/Databank
 PUBLICATION: null
+AUTHORS_CONTACT: Jesper J. Madsen
+SYSTEM: 250POPG_250POPC_128CAL_6CLA_298K_127778Atoms
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI v1.7
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.yaml
+    COUNT:
+    - 125
+    - 125
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 125
+    - 125
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 20798
+  CAL:
+    NAME: CAL
+    MAPPING: mappingCAL.yaml
+    COUNT: 128
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 6
+TRAJECTORY_SIZE: 958294056
+TRJLENGTH: 200100.0
+TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 127778
+DATEOFRUNNING: 06/05/2022
+TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
     POPG: {}
     POPC: {}
   FORMFACTOR: {}
-FF_SOURCE: CHARMM-GUI v1.7
-COMPOSITION:
-  POPG:
-    NAME: POPG
-    COUNT:
-    - 125
-    - 125
-    MAPPING: mappingPOPGcharmm.txt
-  SOL:
-    NAME: TIP3
-    COUNT: 20798
-    MAPPING: mappingTIP3PCHARMMgui.txt
-  POPC:
-    NAME: POPC
-    COUNT:
-    - 125
-    - 125
-    MAPPING: mappingPOPCcharmm.txt
-  CAL:
-    NAME: CAL
-    COUNT: 128
-    MAPPING: mappingCAL.txt
-  CLA:
-    NAME: CLA
-    COUNT: 6
-    MAPPING: mappingCLA.txt
-TIMELEFTOUT: 0
-CPT: null
-TRJLENGTH: 200100.0
-TRAJECTORY_SIZE: 958294056
-SOFTWARE_VERSION: null
-FF: CHARMM36
-TOP:
-- - topol.top
-PREEQTIME: 0
-DOI: 10.5281/zenodo.3483789
-DATEOFRUNNING: 01/10/2021
-TPR:
-- - step7_1.tpr
-TRJ:
-- - run.wrapped.xtc
-LOG: null
-SOFTWARE: gromacs
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/

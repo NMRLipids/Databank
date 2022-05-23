@@ -9,31 +9,33 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid17.txt
+    MOLTYPE: system1
+    MAPPING: mappingPOPClipid17.yaml
     COUNT:
     - 75
     - 75
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17.txt
+    MOLTYPE: system2
+    MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 77
     - 73
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 31401
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
     COUNT: 57
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 114
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 150
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

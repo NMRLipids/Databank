@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.13934
+SOFTWARE: gromacs
+TRJ:
+- - md.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 30
+UNITEDATOM_DICT:
+  DPPC: Berger_DPPC
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCberger.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 2880
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: "M\xE4\xE4tt\xE4, Jukka"
+SYSTEM: 72DPPC_2880SOL_323K_Berger
+SOFTWARE_VERSION: 4.6.6
+FF: Berger-DPPC-98
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - md.gro
+TRAJECTORY_SIZE: 266441020
+TRJLENGTH: 60010.0
+TEMPERATURE: 323.0
+NUMBER_OF_ATOMS: 12240
+DATEOFRUNNING: 24/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/4

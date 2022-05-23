@@ -12,16 +12,16 @@ UNITEDATOM_DICT:
 COMPOSITION:
  POPC:
   NAME: PLA
-  MAPPING: mappingPOPCberger.txt
+  MAPPING: mappingPOPCberger.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
  CAL:
   NAME: CA
-  MAPPING: mappingCALecc.txt
+  MAPPING: mappingCALecc.yaml
  CLA:
   NAME: CL
-  MAPPING: mappingCLAecc.txt
+  MAPPING: mappingCLAecc.yaml
 
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 

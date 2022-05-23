@@ -9,21 +9,21 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPE:
     NAME: PE
-    MAPPING: mappingPOPElipid17.txt
+    MAPPING: mappingPOPElipid17.yaml
     COUNT:
     - 250
     - 250
   SOD:
     NAME: Na+
-    MAPPING: mappingNA+.txt
+    MAPPING: mappingNa+.yaml
     COUNT: 50
   CLA:
     NAME: Cl-
-    MAPPING: mappingCL-.txt
+    MAPPING: mappingCl-.yaml
     COUNT: 50
   SOL:
     NAME: WAT
-    MAPPING: mappingwaterlipid14.txt
+    MAPPING: mappingwaterlipid14.yaml
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

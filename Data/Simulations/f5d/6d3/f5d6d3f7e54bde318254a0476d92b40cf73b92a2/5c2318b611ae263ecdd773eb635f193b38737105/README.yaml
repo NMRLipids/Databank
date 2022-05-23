@@ -22,21 +22,21 @@ TOP:
 COMPOSITION:
   DPPC:
     NAME: DPPC
-    MAPPING: mappingDPPCslipid.txt
+    MAPPING: mappingDPPCslipid.yaml
     COUNT:
     - 100
     - 100
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
     COUNT: 9000
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 21
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 21
 TRAJECTORY_SIZE: 388557384
 TRJLENGTH: 200100.0

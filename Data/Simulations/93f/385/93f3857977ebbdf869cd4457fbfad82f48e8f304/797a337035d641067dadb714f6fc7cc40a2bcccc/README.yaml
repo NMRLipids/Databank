@@ -20,19 +20,19 @@ TOP: null
 COMPOSITION:
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLslipid.txt
+    MAPPING: mappingCHOLESTEROLslipid.yaml
     COUNT:
     - 76
     - 78
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
     COUNT:
     - 179
     - 179
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 21183
 TRAJECTORY_SIZE: 458213532
 TRJLENGTH: 100100.0

@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.1293889
+
+SOFTWARE: gromacs
+TRJ: md-POPE_berger_303K_repH_v1_100-200ns.xtc
+TPR: for-md-POPE_berger_303K_repH_v1.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPE: Berger_POPE
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Thomas Piggot
+
+SYSTEM: 128POPE_3552SOL_303K_v1
+SOFTWARE_VERSION: 4.0.7
+
+FF: Berger-POPE-2004
+FF_SOURCE: starting structure from equilibrated POPE membrane simulated with the GROMOS-CKP force field, PE parameters https://pubs.acs.org/doi/abs/10.1021/jp0366926
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO: md-POPE_berger_303K_repH_v1.gro

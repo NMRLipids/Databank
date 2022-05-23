@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.1475285
+
+SOFTWARE: gromacs
+TRJ: trajectory.xtc
+TPR: topol.tpr
+PREEQTIME: 40
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  POPS: Berger_POPS
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCberger.yaml
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSberger.yaml
+ SOD: 
+  NAME: Na
+  MAPPING: mappingNa.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila O. H. Samuli
+
+SYSTEM: 102POPC_26POPS_26SOD_4290SOL_310K_Berger
+SOFTWARE_VERSION:
+
+FF: Berger 
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: run.gro

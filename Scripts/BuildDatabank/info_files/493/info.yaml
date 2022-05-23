@@ -1,0 +1,85 @@
+DOI: 10.5281/zenodo.887351
+
+
+
+SOFTWARE: gromacs
+
+TRJ: traj.xtc
+
+TPR: topol.tpr
+
+PREEQTIME: 100
+
+TIMELEFTOUT: 0
+
+
+
+UNITEDATOM_DICT:
+
+  POPC: Berger_POPC
+
+
+
+COMPOSITION:
+
+ POPC:
+
+  NAME: POPC
+
+  MAPPING: mappingPOPCberger.yaml
+
+ SOL:
+
+  NAME: SOL 
+
+  MAPPING: mappingSPCwater.yaml 
+
+ CAL: 
+
+  NAME: XCA
+
+  MAPPING: mappingXCA.yaml
+
+ CLA: 
+
+  NAME: XCL
+
+  MAPPING: mappingXCL.yaml
+
+
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK
+
+
+
+PUBLICATION: 10.1038/srep38035
+
+AUTHORS_CONTACT: Cwiklik Lukasz
+
+
+
+SYSTEM: 128POPC_4452SOL_8CAL_16CLA_310K_Berger
+
+SOFTWARE_VERSION: 4.5.5
+
+
+
+FF: Berger 
+
+FFCAL: scaled charges
+
+FFCLA: scaled charges
+
+FF_SOURCE:
+
+FF_DATE:
+
+
+
+CPT:
+
+LOG:
+
+TOP: topol.top
+
+GRO: conf.gro

@@ -6,10 +6,10 @@ import yaml
 
 
 
-for filename in os.scandir('./mapping_files/'):
+for filename in os.scandir('./mapping_files/mapping_files_txt/'):
     if filename.path.endswith('mappingDESCRIBE.txt') or filename.path.endswith('mappingPOPCulmschneider.txt') or filename.path == './mapping_files/mapping_files_yaml':
         continue
-#    elif filename.path.endswith('mappingPOPClipid17ecc.txt'):
+  #  if filename.path.endswith('mappingPOPClipid17ecc.txt'):
     #    if filename == 'mappingPOPCslipids.txt':
   #          print('toimii')
     else:
@@ -46,8 +46,17 @@ for filename in os.scandir('./mapping_files/'):
                         fragment = 'headgroup'
                     else:
                         fragment = 'tail'
+                elif 'CER' in filename.path:
+                    if 'M_G3O1H1_M' in generic_name:
+                        fragment = 'headgroup'
+                    elif 'M_G3' in generic_name or 'M_G2H1_M'  in generic_name or 'M_G2_M'  in generic_name or 'M_G2N'  in generic_name or 'M_G1_M' in generic_name or 'M_G1H2_M'   in generic_name or 'M_G1O1_M'  in generic_name or 'M_G1O1H1_M'   in generic_name:
+                        fragment = 'backbone'
+                    elif 'M_G2' in generic_name:
+                        fragment = 'sn-2'
+                    elif 'M_G1' in generic_name:
+                        fragment = 'sn-1'                        
                 elif 'PC' in filename.path or 'PE' in filename.path or 'PS' in filename.path or 'PG' in filename.path or 'PI' in filename.path: #phospholipids
-                    if 'M_G3_M' in generic_name or 'M_G3H' in generic_name or 'M_G1_M' in generic_name or 'M_G1H' in generic_name or 'M_G2_M' in generic_name or 'M_G2H' in generic_name: 
+                    if 'M_G3_M' in generic_name or 'M_G3H' in generic_name or 'M_G3O1' in generic_name or 'M_G1_M' in generic_name or 'M_G1O1_M' in generic_name or 'M_G1H' in generic_name or 'M_G2_M' in generic_name or 'M_G2H' in generic_name  or 'M_G1O' in generic_name or 'M_G2O' in generic_name: 
                         fragment = 'glycerol backbone'
                     elif 'M_G3' in generic_name:
                         fragment = 'headgroup'
@@ -55,6 +64,13 @@ for filename in os.scandir('./mapping_files/'):
                         fragment = 'sn-1'
                     elif 'M_G2C' in generic_name:
                         fragment = 'sn-2'
+                elif 'DHMDMAB' in filename.path:
+                    if 'M_G1C' in generic_name:
+                        fragment = 'sn-1'
+                    elif 'M_G2C' in generic_name:
+                        fragment = 'sn-2'
+                    elif 'M_N1' in generic_name:
+                        fragment = 'headgroup'
                 else:
                     fragment = ""
                         
@@ -70,11 +86,12 @@ for filename in os.scandir('./mapping_files/'):
         print("number of atoms in txt file: " + str(linecount))
         print("####################")
         
-        if len(mapping_dict.keys()) == linecount:
-            new_file = './mapping_files/mapping_files_yaml/' + fname + '.yaml'
-           # print(new_file)
+        #if len(mapping_dict.keys()) == linecount:
+           # new_file = './mapping_files/mapping_files_yaml/' + fname + '.yaml'
+        new_file = './mapping_files/' + fname + '.yaml'
+        #print(new_file)
         
-            with open(new_file,'w') as f:
-                yaml.dump(mapping_dict, f)
-            f.close()
+        with open(new_file,'w') as f:
+            yaml.dump(mapping_dict, f,sort_keys=False)
+        #f.close()
 

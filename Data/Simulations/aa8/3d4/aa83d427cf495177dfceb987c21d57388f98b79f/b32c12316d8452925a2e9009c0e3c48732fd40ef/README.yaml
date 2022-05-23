@@ -20,17 +20,17 @@ TOP: null
 COMPOSITION:
   DOPS:
     NAME: DOPS
-    MAPPING: mappingDOPSslipids.txt
+    MAPPING: mappingDOPSslipids.yaml
     COUNT:
     - 144
     - 144
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 11232
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 288
 TRAJECTORY_SIZE: 668567244
 TRJLENGTH: 50020.0
@@ -42,3 +42,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     DOPS: {}
   FORMFACTOR: {}
+path: ../../Data/Simulations/aa8/3d4/aa83d427cf495177dfceb987c21d57388f98b79f/b32c12316d8452925a2e9009c0e3c48732fd40ef/
+WARNINGS:
+  PBC: z-jumps

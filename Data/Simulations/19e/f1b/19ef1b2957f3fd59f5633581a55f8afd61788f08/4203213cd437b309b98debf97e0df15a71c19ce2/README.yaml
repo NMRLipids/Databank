@@ -17,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 16
     - 16
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   DPPC:
     NAME: DPPC
     COUNT:
     - 64
     - 64
-    MAPPING: mappingDPPCcharmm.txt
+    MAPPING: mappingDPPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 4800
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - DPPC_128_CHL1_32_310K_md.cpt

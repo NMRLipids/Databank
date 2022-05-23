@@ -1,0 +1,63 @@
+DOI: 10.5281/zenodo.838229
+SOFTWARE: gromacs
+TRJ:
+- - traj.xtc
+TPR:
+- - topol.tpr
+PREEQTIME: 150
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  POPS: Berger_POPS
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 51
+    - 51
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPSberger.yaml
+    COUNT:
+    - 13
+    - 13
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 4290
+  CES:
+    NAME: Cs
+    MAPPING: mappingCs.yaml
+    COUNT: 106
+  CLA:
+    NAME: Cl
+    MAPPING: mappingCl.yaml
+    COUNT: 80
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1016/j.bbamem.2011.11.033
+AUTHORS_CONTACT: Cwiklik, Lukasz
+SYSTEM: 102POPC_26POPS_4290SOL_106CES_80CLA_310K
+SOFTWARE_VERSION: 4.0.7
+FF: Berger
+FFCES: Dang's
+FFCLA: ffgmx
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - conf.gro
+TRAJECTORY_SIZE: 182051560
+TRJLENGTH: 50020.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 19790
+DATEOFRUNNING: 27/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    POPS: {}
+  FORMFACTOR: {}

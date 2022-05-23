@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: water
     COUNT: 10456
-    MAPPING: mappingTIP4Pwater.txt
+    MAPPING: mappingTIP4Pwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - original_CHARMM_tip4p2005water_no_ions.cpt

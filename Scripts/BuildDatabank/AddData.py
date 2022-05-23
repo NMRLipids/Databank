@@ -236,7 +236,7 @@ for key_sim, value_sim in sim.items():
             for file_provided in value_sim:
                 #print("File={0}".format(file_provided[0]))
                 file_url = download_link(DOI, file_provided[0])
-                if file_url == "":                        
+                if file_url == "":
                     wrong_links += 1
                     continue
                 try:
@@ -282,6 +282,7 @@ download_failed = False
 
 # Create temporary directory where to download files and analyze them
 dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+
 print("The data will be processed in directory path " + dir_tmp)
 
 if (not os.path.isdir(dir_tmp)): 
@@ -345,16 +346,13 @@ if download_failed:
 #dir_tmp = os.path.join(dir_wrk, "tmp/")
 sim_hashes = deepcopy(sim)
 
-#for sim in sims_hashes:
-# print("ID {0}".format(sim["ID"]), flush=True)
 software_sim = software_dict[sim['SOFTWARE'].upper()]
-# dir_sim = os.path.join(dir_tmp, str(sim["ID"])) 
     
 #list_containing the sha1 sums for all required files
 sha1_list_requied = []
     
 # Make empty dataframe with the desired columns
-df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'])
+df_files = pd.DataFrame(columns=['NAME','TYPE','REQUIRED','HASH'],dtype=object)
     
 for key_sim, value_sim in sim_hashes.items():
         #print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
@@ -452,16 +450,26 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim['COMPOSITION'].keys():
        m_file = sim['COMPOSITION'][key_mol]['MAPPING']
-       with open('./mapping_files/'+m_file,"r") as f:
-           for line in f:
-               if len(line.split()) > 2 and "Individual atoms" not in line:
-                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
-               elif "Individual atoms" in line:
-                   continue
-               else:
-                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-                   #print(selection)
-                   break
+       mapping_dict = {}
+       with open('./mapping_files/'+m_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+       yaml_file.close()
+       for key in mapping_dict.keys():
+           if 'RESIDUE' in mapping_dict[key].keys():
+               selection = selection + "(resname " + mapping_dict[key]['RESIDUE'] + " and name " + mapping_dict[key]['ATOMNAME'] + ") or "
+           else:      
+               selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+               break
+#       with open('./mapping_files/'+m_file,"r") as f:
+#           for line in f:
+#               if len(line.split()) > 2 and "Individual atoms" not in line:
+#                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
+#               elif "Individual atoms" in line:
+#                   continue
+#               else:
+#                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+#                   #print(selection)
+#                   break
     selection = selection.rstrip(' or ')
     #print("selection    " + selection)
     molecules = u0.select_atoms(selection)
@@ -491,15 +499,25 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim['COMPOSITION'].keys():
         m_file = sim['COMPOSITION'][key_mol]['MAPPING']
-        with open('./mapping_files/'+m_file,"r") as f:
-            for line in f:
-                if len(line.split()) > 2 and "Individual atoms" not in line:
-                    selection = selection + "resname " + line.split()[2] + " and name " + line.split()[1] + " or "
-                elif "Individual atoms" in line:
-                    continue
-                else:
-                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-                    break
+        with open('./mapping_files/'+m_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
+        for key in mapping_dict.keys():
+           if 'RESIDUE' in mapping_dict[key].keys():
+               selection = selection + "resname " + mapping_dict[key]['RESIDUE'] + " and name " + mapping_dict[key]['ATOMNAME'] + " or "
+           else:      
+               selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+               break
+        
+#        with open('./mapping_files/'+m_file,"r") as f:
+#            for line in f:
+#                if len(line.split()) > 2 and "Individual atoms" not in line:
+#                    selection = selection + "resname " + line.split()[2] + " and name " + line.split()[1] + " or "
+#                elif "Individual atoms" in line:
+#                    continue
+#                else:
+#                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
+#                    break
     selection = selection.rstrip(' or ')
     print(selection)
     molecules = u0.select_atoms(selection)
@@ -586,24 +604,54 @@ number_of_atomsTRJ = len(u.atoms)
 
 number_of_atoms = 0
 for key_mol in all_molecules:
+    mapping_dict = {}
     try:
         mapping_file = './mapping_files/'+sim['COMPOSITION'][key_mol]['MAPPING']
     except:
         continue
+    else:
+        with open(mapping_file,"r") as yaml_file:
+           mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
+
     if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
-        lines = open(mapping_file).readlines(  )
         mapping_file_length = 0
-        for line in lines:
-            if 'H' in line:
+        
+        for key in mapping_dict.keys():
+            if 'H' in key:
                 continue
             else:
                 mapping_file_length += 1
+
+    #if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
+    #    lines = open(mapping_file).readlines(  )
+    #    mapping_file_length = 0
+    #    for line in lines:
+    #        if 'H' in line.split(" ")[0]:
+    #            continue
+    #        else:
+    #            mapping_file_length += 1
     else:
-        mapping_file_length = len(open(mapping_file).readlines(  ))
-    try:
+        mapping_file_length = len(mapping_dict.keys())
+         
+    try: 
         number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
     except:
         continue
+#    if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
+#        lines = open(mapping_file).readlines(  )
+#        mapping_file_length = 0
+#        for line in lines:
+#            if 'H' in line:
+#                continue
+#            else:
+#                mapping_file_length += 1
+#    else:
+#        mapping_file_length = len(open(mapping_file).readlines(  ))
+#    try:
+#        number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
+#    except:
+#        continue
         
 
 if number_of_atoms != number_of_atomsTRJ:
@@ -611,7 +659,7 @@ if number_of_atoms != number_of_atomsTRJ:
     if stop == "n":
         os._exit("Interrupted because atomnumbers did not match")
     if stop == "y":
-        print("Progressed even thought that atom numbers did not math. CHECK RESULTS MANUALLY!")
+        print("Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!")
 
 sim['NUMBER_OF_ATOMS'] = number_of_atomsTRJ
 print("Number of atoms in the system: " + str(sim['NUMBER_OF_ATOMS']))

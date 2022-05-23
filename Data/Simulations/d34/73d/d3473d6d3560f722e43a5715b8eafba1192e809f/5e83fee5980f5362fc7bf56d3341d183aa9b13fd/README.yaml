@@ -20,13 +20,13 @@ TOP: null
 COMPOSITION:
   DPPE:
     NAME: DPPE
-    MAPPING: mappingDPPEslipids.txt
+    MAPPING: mappingDPPEslipids.yaml
     COUNT:
     - 144
     - 144
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 9386
 TRAJECTORY_SIZE: 586754784
 TRJLENGTH: 50020.0

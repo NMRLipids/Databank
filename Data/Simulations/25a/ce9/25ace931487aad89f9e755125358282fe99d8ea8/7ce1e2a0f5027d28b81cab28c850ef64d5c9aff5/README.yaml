@@ -13,24 +13,26 @@ FF_SOURCE: 10.5281/zenodo.2585523
 COMPOSITION:
   POPG:
     NAME: PGR
+    MOLTYPE: system2
     COUNT:
     - 44
     - 44
-    MAPPING: mappingPOPGlipid17.txt
+    MAPPING: mappingPOPGlipid17.yaml
   POPC:
     NAME: PC
+    MOLTYPE: system1
     COUNT:
     - 175
     - 175
-    MAPPING: mappingPOPClipid17.txt
+    MAPPING: mappingPOPClipid17.yaml
   SOL:
     NAME: SOL
     COUNT: 26265
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   SOD:
     NAME: NA
     COUNT: 88
-    MAPPING: mappingSODlipid17.txt
+    MAPPING: mappingSODlipid17.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 350040.0
 DATEOFRUNNING: 03/10/2021

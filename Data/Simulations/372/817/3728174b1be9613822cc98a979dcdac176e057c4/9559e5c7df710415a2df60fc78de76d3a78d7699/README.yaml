@@ -17,17 +17,17 @@ COMPOSITION:
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
     COUNT: 9102
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   POPE:
     NAME: POPE
     COUNT:
     - 64
     - 64
-    MAPPING: mappingPOPEcharmm.txt
+    MAPPING: mappingPOPEcharmm.yaml
 TIMELEFTOUT: 50
 CPT: null
 TRJLENGTH: 300100.0

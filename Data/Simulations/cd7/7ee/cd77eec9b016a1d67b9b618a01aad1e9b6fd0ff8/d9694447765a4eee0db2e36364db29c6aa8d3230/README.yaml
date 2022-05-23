@@ -9,27 +9,29 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPG:
     NAME: PGR
-    MAPPING: mappingPOPGlipid17.txt
+    MOLTYPE: system1
+    MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 187
     - 187
   POPE:
     NAME: PE
-    MAPPING: mappingPOPElipid17.txt
+    MOLTYPE: system2
+    MAPPING: mappingPOPElipid17.yaml
     COUNT:
     - 63
     - 63
   SOD:
     NAME: Na+
-    MAPPING: mappingNA+.txt
+    MAPPING: mappingNa+.yaml
     COUNT: 423
   CLA:
     NAME: Cl-
-    MAPPING: mappingCl-.txt
+    MAPPING: mappingCl-.yaml
     COUNT: 49
   SOL:
     NAME: WAT
-    MAPPING: mappingTIP3Plipid17.txt
+    MAPPING: mappingTIP3Plipid17.yaml
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

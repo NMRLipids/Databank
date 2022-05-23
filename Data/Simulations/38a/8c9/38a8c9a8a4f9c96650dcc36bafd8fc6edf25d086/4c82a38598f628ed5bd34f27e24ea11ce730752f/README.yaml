@@ -9,17 +9,17 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPS:
     NAME: POPS
-    MAPPING: mappingPOPScharmm.txt
+    MAPPING: mappingPOPScharmm.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 3600
   POT:
     NAME: K
-    MAPPING: mappingK.txt
+    MAPPING: mappingK.yaml
     COUNT: 72
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null

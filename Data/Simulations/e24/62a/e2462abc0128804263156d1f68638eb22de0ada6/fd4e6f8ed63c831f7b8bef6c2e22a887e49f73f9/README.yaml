@@ -12,24 +12,26 @@ FF_SOURCE: ??
 COMPOSITION:
   POPG:
     NAME: system2
+    MOLTYPE: system2
     COUNT:
     - 75
     - 75
-    MAPPING: mappingPOPGlipid17.txt
+    MAPPING: mappingPOPGlipid17.yaml
   POPC:
     NAME: system1
+    MOLTYPE: system1
     COUNT:
     - 175
     - 175
-    MAPPING: mappingPOPClipid17.txt
+    MAPPING: mappingPOPClipid17.yaml
   SOL:
     NAME: WAT
     COUNT: 25000
-    MAPPING: mappingTIP3Plipid17.txt
+    MAPPING: mappingTIP3Plipid17.yaml
   SOD:
     NAME: Na+
     COUNT: 150
-    MAPPING: mappingSODlipid17_2.txt
+    MAPPING: mappingSODlipid17_2.yaml
 TIMELEFTOUT: 0
 TRJLENGTH: 100010.0
 DATEOFRUNNING: 01/10/2021

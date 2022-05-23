@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.1293928
+
+SOFTWARE: gromacs
+TRJ: md-DOPE_berger_271K_repH_v1_100-200ns.xtc
+TPR: for-md-DOPE_berger_271K_repH_v1.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  DOPE: BergerTP_DOPE
+
+COMPOSITION:
+ DOPE:
+  NAME: DOPE
+  MAPPING: mappingDOPEbergerTP.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Thomas Piggot
+
+SYSTEM: 128DOPE_4789SOL_271K_v1
+SOFTWARE_VERSION: 4.0.7
+
+FF: Berger-DOPE-2004
+FF_SOURCE: starting structure was converted from equilibrated DOPC membrane simulated with GROMOS-CKP force field, https://pubs.acs.org/doi/abs/10.1021/jp0366926
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO: md-DOPE_berger_271K_repH_v1.gro

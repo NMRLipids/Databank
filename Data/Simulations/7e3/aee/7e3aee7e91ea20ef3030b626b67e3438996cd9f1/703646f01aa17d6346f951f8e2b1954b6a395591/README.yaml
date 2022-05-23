@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.1293891
+SOFTWARE: gromacs
+TRJ:
+- - md-POPE_berger_303K_repH2_v1_100-200ns.xtc
+TPR:
+- - for-md-POPE_berger_303K_repH2_v1.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPE: Berger_POPE
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEberger.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 3552
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 128POPE_3552SOL_303K_Berger_v1
+SOFTWARE_VERSION: 4.0.7
+FF: Berger
+FF_SOURCE: PE parameters almost like https://pubs.acs.org/doi/abs/10.1021/jp0366926
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO:
+- - md-POPE_berger_303K_repH2_v1.gro
+TRAJECTORY_SIZE: 637741052
+TRJLENGTH: 100010.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 17312
+DATEOFRUNNING: 24/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE: {}
+  FORMFACTOR: {}

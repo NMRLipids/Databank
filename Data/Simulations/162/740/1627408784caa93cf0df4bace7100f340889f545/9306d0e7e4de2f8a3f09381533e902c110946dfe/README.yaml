@@ -9,21 +9,21 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPG:
     NAME: POG
-    MAPPING: mappingPOPGslipids.txt
+    MAPPING: mappingPOPGslipids.yaml
     COUNT:
     - 250
     - 250
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
     COUNT: 25000
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 549
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 49
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null

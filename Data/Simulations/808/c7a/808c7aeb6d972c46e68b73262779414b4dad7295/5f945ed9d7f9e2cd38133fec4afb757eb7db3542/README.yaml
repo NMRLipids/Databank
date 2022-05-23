@@ -21,21 +21,21 @@ TOP:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 36
     - 36
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 2168
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 37
   SOD:
     NAME: NA
-    MAPPING: mappingNA.txt
+    MAPPING: mappingNA.yaml
     COUNT: 37
 TRAJECTORY_SIZE: 359802172
 TRJLENGTH: 60010.0
@@ -47,3 +47,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
   FORMFACTOR: {}
+path: ../../Data/Simulations/808/c7a/808c7aeb6d972c46e68b73262779414b4dad7295/5f945ed9d7f9e2cd38133fec4afb757eb7db3542/
+WARNINGS:
+  PBC: z-jumps

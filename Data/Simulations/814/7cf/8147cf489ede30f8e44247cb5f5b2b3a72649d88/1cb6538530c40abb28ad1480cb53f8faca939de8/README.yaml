@@ -9,19 +9,19 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: PC
-    MAPPING: mappingPOPClipid14.txt
+    MAPPING: mappingPOPClipid14.yaml
     COUNT:
     - 36
     - 28
   CHOL:
     NAME: CHL
-    MAPPING: mappingCHOLESTEROLlipid14.txt
+    MAPPING: mappingCHOLESTEROLlipid14.yaml
     COUNT:
     - 32
     - 32
   SOL:
     NAME: WAT
-    MAPPING: mappingwaterlipid14.txt
+    MAPPING: mappingwaterlipid14.yaml
     COUNT: 3968
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
@@ -46,3 +46,6 @@ EXPERIMENT:
     POPC: {}
     CHOL: {}
   FORMFACTOR: {}
+path: ../../Data/Simulations/814/7cf/8147cf489ede30f8e44247cb5f5b2b3a72649d88/1cb6538530c40abb28ad1480cb53f8faca939de8/
+WARNINGS:
+  PBC: z-jumps

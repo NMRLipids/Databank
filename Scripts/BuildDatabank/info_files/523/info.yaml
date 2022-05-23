@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.16289
+
+SOFTWARE: gromacs
+TRJ: traj_dil.xtc
+TPR: topol.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 20
+
+UNITEDATOM_DICT:
+  DLPC: Berger_DPP
+
+COMPOSITION:
+ DLPC:
+  NAME: DPP
+  MAPPING: mappingDLPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Matej Kanduc
+
+SYSTEM: 72DLPC_1728SOL_300K
+SOFTWARE_VERSION: 4.5.4
+
+FF: Berger-DLPC-13
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: system.top
+GRO: init2_TI5.gro

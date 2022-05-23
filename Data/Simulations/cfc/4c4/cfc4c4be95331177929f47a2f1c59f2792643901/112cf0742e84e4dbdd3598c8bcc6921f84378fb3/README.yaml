@@ -14,12 +14,14 @@ DIR_WRK: /media/akiirikk/DATADRIVE1/tietokanta/Data/tmp/DATABANK/tmp_6-935999/
 COMPOSITION:
   POPC:
     NAME: PC
+    MOLTYPE: system1
     MAPPING: mappingPOPClipid17ecc.yaml
     COUNT:
     - 175
     - 175
   POPG:
     NAME: PGR
+    MOLTYPE: system2
     MAPPING: mappingPOPGlipid17ecc.yaml
     COUNT:
     - 44

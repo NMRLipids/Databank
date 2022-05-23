@@ -1,40 +1,38 @@
-FF_DATE: ??
-TYPEOFSYSTEM: lipid bilayer
+DOI: 10.5281/zenodo.1011096
 SYSTEM: POPG_T298K
-TEMPERATURE: 298.0
-NUMBER_OF_ATOMS: 27434
-EXPERIMENT:
-  ORDERPARAMETER:
-    POPG:
-      unpublished/ferreiraPOPG: unpublished/ferreiraPOPG/1
-      10.5281/zenodo.4748647: 10.1021/jacs.1c05549/1
-  FORMFACTOR: {}
+SOFTWARE: gromacs
+FF: CHARMM36
 FF_SOURCE: CHARMM-GUI
+FF_DATE: ??
+TRJ:
+- - run2.xtc
+TPR:
+- - run2.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 20
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 COMPOSITION:
   POPG:
     NAME: POPG
+    MAPPING: mappingPOPGcharmm.yaml
     COUNT:
     - 59
     - 59
-    MAPPING: mappingPOPGcharmm.txt
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 118
   SOL:
     NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
     COUNT: 4110
-    MAPPING: mappingTIP3PCHARMMgui.txt
-  SOD:
-    NAME: POT
-    COUNT: 118
-    MAPPING: mappingPOT.txt
-TIMELEFTOUT: 20
-TRJLENGTH: 100010.0
-DATEOFRUNNING: 01/10/2021
-FF: CHARMM36
-SOFTWARE: gromacs
-PREEQTIME: 0
-DOI: 10.5281/zenodo.1011096
 TRAJECTORY_SIZE: 1012328064
-TPR:
-- - run2.tpr
-TRJ:
-- - run2.xtc
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+TRJLENGTH: 100010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 27434
+DATEOFRUNNING: 24/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPG: {}
+  FORMFACTOR: {}

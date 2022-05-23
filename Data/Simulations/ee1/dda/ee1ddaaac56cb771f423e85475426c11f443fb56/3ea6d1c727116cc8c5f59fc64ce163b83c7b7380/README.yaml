@@ -1,49 +1,50 @@
-AUTHORS_CONTACT: Nencini, Ricky
-FF_DATE: null
-SYSTEM: 200POPC_9000SOL_157SOD_157CLA_310K
-TYPEOFSYSTEM: lipid bilayer
-TEMPERATURE: 310.15
+DOI: 10.5281/zenodo.3434396
+SOFTWARE: gromacs
+TRJ:
+- - NB-Fix-sodium_943mM.xtc
+TPR:
+- - NB-Fix-sodium_943mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 9000
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 157
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 157
+DIR_WRK: /home/lara/Databank
 PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 200POPC_9000SOL_157SOD_157CLA_310K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FFSOL: TIP3P
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO: null
+TRAJECTORY_SIZE: 753242708
+TRJLENGTH: 375600.0
+TEMPERATURE: 310.15
 NUMBER_OF_ATOMS: 54114
+DATEOFRUNNING: 06/05/2022
+TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
   FORMFACTOR: {}
-FF_SOURCE: CHARMM-GUI v1.7
-COMPOSITION:
-  CLA:
-    NAME: CLA
-    COUNT: 157
-    MAPPING: mappingCLA.txt
-  POPC:
-    NAME: POPC
-    COUNT:
-    - 100
-    - 100
-    MAPPING: mappingPOPCcharmm.txt
-  SOL:
-    NAME: SOL
-    COUNT: 9000
-    MAPPING: mappingTIP3PCHARMMgui.txt
-  SOD:
-    NAME: SOD
-    COUNT: 157
-    MAPPING: mappingSOD.txt
-TIMELEFTOUT: 0
-CPT: null
-TRJLENGTH: 375600.0
-TRAJECTORY_SIZE: 753242708
-SOFTWARE_VERSION: 5.1.4
-FF: CHARMM36
-TOP:
-- - topol.top
-PREEQTIME: 0
-DOI: 10.5281/zenodo.1198454
-DATEOFRUNNING: 01/10/2021
-TPR:
-- - topol.tpr
-TRJ:
-- - traj_comp.xtc
-LOG: null
-SOFTWARE: gromacs
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/

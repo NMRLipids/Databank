@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.1293932
+
+SOFTWARE: gromacs
+TRJ: md_POPE_CKP_new_NH3_PME_verlet_v1_100-500ns.xtc
+TPR: for-md_POPE_CKP_new_NH3_PME_verlet_v1.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPE: GROMOSCKP_TP_POPE
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEGROMOS_CKP_TP.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Thomas Piggot
+
+SYSTEM: 128POPE_3552SOL_313K_GROMOS-CKP_v1
+SOFTWARE_VERSION: 5.0.6
+
+FF: GROMOS-CKP
+FF_SOURCE: https://pubs.acs.org/doi/abs/10.1021/jp207013v
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO: md_POPE_CKP_new_NH3_PME_verlet_v1.gro

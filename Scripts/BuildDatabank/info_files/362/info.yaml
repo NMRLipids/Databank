@@ -9,10 +9,10 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPE:
   NAME: POPE
-  MAPPING: mappingPOPEmacrogFUCHS.txt 
+  MAPPING: mappingPOPEmacrogFUCHS.yaml 
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

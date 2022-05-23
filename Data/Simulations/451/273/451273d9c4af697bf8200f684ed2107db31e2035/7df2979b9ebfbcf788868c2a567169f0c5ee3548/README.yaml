@@ -9,17 +9,17 @@ TIMELEFTOUT: 200
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCMaciejewskiRog2.txt
+    MAPPING: mappingPOPCMaciejewskiRog2.yaml
     COUNT:
     - 57
     - 57
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 6400
   CHOL:
     NAME: CHO
-    MAPPING: mappingCHOLESTEROLmacrog.txt
+    MAPPING: mappingCHOLESTEROLmacrog.yaml
     COUNT:
     - 7
     - 7

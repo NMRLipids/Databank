@@ -11,21 +11,21 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: PLA
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 64
     - 64
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
     COUNT: 44
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 88
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 7157
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
@@ -49,3 +49,7 @@ TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 28259
 DATEOFRUNNING: 16/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

@@ -9,10 +9,10 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPC:
   NAME: POPC
-  MAPPING: mappingPOPCMaciejewskiRog1.txt
+  MAPPING: mappingPOPCMaciejewskiRog1.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingSPCwater.txt
+  MAPPING: mappingSPCwater.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

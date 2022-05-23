@@ -22,13 +22,13 @@ TOP:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
     COUNT:
     - 100
     - 100
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
     COUNT: 9000
 TRAJECTORY_SIZE: 988758448
 TRJLENGTH: 500100.0

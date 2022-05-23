@@ -17,25 +17,25 @@ COMPOSITION:
     COUNT:
     - 27
     - 23
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 9000
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
   POPC:
     NAME: POPC
     COUNT:
     - 100
     - 100
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   CAL:
     NAME: Cal
     COUNT: 73
-    MAPPING: mappingCAL_2.txt
+    MAPPING: mappingCAL_2.yaml
   CLA:
     NAME: CL
     COUNT: 146
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 2000100.0

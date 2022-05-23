@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.887400
+
+SOFTWARE: gromacs
+TRJ: traj.xtc
+TPR: topol.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_POPC
+  POPS: Berger_POPS
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCberger.yaml
+ POPS:
+  NAME: POPS
+  MAPPING: mappingPOPSberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ CAL:
+  NAME: XCA
+  MAPPING: mappingXCA.yaml
+ CLA:
+  NAME: XCl
+  MAPPING: mappingXCL.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1038/srep38035
+AUTHORS_CONTACT: Cwiklik Lukasz
+
+SYSTEM: 104POPC_24POPS_4306SOL_72CAL_112CLA_310K
+SOFTWARE_VERSION: 4.5.5
+
+FF: Berger
+FFCAL: scaled charges
+FFCLA: scaled charges
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: conf.gro

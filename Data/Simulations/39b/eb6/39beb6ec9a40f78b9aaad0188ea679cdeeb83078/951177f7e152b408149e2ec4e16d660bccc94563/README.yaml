@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 61
     - 61
-    MAPPING: mappingPOPCslipids.txt
+    MAPPING: mappingPOPCslipids.yaml
   SOL:
     NAME: SOL
     COUNT: 4880
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 1200010.0

@@ -1,0 +1,55 @@
+DOI: 10.5281/zenodo.32144
+SOFTWARE: gromacs
+TRJ:
+- - run2.xtc
+TPR:
+- - run2.tpr
+PREEQTIME: 60
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 64
+    - 64
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 44
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 44
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 7202
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Ollila O. H. Samuli
+SYSTEM: 128POPC_44SOD_44CLA_7202SOL_298K_Berger
+SOFTWARE_VERSION: 4.5
+FF: Berger delivered by Peter Tieleman
+FFSOD: ffgmx parameters
+FFCLA: ffgmx parameters
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popcNACL.top
+GRO:
+- - run.gro
+TRAJECTORY_SIZE: 525214684
+TRJLENGTH: 50850.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 28350
+DATEOFRUNNING: 24/03/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

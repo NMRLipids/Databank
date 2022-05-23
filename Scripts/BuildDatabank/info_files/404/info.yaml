@@ -9,10 +9,10 @@ TIMELEFTOUT: 0
 COMPOSITION:
  POPE:
   NAME: POPE
-  MAPPING: mappingPOPEslipids.txt
+  MAPPING: mappingPOPEslipids.yaml
  SOL:
   NAME: SOL
-  MAPPING: mappingTIP3PwaterSlipids.txt
+  MAPPING: mappingTIP3PwaterSlipids.yaml
  
 DIR_WRK: /usr/home/bort/Databank
 

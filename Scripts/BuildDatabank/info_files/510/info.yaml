@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.1402441
+
+SOFTWARE: gromacs
+TRJ: md_dt100_OK_centered.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+
+UNITEDATOM_DICT:
+  POPC: Berger_POPC  
+  DOPE: BergerPF_DOPE
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCberger.yaml
+ DOPE:
+  NAME: DOPE
+  MAPPING: mappingDOPEbergerPF.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Bacle Amélie; Fuchs Patrick F.J.
+
+SYSTEM: 128POPC_128DOPE_11096SOL_300K
+SOFTWARE_VERSION:
+
+FF: Berger (modified to add a repulsive potential onto the ethanolamine hydrogens)
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO: start.gro

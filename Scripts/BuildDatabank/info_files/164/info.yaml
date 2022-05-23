@@ -20,16 +20,16 @@ TOP: md10.top
 COMPOSITION:
   CHOL:
     NAME: CHL1
-    MAPPING: mappingCHOLESTEROLcharmm.txt
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml

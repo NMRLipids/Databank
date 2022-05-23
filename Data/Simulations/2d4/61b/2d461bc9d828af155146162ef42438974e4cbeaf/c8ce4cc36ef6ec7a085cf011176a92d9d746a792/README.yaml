@@ -6,21 +6,21 @@ NUMBER_OF_ATOMS: 35280
 EXPERIMENT:
   ORDERPARAMETER:
     POPE:
-      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
       10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
   FORMFACTOR: 10.1021/jp511159q/1
 FF_SOURCE: CHARMM-GUI
 COMPOSITION:
   SOL:
     NAME: TIP3
     COUNT: 5760
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml
   POPE:
     NAME: POPE
     COUNT:
     - 72
     - 72
-    MAPPING: mappingPOPEcharmm.txt
+    MAPPING: mappingPOPEcharmm.yaml
 TIMELEFTOUT: 50
 TRJLENGTH: 500100.0
 DATEOFRUNNING: 01/10/2021

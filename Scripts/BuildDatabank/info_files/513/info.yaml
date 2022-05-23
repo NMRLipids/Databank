@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.44622
+
+SOFTWARE: gromacs
+TRJ: pzpcRUN2.trr
+TPR: pzpcRUN2.tpr
+PREEQTIME: 60
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+  PAzePCdeprot: Berger_PZPC  
+
+COMPOSITION:
+ POPC:
+  NAME: PLA
+  MAPPING: mappingPOPCberger.yaml
+ PAzePCdeprot: 
+  NAME: PZPC
+  MAPPING: mappingPAZEPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ POT:
+  NAME: K
+  MAPPING: mappingK.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/acs.langmuir.6b00788 
+AUTHORS_CONTACT: Ollila, Samuli; Khandelia, Himanshu 
+
+SYSTEM: 90POPC_38PAzePCdeprot_7250SOL_38POT_298K
+SOFTWARE_VERSION: 4.5
+
+FF: Berger
+FF_SOURCE: H. Khandelia and O. G. Mouritsen, Biophysical Journal, 2009, 96(7), 2734 – 2743, http://dx.doi.org/10.1016/j.bpj.2009.01.007 for PAzePCdeprot
+FF_DATE:
+
+CPT:
+LOG:
+TOP: pzpc.top
+GRO: pzpcRUN2.gro

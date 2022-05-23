@@ -11,13 +11,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
   POPC:
     NAME: PLA
-    MAPPING: mappingPOPCberger.txt
+    MAPPING: mappingPOPCberger.yaml
     COUNT:
     - 82
     - 46
   SOL:
     NAME: SOL
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
     COUNT: 896
 DIR_WRK: /home/lara/Databank
 PUBLICATION: 10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878
@@ -39,3 +39,7 @@ TEMPERATURE: 298.0
 NUMBER_OF_ATOMS: 9344
 DATEOFRUNNING: 16/03/2022
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}

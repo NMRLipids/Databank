@@ -20,22 +20,22 @@ TOP: topol.top
 COMPOSITION:
   DMPC:
     NAME: DMPC
-    MAPPING: mappingDMPCcharmm.txt
+    MAPPING: mappingDMPCcharmm.yaml
   POPI:
     NAME: POPI
-    MAPPING: mappingPOPIcharmm.txt
+    MAPPING: mappingPOPIcharmm.yaml
   SAPI:
     NAME: SAPI
-    MAPPING: mappingSAPIcharmm.txt
+    MAPPING: mappingSAPIcharmm.yaml
   SLPI:
     NAME: SLPI
-    MAPPING: mappingSLPIcharmm.txt
+    MAPPING: mappingSLPIcharmm.yaml
   SOD:
     NAME: SOD
-    MAPPING: mappingSOD.txt
+    MAPPING: mappingSOD.yaml
   CLA:
     NAME: CLA
-    MAPPING: mappingCLA.txt
+    MAPPING: mappingCLA.yaml
   SOL:
     NAME: TIP3
-    MAPPING: mappingTIP3PCHARMMgui.txt
+    MAPPING: mappingTIP3PCHARMMgui.yaml

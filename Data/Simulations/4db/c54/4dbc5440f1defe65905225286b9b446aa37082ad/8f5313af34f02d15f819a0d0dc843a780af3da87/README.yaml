@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 36
     - 36
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 2239
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
 TIMELEFTOUT: 0
 CPT:
 - - POPC_72_310K_rmcomm_leaflets_low_hydration_md.cpt

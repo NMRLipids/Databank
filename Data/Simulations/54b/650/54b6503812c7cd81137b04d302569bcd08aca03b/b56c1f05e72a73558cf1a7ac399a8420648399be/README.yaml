@@ -16,11 +16,11 @@ COMPOSITION:
     COUNT:
     - 36
     - 36
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
   SOL:
     NAME: SOL
     COUNT: 2242
-    MAPPING: mappingSPCwater.txt
+    MAPPING: mappingSPCwater.yaml
 TIMELEFTOUT: 0
 CPT: null
 TRJLENGTH: 20005.0
@@ -39,3 +39,6 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+path: ../../Data/Simulations/54b/650/54b6503812c7cd81137b04d302569bcd08aca03b/b56c1f05e72a73558cf1a7ac399a8420648399be/
+WARNINGS:
+  PBC: z-jumps

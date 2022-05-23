@@ -1,0 +1,58 @@
+DOI: 10.5281/zenodo.44622
+SOFTWARE: gromacs
+TRJ:
+- - pzpcRUN2.trr
+TPR:
+- - pzpcRUN2.tpr
+PREEQTIME: 60
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+  PAzePCdeprot: Berger_PZPC
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 45
+    - 45
+  PAzePCdeprot:
+    NAME: PZPC
+    MAPPING: mappingPAZEPCbergerDEPROT.yaml
+    COUNT:
+    - 19
+    - 19
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 7250
+  POT:
+    NAME: K
+    MAPPING: mappingK.yaml
+    COUNT: 38
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1021/acs.langmuir.6b00788
+AUTHORS_CONTACT: Ollila, Samuli; Khandelia, Himanshu
+SYSTEM: 90POPC_38PAzePCdeprot_7250SOL_38POT_298K
+SOFTWARE_VERSION: 4.5
+FF: Berger
+FF_SOURCE: "H. Khandelia and O. G. Mouritsen, Biophysical Journal, 2009, 96(7), 2734\
+  \ \u2013 2743, http://dx.doi.org/10.1016/j.bpj.2009.01.007 for PAzePCdeprot"
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - pzpc.top
+GRO:
+- - pzpcRUN2.gro
+TRAJECTORY_SIZE: 2029852392
+TRJLENGTH: 60020.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 28178
+DATEOFRUNNING: 12/04/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    PAzePCdeprot: {}
+  FORMFACTOR: {}

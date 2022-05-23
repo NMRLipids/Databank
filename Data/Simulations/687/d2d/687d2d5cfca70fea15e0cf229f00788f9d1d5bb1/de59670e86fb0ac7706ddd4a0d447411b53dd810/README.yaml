@@ -21,21 +21,21 @@ TOP:
 COMPOSITION:
   POPC:
     NAME: POPC
-    MAPPING: mappingPOPCcharmm.txt
+    MAPPING: mappingPOPCcharmm.yaml
     COUNT:
     - 100
     - 100
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3Pwater.txt
+    MAPPING: mappingTIP3Pwater.yaml
     COUNT: 9000
   CAL:
     NAME: Cal
-    MAPPING: mappingCal.txt
+    MAPPING: mappingCal.yaml
     COUNT: 73
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
     COUNT: 146
 TRAJECTORY_SIZE: 200297764
 TRJLENGTH: 100100.0

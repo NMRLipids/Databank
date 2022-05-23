@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.32144
+
+SOFTWARE: gromacs
+TRJ: run2.xtc
+TPR: run2.tpr
+PREEQTIME: 60
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+
+COMPOSITION:
+ POPC:
+  NAME: PLA
+  MAPPING: mappingPOPCberger.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ CLA:
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila O. H. Samuli
+
+SYSTEM: 128POPC_44SOD_44CLA_7202SOL_298K_Berger
+SOFTWARE_VERSION: 4.5
+
+FF: Berger delivered by Peter Tieleman
+FFSOD: ffgmx parameters
+FFCLA: ffgmx parameters
+FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads
+FF_DATE:
+
+CPT:
+LOG:
+TOP: popcNACL.top
+GRO: run.gro

@@ -19,13 +19,13 @@ TOP: dopc_ld_ca.top
 COMPOSITION:
   DOPC:
     NAME: DOPC
-    MAPPING: mappingDOPCslipids.txt
+    MAPPING: mappingDOPCslipids.yaml
   SOL:
     NAME: SOL
-    MAPPING: mappingTIP3PwaterSlipids.txt
+    MAPPING: mappingTIP3PwaterSlipids.yaml
   CAL:
     NAME: CA
-    MAPPING: mappingCA.txt
+    MAPPING: mappingCA.yaml
   CLA:
     NAME: CL
-    MAPPING: mappingCL.txt
+    MAPPING: mappingCL.yaml
