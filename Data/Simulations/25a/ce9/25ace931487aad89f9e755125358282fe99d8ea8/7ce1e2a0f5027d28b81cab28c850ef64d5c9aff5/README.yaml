@@ -13,12 +13,14 @@ FF_SOURCE: 10.5281/zenodo.2585523
 COMPOSITION:
   POPG:
     NAME: PGR
+    MOLTYPE: system2
     COUNT:
     - 44
     - 44
     MAPPING: mappingPOPGlipid17.yaml
   POPC:
     NAME: PC
+    MOLTYPE: system1
     COUNT:
     - 175
     - 175

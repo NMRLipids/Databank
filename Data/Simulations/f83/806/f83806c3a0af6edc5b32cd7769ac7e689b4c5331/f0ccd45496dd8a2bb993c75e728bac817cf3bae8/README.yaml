@@ -60,3 +60,6 @@ EXPERIMENT:
     CHOL: {}
     DOPC: {}
   FORMFACTOR: {}
+WARNINGS:
+  ORIENTATION: x-normal
+  

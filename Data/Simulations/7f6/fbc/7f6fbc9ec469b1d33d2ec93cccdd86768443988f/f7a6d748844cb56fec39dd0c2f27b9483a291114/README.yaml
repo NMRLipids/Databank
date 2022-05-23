@@ -47,3 +47,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
   FORMFACTOR: {}
+WARNINGS:
+  PBC: z-jumps
+  

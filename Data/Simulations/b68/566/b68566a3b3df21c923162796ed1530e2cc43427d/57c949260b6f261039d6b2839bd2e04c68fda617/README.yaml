@@ -53,3 +53,6 @@ EXPERIMENT:
     DPPC: {}
     DCHOL: {}
   FORMFACTOR: {}
+WARNINGS:
+  ORIENTATION: x-normal
+ 

@@ -12,12 +12,14 @@ FF_SOURCE: ??
 COMPOSITION:
   POPG:
     NAME: system2
+    MOLTYPE: system2
     COUNT:
     - 75
     - 75
     MAPPING: mappingPOPGlipid17.yaml
   POPC:
     NAME: system1
+    MOLTYPE: system1
     COUNT:
     - 175
     - 175

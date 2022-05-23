@@ -9,22 +9,26 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPG:
     NAME: PGR
+    MOLTYPE: system1
     MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 187
     - 187
   POPE:
     NAME: PE
+    MOLTYPE: system2
     MAPPING: mappingPOPElipid17.yaml
     COUNT:
     - 63
     - 63
   SOD:
     NAME: Na+
+    MOLTYPE: Na+
     MAPPING: mappingNa+.yaml
     COUNT: 374
   SOL:
     NAME: WAT
+    MOLTYPE: WAT
     MAPPING: mappingTIP3Plipid17.yaml
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank

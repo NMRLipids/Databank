@@ -9,12 +9,14 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPC:
     NAME: PC
+    MOLTYPE: system1
     MAPPING: mappingPOPClipid17.yaml
     COUNT:
     - 75
     - 75
   POPG:
     NAME: PGR
+    MOLTYPE: system2
     MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 76
