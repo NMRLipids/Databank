@@ -1,0 +1,38 @@
+DOI: 
+
+SOFTWARE: Gromacs 
+TRJ: run_pope_dog_lipid17.xtc
+TPR: run_pope_dog_lipid17.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 100 
+
+UNITEDATOM_DICT:
+
+COMPOSITION:
+ POPE:
+  NAME: PE
+  MAPPING: mappingPOPElipid17.yaml
+ DOG:
+  NAME: DOG
+  MAPPING: mappingDOGlipid17.yaml
+ SOL: 
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ 
+DIR_WRK: /home/samuli/temp/
+
+PUBLICATION: 
+AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
+
+SYSTEM: 9.4%DOGinPOPEwithLipid17
+SOFTWARE_VERSION: 18.6
+
+FF: Lipid17
+FF_SOURCE: Amber tools
+FF_DATE: 2019
+	
+CPT:
+LOG:
+TOP:
+GRO:	
+ITP: 
