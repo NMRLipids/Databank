@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.2605546
+
+SOFTWARE: gromacs
+TRJ: dmpc128-200ns.trr
+TPR: dmpc128-200ns.tpr
+PREEQTIME: 52
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+ DMPC: BergerGROMOS53A6_DMPC
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCBergerGROMOS53A6.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Karttunen, Mikko
+
+SYSTEM: 128DMPC_3655SOL_323K
+SOFTWARE_VERSION:
+
+FF: Berger lipids + Gromos 53A6
+FF_SOURCE:
+FF_DATE:
+
+CPT: dmpc128-200ns.cpt
+LOG:
+TOP:
+GRO: dmpc128-200ns.gro
