@@ -35,11 +35,11 @@ for system in systems:
     if (not os.path.isfile(tpr_name)):
         response = urllib.request.urlretrieve(tpr_url, tpr_name)
                         
-    if (not os.path.isfile(trj_name)):
-        response = urllib.request.urlretrieve(trj_url, trj_name)
+    #if (not os.path.isfile(trj_name)):
+    #    response = urllib.request.urlretrieve(trj_url, trj_name)
 
     if 'gromacs' in system['SOFTWARE']:
-        os.system('echo System | gmx trjconv -s '+ tpr_name + ' -f '+ trj_name + ' -dump 0 -o ' + outfilename)
+        os.system('gmx editconf -f '+ tpr_name + ' -o ' + outfilename)
 
 
         
