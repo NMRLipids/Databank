@@ -125,6 +125,7 @@ DDOPC| 1,2-didocosahexaenoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
 DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
+DMTAP | 1,2-dimyristoyl-3-trimethylammonium-propane
 POPI | 
 SAPI | 
 SLPI | 
