@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.30894
+
+SOFTWARE: gromacs
+TRJ: 1m_popc_ulm_200.xtc
+TPR: run_200ns_gpu.tpr
+PREEQTIME: 5
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+ POPC: Ulmschneider_POPC
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCulmschneider.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml 
+ CLA: 
+  NAME: CL
+  MAPPING: mappingCL.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Girych Mykhailo; Ollila O. H. Samuli
+
+SYSTEM: 128POPC_5120SOL_77SOD_77CLA_298K
+SOFTWARE_VERSION: 5.0.3
+
+FF: Ulmschneider
+FFSOD: OPLS-AA
+FFCLA: OPLS-AA
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: topol.top
+GRO: confout.gro
