@@ -1,0 +1,95 @@
+DOI: 10.5281/zenodo.53151
+
+
+
+SOFTWARE: gromacs
+
+TRJ: tap50s05_21-200ns.xtc
+
+TPR: tap50s05_101ns.tpr
+
+PREEQTIME: 21
+
+TIMELEFTOUT: 0
+
+
+
+UNITEDATOM_DICT:
+
+  DMPC: Berger_DMPC
+
+  DMTAP: Berger_DMTA
+
+
+
+COMPOSITION:
+
+ DMPC:
+
+  NAME: DMPC
+
+  MAPPING: mappingDMPCBergerGROMOS53A6.yaml
+
+ DMTAP:
+
+  NAME: DMTA
+
+  MAPPING: mappingDMTAPberger.yaml
+
+ SOD:
+
+  NAME: Na
+
+  MAPPING: mappingNa.yaml
+
+ CLA:
+
+  NAME: Cl
+
+  MAPPING: mappingCl.yaml
+
+ SOL:
+
+  NAME: SOL 
+
+  MAPPING: mappingSPCwater.yaml
+
+
+
+DIR_WRK: /home/ohs/NMRlipids/temp/
+
+
+
+PUBLICATION: 10.1021/jp810233q; ISBN 978-952-60-3194-1
+
+AUTHORS_CONTACT: Miettinen, Markus S.; Gurtovenko, Andrey A.
+
+
+
+SYSTEM: 64DMPC_64DMTAP_48SOD_112CLA_5240SOL_323K
+
+SOFTWARE_VERSION: 3.x
+
+
+
+FF: Berger with DMTAP modification by Gurtovenko et al.
+
+FFSOL: SPC
+
+FF_SOURCE:
+
+FF_DATE:
+
+
+
+CPT:
+
+LOG:
+
+TOP: tap50s05.top
+
+GRO: tap50s05_200ns.gro
+
+WARNINGS:
+  GROMACS_VERSION: gromacs3
+  
