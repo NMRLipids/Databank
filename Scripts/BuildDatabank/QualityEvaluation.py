@@ -531,7 +531,7 @@ def formfactorQuality(simFFdata, expFFdata):
         F_s = SimExpData[i][3]
         #print(SimExpData[i])
         
-        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / (k_e*deltaF_e)**2
     
         khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
 

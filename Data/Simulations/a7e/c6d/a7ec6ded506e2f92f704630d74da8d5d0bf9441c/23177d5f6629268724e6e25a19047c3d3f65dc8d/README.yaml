@@ -55,4 +55,4 @@ EXPERIMENT:
   FORMFACTOR: {}
 path: ../../Data/Simulations/a7e/c6d/a7ec6ded506e2f92f704630d74da8d5d0bf9441c/23177d5f6629268724e6e25a19047c3d3f65dc8d/
 WARNINGS:
-  PBC: z-jumps
+  ORIENTATION: x-normal
