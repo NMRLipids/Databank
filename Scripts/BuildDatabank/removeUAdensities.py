@@ -29,6 +29,7 @@ for system in systems:
             print(system['path'])
             os.system('rm ' + system['path'] + '/*Density*')
             os.system('rm ' + system['path'] + '/FormFactor*')
-            os.system('rm ' + system['path'] + '/thickness.json')
+            #os.system('rm ' + system['path'] + '/FormFactorQuality*')
+            #os.system('ls ' + system['path'] + '/thickness.json')
     except:
         continue

@@ -42,6 +42,7 @@ def getLipids(readme, molecules=lipids_dict.keys()):
     lipids = 'resname '
 
     for key1 in readme['COMPOSITION'].keys():
+        #print('TST',key1)
         if key1 in molecules:
             mapping_file = readme['COMPOSITION'][key1]['MAPPING']
             
@@ -49,8 +50,13 @@ def getLipids(readme, molecules=lipids_dict.keys()):
             
             switch = 0
             for key2 in mapping_dict:
+                #print(mapping_dict[key2]['RESIDUE'])
+                #if 'POPC' in key1:
+                #    res = mapping_dict[key2]['RESIDUE']
+                #    print('TST',res)
                 try:
                     res = mapping_dict[key2]['RESIDUE']
+                    #print('TST',res)
                 except KeyError:
                     switch = 1
                     continue
@@ -60,7 +66,7 @@ def getLipids(readme, molecules=lipids_dict.keys()):
             
             if switch == 1:
                 lipids = lipids + readme['COMPOSITION'][key1]['NAME'] + ' or resname '
-                break
+                #break
 
                      
     lipids = lipids[:-12]
@@ -83,7 +89,7 @@ def getWater(readme, molecules=lipids_dict.keys()):
 electron_dictionary={"H":1,"He":2,"Li":3,"Be":4,"B":5,"C":6,"N":7,"O":8,"F":9,"Ne":10,
                    "Na":10,"Mg":10,"Al":13,"Si":14,"P":15,"S":16,"Cl":18,"Ar":18,
                    "K":18,"Ca":18,"Sc":21,"Ti":22,"V":23,"Cr":24,"Mn":25,"Fe":26,"Co":27,"Ni":28,
-                     "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0}
+                     "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0,"Cs":54}
 	
 def filterHbonds(mapping_names):
     
@@ -124,9 +130,12 @@ def listNamePairs(mapping_dict,molecule):
             residues.append(mapping_dict[mapping_name]['RESIDUE'])
         except KeyError:
             continue
+            
+   # print(residues)
     
     if residues:
         pairs_dictionary = dict.fromkeys(residues)
+        print(pairs_dictionary.keys())
         for res in pairs_dictionary.keys():
             pairs = []
             for mapping_name in mapping_dict.keys():
@@ -135,7 +144,7 @@ def listNamePairs(mapping_dict,molecule):
             pairs_dictionary[res] = pairs
 
     else:
-        pairs_dictionary = dict.fromkeys(molecule)  
+        pairs_dictionary = dict.fromkeys([molecule])  
         pairs = []  
         for mapping_name in mapping_dict.keys():
             pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']]) 
@@ -193,7 +202,6 @@ class FormFactor:
         self.system_mapping = self.temporary_mapping_dictionary()
         
         self.calculate_weight()
-        
 
         self.calculate_density()
         
@@ -227,42 +235,39 @@ class FormFactor:
         print(molecule)
         "return list of electrons"
         electrons = []
-      #  molname = self.readme['COMPOSITION'][molecule]['NAME']
-      # residue_atoms, residue_names = listNamePairs(self.system_mapping[molecule])
+        #get the name of molecule used in simulation files
+        molname = self.readme['COMPOSITION'][molecule]['NAME']
       
-        pairs_residue = listNamePairs(self.system_mapping[molecule], molecule)
-        for res in pairs_residue.keys():
-            residue_atoms = list(self.u.select_atoms("resname " + res).atoms.names) #explicit atoms of the residue
-            for atom in residue_atoms:
+        pairs_residue = listNamePairs(self.system_mapping[molname], molname)
+        
+     #   print(pairs_residue)
+        
+        # if lipid is split to multiple residues
+        selection_txt = ""
+        
+        try:
+            selection_txt = "moltype " + self.readme['COMPOSITION'][molecule]['MOLTYPE'] + " and "
+        except KeyError:
+            pass
+            
+        
+        for res in pairs_residue.keys(): #KORJAA TOI res tossa explicit_atoms
+          #  print(res)                           #   when lipids are split into more than one residue in topology with same residue names e.g. PGR,PA,OL and PE, PA,OL
+                                                  #    u.select_atoms("resname " + res) does not distinguish which PA or PL belongs to POPG or POPE
+            selection_txt = selection_txt + "resname " + res
+            explicit_atoms = list(self.u.select_atoms(selection_txt).atoms.names) #explicit atoms of the residue
+            for atom in explicit_atoms:
+                #find generic mapping name matching to forcefield atom name
                 index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
                 atom_i1 = index_list.index(True)
-                mapping_name = pairs_residue[res][atom_i1][0] #does this work??
+                #print("atom_i1")
+                #print(atom_i1)
+  
+                mapping_name = pairs_residue[res][atom_i1][0] 
                 e_atom_i = self.getElectrons(mapping_name) #get number of electrons in an atom i of residue
+                #print(mapping_name + " " + str(e_atom_i))
                 electrons.append(e_atom_i)
 
-#        for i,residue in enumerate(self.u.residues.resnames):
-  #          if residue != "WAT" and residue != "CHL":
-  #              print(residue)
-  
-#            if residue_names:
-#                if residue in residue_names:
-#                    for atom in self.u.residues[i].atoms.names:
-#                        index_list = [atom in pairs for pairs in residue_atoms]
-#                        atom_i1 = index_list.index(True)
-#                        mapping_name = residue_atoms[atom_i1][0]
-                            
-#                        e_atom_i = self.getElectrons(mapping_name) #get number of electrons in an atom i of residue
-#                        electrons.append(e_atom_i)
-#            else:
-#                if residue == molecule:
-#                    for atom in self.u.residues[i].atoms.names:
-#                        index_list = [atom in pairs for pairs in residue_atoms]
-#                        atom_i1 = index_list.index(True)
-#                        mapping_name = residue_atoms[atom_i1][0]
-                            
-#                        e_atom_i = self.getElectrons(mapping_name) #get number of electrons in an atom i of residue
-                     #   print(molecule + " " + str(e_atom_i))
-#                        electrons.append(e_atom_i)
     #    print(electrons)
     #    print(len(electrons))
         return electrons
@@ -278,107 +283,65 @@ class FormFactor:
             UA = True
         
         weights=[]
-#        cSOL = 0
-#        cNA = 0
+        l_weights = [] #separate list for lipid electrons
+        w_weights = [] #separate list for water electrons
         
         if UA:  #UNITED ATOM SIMULATIONS
-            for molecule in self.system_mapping.keys():
-                print(molecule)
+            for molecule1 in self.readme['COMPOSITION'].keys():
+                print(molecule1)
                 
-                if molecule in lipids_dict:
+                if molecule1 in lipids_dict:
+                    molecule2 = self.readme['COMPOSITION'][molecule1]['NAME']
                     electrons=[]
+
+                    #print(molecule2, self.system_mapping[molecule2])
+                    pairs_residue = listNamePairs(self.system_mapping[molecule2], molecule2)
+                    atomsH = filterHbonds(self.system_mapping[molecule2].keys()) #list of hydrogen atoms
+                    #print(pairs_residue)
                     
-                    pairs_residue = listNamePairs(self.system_mapping[molecule], molecule)
-                    atomsH = filterHbonds(self.system_mapping[molecule].keys()) #list of hydrogen atoms
+                    selection_txt = ""
+        
+                    try:
+                        selection_txt = "moltype " + self.readme['COMPOSITION'][molecule2]['MOLTYPE'] + " and "
+                    except KeyError:
+                        pass
                     
                     # extract explicit atoms and get the mapping names
                     for res in pairs_residue.keys():
-                        residue_atoms = list(self.u.select_atoms("resname " + res).atoms.names) #explicit atoms of the residue
-                        for atom in residue_atoms:
+                        explicit_atoms = list(self.u.select_atoms("resname " + res).atoms.names) #explicit atoms of the residue
+                        for atom in explicit_atoms:
+                            #print(atom)
+                            #find generic mapping name matching to forcefield atom name
                             index_list = [atom in pairs for pairs in pairs_residue[res]] 
                             atom_i1 = index_list.index(True)
-                            mapping_name = pairs_residue[res][atom_i1][0] #does this work??
+                            mapping_name = pairs_residue[res][atom_i1][0]
                             name1 = re.sub(r'_M','',mapping_name[::1]) #remove _M from the end of mapping name
                 
                             #count how many times name1 occurs in atomsH i.e. how many H are bound to it
                             numberH = sum(1 for atomH in atomsH if name1 == re.sub(r'H[1-4]_M','',atomH[::1]))
                             number_e = self.getElectrons(mapping_name)
                             e_atom_i = number_e + numberH 
-                            print(name1 + " " + str(numberH))
+                            #print(name1 + " " + str(numberH))
                             electrons.append(e_atom_i)
                             
-                    # extract explicit atoms and get the mapping names
+                    
                     weights.extend(electrons)
+                    l_weights.extend(electrons)
                 else:
-                    weights.extend(self.residueElectronsAll(molecule))    
-                    
-#                    
-                   # atomsH = filterHbonds(self.system_mapping[molecule].keys()) #list of hydrogen atoms
-                   # boundToH = self.system_mapping[molecule].keys() - atomsH #list of atoms that are not hydrogen atoms
-                   # print("length of boundToH " + str(len(boundToH)))
-                    
-                   # residue_atoms, residue_names = listNamePairs(self.system_mapping[molecule]) # RESIDUES!!!
-#                    
-#                    print(residue_names)
-                    
-#                    for i,residue in enumerate(self.u.residues.resnames):
-#                        if residue_names:
-#                            if residue in residue_names:
-#                                for atom in self.u.residues[i].atoms.names:
-#                                    index_list = [atom in pairs for pairs in residue_atoms] #is it possible for atom name to appear more than once
-#                                    atom_i1 = index_list.index(True)
-#                                    mapping_name = residue_atoms[atom_i1][0]
-#                                    if mapping_name in atomsH:
-#                                        continue
-#                                    else:    
-#                                        name1 = re.sub(r'_M','',mapping_name[::1]) #remove _M from the end of mapping name
-                
-                                        #count how many times name1 occurs in atomsH i.e. how many H are bound to it
-#                                        numberH = sum(1 for atomH in atomsH if name1 == re.sub(r'H[1-4]_M','',atomH[::1]))
-                                        #for atom in boundToH:
-                
-#                                        number_e = self.getElectrons(mapping_name)
-                
-#                                        e_atom_i = number_e + numberH 
-                                      #  print(name1 + " " + str(numberH))
-#                                        electrons.append(e_atom_i)
-                                      
-#                        else:            
-#                            if residue == molecule:
-#                                for atom in self.u.residues[i].atoms.names:
-#                                    index_list = [atom in pairs for pairs in residue_atoms]
-#                                    atom_i1 = index_list.index(True)
-#                                    mapping_name = residue_atoms[atom_i1][0]
-#                                    if mapping_name in atomsH:
-#                                        continue
-#                                    else:    
-#                                        name1 = re.sub(r'_M','',mapping_name[::1]) #remove _M from the end of mapping name
-#                
-#                                        #count how many times name1 occurs in atomsH i.e. how many H are bound to it
-#                                        numberH = sum(1 for atomH in atomsH if name1 == re.sub(r'H[1-4]_M','',atomH[::1]))
-#                                        #for atom in boundToH:
-                
-#                                        number_e = self.getElectrons(mapping_name)
-#                
-#                                        e_atom_i = number_e + numberH 
-                                     #   print(name1 + " " + str(numberH))
-#                                        electrons.append(e_atom_i)
-#                    print(electrons)
-#                    print("length " + str(len(electrons)))                    
-#                    weights.extend(electrons)
-                    
-#                else:
-#                    print(molecule)
-                    
-#                    if molecule == "SOL":
-#                        cSOL += 1
-#                    if molecule == "NA":
-#                        cNA += 1
-#                    weights.extend(self.residueElectronsAll(molecule))
+                    w = self.residueElectronsAll(molecule1)
+                    weights.extend(w)    
+                    if molecule1 == 'SOL':
+                        w_weights.extend(w)
                     
         else:   #ALL ATOM SIMULATIONS
-            for molecule in self.system_mapping.keys():
-                weights.extend(self.residueElectronsAll(molecule))
+            for molecule in self.readme['COMPOSITION'].keys():
+                w = self.residueElectronsAll(molecule)
+                weights.extend(w)
+                if molecule in lipids_dict:
+                    l_weights.extend(w)
+                elif molecule == 'SOL':
+                    w_weights.extend(w)
+                
                     
            # how to do lipids split into three residues??    MAYBE WORKS 
               
@@ -386,7 +349,7 @@ class FormFactor:
       #  print("number of SOL: " + str(cSOL))
       #  print("number of NA: " + str(cNA))
              
-        return weights
+        return weights, l_weights, w_weights
         
               
     def calculate_weight(self):
@@ -408,18 +371,36 @@ class FormFactor:
         start_time=time.time()
         if self.density_type=="electron":
             #weights to calculate the electron density
-            self.wght= self.assignElectrons() # function that maps the electrons to atoms
+            self.wght, self.lipid_wght, self.water_wght = self.assignElectrons() # function that maps the electrons to atoms
             print("lenght of wght: " + str(len(self.wght)))
-           # print(self.wght)
+            print("lenght of lipid_wght: " + str(len(self.lipid_wght)))
+            #print(self.wght)
             print("atoms in system: " + str(len(self.u.atoms.names)))
+            
+            if len(self.wght) != len(self.u.atoms.names):
+                print("ERROR: Number of atoms mismatch")
+                print("ERROR: If lipids are split to many residues add moltype of lipids from tpr as 'MOLTYPE' to README.yaml under 'COMPOSITION'.")
+            
+           # print(self.lipid_wght)
+            #print(self.water_wght)
+            
            
         if self.density_type=="number":
             self.wght=np.ones(self.u.atoms.names.shape[0])
+            clipids = self.u.select_atoms(self.lipids)
+            self.lipid_wght=np.ones(clipids.atoms.names.shape[0])
+            cwaters = self.u.select_atoms(self.waters)
+            self.lipid_wght=np.ones(cwaters.atoms.names.shape[0])
+            
         if self.density_type=="mass":
-            self.wght=self.u.atoms.masses           
+            self.wght=self.u.atoms.masses
+            clipids = self.u.select_atoms(self.lipids)
+            self.lipid_wght=np.ones(clipids.atoms.names.shape[0])
+            cwaters = self.u.select_atoms(self.waters)
+            self.lipid_wght=np.ones(cwaters.atoms.names.shape[0])           
         
-        print(self.lipids)
-        print(self.u.atoms.resnames)
+        #print(self.lipids)
+        #print(self.u.atoms.resnames)
             
         print("Creating the electron mapping dictonary takes {:10.6f} s".format(time.time()-start_time))
         
@@ -451,6 +432,75 @@ class FormFactor:
         start_time=time.time()
         min_z=10000000
         frame=0
+
+#        for mol in self.readme['COMPOSITION']:
+ #           print(self.readme['COMPOSITION'][mol]['MAPPING'])
+
+        ElectronNumbers = {}
+
+        try:
+            UA = self.readme['UNITEDATOM_DICT']
+        except KeyError:
+            UA = False
+        else:
+            if self.readme['UNITEDATOM_DICT'] == None:
+                #print(self.readme['UNITEDATOM_DICT'])
+                UA = False 
+            else:
+                UA = True
+        
+        #print(self.system_mapping)
+
+            
+        #for mol in self.system_mapping:
+        for key1 in self.readme['COMPOSITION'].keys(): #
+            mol = self.readme['COMPOSITION'][key1]['NAME']
+            print(mol)
+            #ElectronNumbers[mol] = {}
+            for universalAN in self.system_mapping[mol]:
+                AtomName = self.system_mapping[mol][universalAN]['ATOMNAME']
+                try:
+                    ResName = self.system_mapping[mol][universalAN]['RESIDUE']
+                except:
+                    ResName = mol
+
+                #print(ElectronNumbers.keys())
+                if ResName not in ElectronNumbers.keys():
+                    ElectronNumbers[ResName] = {}
+                
+                #print(mol)
+
+                if UA and key1 in lipids_dict:
+                    #print(self.readme['UNITEDATOM_DICT'])
+                    UAlipidjsonNAME = './lipid_json_buildH/' + self.readme['UNITEDATOM_DICT'][key1] + '.json'
+                    with open(UAlipidjsonNAME) as json_file:
+                        UAlipidjson = json.load(json_file)
+                    #print(UAlipidjson)
+
+                    numberH = 0
+                    try:
+                        #print(UAlipidjson[AtomName][0])
+                        if UAlipidjson[AtomName][0] == "CH":
+                            numberH = 1
+                        if UAlipidjson[AtomName][0] == "CH2":
+                            numberH = 2
+                        if UAlipidjson[AtomName][0] == "CH3":
+                            numberH = 3
+                    except:
+                        pass
+                        #print(AtomName)
+
+                    ElectronNumbers[ResName][AtomName] = self.getElectrons(universalAN) + numberH
+
+                else:
+                    #print(universalAN, self.system_mapping[mol][universalAN]['ATOMNAME'])
+                    ElectronNumbers[ResName][AtomName] = self.getElectrons(universalAN)
+                    #print(universalAN, self.getElectrons(universalAN))
+
+
+                    
+        print(ElectronNumbers)
+                
         for ts in self.u.trajectory:
             #count the index of the frame, numbered from 0, used to be used for the density profile averaging
             #posible not needed now
@@ -473,7 +523,7 @@ class FormFactor:
 
             
             crds_no_center = c.atoms.positions[:,2]/10
-            lipid_wght=np.ones(c.atoms.names.shape[0])
+          #  lipid_wght=np.ones(c.atoms.names.shape[0])
             
             #calculates the center of mass of the selected atoms that the density should be centered around and 
             #takes the z-coordinate value
@@ -499,6 +549,7 @@ class FormFactor:
             clipids = self.u.select_atoms(self.lipids)
             cwaters = self.u.select_atoms(self.waters)
 
+            #print(self.lipids)
             
             """shif the coordinates so that the center in z-dimention is in 0; 
             #divide by 10 to get the coordinates in nm, since now the crds are only the z coordinates"""
@@ -506,9 +557,25 @@ class FormFactor:
             clipids_center = (clipids.atoms.positions[:,2] - box_z/2)/10
             cwaters_center = (cwaters.atoms.positions[:,2] - box_z/2)/10
 
+            if frame == 1:
+                weightsALL = []
+                for i in self.u.atoms:
+                    #print(i.resname)
+                    weightsALL.append(ElectronNumbers[i.resname][i.name])
 
+                weightsLIPIDS = []
+                for i in clipids.atoms:
+                    weightsLIPIDS.append(ElectronNumbers[i.resname][i.name])
 
-            water_wght=np.ones(cwaters.atoms.names.shape[0])
+                weightsWATERS = []
+                for i in cwaters.atoms:
+                    weightsWATERS.append(ElectronNumbers[i.resname][i.name])
+
+                
+                #print(self.u.atoms)
+            #print(weights)
+            
+         #   water_wght=np.ones(cwaters.atoms.names.shape[0])
             
             """calculates the volume of the bin; d- the "height" of a bin; assumes in [nm] """
             # ts.dimension[0], ts.dimension[1] - the x and y dimension; in [A] --> devides by 100
@@ -538,14 +605,36 @@ class FormFactor:
             #print("One furier loop takes {:10.6f} s".format(time.time()-start_time2))
           
  
-         
+            #print(len(clipids_center))
 
             """calculates the total density profile; keep for now"""
-            density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.wght/vbin)[0]
-            density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=lipid_wght/vbin)[0]
-            density_lipids_center += np.histogram(clipids_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=lipid_wght/vbin)[0]
-            density_waters_center += np.histogram(cwaters_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=water_wght/vbin)[0]
 
+
+            #density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.wght/vbin)[0]
+            #density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=self.lipid_wght/vbin)[0]
+            #density_lipids_center += np.histogram(clipids_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.lipid_wght/vbin)[0] # ELECTRON WEIGHTS 
+            #density_waters_center += np.histogram(cwaters_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=self.water_wght/vbin)[0] # ELECTRON WEIGHTS
+
+            density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=weightsALL/vbin)[0]
+            density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=weightsLIPIDS/vbin)[0]
+            density_lipids_center += np.histogram(clipids_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=weightsLIPIDS/vbin)[0] # ELECTRON WEIGHTS 
+            density_waters_center += np.histogram(cwaters_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=weightsWATERS/vbin)[0] # ELECTRON WEIGHTS
+
+            
+            #self.wght=np.ones(self.u.atoms.names.shape[0])
+            #clipids = self.u.select_atoms(self.lipids)
+            #self.lipid_wght=np.ones(clipids.atoms.names.shape[0])
+            #cwaters = self.u.select_atoms(self.waters)
+            #self.lipid_wght=np.ones(cwaters.atoms.names.shape[0])
+            
+            #density_z_centered += np.histogram(crds,bins=self.nbin,range=(-boxH/2,boxH/2),weights=np.ones(self.u.atoms.names.shape[0]))[0]
+            #density_z_no_center += np.histogram(crds_no_center,bins=self.nbin,range=(0,boxH),weights=np.ones(self.u.atoms.names.shape[0]))[0]
+            #density_lipids_center += np.histogram(clipids_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=np.ones(clipids.atoms.names.shape[0]))[0] # ELECTRON WEIGHTS 
+            #density_waters_center += np.histogram(cwaters_center,bins=self.nbin,range=(-boxH/2,boxH/2),weights=np.ones(cwaters.atoms.names.shape[0]))[0] # ELECTRON WEIGHTS
+
+            
+            #print(self.wght)
+            
         print("Calculating the density takes {:10.6f} s".format(time.time()-start_time))
 
 

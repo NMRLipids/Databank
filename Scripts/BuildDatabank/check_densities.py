@@ -33,8 +33,16 @@ for system in systems:
         #print(WaterDensity[center][1], WaterDensity[0][1])
         if WaterDensity[center][1] > WaterDensity[0][1]:
             print(system['path'])
-            os.system('rm ' + system['path'] + '/*Density*')
-            os.system('rm ' + system['path'] + '/FormFactor*')
+            system['WARNINGS'] = {}
+            system['WARNINGS']['PBC'] = 'z-jumps'
+            #print(system)
+
+            outfileDICT= system['path'] + '/README.yaml'
+            with open(outfileDICT, 'w') as f:
+                yaml.dump(system,f, sort_keys=False)
+            
+            #os.system('rm ' + system['path'] + '/*Density*')
+            #os.system('rm ' + system['path'] + '/FormFactor*')
     except:
         pass
         #print('Density file not found from ' +  system['path'])
