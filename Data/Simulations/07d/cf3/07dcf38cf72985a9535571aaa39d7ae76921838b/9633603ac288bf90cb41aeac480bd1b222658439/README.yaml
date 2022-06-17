@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.1293774
+SOFTWARE: gromacs
+TRJ:
+- - md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2_100-200ns.xtc
+TPR:
+- - for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.tpr
+PREEQTIME: 100
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPE: CHARMM36UA_PEUA
+COMPOSITION:
+  POPE:
+    NAME: PEUA
+    MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 168
+    - 168
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 15254
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 336POPE_15254SOL_310K_v2
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36-UA
+FF_SOURCE: starting structure was made by reverse mapping an equilibrated MARTINI
+  POPE bilayer (constructed with the INSANE script)
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO:
+- - md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.gro
+TRAJECTORY_SIZE: 1016472968
+TRJLENGTH: 100025.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 67602
+DATEOFRUNNING: 10/06/2022
+TYPEOFSYSTEM: lipid bilayer
