@@ -423,6 +423,7 @@ leaflet2 = 0 #total number of lipids in lower leaflet
 #u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
 gro = str(dir_tmp) + '/frame0.gro'
+NewTraj = str(dir_tmp) + '/NewTraj.xtc'
 
 try:
     u = Universe(top, traj)
@@ -430,7 +431,12 @@ try:
 except:
     #conf = str(dir_tmp) + '/conf.gro'
     print("Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version")
-    os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + gro)
+    if sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+        os.system('echo System | trjconv -s '+ top + ' -f '+ traj + ' -dump 22000 -o ' + gro)
+        #os.system('echo System | trjconv -s '+ top + ' -f '+ traj + ' -o ' + NewTraj)
+        #u = Universe(gro, NewTraj)
+    else:
+        os.system('echo System | gmx trjconv -s '+ top + ' -f '+ traj + ' -dump 0 -o ' + gro)
     u = Universe(gro, traj)
     u.atoms.write(gro, frames=u.trajectory[[0]]) #write first frame into gro file
 
@@ -573,11 +579,16 @@ if sim['SOFTWARE'] == 'gromacs':
     file1 = str(dir_tmp) + '/tpr.txt'
 
     print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
-    os.system('echo System | gmx dump -s '+ top + ' > '+file1)
+    if sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+        os.system('echo System | gmxdump -s '+ top + ' > '+file1)
+        TemperatureKey = 'ref_t'
+    else:
+        os.system('echo System | gmx dump -s '+ top + ' > '+file1)
+        TemperatureKey = 'ref-t'
 
     with open(file1, 'rt') as tpr_info:
         for line in tpr_info:
-            if 'ref-t' in line:
+            if TemperatureKey in line:
                 sim['TEMPERATURE']=float(line.split()[1])
 #read temperature from xml or inp
 elif sim['SOFTWARE'] == 'openMM':

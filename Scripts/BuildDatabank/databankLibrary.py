@@ -325,7 +325,11 @@ gromacs_dict = {
                           },
              'COMPOSITION' : {"REQUIRED": True,
                               "TYPE" : "dictionary",
+                              },
+             'WARNINGS' : {"REQUIRED": False,
+                              "TYPE" : "dictionary",
                               }
+
                }
 
 # Amber
