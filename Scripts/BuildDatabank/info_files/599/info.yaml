@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.1230170
+
+SOFTWARE: gromacs
+TRJ: traj10-50ns.trr
+TPR: topol_10-11.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+
+COMPOSITION:
+ POPC:
+  NAME: PLA
+  MAPPING: mappingPOPCberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/jp065424f
+AUTHORS_CONTACT: Ollila O. H. Samuli
+
+SYSTEM: POPClipidbilayer_310K_Berger
+SOFTWARE_VERSION: 3.1.4
+
+FF: Berger 
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: popc.top
+GRO: confout_49-50.gro
+
+WARNINGS:
+  GROMACS_VERSION: gromacs3
