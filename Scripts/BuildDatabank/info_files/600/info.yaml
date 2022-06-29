@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.51635
+
+SOFTWARE: gromacs
+TRJ: dmpc128W_21-130ns.xtc
+TPR: dmpc128W_1ns.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  DMPC: Berger_DMPC
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCBergerGROMOS53A6.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/jp810233q; ISBN 978-952-60-3194-1
+AUTHORS_CONTACT: Miettinen, Markus S.; Gurtovenko, Andrey A.
+
+SYSTEM: 128DMPC_5097SOL_323K_Berger
+SOFTWARE_VERSION: 3.x
+
+FF: Berger
+FFSOL: SPC
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: dmpc128W.top
+GRO:
+
+WARNINGS:
+  GROMACS_VERSION: gromacs3
