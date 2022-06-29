@@ -579,7 +579,7 @@ if sim['SOFTWARE'] == 'gromacs':
     file1 = str(dir_tmp) + '/tpr.txt'
 
     print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
-    if sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+    if 'WARNINGS' in sim and sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
         os.system('echo System | gmxdump -s '+ top + ' > '+file1)
         TemperatureKey = 'ref_t'
     else:
