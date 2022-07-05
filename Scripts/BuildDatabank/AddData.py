@@ -591,18 +591,18 @@ if sim['SOFTWARE'] == 'gromacs':
             if TemperatureKey in line:
                 sim['TEMPERATURE']=float(line.split()[1])
 #read temperature from xml or inp
-elif sim['SOFTWARE'] == 'openMM':
-#Use parser written by batuhan to read inp and xml files
-    for key in ['INP','XML']:
-        try:
-            file1 = str(dir_tmp) + '/' + sim[key][0][0]
-        except KeyError:
-            print(key + ' file does not exist')
-            continue
-        else:
-            type = key.lower()
-            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
-            break
+#elif sim['SOFTWARE'] == 'openMM':
+##Use parser written by batuhan to read inp and xml files
+#    for key in ['INP','XML']:
+#        try:
+#            file1 = str(dir_tmp) + '/' + sim[key][0][0]
+#        except KeyError:
+#            print(key + ' file does not exist')
+#            continue
+#        else:
+#            type = key.lower()
+#            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
+#            break
 
 print("Parameters read from input files:")
 print("TEMPERATURE: " + str(sim['TEMPERATURE']))

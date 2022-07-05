@@ -505,6 +505,10 @@ openmm_dict = {
                'CHK' : {"REQUIRED" : False,
                         "TYPE" : "file",
                         "EXTENSION" : ("chk",),
+                        },
+               'CRD' : {"REQUIRED" : False,
+                        "TYPE" : "file",
+                        "EXTENSION" : ("crd",),
                        },
                'INP' : {"REQUIRED" : False, # input file used to run the simulation
                         "TYPE" : "file",
@@ -628,9 +632,8 @@ def download_link(doi, file):
 #Return mapping name of atom from mapping file        
 def read_mapping_file(mapping_file, atom1):
 	with open(mapping_file, 'rt') as mapping_file:
-		for line in mapping_file:
-			if atom1 in line:
-				m_atom1 = line.split()[1]
+            mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
+            m_atom1 = mapping[atom1]['ATOMNAME']
 	return m_atom1
 
 #Return mapping names of pair of atoms from mapping file

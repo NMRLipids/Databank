@@ -42,15 +42,10 @@ for system in systems:
                 
     doi = system.get('DOI')
     trj = system.get('TRJ')
-    tpr = system.get('TPR')
     trj_name = path + system.get('TRJ')[0][0]
-    tpr_name = path + system.get('TPR')[0][0]
     trj_url = download_link(doi, trj[0][0])
-    tpr_url = download_link(doi, tpr[0][0])
     #print(trj_name,tpr_name)
     
-    if (not os.path.isfile(tpr_name)):
-        response = urllib.request.urlretrieve(tpr_url, tpr_name)
                         
     if (not os.path.isfile(trj_name)):
         response = urllib.request.urlretrieve(trj_url, trj_name)
@@ -62,23 +57,43 @@ for system in systems:
     except:
         unitedAtom = False
 
-    if 'gromacs' in software:
-         xtcwhole= path + '/whole.xtc'
-         if (not os.path.isfile(xtcwhole)):
-             print("Make molecules whole in the trajectory")
-             if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
-                 print("United atom trajectry larger than 15 Gb. Using only every third frame to reduce memory usage.")
-                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
-             else:
-                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+    if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+        trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
     else:
-        print('Order parameter calculation for other gromacs is yet to be implemented.')
+        trjconvCOMMAND = 'gmx trjconv'
+        
+    if 'gromacs' in software:
+        tpr = system.get('TPR')
+        tpr_name = path + system.get('TPR')[0][0]
+        tpr_url = download_link(doi, tpr[0][0])
+        if (not os.path.isfile(tpr_name)):
+            response = urllib.request.urlretrieve(tpr_url, tpr_name)
+
+        xtcwhole= path + '/whole.xtc'
+        if (not os.path.isfile(xtcwhole)):
+            print("Make molecules whole in the trajectory")
+            if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
+                print("United atom trajectry larger than 15 Gb. Using only every third frame to reduce memory usage.")
+                os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
+            else:
+                os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+    elif 'openMM' in software:
+        pdb = system.get('PDB')
+        pdb_name = path + system.get('PDB')[0][0]
+        pdb_url = download_link(doi, pdb[0][0])
+        if (not os.path.isfile(pdb_name)):
+            response = urllib.request.urlretrieve(pdb_url, pdb_name)
+    else:
+        print('Order parameter calculation for other than gromacs and openMM are yet to be implemented.')
         continue
 
 
-    if unitedAtom:
+    if unitedAtom and 'gromacs' in software:
         topfile = path + '/frame0.gro'
-        os.system('echo System | gmx trjconv -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
+        if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+            os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + topfile )
+        else:
+            os.system('echo System | ' + trjconvCOMMAND + ' -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
         
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
@@ -121,62 +136,6 @@ for system in systems:
                         previous_line = def_line
             def_file.close()            
              
-#                for line in f.readlines():
-#                    if not line.startswith("#"):
-#                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-#                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-#                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-#                        regexp2_C = re.compile(r'M_G[0-9]_M')
-#
-#                        if regexp1_C.search(line) or regexp2_C.search(line):
-#                            atomC = line.split()
-#                            atomH = []
-#                        elif regexp1_H.search(line) or regexp2_H.search(line):
-#                            atomH = line.split()
-#                        else:
-#                            atomC = []
-#                            atomH = []
-
-#                        if atomH:
-#                            items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-#                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-#                            #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
-#                            if def_line != previous_line:
-#                                def_file.write(def_line)
-#                                print(def_line)
-#                                previous_line = def_line
-#            def_file.close()
-
-#            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as f:
-#                for line in f.readlines():
-#                    if not line.startswith("#"):
-#                        regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-#                        regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-#                        regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-#                        regexp2_C = re.compile(r'M_G[0-9]_M')
-#
-#                        if regexp1_C.search(line) or regexp2_C.search(line):
-#                            atomC = line.split()
-#                            atomH = []
-#                        elif regexp1_H.search(line) or regexp2_H.search(line):
-#                            atomH = line.split()
-#                        else:
-#                            atomC = []
-#                            atomH = []
-#
-#                        if atomH:
-#                            try:
-#                                items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-#                            except:
-#                                continue
-#                            def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-#                            #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
-#                            if def_line != previous_line:
-#                                def_file.write(def_line)
-#                                print(def_line)
-#                                previous_line = def_line
-#            def_file.close()
-
             #Add hydrogens to trajectory and calculate order parameters with buildH
             ordPfile = path + key + 'OrderParameters.dat' 
 
@@ -221,12 +180,17 @@ for system in systems:
         # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
         # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
     else:
-        #trj = str(DATAdir) + '/' + str(trj)
-        gro = path + '/conf.gro'
+        if 'gromacs' in software:
+            #trj = str(DATAdir) + '/' + str(trj)
+            gro = path + '/conf.gro'
 
-        #make gro file
-        print("\n Makin gro file")
-        os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
+            #make gro file
+            print("\n Makin gro file")
+            if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+                os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + gro) 
+            else:
+                os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
+
                     
         for key in system['COMPOSITION']:
             if key in lipids_dict.keys():
@@ -240,12 +204,16 @@ for system in systems:
                     continue
                 outfile=open(outfilename,'w')
 
-                try:
-                    OrdParam=find_OP(mapping_file,tpr_name,xtcwhole,resname)
-                except:
-                    print('Using tpr did not work, trying with gro')
-                    OrdParam=find_OP(mapping_file,gro,xtcwhole,resname)
-                    
+                if 'gromacs' in software:
+                    try:
+                        OrdParam=find_OP(mapping_file,tpr_name,xtcwhole,resname)
+                    except:
+                        print('Using tpr did not work, trying with gro')
+                        OrdParam=find_OP(mapping_file,gro,xtcwhole,resname)
+
+                if 'openMM' in software:
+                    OrdParam=find_OP(mapping_file,pdb_name,trj_name,resname)
+                        
                 line1="Atom     Average OP     OP stem"+'\n'
                 outfile.write(line1)
     
