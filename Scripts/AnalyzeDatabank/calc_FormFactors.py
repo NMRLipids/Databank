@@ -33,8 +33,10 @@ with open("system_already_run_17_11_21.out","w") as f:
     
      
 for system in systems:
+    software=system['SOFTWARE']
     #download trajectory and gro files
     system_path = system['path']
+    doi = system.get('DOI')
 
     if (os.path.isfile(system_path + "/FormFactor.json")):
         continue
@@ -77,9 +79,7 @@ for system in systems:
     output_name = ""
     
     trj_name = system['path'] + system['TRJ'][0][0]
-    tpr_name = system['path'] + system['TPR'][0][0]
     trj_url = download_link(system['DOI'], system['TRJ'][0][0])
-    tpr_url = download_link(system['DOI'], system['TPR'][0][0])
 
     socket.setdefaulttimeout(15)
 
@@ -87,34 +87,44 @@ for system in systems:
 
     
     # make a function like this
-    if (not os.path.isfile(tpr_name)):
-        try:
-            url_size = urllib.request.urlopen(tpr_url).length
-            response = urllib.request.urlretrieve(tpr_url, tpr_name)
+    if 'gromacs' in software:
+        tpr_name = system['path'] + system['TPR'][0][0]
+        tpr_url = download_link(system['DOI'], system['TPR'][0][0])
+
+        if (not os.path.isfile(tpr_name)):
+            try:
+                url_size = urllib.request.urlopen(tpr_url).length
+                response = urllib.request.urlretrieve(tpr_url, tpr_name)
             
-        except ContentTooShortError:
-            download_failed = True
-            print("Content too short error.")
-        except HTTPError as e:
-            download_failed = True
-            print(e)
-        except URLError as ue:
-            download_failed = True
-            print("failed to download")
-        except socket.timeout as se:
-            download_failed = True
-            print("socket time out")
-        except Exception as ee:
-            download_failed = True
-            print(ee)
-        #check if the file is fully downloaded
-        else:
-            size = os.path.getsize(tpr_name)
-            print("size of the file "  + " to be downloaded: " + str(url_size))
-            print("size of the file " + " after download: " + str(size) )
-            if url_size != size:
-                print("Download of the file "  + " was interrupted.")
+            except ContentTooShortError:
+                download_failed = True
+                print("Content too short error.")
+            except HTTPError as e:
+                download_failed = True
+                print(e)
+            except URLError as ue:
+                download_failed = True
+                print("failed to download")
+            except socket.timeout as se:
+                download_failed = True
+                print("socket time out")
+            except Exception as ee:
+                download_failed = True
+                print(ee)
+                #check if the file is fully downloaded
+            else:
+                size = os.path.getsize(tpr_name)
+                print("size of the file "  + " to be downloaded: " + str(url_size))
+                print("size of the file " + " after download: " + str(size) )
+                if url_size != size:
+                    print("Download of the file "  + " was interrupted.")
                
+    if 'openMM' in software:
+        pdb = system.get('PDB')
+        pdb_name = path + system.get('PDB')[0][0]
+        pdb_url = download_link(doi, pdb[0][0])
+        if (not os.path.isfile(pdb_name)):
+            response = urllib.request.urlretrieve(pdb_url, pdb_name)
 
 
                         
@@ -177,8 +187,16 @@ for system in systems:
 
     # Center around one lipid tail CH3 to guarantee all lipids in the same box
     if 'gromacs' in system['SOFTWARE']:
+
+        if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+            trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
+            makendxCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/make_ndx'
+        else:
+            trjconvCOMMAND = 'gmx trjconv'
+            makendxCOMMAND = 'gmx make_ndx'
+        
         os.system('rm foo.ndx')
-        os.system('echo "a ' + lastAtom + '\nq" | gmx make_ndx -f ' + tpr_name + ' -o foo.ndx')
+        os.system('echo "a ' + lastAtom + '\nq" | ' + makendxCOMMAND +' -f ' + tpr_name + ' -o foo.ndx')
         os.system("tail -n1 foo.ndx | awk '{print $NF}'")
         os.system('echo "[ centralAtom ]" >> foo.ndx')
         os.system("tail -n2 foo.ndx | head -n1 |  awk '{print $NF}' >> foo.ndx")
@@ -193,23 +211,23 @@ for system in systems:
             #    os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
             #else:
             if (not os.path.isfile(xtcwhole)):
-                os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+                os.system('echo System | + ' +  trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
 
             if (not os.path.isfile(xtcfoo)):
-                os.system('echo "centralAtom\nSystem" | gmx trjconv -center -pbc mol -n foo.ndx -f ' + xtcwhole  + ' -s ' + tpr_name + ' -o ' + xtcfoo) 
+                os.system('echo "centralAtom\nSystem" |  '+  trjconvCOMMAND + ' -center -pbc mol -n foo.ndx -f ' + xtcwhole  + ' -s ' + tpr_name + ' -o ' + xtcfoo) 
 
             os.system('rm foo.ndx')
             os.system('rm ' + xtcwhole)
                 
         #Center around the center of mass of all the g_3 carbons
         #if (not os.path.isfile(xtccentered)):        
-            os.system('echo "a ' + G3atom + '\nq" | gmx make_ndx -f ' + tpr_name + ' -o foo.ndx')
-            os.system('echo "' + G3atom + '\nSystem" | gmx trjconv -center -pbc mol -n foo.ndx -f ' + xtcfoo + ' -s ' + tpr_name + ' -o ' + xtccentered)
+            os.system('echo "a ' + G3atom + '\nq" | ' + makendxCOMMAND +' -f ' + tpr_name + ' -o foo.ndx')
+            os.system('echo "' + G3atom + '\nSystem" |  '+  trjconvCOMMAND + ' -center -pbc mol -n foo.ndx -f ' + xtcfoo + ' -s ' + tpr_name + ' -o ' + xtccentered)
             os.system('rm ' + xtcfoo)
 
             
     else:
-        print('Order parameter calculation for other gromacs is yet to be implemented.')
+        print('Centering for other than Gromacs may not work if there are jumps over periodic boundary conditions in z-direction.')
 
             
             
@@ -218,7 +236,10 @@ for system in systems:
             f.write(system_path+" download successfull \n")   
         if (not os.path.isfile(system_path + "/FormFactor.json")):
             try:
-                form_factor.FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
+                if 'gromacs' in system['SOFTWARE']:
+                    form_factor.FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
+                if 'openMM' in system['SOFTWARE']:
+                    form_factor.FormFactor(system_path, pdb_name, trj_name, 200, output_name,  system)
             except ValueError as e:
                 #print(e)
                 if "Cannot load file containing pickled data when allow_pickle=False" not in str(e):
