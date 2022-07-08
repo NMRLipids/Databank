@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.209360
+
+SOFTWARE: openMM
+TRJ: traj_openMM.dcd
+PDB: traj_openMM_every1ns.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POP
+  MAPPING: mappingPOPCcharmm.yaml
+ CHOL:
+  NAME: CLO
+  MAPPING: mappingCHOLESTEROLcharmm.yaml
+ SOL:
+  NAME: TIP
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 84POPC_36CHOL_4800SOL_303K
+SOFTWARE_VERSION: v7
+
+FF: CHARMM36 additive force field parameters
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
+FF_DATE:
+
+CHK:
+TOP:
+CRD:
