@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.5507323
+SOFTWARE: openMM
+TRJ:
+- - traj_combined.dcd
+PDB:
+- - step2_drude.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 303
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmmDrude.yaml
+    COUNT:
+    - 72
+    - 72
+  SOL:
+    NAME: SWM4
+    MAPPING: mappingSWM4water.yaml
+    COUNT: 5040
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: 72POPE_5040SOL_303K
+SOFTWARE_VERSION: 7.5.0
+FF: Charmm-Drude
+FF_SOURCE: initial structures from CHARMM-GUI v3.2.2
+FF_DATE: 3/22/21
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 1850928276
+TRJLENGTH: 146.66463000000002
+NUMBER_OF_ATOMS: 51408
+DATEOFRUNNING: 12/07/2022
+TYPEOFSYSTEM: lipid bilayer

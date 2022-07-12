@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.5507288
+
+SOFTWARE: openMM
+TRJ: step5_centered_100_500_ns.dcd
+PDB: step5.pdb
+PREEQTIME: 100
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POP
+  MAPPING: mappingPOPCcharmmPolarizable.yaml
+ SOL:
+  NAME: SWM
+  MAPPING: mappingSWM4water.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: 64POPC_6400SOL_303K
+SOFTWARE_VERSION: 7.5.0
+
+FF: Charmm-Drude
+FF_SOURCE:
+FF_DATE: 2021-02-23
+
+CHK: step5.chk
+TOP:
+CRD:
