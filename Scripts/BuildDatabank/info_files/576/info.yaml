@@ -1,7 +1,7 @@
-DOI: 
+DOI: 10.5281/zenodo.6778072
 
-SOFTWARE: Gromacs 
-TRJ: run_pope_dog_lipid17.xtc
+SOFTWARE: gromacs 
+TRJ: run_pope_dog_lipid17-0to2100ns.xtc
 TPR: run_pope_dog_lipid17.tpr
 PREEQTIME: 20
 TIMELEFTOUT: 100 
@@ -19,7 +19,7 @@ COMPOSITION:
   NAME: SOL
   MAPPING: mappingTIP3Pwater.yaml
  
-DIR_WRK: /home/samuli/temp/
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION: 
 AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
@@ -30,9 +30,3 @@ SOFTWARE_VERSION: 18.6
 FF: Lipid17
 FF_SOURCE: Amber tools
 FF_DATE: 2019
-	
-CPT:
-LOG:
-TOP:
-GRO:	
-ITP: 
