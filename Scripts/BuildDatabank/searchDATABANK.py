@@ -153,6 +153,12 @@ def loadSimulations():
                 READMEfilepathSimulation = subdir + '/README.yaml'
                 with open(READMEfilepathSimulation) as yaml_file_sim:
                     readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
+                    #print(simulation.readme)
+                    try:
+                        if readmeSim['WARNINGS']['NOWATER']:
+                            continue
+                    except:
+                        pass
                     indexingPath = "/".join(filepath.split("/")[4:8])
                    # print(indexingPath)
                     simOPdata = [] #order parameter files for each type of lipid
