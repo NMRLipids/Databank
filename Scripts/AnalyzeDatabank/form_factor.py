@@ -89,7 +89,7 @@ def getWater(readme, molecules=lipids_dict.keys()):
 electron_dictionary={"H":1,"He":2,"Li":3,"Be":4,"B":5,"C":6,"N":7,"O":8,"F":9,"Ne":10,
                    "Na":10,"Mg":10,"Al":13,"Si":14,"P":15,"S":16,"Cl":18,"Ar":18,
                    "K":18,"Ca":18,"Sc":21,"Ti":22,"V":23,"Cr":24,"Mn":25,"Fe":26,"Co":27,"Ni":28,
-                     "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0,"Cs":54}
+                     "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0,"Cs":54,"D":0}
 	
 def filterHbonds(mapping_names):
     
@@ -175,7 +175,9 @@ class FormFactor:
         self.readme = readme
         start_time=time.time()
         try:
+            #print(self.conf,self.traj)
             self.u = mda.Universe(self.conf,self.traj)
+            print()
         except:
             gro = self.path + '/conf.gro'
             print("Generating conf.gro because MDAnalysis cannot read tpr version")
@@ -259,6 +261,7 @@ class FormFactor:
             for atom in explicit_atoms:
                 #find generic mapping name matching to forcefield atom name
                 index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
+                #print(atom, index_list)
                 atom_i1 = index_list.index(True)
                 #print("atom_i1")
                 #print(atom_i1)

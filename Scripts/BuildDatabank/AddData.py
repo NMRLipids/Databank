@@ -431,7 +431,7 @@ try:
 except:
     #conf = str(dir_tmp) + '/conf.gro'
     print("Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version")
-    if sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+    if 'WARNINGS' in sim and sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
         os.system('echo System | trjconv -s '+ top + ' -f '+ traj + ' -dump 22000 -o ' + gro)
         #os.system('echo System | trjconv -s '+ top + ' -f '+ traj + ' -o ' + NewTraj)
         #u = Universe(gro, NewTraj)
