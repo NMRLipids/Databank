@@ -67,6 +67,13 @@ for system in systems:
     except:
         pass
 
+    try:
+        if system['WARNINGS']['NOWATER']:
+            print('Skipping because there is not water in the trajectory.')
+            continue
+    except:
+        pass
+
     
     #try:
     #    if system['WARNINGS']['PBC']:
@@ -121,7 +128,7 @@ for system in systems:
                
     if 'openMM' in software:
         pdb = system.get('PDB')
-        pdb_name = path + system.get('PDB')[0][0]
+        pdb_name = system['path'] + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
         if (not os.path.isfile(pdb_name)):
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
