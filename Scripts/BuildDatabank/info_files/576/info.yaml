@@ -10,8 +10,8 @@ UNITEDATOM_DICT:
 
 COMPOSITION:
  POPE:
-  NAME: PE
-  MAPPING: mappingPOPElipid17.yaml
+  NAME: POPE
+  MAPPING: mappingPOPElipid17_2.yaml
  DOG:
   NAME: DOG
   MAPPING: mappingDOGlipid17.yaml
@@ -19,9 +19,9 @@ COMPOSITION:
   NAME: SOL
   MAPPING: mappingTIP3Pwater.yaml
  
-DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+DIR_WRK: /home/local/suvihein/nmr_lipids/Databank/
 
-PUBLICATION: 
+PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
 AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
 
 SYSTEM: 9.4%DOGinPOPEwithLipid17
