@@ -19,7 +19,7 @@ COMPOSITION:
   NAME: SOL
   MAPPING: mappingTIP3Pwater.yaml
  
-DIR_WRK: /home/local/suvihein/nmr_lipids/Databank/
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
 AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
@@ -30,3 +30,6 @@ SOFTWARE_VERSION: 18.6
 FF: Lipid17
 FF_SOURCE: Amber tools
 FF_DATE: 2019
+
+WARNINGS:
+  AMBIGUOUS_ATOMNAMES:
