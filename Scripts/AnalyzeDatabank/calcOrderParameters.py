@@ -23,6 +23,11 @@ for system in systems:
     Nlipid = 0
     path = system['path']
 
+    if 'WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys():
+        print(path)
+        print('Order parameters cannot be calculated if atom names are ambiguous.')
+        continue
+    
     for key in system['COMPOSITION']:
         outfilename = path + key + 'OrderParameters.json'
         #print(outfilename)

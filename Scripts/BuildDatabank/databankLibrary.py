@@ -47,6 +47,9 @@ lipids_dict = {
             'DLIPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'DOG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
             'DOPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
@@ -162,6 +165,9 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFDLIPC' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFDOG' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFDOPC' : {"REQUIRED": False,
@@ -1002,6 +1008,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                    atA=op.atAname
                    atB=op.atBname
                    nat=res.n_atoms
+                   print(atA,atB,nat)
                    warnings.warn("Selection >> name {atA} {atB} << \
                    contains {nat} atoms, but should contain exactly 2!")
         op.selection = selection
