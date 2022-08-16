@@ -10,7 +10,7 @@ TEMPERATURE: 303
 COMPOSITION:
  POPE:
   NAME: POPE
-  MAPPING: mappingPOPEcharmmDrude.yaml
+  MAPPING: mappingPOPEcharmmDrude1.yaml
  SOL:
   NAME: SWM4
   MAPPING: mappingSWM4water.yaml
