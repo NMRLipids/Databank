@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.163340
+
+SOFTWARE: openMM
+TRJ: traj_openMM.dcd
+PDB: step5_charmm2gmx.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ CHOL:
+  NAME: CHL1
+  MAPPING: mappingCHOLESTEROLcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Melcr, Josef
+
+SYSTEM: 84POPC_36CHOL_4800SOL_303K
+SOFTWARE_VERSION: v7
+
+FF: CHARMM36
+FF_SOURCE: starting structure from CHARMM-GUI Membrane Builder v1.7 (http://www.charmm-gui.org/) 
+FF_DATE:
+
+CHK:
+TOP:
+CRD:
