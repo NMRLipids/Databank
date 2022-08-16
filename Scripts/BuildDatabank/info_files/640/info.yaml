@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6943413
+
+SOFTWARE: gromacs
+TRJ: DPPC_small.xtc
+TPR: DPPC_small.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 64DPPC_3200SOL_333K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: DPPC_small.cpt
+LOG:
+TOP: DPPC_small.top
+GRO: DPPC_small.gro
