@@ -130,6 +130,8 @@ DMTAP | 1,2-dimyristoyl-3-trimethylammonium-propane
 POPI | 
 SAPI | 
 SLPI | 
+SDG | 1-stearoyl-2-docosahexaenoyl-sn-glycerol
+SDPE | 1-stearoyl-2-docosahexaenoyl-sn-glycero-3-phosphoethanolamine
 CER  | N-palmitoyl-D-erythro-sphingosine
 CHOL | cholesterol 
 DCHOL | 18,19-di-nor-cholesterol
