@@ -125,6 +125,7 @@ DDOPC| 1,2-didocosahexaenoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
 DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
+SLiPC | 1-(18:0)-2-(18:2 $^{\Delta9,12}$)-sn-glycero-3-phosphocholine 
 DMTAP | 1,2-dimyristoyl-3-trimethylammonium-propane
 POPI | 
 SAPI | 
@@ -140,7 +141,6 @@ CAL | calcium ion
 CES | caesium ion
 SOL | water 
     
-
 #### DIR\_WRK (compulsory)
 Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here. 
 
