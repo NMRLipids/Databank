@@ -218,7 +218,7 @@ for system in systems:
             #    os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
             #else:
             if (not os.path.isfile(xtcwhole)):
-                os.system('echo System | + ' +  trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+                os.system('echo System |  ' +  trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
 
             if (not os.path.isfile(xtcfoo)):
                 os.system('echo "centralAtom\nSystem" |  '+  trjconvCOMMAND + ' -center -pbc mol -n foo.ndx -f ' + xtcwhole  + ' -s ' + tpr_name + ' -o ' + xtcfoo) 
