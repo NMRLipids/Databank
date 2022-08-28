@@ -15,6 +15,7 @@ from random import randint
 from matplotlib import cm
 #from scipy.stats import norm
 import scipy.stats
+import scipy.signal
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
@@ -505,10 +506,63 @@ def calc_k_e(SimExpData):
     else:
         return ""
 
+
+
+def FormFactorMinFromData(FormFactor):
+    min = 1000
+    iprev = FormFactor[0][1]
+    iprevD = 0
+    minX = []
+    FFtmp = []
+    for i in FormFactor:
+        FFtmp.append(i[1])
+        #iD = i[1]-iprev
+        #if iD > 0 and iprevD < 0 and i[0] > 0.1:
+        #    minX.append(i[0])
+        #iprevD = i[1]-iprev
+        #iprev = i[1]
+
+    peak_ind = scipy.signal.find_peaks_cwt(FFtmp, 0.1)
+
+    for i in peak_ind:
+        minX.append(FormFactor[i][0])
+
+    print(minX)
+    return(minX)
+    
+def formfactorQuality(simFFdata, expFFdata):
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
+
+    # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
+    SimExpData = []   
+    for SimValues in simFFdata:
+        for ExpValues in expFFdata:
+            if np.abs(SimValues[0]-ExpValues[0]) < 0.0005: # and ExpValues[0] < 0.41:
+                SimExpData.append([ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]])
+
+    # Calculates the scaling factor for plotting
+    k_e = calc_k_e(SimExpData)
+
+    SimMin = FormFactorMinFromData(simFFdata)
+    ExpMin = FormFactorMinFromData(expFFdata)
+
+    SQsum = 0
+    for i in [0,1]:
+        SQsum += (SimMin[i]-ExpMin[i])**2
+
+    khi2 = np.sqrt(SQsum)
+    N = len(SimExpData)
+
+    print(SimMin, ExpMin, khi2)
+    
+    if N > 0:
+        return khi2, k_e
+    else:
+        return ""
     
 
 
-def formfactorQuality(simFFdata, expFFdata):
+def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
     """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
 
     # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
@@ -879,7 +933,7 @@ for simulation in simulations:
     
     simFFdata = simulation.FFdata
 
-    if len(expFFpath) > 0:
+    if len(expFFpath) > 0 and len(simFFdata) > 0:
         ffQuality = formfactorQuality(simFFdata, expFFdata)
         outfile3 = DATAdir + '/FormFactorQuality.json'
         with open(outfile3,'w') as f:
