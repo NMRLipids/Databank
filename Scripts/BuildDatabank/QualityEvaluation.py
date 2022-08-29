@@ -509,23 +509,31 @@ def calc_k_e(SimExpData):
 
 
 def FormFactorMinFromData(FormFactor):
-    min = 1000
-    iprev = FormFactor[0][1]
-    iprevD = 0
-    minX = []
     FFtmp = []
     for i in FormFactor:
-        FFtmp.append(i[1])
-        #iD = i[1]-iprev
+        FFtmp.append(-i[1])
+
+    w = scipy.signal.savgol_filter(FFtmp, 41, 1)
+
+    #min = 1000
+    #iprev = FormFactor[0][1]
+    #iprevD = 0
+    minX = []
+    #for i in  w:
+        ##iD = i[1]-iprev
         #if iD > 0 and iprevD < 0 and i[0] > 0.1:
         #    minX.append(i[0])
         #iprevD = i[1]-iprev
         #iprev = i[1]
 
-    peak_ind = scipy.signal.find_peaks_cwt(FFtmp, 0.1)
+    peak_ind = scipy.signal.find_peaks(w)
 
-    for i in peak_ind:
-        minX.append(FormFactor[i][0])
+    #print(FormFactor, FFtmp, w, peak_ind[0])
+    
+    for i in peak_ind[0]:
+        #print(i)
+        if FormFactor[i][0] > 0.1:
+            minX.append(FormFactor[i][0])
 
     print(minX)
     return(minX)
@@ -550,7 +558,7 @@ def formfactorQuality(simFFdata, expFFdata):
     for i in [0,1]:
         SQsum += (SimMin[i]-ExpMin[i])**2
 
-    khi2 = np.sqrt(SQsum)
+    khi2 = np.sqrt(SQsum)*100
     N = len(SimExpData)
 
     print(SimMin, ExpMin, khi2)
