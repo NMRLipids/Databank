@@ -513,7 +513,7 @@ def FormFactorMinFromData(FormFactor):
     for i in FormFactor:
         FFtmp.append(-i[1])
 
-    w = scipy.signal.savgol_filter(FFtmp, 41, 1)
+    w = scipy.signal.savgol_filter(FFtmp, 31, 1)
 
     #min = 1000
     #iprev = FormFactor[0][1]
@@ -554,10 +554,11 @@ def formfactorQuality(simFFdata, expFFdata):
     SimMin = FormFactorMinFromData(simFFdata)
     ExpMin = FormFactorMinFromData(expFFdata)
 
-    SQsum = 0
-    for i in [0,1]:
-        SQsum += (SimMin[i]-ExpMin[i])**2
+#    SQsum = 0
+#    for i in [0,1]:
+#        SQsum += (SimMin[i]-ExpMin[i])**2
 
+    SQsum = (SimMin[0]-ExpMin[0])**2
     khi2 = np.sqrt(SQsum)*100
     N = len(SimExpData)
 
@@ -701,7 +702,7 @@ for simulation in simulations:
     #fragment_quality_output = {}
     #system_qual_output = {}    
 
-    os.system('git rm ' + DATAdir + '/*uality.json')
+    #os.system('git rm ' + DATAdir + '/*uality.json')
 
    
     #Order Parameters 
