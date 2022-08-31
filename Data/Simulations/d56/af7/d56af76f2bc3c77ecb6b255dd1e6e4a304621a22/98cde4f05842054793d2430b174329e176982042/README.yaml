@@ -46,6 +46,6 @@ EXPERIMENT:
     POPC: {}
     CHOL: {}
   FORMFACTOR: {}
-path: ../../Data/Simulations/d56/af7/d56af76f2bc3c77ecb6b255dd1e6e4a304621a22/98cde4f05842054793d2430b174329e176982042/
 WARNINGS:
   PBC: z-jumps
+ID: 421

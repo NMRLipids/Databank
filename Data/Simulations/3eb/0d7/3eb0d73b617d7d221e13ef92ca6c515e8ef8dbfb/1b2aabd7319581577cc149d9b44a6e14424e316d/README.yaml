@@ -39,6 +39,6 @@ TRJ:
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
-path: ../../Data/Simulations/3eb/0d7/3eb0d73b617d7d221e13ef92ca6c515e8ef8dbfb/1b2aabd7319581577cc149d9b44a6e14424e316d/
 WARNINGS:
   PBC: z-jumps
+ID: 150

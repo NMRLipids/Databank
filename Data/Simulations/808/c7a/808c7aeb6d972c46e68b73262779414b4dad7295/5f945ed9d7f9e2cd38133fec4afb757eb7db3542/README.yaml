@@ -47,6 +47,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
   FORMFACTOR: {}
-path: ../../Data/Simulations/808/c7a/808c7aeb6d972c46e68b73262779414b4dad7295/5f945ed9d7f9e2cd38133fec4afb757eb7db3542/
 WARNINGS:
   PBC: z-jumps
+ID: 372

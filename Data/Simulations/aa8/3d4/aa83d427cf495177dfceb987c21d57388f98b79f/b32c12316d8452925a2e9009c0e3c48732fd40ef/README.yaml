@@ -42,6 +42,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     DOPS: {}
   FORMFACTOR: {}
-path: ../../Data/Simulations/aa8/3d4/aa83d427cf495177dfceb987c21d57388f98b79f/b32c12316d8452925a2e9009c0e3c48732fd40ef/
 WARNINGS:
   PBC: z-jumps
+ID: 100
