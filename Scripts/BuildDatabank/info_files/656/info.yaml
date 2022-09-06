@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6943413
+
+SOFTWARE: gromacs
+TRJ: SOPC_large.xtc
+TPR: SOPC_large.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ SOPC:
+  NAME: SOPC 
+  MAPPING: mappingSOPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 1024SOPC_51200SOL_333K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: SOPC_large.cpt
+LOG:
+TOP: SOPC_large.top
+GRO: SOPC_large.gro
