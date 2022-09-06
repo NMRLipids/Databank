@@ -109,6 +109,7 @@ POPC |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPG |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol
 POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
+PYPC | 1-(16:0)-2-(16:1$^\Delta9$)-sn-glycero-3-phosphocholine
 PAzePCprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine protonated
 PAzePCdeprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine deprotonated
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
@@ -116,6 +117,8 @@ DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
 DPPE | 1,2-dipalmitoyl-sn-glycero-3-phosphoethanolamine
 DPPG | 1,2-dipalmitoyl-sn-glycero-3-phospho-(1'-rac-glycerol) (sodium salt)
 DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
+DRPC | 1,2-(14:1$^\Delta9$)-sn-glycero-3-phosphocholine
+DYPC | 1,2-(16:1$^\Delta9$)-sn-glycero-3-phosphocholine
 DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DLIPC| 1,2-dilinoleoyl-sn-glycero-3-phosphocholine
 DOG  | 1,2-dioleoyl-sn-glycerol
@@ -127,6 +130,7 @@ DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
 DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
 SLiPC | 1-(18:0)-2-(18:2 $^{\Delta9,12}$)-sn-glycero-3-phosphocholine 
 DMTAP | 1,2-dimyristoyl-3-trimethylammonium-propane
+SOPC | 1-stearoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
