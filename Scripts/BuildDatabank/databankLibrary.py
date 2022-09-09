@@ -107,6 +107,9 @@ lipids_dict = {
             'DPPG' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'SLiPC' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
                 }
 
 
