@@ -14,14 +14,33 @@ path = '../../Data/Simulations/'
 db_data = databank(path)
 systems = db_data.get_systems()
 
-ind = 1
+IDs = []
 for system in systems:
-    system['ID'] = ind
-    ind += 1
-    READMEpath = system['path'] + 'README.yaml'
-    system.pop('path',None)
-    with open(READMEpath, 'w') as f:
-        yaml.dump(system,f, sort_keys=False)
-    #print(READMEpath)
+    if 'ID' in system.keys():
+        IDs.append(system['ID'])
+
+print('Adding IDs to the following to these systems:')
+for system in systems:
+    if 'ID' not in system.keys():
+        NewID = max(IDs) + 1
+        system['ID'] = NewID
+        READMEpath = system['path'] + 'README.yaml'
+        system.pop('path',None)
+        with open(READMEpath, 'w') as f:
+            yaml.dump(system,f, sort_keys=False)
+        IDs.append(system['ID'])
+        print(READMEpath, NewID)
+        
+print('Largest ID: ', max(IDs))
+
+#ind = 1
+#for system in systems:
+#    system['ID'] = ind
+#    ind += 1
+#    READMEpath = system['path'] + 'README.yaml'
+#    system.pop('path',None)
+#    with open(READMEpath, 'w') as f:
+#        yaml.dump(system,f, sort_keys=False)
+#    #print(READMEpath)
         
 
