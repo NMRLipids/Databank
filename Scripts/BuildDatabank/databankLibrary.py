@@ -1025,7 +1025,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         selection = mol.select_atoms("resname {rnm} and name {atA} {atB}".format(
                                     rnm=op.resname, atA=op.atAname, atB=op.atBname)
                                     ).atoms.split("residue")
-#        print(op.resname + " " + op.atAname + " " + op.atBname)
+        #print(op.resname + " " + op.atAname + " " + op.atBname)
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
             if res.n_atoms != 2:
@@ -1101,6 +1101,10 @@ def parse_op_input(mapping_file,lipid_name):
     for mapping_key in mapping_dict.keys():
         if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key) or regexp3_C.search(mapping_key):
             atomC = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+            try:
+                resname = mapping_dict[mapping_key]['RESIDUE']
+            except:
+                pass
 #            print(atomC)
             atomH = []
         elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key) or regexp3_H.search(mapping_key):
