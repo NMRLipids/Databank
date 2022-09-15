@@ -188,14 +188,13 @@ for system in systems:
         if 'gromacs' in software:
             #trj = str(DATAdir) + '/' + str(trj)
             gro = path + '/conf.gro'
-
+            
             #make gro file
             print("\n Makin gro file")
             if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
                 os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + gro) 
             else:
                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
-
                     
         for key in system['COMPOSITION']:
             if key in lipids_dict.keys():
