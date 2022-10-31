@@ -230,17 +230,14 @@ def findPairs(experiments):
         sim_molar_fractions = {}
         for lipid in sim_lipids:
             sim_molar_fractions[lipid] = simulation.molarFraction(lipid)
-       # print(sim_molar_fractions)
         
         for experiment in experiments: 
-            #print(experiment.readme)
+
             # check lipid composition matches the simulation
             exp_lipids = experiment.getLipids() 
-            #  print(experiment.getLipids())
-
+            
             exp_total_lipid_concentration = experiment.readme['TOTAL_LIPID_CONCENTRATION']
             exp_ions = experiment.getIons(ions_list)
-            # print('experiment ions: ' + str(exp_ions)) 
             exp_counter_ions = experiment.readme['COUNTER_IONS']
         
             # calculate simulation ion concentrations
@@ -248,22 +245,18 @@ def findPairs(experiments):
             for molecule in ions_list:
                 sim_concentrations[molecule] = simulation.ionConcentration(molecule, exp_counter_ions)
 
-            #print(sim_concentrations)
-            
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
                 # compare molar fractions
                 mf_ok = 0
                 for key in sim_lipids:
-                    if (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - 0.05) and (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key]+ 0.05):
+                    if (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - 0.03) and (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key]+ 0.03):
                         mf_ok +=1 
 
                 c_ok = 0
 
                 # compare ion concentrations 
                 if set(sim_ions) == set(exp_ions):
-                  #  print(sim_ions)
-                  #  print(exp_ions)
                     for key in sim_ions:
                         if (experiment.readme['ION_CONCENTRATIONS'][key] >= sim_concentrations[key] - 0.05) and (experiment.readme['ION_CONCENTRATIONS'][key] <= sim_concentrations[key] + 0.05): 
                             c_ok += 1 
@@ -286,18 +279,12 @@ def findPairs(experiments):
                     t_exp = experiment.readme['TEMPERATURE']
                     
                     if (mf_ok == len(sim_lipids)) and (c_ok == len(sim_ions)) and (t_exp >= float(t_sim) - 2.0) and (t_exp <= float(t_sim) + 2.0):
-                        #  print(simulation.indexingPath
                         pairs.append([simulation, experiment])
-                        # print(simulation.readme['SYSTEM'])
-                        #print(simulation.indexingPath)
-                        #print(experiment.dataPath)
-                        #print("matching works")
-                    #Add path to experiment into simulation README.yaml
-                    #many experiment entries can match to same simulation
+
+                        #Add path to experiment into simulation README.yaml
+                        #many experiment entries can match to same simulation
                         exp_doi = experiment.readme['DOI'] 
-                        #print(experiment.dataPath)
                         exp_path = "/".join(experiment.dataPath.split("/")[5:8])
-                       # print(exp_path)
                         #try:
                         #    lipid = experiment.data.molecule
                         #except AttributeError:
@@ -307,9 +294,6 @@ def findPairs(experiments):
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.data.molecule
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
-                            #print(simulation.readme['DOI'])
-                            #print(simulation.readme['EXPERIMENT'])
-                            #print('\n')
                         elif experiment.exptype == "FormFactors":
                             simulation.readme['EXPERIMENT']['FORMFACTOR']=exp_path
                     else:
