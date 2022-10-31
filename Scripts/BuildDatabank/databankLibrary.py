@@ -1035,7 +1035,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                    atA=op.atAname
                    atB=op.atBname
                    nat=res.n_atoms
-                   print(atA,atB,nat)
+                   #print(atA,atB,nat)
                    warnings.warn("Selection >> name {atA} {atB} << \
                    contains {nat} atoms, but should contain exactly 2!")
         op.selection = selection

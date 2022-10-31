@@ -1,7 +1,8 @@
 #!/bin/bash
 #Loop AddData.py over many simulations 
 
-for i in {179..183}
+for i in {677..741}
 do
-    python3.6 AddData.py -f ./info_files/$i/*.yaml
+    echo $i
+    python AddData.py -f ./info_files/$i/info.yaml
 done
