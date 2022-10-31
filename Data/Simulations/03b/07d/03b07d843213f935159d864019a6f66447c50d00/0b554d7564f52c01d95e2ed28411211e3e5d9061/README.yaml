@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.7061800
+SOFTWARE: gromacs
+TRJ:
+- - CHOL13_medium.xtc
+TPR:
+- - CHOL13_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCmacrogFUCHS.yaml
+    COUNT:
+    - 128
+    - 128
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 18000
+  CHOL:
+    NAME: CHOL
+    MAPPING: mappingCHOLESTEROLmacrog.yaml
+    COUNT:
+    - 52
+    - 52
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen
+SYSTEM: MacRog_POPC_CHOL29_M
+SOFTWARE_VERSION: 2021
+FF: MacRog
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - CHOL13_medium.cpt
+LOG: null
+TOP:
+- - CHOL13_medium.top
+TRAJECTORY_SIZE: 356916912
+TRJLENGTH: 1001000.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 96000
+DATEOFRUNNING: 17/10/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}
+ID: 655

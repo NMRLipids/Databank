@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.7022749
+SOFTWARE: gromacs
+TRJ:
+- - CHOL4_medium.xtc
+TPR:
+- - CHOL4_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 128
+    - 128
+  SOL:
+    NAME: TP3
+    MAPPING: mappingTIP3Plipid17.yaml
+    COUNT: 14400
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 16
+    - 16
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen
+SYSTEM: Slipids_POPC_CHOL11_M
+SOFTWARE_VERSION: 2021
+FF: Slipids
+FF_SOURCE: CHARMM-GUI
+FF_DATE: null
+CPT:
+- - CHOL4_medium.cpt
+LOG: null
+TOP:
+- - CHOL4_medium.top
+TRAJECTORY_SIZE: 297183244
+TRJLENGTH: 1001000.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 79872
+DATEOFRUNNING: 17/10/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: unpublished/NMRlipidsIII/3
+ID: 681
