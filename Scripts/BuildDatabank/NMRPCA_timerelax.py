@@ -1,466 +1,673 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+This code aims to calculate the relaxation time based on the
+PCAlipids analysis.
 
-import yaml
-import urllib.request
-import sys
-import os
-import subprocess
-import math
+For details check:
+
+[Principal Component Analysis of Lipid Molecule Conformational
+Changes in Molecular Dynamics Simulations
+Pavel Buslaev, Valentin Gordeliy, Sergei Grudinin, and Ivan Gushchin
+Journal of Chemical Theory and Computation 2016 12 (3), 1019-1028
+DOI: 10.1021/acs.jctc.5b01106 ]
+
+and
+
+[Principal component analysis highlights the influence of temperature,
+curvature and cholesterol on conformational dynamics of lipids
+Pavel Buslaev, Khalid Mustafin, and Ivan Gushchin
+Biochimica et Biophysica Acta (BBA) - Biomembranes
+Volume 1862, Issue 7, 1 July 2020, 183253
+DOI: 10.1016/j.bbamem.2020.183253]
+
+The main idea is to run PCA on concatenated lipid trajectory,
+calculate the autocorrelation times, which are linearly related
+to equilibration times of individual lipids. The parameters of linear
+transform are calculated based on the trajectories from NMRlipids
+databank.
+
+The code was developed by
+Dr. Pavel Buslaev, pavel.i.buslaev@jyu.fi
+Dr. Samuli Olilla
+Patrik Kula
+Alexander Kuzmin
+"""
+
 import gc
-import pdb
-#sys.path.insert(1, '/home/sashq/.local/lib/python3.6/site-packages/')
-#from databankLibrary import download_link
+import os
+import sys
+import urllib.request
+import warnings
 
 import MDAnalysis as mda
 import MDAnalysis.transformations
-from MDAnalysis.analysis import align
 import numpy as np
+import yaml
+from MDAnalysis.analysis import align
+from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
+from databankLibrary import databank, download_link
 
-sys.path.insert(1, '/BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+# Probably also needed: , lipids_dict
 
+sys.path.insert(1, "/BuildDatabank/")
 
-################################# AMBER ################################################
-def loadMappingFile(path_to_mapping_file):    # load mapping file into a dictionary
-    mapping_dict = {}
-    with open(f'mapping_files/{path_to_mapping_file}', "r") as yaml_file:
-        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    yaml_file.close()
-    return mapping_dict
+SKIPLIPIDS = ["CHOL", "DCHOL"]
 
-def findHead(ind, nahead, headlist):
-    headcoord=np.empty((nahead, 3))
-    headcoord[0:nahead, :]=headlist.positions[ind*nahead:(ind+1)*nahead]
-    return headcoord
-           
-def findTails(ind, natail1, natail2, tail1list, tail2list):
-    tail1coord=np.empty((natail1, 3))
-    tail2coord=np.empty((natail2, 3))
-    
-    tail1coord[0:natail1, :]=tail1list.positions[ind*natail1:(ind+1)*natail1]
-    tail2coord[0:natail2, :]=tail2list.positions[ind*natail2:(ind+1)*natail2] 
-    return tail1coord, tail2coord
-
-def mergeHeadTails(nahead, headlist, natail1, tail1list, natail2, tail2list, ind):    
-    headc=findHead(ind, nahead, headlist)
-    tail1c,tail2c=findTails(ind, natail1, natail2, tail1list, tail2list)
-    
-    mergecoord=np.concatenate((tail1c, headc, tail2c))
-    return mergecoord
-  
-def framesLipCoord(nhead, nahead, headlist, natail1, tail1list, natail2, tail2list):
-    frameLipCoord=np.empty((0,3))
-    for j in range(nhead):
-        frameLipCoord=np.concatenate((frameLipCoord, mergeHeadTails(nahead, headlist, natail1, tail1list, natail2, tail2list, j)))
-    return frameLipCoord
-###############################################################################################
-    
-def load_traj(traj_file, top_file, lipid_resname, stride, sf, ef):
-    if not traj_file or not top_file or not lipid_resname:
-        print("Trajectory and topology files have to be provided.\n\
-              Name of residue of interest have to be indicated.")
-        return 0
-    topol = mda.Universe(top_file, traj_file)
-    traj = topol.trajectory[:]
-    return topol, traj
-
-def concat(readme, u, FF, lipid_resname):
-    traj = u.trajectory
-    #topol = u.topol
-    n_frames = len(traj)
-    mapping_file = readme['COMPOSITION'][lipid_resname]['MAPPING']
-    atoms_dict = loadMappingFile(mapping_file)
-    heavy_atoms = []
-    head_atoms = []
-    tail1_atoms = []
-    tail2_atoms = []
-
-    for key in atoms_dict:
-        atom = atoms_dict[key]['ATOMNAME']
-        if atom[0] == "H":
-            continue
-        if atoms_dict[key]['FRAGMENT'] == 'headgroup' or atoms_dict[key]['FRAGMENT'] == 'glycerol backbone':
-            head_atoms.append(atom)
-        elif atoms_dict[key]['FRAGMENT'] == 'sn-1':
-            tail1_atoms.append(atom)
-        elif atoms_dict[key]['FRAGMENT'] == 'sn-2':
-            tail2_atoms.append(atom)
-        heavy_atoms.append(atom)
-
-    heavy_top = u.select_atoms(f'resname {lipid_resname} and not name H*')
-    head_top = u.select_atoms(f'(name {" ".join(head_atoms)}) and resname {lipid_resname}')
-    tail1_top = u.select_atoms(f'(name {" ".join(tail1_atoms)}) and resname {lipid_resname}')
-    tail2_top = u.select_atoms(f'(name {" ".join(tail2_atoms)}) and resname {lipid_resname}')
-
-    n_lipid = head_top.n_residues          # number of lipids
-    
-    n_atoms_lipid = len(heavy_atoms)
-    n_atoms_head = len(head_atoms)
-    n_atoms_tail1 = len(tail1_atoms)
-    n_atoms_tail2 = len(tail2_atoms)
+"""
+Class Parser is a basic class to work with the trajectory. It has basic utility
+for preparing trajectories:
+    1. Checking if simulation has a correct name
+    2. Checking if trajectory is downloaded. Downloading, if not
+    3. Calling AmberMerger to merge head groups and tails for Amber
+       trajectories
+    4. Concatenate trajectories
+"""
 
 
-    coords = np.empty((n_frames*n_lipid*n_atoms_lipid, 3))
-    for i, ts in enumerate(traj):
-        #coords[i*n_atoms_lipid*n_lipid:(i+1)*n_atoms_lipid*n_lipid, :] = framesLipCoord(n_lipid, n_atoms_head, head_top, n_atoms_tail1, tail1_top, n_atoms_tail2, tail2_top)
-        coords[i*n_atoms_lipid*n_lipid:(i+1)*n_atoms_lipid*n_lipid, :] = heavy_top.positions #heavy_trj.positions
+class Parser:
+    """
+    Constructor for Parser:
+        root   - path to the directory with trajectories
+        readme - simulation data
+        path   - name of a particular trajectory
+        v      - verbosity for testing
+    """
 
-    coords = coords.reshape((n_frames,n_lipid,n_atoms_lipid,3))
-    coords = np.swapaxes(coords,0,1)
-    coords = coords.reshape((n_frames*n_lipid,n_atoms_lipid,3))
+    def __init__(self, root, readme, path=None, v=True):
+        # Technical
+        self.verbose = v
+        self.error = 0
 
-    # new Universe (trajn) based on heavy atom positions
-    atom_resindex = np.repeat(0, n_atoms_lipid)
-    # [] are neaded
-    res_name = [lipid_resname]
-    trajn = mda.Universe.empty(n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True)
-    trajn.add_TopologyAttr('name', heavy_atoms)
-    trajn.add_TopologyAttr('resname', res_name)
-    trajn.load_new(coords)
-    
-    # average structure
-    av = align.AverageStructure(trajn, ref_frame=0).run()
-    avg_str = av.results.universe 
-    align.AlignTraj(trajn, avg_str).run() #aligning of the new trajectory along the average structure
-    
-    # positions from the average structure
-    avg_pos = avg_str.select_atoms('all').positions.astype(np.float64).\
-    reshape(1, avg_str.select_atoms('all').n_atoms * 3)
-    
-    # positions from trajn   
-    n_framesn = len(trajn.trajectory)
-    n_atoms_lipid = trajn.select_atoms('all').n_atoms
-    coords = np.empty((n_framesn*n_atoms_lipid, 3))
-    print(n_framesn, n_atoms_lipid)
-    for i, ts in enumerate(trajn.trajectory):
-        coords[i*n_atoms_lipid:(i+1)*n_atoms_lipid, :] = trajn.select_atoms('all').positions
-    return coords, avg_pos, n_lipid, n_frames
+        # Path
+        self.root = root
 
-###################################### AMBER ################################################################################################  
-#    if FF == 'Lipid17' or FF == 'Lipid14' or FF == 'lipid17':
-#        
-#        if lipid_resname == 'POPC':
-#            head, tail1, tail2 = 'PC','PA','OL'
-#            
-#        if lipid_resname == 'POPG':
-#            head, tail1, tail2 = 'PGR','PA','OL'
-#            
-#        if lipid_resname == 'POPS':
-#            head, tail1, tail2 = 'PS','PA','OL'
-#            
-#        if lipid_resname == 'POPE':
-#            head, tail1, tail2 = 'PE','PA','OL'
-#            
-#        print('not name H* and resname '+'{}'.format(head))
-#        headlist = topol.select_atoms('not name H* and resname '+'{}'.format(head))
-#        print("headlist: ", headlist.n_residues, headlist.n_atoms)
-#        nhead = headlist.n_residues
-#        nahead = headlist.n_atoms // nhead
-#
-#        tail1list = topol.select_atoms(f'(resname {"{}".format(tail1)}) and around 2.0 (resname "{}".format(head) and not name H*)')
-#        selResTail1 = "("
-#        for i, j in enumerate(tail1list.resids[:-1]):
-#            selResTail1 = selResTail1+'resid '+'{}'.format(j)+' or '
-#        selResTail1 = selResTail1+'resid '+'{}'.format(tail1list.resids[-1])+') and not name H*'
-#
-#        tail2list = topol.select_atoms('(not name H* and resname '+'{}'.format(tail2)+') and around 2.0 (resname '+'{}'.format(head)+' and not name H*)')
-#        selResTail2 = "("
-#        for i, j in enumerate(tail2list.resids[:-1]):
-#            selResTail2 = selResTail2+'resid '+'{}'.format(j)+' or '
-#        selResTail2 = selResTail2+'resid '+'{}'.format(tail2list.resids[-1])+') and not name H*'
-#
-#        tail1list = topol.select_atoms(selResTail1) 
-#        ntail1 = tail1list.n_residues
-#        natail1 = tail1list.n_atoms // ntail1
-#
-#        tail2list = topol.select_atoms(selResTail2) 
-#        ntail2 = tail2list.n_residues
-#        natail2 = tail2list.n_atoms // ntail2
-#   
-#
-#        headnames = list(headlist.atoms[:nahead].names)
-#        tail1names = list(tail1list.atoms[:natail1].names)
-#        tail2names = list(tail2list.atoms[:natail2].names)
-#        lipnames = tail1names+headnames+tail2names
-#        atom_name = lipnames
-#        
-#        nlip = nhead
-#    for i, ts in enumerate(traj):
-#        for i, ts in enumerate(trajn.trajectory):
-#            trajxyz[i*nalip*nlip:(i+1)*nalip*nlip, :] = framesLipCoord(n_lipid, n_atoms_head, headlist, n_atoms_tail1, tail1list, n_a_toms_tail2, tail2list)
-#########################################################################################################################################    
-#    
-#    else:
-#        
-#        ailist = topol.select_atoms('not resname SOL and not (name H* or type HW or type OW or type W \
-#                                                          or type H or type Hs or type WT4 or type NaW \
-#                                                          or type KW or type CLW or type MgW) and resname %s' \
-#        % lipid_resname) #selection of heavy lipid atoms
-#    
-##    na      = ailist.n_atoms # amount of lipid atoms
-#        nalip    = ailist.n_atoms // nlip # amount of atoms per lipid
-#        
-#        lipnames = list(ailist.atoms[:nalip].names)
-#        atom_name = lipnames
-#        
-#    # positions
-#    
-#    trajxyz = trajxyz.reshape((nframes,nlip,nalip,3))
-#    trajxyz = np.swapaxes(trajxyz,0,1)
-#    trajxyz = trajxyz.reshape((nframes*nlip,nalip,3))
-#    # new Universe (trajn) based on heavy atom positions
-#    atom_resindex = np.repeat(0, nalip)
-#    # [] are neaded
-#    res_name = [lipid_resname]
-#    trajn = mda.Universe.empty(nalip, 1, atom_resindex=atom_resindex, trajectory=True)
-#    trajn.add_TopologyAttr('name', atom_name)
-#    trajn.add_TopologyAttr('resname', res_name)
-#    trajn.load_new(trajxyz)
-#    # average structure
-#    av = align.AverageStructure(trajn, ref_frame=0).run()
-#    avg_str = av.results.universe 
-#    align.AlignTraj(trajn, avg_str).run() #aligning of the new trajectory along the average structure
-#    # positions from the average structure
-#    avg_pos = avg_str.select_atoms('all').positions.astype(np.float64).\
-#    reshape(1, avg_str.select_atoms('all').n_atoms * 3)
-#    # positions from trajn   
-#    nframesn = len(trajn.trajectory)
-#    nalip = trajn.select_atoms('all').n_atoms
-#    trajxyz = np.empty((nframesn*nalip, 3))
-
-def PCA(trajxyz, avg_pos):
-    
-    nalip = len(avg_pos[0,:]) // 3
-    nframes = len(trajxyz) // nalip  
-    # centering of positions relative to the origin
-    X = trajxyz.astype(np.float64).reshape(nframes, nalip * 3) - avg_pos
-    # the sum of all coordinates (to calculate mean)
-    X_1 = X.sum(axis=0)
-    # production of X and X^T
-    X_X = np.tensordot(X, X, axes=(0,0))
-    # covariance matrix calculation
-    cov_mat = (X_X - np.dot(X_1.reshape(len(X_1),1), \
-		(X_1.reshape(len(X_1),1)).T) / nframes) / (nframes - 1)
-    # eigenvalues and eigenvectors calculation
-    eig_vals, eig_vecs = np.linalg.eigh(cov_mat)
-    eig_vecs = np.flip(eig_vecs, axis=1).T
-    
-    return X, eig_vecs
- 
-def get_proj(cdata, eig_vecs, first_PC = 1):
-    # projection on PC1
-    proj = np.tensordot(cdata, eig_vecs[first_PC - 1:1], axes = (1,1)).T
-    proj=np.concatenate(np.array(proj), axis=None)
-    
-    return proj
-
-def estimated_autocorrelation(x, variance, mean):
-	# x - data
-	n = len(x)
-	# Centering the data
-	x = x-mean
-	# Convolve the data
-	r = signal.fftconvolve(x, x[::-1], mode="full")[-n:]
-	# Weight the correlation to get the result in range -1 to 1
-	result = r/(variance*(np.arange(n, 0, -1)))
-    
-	return result
-
-# Interpolation
-def get_nearest_value(iterable, value):
-    
-	for idx, x in enumerate(iterable):
-		if x < value:
-			break
-
-	A = idx
-	if idx == 0:
-		for idx, x in enumerate(iterable):
-			if x < iterable[A]:
-				break
-		B = idx
-	else:
-		B = idx - 1
-	# print(A,B)
-	return A, B
-
-def calc(proj, nlip, timestep):
-	# mean,variance calculation
-    variance  = proj.var()
-    mean = proj.mean()
-	# correlation for the first lipid
-    data_1 = proj[:len(proj) // nlip]
-    R = estimated_autocorrelation(data_1, variance, mean)
-	# correlation for other lipids
-    for i in range(1, nlip):
-	    data_1 = proj[len(proj) * i // nlip:len(proj) * (i + 1) // nlip]
-	    R += estimated_autocorrelation(data_1, variance, mean)
-	# averaged correlation calculation
-    R /= nlip
-	# corresponding times
-    T = []
-    for i in range(0, len(R)):
-	    T.append(timestep * i)
-        
-    return T, R
-    
-def timerelax(time, aucor):
-    
-    points = []
-    j = 1
-    while j < len(aucor):
-        points.append(j)
-        j = int(1.5 * j) + 1
-    # decay in e^1
-    T_pic = np.array([time[i] for i in points if aucor[i] > 0.])
-    R_pic = np.array([aucor[i] for i in points if aucor[i] > 0.])
-    R_log = np.log(R_pic[:])
-    T_log = np.log(T_pic[:])
-	# data interpolation
-    power = -1
-    A, B = get_nearest_value(R_log, power)
-    a = (T_log[B] - T_log[A]) / (R_log[B] - R_log[A])
-    b = T_log[A] - a * R_log[A]
-    t_relax1 = a * power + b
-    T_relax1 = math.e ** t_relax1
-    
-    return T_relax1
-
-def esttime(readme, file_1, file_2, FF, trj_len, lipid_resname, stride = 1, sf = 1, ef = -1):
-
-#    PATH = os.getcwd() + '/'
-    # topology, trajectory loading
-    u = mda.Universe(file_2, file_1)
-    # positions of heavy lipid atoms
-    trajxyz, avg_pos, nlip, nframes = concat(readme, u=u, FF=FF, lipid_resname=lipid_resname)
-    # PCA
-    X, eig_vecs = PCA(trajxyz=trajxyz, avg_pos=avg_pos)
-    # projection on PC1
-    proj = get_proj(cdata=X, eig_vecs=eig_vecs)
-    #timestep
-    ts=trj_len/(nframes)
-    # autocorrelation
-    T, R = calc(proj=proj, nlip=nlip, timestep=ts)
-    # relaxation time at e^1 decay
-    te1 = timerelax(time=T, aucor=R)
-    
-    return te1 * 49 # 49 from sample data average of tkss2/tac1
-
-def findlipids(readme):
-    # must be a full list of lipids
-    lipids_list = ['POPC', 'POPE', 'POPG', 'POPS', 'DMPC', 'DPPC', 'DPPE', 'DPPG', 'DEPC', 'DLPC', 'DLIPC', 'DOPC', 'DDOPC', 'DOPS', 'DSPC', 'DAPC', 'POPI', 'SAPI', 'SLPI', 'CER', 'DCHOL', 'DHMDMAB', 'DPPG', 'CHOL', 'DPP'] #add the rest
-    lipids = []
-    # add to the lipids those lipids that are indicated in .yaml 
-    for lipid in lipids_list:
+        # Extracting data from readme
+        self.indexingPath = "/".join(readme["path"].split("/")[4:8])
+        self.doi = readme["DOI"]
         try:
-            if readme['COMPOSITION'][lipid] != 0:
-                lipids.append(lipid)
-        except KeyError:
+            self.trj = readme["TRJ"][0][0]
+            self.tpr = readme["TPR"][0][0]
+        except Exception:
+            print("Parser: Currently don't support non-GROMACS trajectories")
+            self.trj = ""
+            self.tpr = ""
+            self.error = 1
+        self.trj_name = f"{self.root}{self.indexingPath}/{self.trj}"
+        self.tpr_name = f"{self.root}{self.indexingPath}/{self.tpr}"
+        self.trj_url = download_link(self.doi, self.trj)
+        self.tpr_url = download_link(self.doi, self.tpr)
+        self.trjLen = readme["TRJLENGTH"] / 1000  # ns
+        self.FF = readme.get("FF")
+
+        self.composition = readme["COMPOSITION"]
+        lipids_list = [
+            "POPC",
+            "POPE",
+            "POPG",
+            "POPS",
+            "DMPC",
+            "DPPC",
+            "DPPE",
+            "DPPG",
+            "DEPC",
+            "DLPC",
+            "DLIPC",
+            "DOPC",
+            "DDOPC",
+            "DOPS",
+            "DSPC",
+            "DAPC",
+            "POPI",
+            "SAPI",
+            "SLPI",
+            "CER",
+            "DCHOL",
+            "DHMDMAB",
+            "DPPG",
+            "CHOL",
+            "DPP",
+        ]  # TODO: add the rest
+        self.lipids = []
+        # TODO: add to the lipids those lipids that are indicated in .yaml
+        for lipid in lipids_list:
+            try:
+                if self.composition[lipid] != 0:
+                    self.lipids.append(lipid)
+            except KeyError:
+                continue
+
+        self.path = path
+
+    """
+    Path validation. Behaviour depends on the input.
+        1. If ther were any errors, validation fails. Currently the only
+           error tested is that .xtc and .tpr files are not present. This
+           is the case for non-GROMACS trajectories.
+        2. If path is not provided, parser is iterating over all trajectories.
+        3. If path is provided and current path is equal to the provided one,
+           parser reports that it finds the trajectory for the analysis.
+    """
+
+    def validatePath(self):
+        if self.error > 0:
+            # This is an error message. Printing even in silent mode
+            print(
+                "Parser: Can't read TPR and TRJ from README for " +
+                f"{indexingPath}"
+            )
+        if self.verbose and not self.path:
+            print(
+                "Parser: Iterating over all trajectories. " +
+                f"Current trajectory is {indexingPath}"
+            )
+            return 0
+        if self.path == self.indexingPath:
+            if self.verbose:
+                print(f"Parser: Found trajectory {indexingPath}")
+                return 0
+        return -1
+
+    """
+    Basic trajectory and TPR download.
+    """
+
+    def downloadTraj(self):
+        if not os.path.isfile(self.tpr_name):
+            # This is a log message. Printing even in silent mode
+            print("Parser: Downloading tpr ", self.doi)
+            urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
+
+        if not os.path.isfile(self.trj_name):
+            # This is a log message. Printing even in silent mode
+            print("Parser: Downloading trj ", self.doi)
+            urllib.request.urlretrieve(self.trj_url, self.trj_name)
+
+    """
+    Preparing trajectory. If centered trajectory is found, use it. If whole
+    trajectory is found, use it. Otherwise, call gmx trjconv to make whole
+    trajectory. The selected trajectory is loaded into Universe.
+    """
+
+    def prepareTraj(self):
+        # Look for centered.xtc
+        if os.path.isfile(f"{self.root}{self.indexingPath}/centered.xtc"):
+            print("Parser: Founder centered trajectory: centered.xtc")
+            self.trj_name = f"{self.root}{self.indexingPath}/centered.xtc"
+        # Look for whole.xtc
+        elif os.path.isfile(f"{self.root}{self.indexingPath}/whole.xtc"):
+            print("Parser: Founder whole trajectory: whole.xtc")
+            self.trj_name = f"{self.root}{self.indexingPath}/whole.xtc"
+        # Run gmx trjconv
+        else:
+            print("Parser: Making trajectory whole")
+            trj_out_name = f"{self.root}{self.indexingPath}/whole.xtc"
+            os.system(
+                f"echo System | gmx trjconv -f {self.trj_name} -s "
+                + f"{self.tpr_name} -pbc mol -o {trj_out_name}"
+            )
+            self.trj_name = trj_out_name
+
+        # Loading trajectory
+        self.traj = mda.Universe(self.tpr_name, self.trj_name)
+
+    """
+    Create Concatenator and corresponding concatenated trajectories for
+    all lipids available for the trajectory.
+    """
+
+    def concatenateTraj(self):
+        self.concatenated_trajs = []
+        for lipid in self.lipids:
+            if lipid in SKIPLIPIDS:
+                # We do not treat cholesterols
+                continue
+            topology = Topology(
+                self.FF, self.traj, lipid, self.composition[lipid]["MAPPING"]
+            )
+            concatenator = Concatenator(topology, self.traj, lipid)
+            self.concatenated_trajs.append(concatenator.concatenate())
+
+
+"""
+Class Topology is a class needed to extract lipid specific data and also to
+merge lipids from Amber trajectories, where lipid is often represented as 3
+residue types. It has the following methods:
+    1. Simple constructor, which sets the force field,residue names,
+       trajectory, and loads mapping_file
+    2. Mapping file loader
+    3. Function that outputs atomNames
+    4. Checker if the merge is needed. Currently defunct
+    5. Runner, that returns lists for head, tail1, tail2 orders for merging
+       Currently defunct
+"""
+
+
+class Topology:
+    """
+    Constructor for Topology:
+        ff            - force field name
+        traj          - MDAnalysis trajectory
+        lipid_resname - name of lipid
+        mapping_file  - path to maping file
+    """
+
+    def __init__(self, ff, traj, lipid_resname, mapping_file):
+        self.ff = ff
+        self.lipid_resname = lipid_resname
+        self.traj = traj
+        self.mapping = self.loadMappingFile(mapping_file)
+
+    """
+    Basic loader of the mapping file.
+    """
+
+    def loadMappingFile(self, mapping_file):
+        mapping_dict = {}
+        with open(f"mapping_files/{mapping_file}", "r") as yaml_file:
+            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        yaml_file.close()
+        return mapping_dict
+
+    """
+    Extract all names of heavy atoms from the mapping
+    """
+
+    def atomNames(self):
+        atoms = []
+        for key in self.mapping:
+            atom = self.mapping[key]["ATOMNAME"]
+            if atom[0] == "H":
+                continue
+            atoms.append(atom)
+        return atoms
+
+    """
+    Checker for merge. Currently defunct.
+    TODO: return True for Amber force fields
+    """
+
+    def isMergeNeeded(self, fnames=[]):
+        return False
+
+    """
+    Find lipid tails that correspond to a particular head-group.
+    Currentlyy defunct.
+    TODO: get the correspondence from structure
+    """
+
+    def runMerger(self):
+        return [], [], []
+
+
+"""
+Class Concatenator is a class needed to concatenate trajectory for lipid types.
+It has the following methods:
+    1. Simple constructor, which sets the topology,residue names, and
+       trajectory
+    2. concatenateTraj method to do the basic by lipid concatenation
+    3. alignTraj method to perform the alignment of the concatenated trajectory
+    4. The enveloping concatenate method
+"""
+
+
+class Concatenator:
+    """
+    Constructor for Concatenator:
+        topology      - topology for lipid
+        traj          - MDAnalysis trajectory
+        lipid_resname - name of lipid
+    """
+
+    def __init__(self, topology, traj, lipid_resname):
+        self.topology = topology
+        self.traj = traj
+        self.lipid_resname = lipid_resname
+
+        if self.topology.isMergeNeeded():
+            self.headlist, self.tail1list, self.tail2list = \
+                self.merger.runMerger()
+        else:
+            self.headlist = None
+            self.tail1list = None
+            self.tail2list = None
+
+    """
+    concatenateTraj performs basic trajectory concatination. First, it extracts
+    coordinates from trajectory, next, it reshapes the coordinate array, swaps
+    time and resid axes to obtain continuous trajectories of individual lipids
+    (this is needed for autocorrelation time analysis), and finally merges
+    individual lipid trajectories.
+    ---
+    TODO: add merge for Amber
+    """
+
+    def concatenateTraj(self):
+        traj = self.traj.trajectory
+        n_frames = len(traj)
+
+        heavy_atoms_topology = self.traj.select_atoms(
+            f"resname {self.lipid_resname} and not name H*"
+        )
+
+        n_lipid = heavy_atoms_topology.n_residues
+
+        n_atoms_lipid = len(self.topology.atomNames())
+        # TODO: add check
+        # n_atoms_lipid == heavy_atoms_topology.n_atoms
+
+        # Get all coordinates n_frames, n_lipid * n_atoms_lipid
+        coords = (
+            AnalysisFromFunction(lambda ag: ag.positions.copy(),
+                                 heavy_atoms_topology)
+            .run()
+            .results["timeseries"]
+        )
+        # Adding axis to separate individual lipid trajectories
+        coords = coords.reshape((n_frames, n_lipid, n_atoms_lipid, 3))
+        # Swapping time frame with lipid axis
+        # Now we have continuous lipid trajectory
+        coords = np.swapaxes(coords, 0, 1)
+        # Reshaping to desired shape
+        coords = coords.reshape((n_frames * n_lipid, n_atoms_lipid, 3))
+
+        # Creating new Universe from the concatenated coordinates
+        atom_resindex = np.repeat(0, n_atoms_lipid)
+        concatenated_traj = mda.Universe.empty(
+            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True
+        )
+        concatenated_traj.add_TopologyAttr("resname", [self.lipid_resname])
+        concatenated_traj.load_new(coords)
+
+        return concatenated_traj, n_lipid, n_frames * n_lipid
+
+    """
+    alignTraj alignes the concatenated trajectory in two steps: (1) it computes
+    average structure after alignment to the first frame, and (2) it alignes
+    the structure to the calculated average structure in (1).
+    """
+
+    def alignTraj(self, concatenated_traj):
+        # Compute average structure after alignment to the first frame
+        av = align.AverageStructure(concatenated_traj, ref_frame=0).run()
+        # Align to average structure
+        align.AlignTraj(concatenated_traj, av.results.universe).run()
+        # Compute average structure after second alignment
+        coords = (
+            AnalysisFromFunction(
+                lambda ag: ag.positions.copy(),
+                concatenated_traj.select_atoms("all")
+            )
+            .run()
+            .results["timeseries"]
+        )
+        return coords.reshape(-1, 3), coords.mean(axis=0).reshape(1, -1)
+
+    """
+    Simple enveloping function to perform concatenation
+    """
+
+    def concatenate(self):
+        concatenated_traj, n_lipid, n_frames = self.concatenateTraj()
+        aligned_traj, av_pos = self.alignTraj(concatenated_traj)
+
+        return aligned_traj, av_pos, n_lipid, n_frames
+
+
+"""
+Class PCA is a class that actually performs PCA. It has the following methods:
+    1. Simple constructor, which sets the aligned trajtory, average coordinates,
+       number of lipids, number of frames in the concatenated trajectory and
+       trajectory length in ns
+    2. PCA prepares the trajectory coordinates for analysis and calculates
+       principal components
+    3. get_proj projects the trajectory on principal components
+    4. get_lipid_autocorrelation calculates the autocorrelation timeseries for
+       individual lipid
+    5. get_autocorrelations calculates the autocorrelation timeseries for
+       trajectory
+"""
+
+
+class PCA:
+    """
+    Constructor for PCA:
+        aligned_traj - np.array with positions of concatenated and aligned
+                       trajectory
+        av_pos       - np.array with average positions for the lipid
+        n_lipid      - number of lipids of particular type in the system
+        n_frames     - number of frames in the concatenated trajectory
+        traj_time    - trajectory length in ns
+    """
+
+    def __init__(self, aligned_traj, av_pos, n_lipid, n_frames, traj_time):
+        self.aligned_traj = aligned_traj
+        self.av_pos = av_pos
+        self.n_lipid = n_lipid
+        self.n_frames = n_frames
+        self.traj_time = traj_time
+
+    """
+    PCA calculates the PCA. First the data is centered and then covariance
+    matrix is calculated manually.
+    """
+
+    def PCA(self):
+        # centering of positions relative to the origin
+        X = self.aligned_traj.astype(np.float64)
+        X = X.reshape(self.n_frames, self.av_pos.shape[1]) - self.av_pos
+        # the sum of all coordinates (to calculate mean)
+        X_1 = X.sum(axis=0)
+        # production of X and X^T
+        X_X = np.tensordot(X, X, axes=(0, 0))
+        # covariance matrix calculation
+        cov_mat = (
+            X_X
+            - np.dot(X_1.reshape(len(X_1), 1), (X_1.reshape(len(X_1), 1)).T)
+            / self.n_frames
+        ) / (self.n_frames - 1)
+        # eigenvalues and eigenvectors calculation
+        eig_vals, eig_vecs = np.linalg.eigh(cov_mat)
+        self.eig_vecs = np.flip(eig_vecs, axis=1).T
+
+        return X
+
+    """
+    Projecting the trajectory on the 1st principal component
+    """
+
+    def get_proj(self, cdata):
+        # projection on PC1
+        proj = np.tensordot(cdata, self.eig_vecs[0:1], axes=(1, 1)).T
+        proj = np.concatenate(np.array(proj), axis=None)
+
+        self.proj = proj
+
+    """
+    Autocorrelation calculation for individual lipid.
+    """
+
+    def get_lipid_autocorrelation(self, data, variance, mean):
+        # Centering the data
+        data -= mean
+        # Convolve the data
+        r = signal.fftconvolve(data, data[::-1], mode="full")[-len(data):]
+        # Weight the correlation to get the result in range -1 to 1
+        return r / (variance * (np.arange(len(data), 0, -1)))
+
+    """
+    Autocorrelation calculation for the trajectory.
+    """
+    def get_autocorrelations(self):
+        variance = self.proj.var()
+        mean = self.proj.mean()
+        # extract the trajectories for individual lipids
+        separate_projs = [
+            self.proj[
+                len(self.proj) * i // self.n_lipid:len(self.proj)
+                * (i + 1) // self.n_lipid
+            ]
+            for i in range(self.n_lipid)
+        ]
+        # calculate autocorrelations for individual lipids
+        R = np.array(
+            [self.get_lipid_autocorrelation(x, variance, mean)
+                for x in separate_projs]
+        )
+        R = R.mean(axis=0)
+        T = np.arange(len(R)) * self.traj_time / len(R)
+        self.autocorrelation = np.array([T, R]).T
+
+
+"""
+Class TimeEstimator is a class that estimates equilbration time from
+autocorrelation data. It includes the following methods:
+    1. Simple constructor, which sets the autocorrelation data
+    2. Helper method get_nearest_value that finds the interval in the data
+       where the autocorrelation falls below specific value
+    3. timerelax method calculates the logarithms of autocorrelation and
+       calculates the decay time
+    4. calculate_time method calculates the estimated equilibration time
+"""
+
+
+class TimeEstimator:
+    """
+    Constructor for PCA:
+        autocorrelation - autocorrelation data
+    """
+
+    def __init__(self, autocorrelation):
+        self.autocorrelation = autocorrelation
+
+    """
+    get_nearest_value method return the indices that frame the particular value
+    As an input it gets an array, which is expected to decay. The method tries
+    to find and index (index_A), for which the array gets below the cutoff value
+    for the first time. Then, for index_A-1 the array was larger than the cutoff
+    value for the last time. It means that the function, represented by the
+    array data is equal to cutoff somewhere between timesteps that correspond to
+    index_A-1 and index_A. It can happen, that this index_A is equal 0. Then,
+    method searches for the first occurance, where array is smaller than
+    array[0]. The method returns the interval inbetween the array gets below
+    cutoff.
+    """
+
+    def get_nearest_value(self, iterable, value):
+        A = np.where(iterable < value)[0][0]
+
+        if A == 0:
+            B = np.where(iterable < iterable[A])
+        else:
+            B = A - 1
+        return A, B
+
+    """
+    Estimates autocorrelation decay time.
+    """
+
+    def timerelax(self):
+        time = self.autocorrelation[:, 0]
+        autocorrelation = self.autocorrelation[:, 1]
+
+        points = []
+        j = 1
+        while j < len(autocorrelation):
+            points.append(j)
+            j = int(1.5 * j) + 1
+        # Get timeseries for autocorrelation
+        T_pic = np.array([time[i] for i in points if
+                          autocorrelation[i] > 0.0])
+        R_pic = np.array(
+                [autocorrelation[i] for i in points
+                    if autocorrelation[i] > 0.0]
+            )
+        # Calculate logs for time and autocorrelation arrays
+        # We use log since in log-log scale autocorrelation is closer to linear
+        R_log = np.log(R_pic)
+        T_log = np.log(T_pic)
+        # data interpolation. We are searching for time interval where
+        # autocorrelations decay by e. This is the most stable method.
+        # Autocorrelations decay by e is equivalent to
+        # log(autocorrelation) < - 1
+        power = -1
+        A, B = self.get_nearest_value(R_log, power)
+        # perform interpolation
+        a = (T_log[B] - T_log[A]) / (R_log[B] - R_log[A])
+        b = T_log[A] - a * R_log[A]
+        t_relax1 = a * power + b
+        T_relax1 = np.exp(t_relax1)
+
+        return T_relax1
+
+    """
+    Basic enveloping method that estimates equilibration time from
+    autocorrelation decay time. They are linearly connected and the
+    coefficient is calculated experimentally.
+    """
+
+    def calculate_time(self):
+        # relaxation time at e^1 decay
+        te1 = self.timerelax()
+
+        return te1 * 49  # 49 from sample data average of tkss2/tac1
+
+
+"""
+Main runs the loop over all databank trajectories and does the following:
+    1. Calls the parser to check, merge, and concatenate trajectory
+    2. Calls PCA to gep PCs, projections, and ACs
+    3. Calls Time calculation
+
+The parser assumes that the trajectory is downloaded and lipids are made
+whole, or GROMACS is installed and available via gmx command.
+"""
+if __name__ == "__main__":
+
+    warnings.filterwarnings("ignore", category=UserWarning)
+
+    path = "../../Data/Simulations/"
+    db_data = databank(
+        path
+    )
+    # searches through every subfolder of a path
+    # and finds every trajectory in databank
+    systems = db_data.get_systems()
+
+    i = 0
+    listall = []
+
+    testTraj = "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/" + \
+               "fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1"
+
+    for readme in systems:
+        # getting data from databank and proprocessing them
+        indexingPath = "/".join(readme["path"].split("/")[4:8])
+        # Start Parser
+        parser = Parser(path, readme, testTraj)
+        # Check trajectory
+        if parser.validatePath() < 0:
             continue
-        
-    return lipids
+        # Download files
+        parser.downloadTraj()
+        # Prepare trajectory
+        parser.prepareTraj()
+        # Concatenate trajectory
+        parser.concatenateTraj()
+        # Iterate over trajectories for different lipids
+        for traj in parser.concatenated_trajs:
+            # Creat PCA for trajectory
+            pca_runner = PCA(traj[0], traj[1], traj[2], traj[3], parser.trjLen)
+            # Run PCA
+            data = pca_runner.PCA()
+            # Project trajectory on PC1
+            pca_runner.get_proj(data)
+            # Calculate autocorrelations
+            pca_runner.get_autocorrelations()
+            # Estimate equilibration time
+            te2 = TimeEstimator(pca_runner.autocorrelation).calculate_time()
 
-path = '../../Data/Simulations/'
-db_data = databank(path)      #searches through every subfolder of a path and finds every trajectory in databank
-systems = db_data.get_systems()
-
-i=0
-listall=[]
-for readme in systems: 
-    #getting data from databank and proprocessing them                
-    indexingPath = "/".join(readme['path'].split("/")[4:8])
-    subdir = f'../../Data/Simulations/{indexingPath}'
-    doi = readme['DOI']
-    if indexingPath != 'fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1':
-        continue
-    print(indexingPath)
-    try:
-        trj = readme['TRJ'][0][0]
-        tpr = readme['TPR'][0][0]
-    except:
-        print(readme)
-        continue
-    trj_name = f'{subdir}/{trj}'
-    tpr_name = f'{subdir}/{tpr}'
-    trj_url = download_link(doi, trj)
-    tpr_url = download_link(doi, tpr)
-    trjLen = readme['TRJLENGTH']/1000 # ns
-    EQtime = float(readme.get('TIMELEFTOUT'))*1000
-    FF = readme.get('FF')
-    if FF == 'Lipid17' or FF == 'Lipid14' or FF == 'lipid17':
-        continue
-#    Temp = readme['TEMPERATURE')
-
-    #try:
-    if not os.path.isfile(tpr_name):
-        print("Downloading tpr ", doi)
-        response = urllib.request.urlretrieve(tpr_url, tpr_name)
-            
-    if not os.path.isfile(trj_name):
-        print("Downloading trj ", doi)
-        response = urllib.request.urlretrieve(trj_url, trj_name)
-   # except:
-   #     print("smth")
-   #     continue
-#try:    
-#        gro = readme['GRO']
-#        gro_name = f'{subdir} / {readme["GRO"][0][0]}'
-#        gro_url = download_link(doi, gro[0][0])
-#
-#        if not os.path.isfile(gro_name):
-#            response = urllib.request.urlretrieve(gro_url, gro_name)
-#        print(gro_name)
-#    except:
-#        gro = None
-    #    gro_name = f'{subdir} / foo.gro'
-    #    os.system(f'gmx trjconv -f {trj_name} -s {tpr_name} -dump 0 -o {gro_name}')
-        
-    i += 1
-    listall.append({})
-    summ = 0
-    if os.path.isfile(f'{subdir}/centered.xtc'):
-        trj_name = f'{subdir}/centered.xtc'
-    elif os.path.isfile(f'{subdir}/whole.xtc'):
-        trj_name = f'{subdir}/whole.xtc'
-    else:
-        print("making everything whole")
-        trj_name = f'{subdir}/whole.xtc'
-        os.system(f'echo System | gmx trjconv -f {trj_name} -s {tpr_name} -pbc mol -o {trj_name}')
-
-    for lipid in findlipids(readme):
-#        summ=summ+sum(readme['COMPOSITION'][lipid]['COUNT'])
-#        listall[i-1]['totalLipidNumber'] = summ
-#        listall[i-1]['trjLen'] = trjLen
-#        listall[i-1]['other'] = [FF]
-#        listall[i-1]['T'] = Temp
-               
-        if lipid=='CHOL' or lipid=='DCHOL':
-            continue
-#        else:
-#            lipidswitch = {
-#                'DDOPC':'DDPC',
-#                'DHMDMAB':'T7H',
-#                'CER':'CER160'
-#                }
-#
-#            if lipid in lipidswitch:
-#                lipid = lipidswitch[lipid]
-#
-#        try:
-#            if (readme.get('FF')=='Berger' or readme.get('FF')=='Berger and Modified H\xF6ltje model for cholesterol') and readme['COMPOSITION']['POPC']!=0:
-#                lipid='PLA'
-#        except KeyError:
-#            print('next')
-        
-        print("calculating")
-        print(trj_name,  FF, trjLen, lipid)
-#        if gro!=None:
-#            te2 = esttime(readme, trj_name, gro_name, FF, trjLen, lipid_resname=lipid)
-#        else:
-        te2 = esttime(readme, trj_name, tpr_name, FF, trjLen, lipid_resname=lipid)
-
-        listall[i-1]['%s' % lipid] = te2/trjLen
-        print(listall)
-    gc.collect()
+            print(te2 / parser.trjLen)
+        gc.collect()
+        break
