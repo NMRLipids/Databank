@@ -34,7 +34,10 @@ Patrik Kula
 Alexander Kuzmin
 """
 
+import time
+
 import gc
+import json
 import os
 import sys
 import urllib.request
@@ -54,6 +57,12 @@ from databankLibrary import databank, download_link
 sys.path.insert(1, "/BuildDatabank/")
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
+
+mergeCutoff = 2.0
+
+TAILSN1 = "sn-1"
+TAILSN2 = "sn-2"
+HEADGRP = "headgroup"
 
 """
 Class Parser is a basic class to work with the trajectory. It has basic utility
@@ -229,6 +238,14 @@ class Parser:
             concatenator = Concatenator(topology, self.traj, lipid)
             self.concatenated_trajs.append(concatenator.concatenate())
 
+    """
+    Write data to json file
+    """
+
+    def dumpData(self, filename, data):
+        f = open(f"{self.root}{self.indexingPath}/{filename}", 'w')
+        json.dump(data, f)
+        f.close()
 
 """
 Class Topology is a class needed to extract lipid specific data and also to
@@ -284,21 +301,89 @@ class Topology:
         return atoms
 
     """
-    Checker for merge. Currently defunct.
-    TODO: return True for Amber force fields
+    Checker for merge. Currently it checks if the RESIDUE key is in the mapping file
+    NOTE: This has to be changed if the content of mapping file changes
     """
 
-    def isMergeNeeded(self, fnames=[]):
-        return False
+    def isMergeNeeded(self):
+        return True if 'RESIDUE' in \
+                self.mapping[list(self.mapping.keys())[0]].keys() \
+                else False
+
+    """
+    Helper function that gets the residue names for lipid, if merge is needed
+    """
+
+    def getLipidResnames(self):
+        if self.isMergeNeeded():
+            resnames = []
+            atomNames = self.atomNames()
+            for key in self.mapping:
+                atom = self.mapping[key]["ATOMNAME"]
+                if atom in atomNames:
+                    resnames.append(self.mapping[key]["RESIDUE"])
+            resnames = set(resnames)
+            return resnames
+        # How can we end up here?
+        # Since currently we only call this function when Merge is needed,
+        # this is a place for checking if everything is ok and we can raise
+        else:
+            return None
+
+    """
+    Helper function that finds head, sn-1 and sn-2 tails
+    NOTE: currently there are only lipids with 2 different tails available in databank:
+          e.g. POPC or POPG. This leads to different names of tails. This won't be the
+          case for DOPC. Currently the algorithm is using that all three groups differ
+    """
+
+    def assignResnames(self, resnames):
+        if self.isMergeNeeded():
+            resnameDict = {}
+            # First find headgroup
+            for key in self.mapping:
+                resname = self.mapping[key]["RESIDUE"]
+                if self.mapping[key]["FRAGMENT"] == HEADGRP:
+                    resnameDict[HEADGRP] = resname
+                    break
+            for key in self.mapping:
+                resname = self.mapping[key]["RESIDUE"]
+                if not TAILSN1 in resnameDict and \
+                        TAILSN1 == self.mapping[key]["FRAGMENT"] \
+                        and not resnameDict[HEADGRP] == resname:
+                    resnameDict[TAILSN1] = resname
+                if not TAILSN2 in resnameDict and \
+                        TAILSN2 == self.mapping[key]["FRAGMENT"] \
+                        and not resnameDict[HEADGRP] == resname:
+                    resnameDict[TAILSN2] = resname
+                if TAILSN1 in resnameDict and TAILSN2 in resnameDict:
+                    break
+            # TODO: add check that all resnames from input are in the dict
+            return resnameDict
+        # How can we end up here?
+        else:
+            return None
 
     """
     Find lipid tails that correspond to a particular head-group.
-    Currentlyy defunct.
+    NOTE: currently there are only lipids with 2 different tails available in databank:
+          e.g. POPC or POPG. This leads to different names of tails. This won't be the
+          case for DOPC. Currently the algorithm is using that all three groups differ
     TODO: get the correspondence from structure
     """
 
     def runMerger(self):
-        return [], [], []
+        resnames = self.getLipidResnames()
+        resnameDict = self.assignResnames(resnames)
+        head_residues = [r.atoms.select_atoms("not name H*") for r in self.traj.select_atoms(\
+                f"not name H* and resname {resnameDict[HEADGRP]}").residues]
+        sn_1_residues = [r.atoms.select_atoms("not name H*") for r in self.traj.select_atoms(\
+                f"not name H* and resname {resnameDict[TAILSN1]} and " +\
+                f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} and not name H*)").residues]
+        sn_2_residues = [r.atoms.select_atoms("not name H*") for r in self.traj.select_atoms(\
+                f"not name H* and resname {resnameDict[TAILSN2]} and " +\
+                f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} and not name H*)").residues]
+        return head_residues, sn_1_residues, sn_2_residues
 
 
 """
@@ -327,7 +412,8 @@ class Concatenator:
 
         if self.topology.isMergeNeeded():
             self.headlist, self.tail1list, self.tail2list = \
-                self.merger.runMerger()
+                self.topology.runMerger()
+            # TODO: raise if length of 3 lists is not equal
         else:
             self.headlist = None
             self.tail1list = None
@@ -339,8 +425,6 @@ class Concatenator:
     time and resid axes to obtain continuous trajectories of individual lipids
     (this is needed for autocorrelation time analysis), and finally merges
     individual lipid trajectories.
-    ---
-    TODO: add merge for Amber
     """
 
     def concatenateTraj(self):
@@ -378,7 +462,62 @@ class Concatenator:
             n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True
         )
         concatenated_traj.add_TopologyAttr("resname", [self.lipid_resname])
-        concatenated_traj.load_new(coords)
+        concatenated_traj.load_new(coords, in_memory = False)
+
+        return concatenated_traj, n_lipid, n_frames * n_lipid
+
+    """
+    concatenateTrajWithMerging performs basic trajectory concatination. In 
+    contrast to basic concatenateTraj it additionally merges splitted lipids.
+    First, it creates extracts coordinates from trajectory, next, it reshapes the coordinate array, swaps
+    time and resid axes to obtain continuous trajectories of individual lipids
+    (this is needed for autocorrelation time analysis), and finally merges
+    individual lipid trajectories.
+    """
+
+    def concatenateTrajWithMerging(self):
+        traj = self.traj.trajectory
+        n_frames = len(traj)
+        
+        heavy_atoms_topology = self.headlist[0] + \
+                               self.tail1list[0] + \
+                               self.tail2list[0]
+        
+        for head, sn1, sn2 in zip(self.headlist[1:],
+                                  self.tail1list[1:],
+                                  self.tail2list[1:]):
+            heavy_atoms_topology = heavy_atoms_topology.union(head + sn1 + sn2)
+
+
+        n_atoms_lipid = len(self.topology.atomNames())
+
+        n_lipid = heavy_atoms_topology.n_atoms // n_atoms_lipid
+
+        # TODO: add check
+        # n_atoms_lipid == heavy_atoms_topology.n_atoms
+
+        # Get all coordinates n_frames, n_lipid * n_atoms_lipid
+        coords = (
+            AnalysisFromFunction(lambda ag: ag.positions.copy(),
+                                 heavy_atoms_topology)
+            .run()
+            .results["timeseries"]
+        )
+        # Adding axis to separate individual lipid trajectories
+        coords = coords.reshape((n_frames, n_lipid, n_atoms_lipid, 3))
+        # Swapping time frame with lipid axis
+        # Now we have continuous lipid trajectory
+        coords = np.swapaxes(coords, 0, 1)
+        # Reshaping to desired shape
+        coords = coords.reshape((n_frames * n_lipid, n_atoms_lipid, 3))
+
+        # Creating new Universe from the concatenated coordinates
+        atom_resindex = np.repeat(0, n_atoms_lipid)
+        concatenated_traj = mda.Universe.empty(
+            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True
+        )
+        concatenated_traj.add_TopologyAttr("resname", [self.lipid_resname])
+        concatenated_traj.load_new(coords, in_memory = False)
 
         return concatenated_traj, n_lipid, n_frames * n_lipid
 
@@ -409,10 +548,15 @@ class Concatenator:
     """
 
     def concatenate(self):
-        concatenated_traj, n_lipid, n_frames = self.concatenateTraj()
+        print(f"Concatenator: Concatenating lipid {self.lipid_resname}")
+        if not self.topology.isMergeNeeded():
+            # Merging is not needed
+            concatenated_traj, n_lipid, n_frames = self.concatenateTraj()
+        else:   
+            concatenated_traj, n_lipid, n_frames = self.concatenateTrajWithMerging()
         aligned_traj, av_pos = self.alignTraj(concatenated_traj)
 
-        return aligned_traj, av_pos, n_lipid, n_frames
+        return aligned_traj, av_pos, n_lipid, n_frames, self.lipid_resname
 
 
 """
@@ -640,6 +784,8 @@ if __name__ == "__main__":
 
     testTraj = "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/" + \
                "fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1"
+    #testTraj = "1c4/77d/1c477da411113327d1c0e43eea10b0f096031d45/" + \
+    #           "35a315cecf0156381237417893bf6755b08ab3e8"
 
     for readme in systems:
         # getting data from databank and proprocessing them
@@ -655,19 +801,27 @@ if __name__ == "__main__":
         parser.prepareTraj()
         # Concatenate trajectory
         parser.concatenateTraj()
+        equilibration_times = {}
         # Iterate over trajectories for different lipids
         for traj in parser.concatenated_trajs:
+            print(f"Main: parsing lipid {traj[4]}")
             # Creat PCA for trajectory
             pca_runner = PCA(traj[0], traj[1], traj[2], traj[3], parser.trjLen)
             # Run PCA
             data = pca_runner.PCA()
+            print("Main: PCA: done")
             # Project trajectory on PC1
             pca_runner.get_proj(data)
+            print("Main: Projections: done")
             # Calculate autocorrelations
             pca_runner.get_autocorrelations()
+            print("Main: Autocorrelations: done")
             # Estimate equilibration time
             te2 = TimeEstimator(pca_runner.autocorrelation).calculate_time()
+            equilibration_times[traj[4]] = te2 / parser.trjLen
+            print("Main: EQ time: done")
 
             print(te2 / parser.trjLen)
         gc.collect()
+        parser.dumpData("eq_times.json", equilibration_times)
         break
