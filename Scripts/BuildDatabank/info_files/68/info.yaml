@@ -11,10 +11,10 @@ TIMELEFTOUT: 0
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 COMPOSITION:
   POPC:
-    NAME: system1
+    NAME: PC
     MAPPING: mappingPOPClipid17.yaml
   POPG:
-    NAME: system2
+    NAME: PGR
     MAPPING: mappingPOPGlipid17.yaml
   SOD:
     NAME: Na+

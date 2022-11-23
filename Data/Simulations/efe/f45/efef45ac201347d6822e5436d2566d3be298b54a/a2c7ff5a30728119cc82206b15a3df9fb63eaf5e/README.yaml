@@ -11,7 +11,7 @@ EXPERIMENT:
 FF_SOURCE: NMRlipidsIV
 COMPOSITION:
   POPG:
-    NAME: POPG
+    NAME: PGR
     COUNT:
     - 44
     - 44

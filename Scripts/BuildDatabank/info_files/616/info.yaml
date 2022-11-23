@@ -1,0 +1,69 @@
+DOI: 10.5281/zenodo.209070
+
+
+
+SOFTWARE: openMM
+
+TRJ: traj_openMM.dcd
+
+PDB: traj_openMM_every1ns.pdb
+
+PREEQTIME: 0
+
+TIMELEFTOUT: 0
+
+TEMPERATURE: 303
+
+
+
+COMPOSITION:
+
+ POPC:
+
+  NAME: POP
+
+  MAPPING: mappingPOPCcharmm.yaml
+
+ CHOL:
+
+  NAME: CLO
+
+  MAPPING: mappingCHOLESTEROLcharmm.yaml
+
+ SOL:
+
+  NAME: HOH
+
+  MAPPING: mappingwaterlipid14.yaml
+
+ 
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+
+
+PUBLICATION:
+
+AUTHORS_CONTACT: Melcr, Josef
+
+
+
+SYSTEM: 80POPC_80CHOL_7200SOL_303K
+
+SOFTWARE_VERSION: v7
+
+
+
+FF: CHARMM36
+
+FF_SOURCE: starting structure from CHARMM-GUI Membrane Builder v1.7 (http://www.charmm-gui.org/) 
+
+FF_DATE:
+
+
+
+CHK:
+
+TOP: topol.top
+
+CRD:

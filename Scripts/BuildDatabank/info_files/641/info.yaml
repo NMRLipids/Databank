@@ -12,7 +12,7 @@ COMPOSITION:
  POPE:
   NAME: POPE
   MAPPING: mappingPOPElipid17_2.yaml
- DOG:
+ SDG:
   NAME: SDG
   MAPPING: mappingSDGlipid17.yaml
  SOL: 
@@ -31,4 +31,5 @@ FF: Lipid17
 FF_SOURCE: Amber tools
 FF_DATE: 2019
 WARNINGS:
-  AMBIGUOUS_ATOMNAMES:
+  AMBIGUOUS_ATOMNAMES: [POPE,SDG]
+  

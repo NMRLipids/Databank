@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.7061800
+
+SOFTWARE: gromacs
+TRJ: CHOL20_medium.xtc
+TPR: CHOL20_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCmacrog.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ CHOL:
+  NAME: CHOL
+  MAPPING: mappingCHOLESTEROLmacrog.yaml
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Matti Javanainen
+
+SYSTEM: MacRog_POPC_CHOL38_M
+SOFTWARE_VERSION: 2021
+
+FF: MacRog
+FF_SOURCE:
+FF_DATE:
+
+CPT: CHOL20_medium.cpt
+LOG: 
+TOP: CHOL20_medium.top

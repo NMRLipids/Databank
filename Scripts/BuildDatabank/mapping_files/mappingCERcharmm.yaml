@@ -309,7 +309,7 @@ M_G3H2_M:
   FRAGMENT: backbone
 M_G3O1_M:
   ATOMNAME: O1
-  FRAGMENT: backbone
+  FRAGMENT: headgroup
 M_G3O1H1_M:
   ATOMNAME: HO1
   FRAGMENT: headgroup

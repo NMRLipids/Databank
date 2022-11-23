@@ -16,7 +16,7 @@ COMPOSITION:
     NAME: POPC
     MAPPING: mappingPOPClipid17ecc_POPCres.yaml
   POPG:
-    NAME: POPG
+    NAME: PGR
     MAPPING: mappingPOPGlipid17ecc.yaml
   SOD:
     NAME: NA

@@ -11,15 +11,13 @@ EXPERIMENT:
 FF_SOURCE: ??
 COMPOSITION:
   POPG:
-    NAME: system2
-    MOLTYPE: system2
+    NAME: PGR
     COUNT:
     - 75
     - 75
     MAPPING: mappingPOPGlipid17.yaml
   POPC:
-    NAME: system1
-    MOLTYPE: system1
+    NAME: PC
     COUNT:
     - 175
     - 175
