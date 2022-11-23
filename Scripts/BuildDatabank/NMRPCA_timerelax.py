@@ -49,7 +49,7 @@ from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
-from databankLibrary import databank, download_link
+from databankLibrary import databank, download_link, lipids_dict
 
 # Probably also needed: , lipids_dict
 
@@ -62,6 +62,9 @@ mergeCutoff = 2.0
 TAILSN1 = "sn-1"
 TAILSN2 = "sn-2"
 HEADGRP = "headgroup"
+
+# In case you want to test for a specific coordinate change the flag to yes
+TEST = False
 
 """
 Class Parser is a basic class to work with the trajectory. It has basic utility
@@ -77,22 +80,31 @@ for preparing trajectories:
 class Parser:
     """
     Constructor for Parser:
-        root   - path to the directory with trajectories
-        readme - simulation data
-        path   - name of a particular trajectory
-        v      - verbosity for testing
+        root          - path to the directory with trajectories
+        readme        - simulation data
+        eq_time_fname - name of the output file
+        path          - name of a particular trajectory
+        v             - verbosity for testing
     """
 
-    def __init__(self, root, readme, path=None, v=True):
+    def __init__(self,
+                 root,
+                 readme,
+                 eq_time_fname="eq_times.json",
+                 path=None,
+                 v=True):
         # Technical
         self.verbose = v
         self.error = 0
 
         # Path
         self.root = root
+        self.eq_time_fname = eq_time_fname
 
         # Extracting data from readme
         self.indexingPath = "/".join(readme["path"].split("/")[4:8])
+        if self.verbose:
+            print(f"Parser: Processing trajectory {self.indexingPath}")
         self.doi = readme["DOI"]
         try:
             self.trj = readme["TRJ"][0][0]
@@ -110,33 +122,7 @@ class Parser:
         self.FF = readme.get("FF")
 
         self.composition = readme["COMPOSITION"]
-        lipids_list = [
-            "POPC",
-            "POPE",
-            "POPG",
-            "POPS",
-            "DMPC",
-            "DPPC",
-            "DPPE",
-            "DPPG",
-            "DEPC",
-            "DLPC",
-            "DLIPC",
-            "DOPC",
-            "DDOPC",
-            "DOPS",
-            "DSPC",
-            "DAPC",
-            "POPI",
-            "SAPI",
-            "SLPI",
-            "CER",
-            "DCHOL",
-            "DHMDMAB",
-            "DPPG",
-            "CHOL",
-            "DPP",
-        ]  # TODO: add the rest
+        lipids_list = list(lipids_dict.keys())
         self.lipids = []
         # TODO: add to the lipids those lipids that are indicated in .yaml
         for lipid in lipids_list:
@@ -163,17 +149,24 @@ class Parser:
             # This is an error message. Printing even in silent mode
             print(
                 "Parser: Can't read TPR and TRJ from README for " +
-                f"{indexingPath}")
+                f"{self.indexingPath}")
         if self.verbose and not self.path:
             print(
                 "Parser: Iterating over all trajectories. "
-                + f"Current trajectory is {indexingPath}"
+                + f"Current trajectory is {self.indexingPath}"
             )
             return 0
         if self.path == self.indexingPath:
+            if os.path.isfile(f"{self.root}{self.indexingPath}" +
+                              f"/{self.eq_time_fname}"):
+                if self.verbose:
+                    print("Parser: Found file with equilibration data. " +
+                          "Not processing the trajectory")
+                    return -1
             if self.verbose:
-                print(f"Parser: Found trajectory {indexingPath}")
-                return 0
+                print(f"Parser: Found trajectory {self.indexingPath}")
+            return 0
+
         return -1
 
     """
@@ -231,17 +224,23 @@ class Parser:
                 # We do not treat cholesterols
                 continue
             topology = Topology(
-                self.FF, self.traj, lipid, self.composition[lipid]["MAPPING"]
+                self.FF,
+                self.traj,
+                self.composition[lipid]["NAME"],
+                self.composition[lipid]["MAPPING"]
             )
-            concatenator = Concatenator(topology, self.traj, lipid)
+            concatenator = Concatenator(topology,
+                                        self.traj,
+                                        lipid,
+                                        self.composition[lipid]["NAME"])
             self.concatenated_trajs.append(concatenator.concatenate())
 
     """
     Write data to json file
     """
 
-    def dumpData(self, filename, data):
-        f = open(f"{self.root}{self.indexingPath}/{filename}", "w")
+    def dumpData(self, data):
+        f = open(f"{self.root}{self.indexingPath}/{self.eq_time_fname}", "w")
         json.dump(data, f)
         f.close()
 
@@ -330,7 +329,7 @@ class Topology:
         # Since currently we only call this function when Merge is needed,
         # this is a place for checking if everything is ok and we can raise
         else:
-            return None
+            return self.lipid_resname
 
     """
     Helper function that finds head, sn-1 and sn-2 tails
@@ -424,12 +423,14 @@ class Concatenator:
     Constructor for Concatenator:
         topology      - topology for lipid
         traj          - MDAnalysis trajectory
-        lipid_resname - name of lipid
+        lipid_name    - lipid name in the databank
+        lipid_resname - lipid resname in the trajectory
     """
 
-    def __init__(self, topology, traj, lipid_resname):
+    def __init__(self, topology, traj, lipid_name, lipid_resname):
         self.topology = topology
         self.traj = traj
+        self.lipid_name = lipid_name
         self.lipid_resname = lipid_resname
 
         if self.topology.isMergeNeeded():
@@ -570,7 +571,7 @@ class Concatenator:
     """
 
     def concatenate(self):
-        print(f"Concatenator: Concatenating lipid {self.lipid_resname}")
+        print(f"Concatenator: Concatenating lipid {self.lipid_name}")
         if not self.topology.isMergeNeeded():
             # Merging is not needed
             concatenated_traj, n_lipid, n_frames = self.concatenateTraj()
@@ -579,7 +580,7 @@ class Concatenator:
                 self.concatenateTrajWithMerging()
         aligned_traj, av_pos = self.alignTraj(concatenated_traj)
 
-        return aligned_traj, av_pos, n_lipid, n_frames, self.lipid_resname
+        return aligned_traj, av_pos, n_lipid, n_frames, self.lipid_name
 
 
 """
@@ -808,20 +809,15 @@ if __name__ == "__main__":
     # testTraj = "1c4/77d/1c477da411113327d1c0e43eea10b0f096031d45/" + \
     #           "35a315cecf0156381237417893bf6755b08ab3e8"
 
-    for readme in systems:
-        # getting data from databank and proprocessing them
-        indexingPath = "/".join(readme["path"].split("/")[4:8])
-        print(indexingPath)
-        # Start Parser
-        eq_time_path = path + indexingPath + "/eq_times.json"
-        print(eq_time_path)
-        if os.path.isfile(eq_time_path):
-            continue
+    eq_time_fname = "eq_times.json"
 
-        if readme['SOFTWARE'] == 'openMM':
-            continue
-        
-        parser = Parser(path, readme, indexingPath)
+    for readme in systems:
+        # getting data from databank and preprocessing them
+        # Start Parser
+        if TEST:
+            parser = Parser(path, readme, eq_time_fname, testTraj)
+        else:
+            parser = Parser(path, readme, eq_time_fname)
         # Check trajectory
         if parser.validatePath() < 0:
             continue
@@ -853,5 +849,6 @@ if __name__ == "__main__":
 
             print(te2 / parser.trjLen)
         gc.collect()
-        parser.dumpData("eq_times.json", equilibration_times)
-        #break
+        parser.dumpData(equilibration_times)
+        if TEST:
+            break
