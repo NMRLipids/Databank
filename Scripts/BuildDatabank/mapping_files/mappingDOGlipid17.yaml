@@ -457,7 +457,7 @@ M_G3H2_M:
 M_G3O1_M:
   ATOMNAME: O31
   RESIDUE: DOG
-  FRAGMENT: glycerol backbone
+  FRAGMENT: headgroup
 M_G3O1H1_M:
   ATOMNAME: H31
   RESIDUE: DOG
