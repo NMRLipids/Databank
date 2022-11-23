@@ -811,8 +811,17 @@ if __name__ == "__main__":
     for readme in systems:
         # getting data from databank and proprocessing them
         indexingPath = "/".join(readme["path"].split("/")[4:8])
+        print(indexingPath)
         # Start Parser
-        parser = Parser(path, readme, testTraj)
+        eq_time_path = path + indexingPath + "/eq_times.json"
+        print(eq_time_path)
+        if os.path.isfile(eq_time_path):
+            continue
+
+        if readme['SOFTWARE'] == 'openMM':
+            continue
+        
+        parser = Parser(path, readme, indexingPath)
         # Check trajectory
         if parser.validatePath() < 0:
             continue
@@ -845,4 +854,4 @@ if __name__ == "__main__":
             print(te2 / parser.trjLen)
         gc.collect()
         parser.dumpData("eq_times.json", equilibration_times)
-        break
+        #break
