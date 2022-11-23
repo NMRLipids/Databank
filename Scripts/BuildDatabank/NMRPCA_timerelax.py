@@ -116,6 +116,7 @@ class Parser:
             self.error = 1
         self.trj_name = f"{self.root}{self.indexingPath}/{self.trj}"
         self.tpr_name = f"{self.root}{self.indexingPath}/{self.tpr}"
+        self.gro_name = f"{self.root}{self.indexingPath}/conf.gro"
         self.trj_url = download_link(self.doi, self.trj)
         self.tpr_url = download_link(self.doi, self.tpr)
         self.trjLen = readme["TRJLENGTH"] / 1000  # ns
@@ -210,7 +211,10 @@ class Parser:
             self.trj_name = trj_out_name
 
         # Loading trajectory
-        self.traj = mda.Universe(self.tpr_name, self.trj_name)
+        try:
+            self.traj = mda.Universe(self.tpr_name, self.trj_name)
+        except:
+            self.traj = mda.Universe(self.gro_name, self.trj_name)
 
     """
     Create Concatenator and corresponding concatenated trajectories for
@@ -822,6 +826,18 @@ if __name__ == "__main__":
         if parser.validatePath() < 0:
             continue
         # Download files
+
+        eq_time_path = path + readme['path'] + "/eq_times.json"
+        print(eq_time_path)
+        if os.path.isfile(eq_time_path):
+            continue
+
+        if readme['SOFTWARE'] == 'openMM':
+            continue
+
+        #if 'WARNINGS' in readme and 'GROMACS_VERSION' in readme['WARNINGS'] and 'gromacs3' in readme['WARNINGS']['GROMACS_VERSION']:
+        #    continue
+        
         parser.downloadTraj()
         # Prepare trajectory
         parser.prepareTraj()
