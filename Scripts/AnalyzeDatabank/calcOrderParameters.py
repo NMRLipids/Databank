@@ -23,10 +23,6 @@ for system in systems:
     Nlipid = 0
     path = system['path']
 
-    if 'WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys():
-        print(path)
-        print('Order parameters cannot be calculated if atom names are ambiguous.')
-        continue
     
     for key in system['COMPOSITION']:
         outfilename = path + key + 'OrderParameters.json'
@@ -197,6 +193,12 @@ for system in systems:
                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
                     
         for key in system['COMPOSITION']:
+
+            if 'WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']:
+                print(path, key)
+                print('Order parameters cannot be calculated if atom names are ambiguous.')
+                continue
+            
             if key in lipids_dict.keys():
                 print('Calculating ', key,' order parameters')
                 mapping_file = system['COMPOSITION'][key]['MAPPING']
@@ -240,7 +242,7 @@ for system in systems:
                 # os.system('cp ' + str(dir_path) + '/' + key + 'OrderParameters.dat ' + DATAdir) #MUUTA
                 #os.system('cp ' +str(dir_path) + '/' + key + 'OrderParameters.json ' + DATAdir) #MUUTA
     
-    print("Order parameters calculated and saved to ",path)
+        print("Order parameters calculated and saved to ",path)
 
     ready = ready + 1
         
