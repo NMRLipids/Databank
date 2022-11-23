@@ -80,6 +80,12 @@ lipids_dict = {
             'DMTAP' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'SDG' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                         },
+            'SDPE' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                         },
             'SOPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                          },
@@ -219,6 +225,12 @@ molecule_ff_dict = {
                                 "TYPE": "string",
                            },
                 'FFPOPI' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFSDG' : {"REQUIRED": False,
+                                "TYPE": "string",
+                           },
+                'FFSDPE' : {"REQUIRED": False,
                                 "TYPE": "string",
                            },
                 'FFSAPI' : {"REQUIRED": False,
@@ -1035,7 +1047,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                    atA=op.atAname
                    atB=op.atBname
                    nat=res.n_atoms
-                   #print(atA,atB,nat)
+                   print(atA,atB,nat)
                    warnings.warn("Selection >> name {atA} {atB} << \
                    contains {nat} atoms, but should contain exactly 2!")
         op.selection = selection
