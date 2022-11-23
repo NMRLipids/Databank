@@ -835,8 +835,8 @@ if __name__ == "__main__":
         if readme['SOFTWARE'] == 'openMM':
             continue
 
-        #if 'WARNINGS' in readme and 'GROMACS_VERSION' in readme['WARNINGS'] and 'gromacs3' in readme['WARNINGS']['GROMACS_VERSION']:
-        #    continue
+        if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
+            continue
         
         parser.downloadTraj()
         # Prepare trajectory
