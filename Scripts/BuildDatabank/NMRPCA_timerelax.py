@@ -51,8 +51,6 @@ from scipy import signal
 
 from databankLibrary import databank, download_link, lipids_dict
 
-# Probably also needed: , lipids_dict
-
 sys.path.insert(1, "/BuildDatabank/")
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
@@ -727,7 +725,13 @@ class TimeEstimator:
     """
 
     def get_nearest_value(self, iterable, value):
-        A = np.where(iterable < value)[0][0]
+        try:
+            A = np.where(iterable < value)[0][0]
+        except:
+            print("TimeEstimator: Autocorrelations do not converge. "
+                  + "We shift to extrapolation regime.")
+            A = np.where(iterable == np.min(iterable))[0][0]
+            return A, A - 1
 
         if A == 0:
             B = np.where(iterable < iterable[A])
@@ -806,12 +810,16 @@ if __name__ == "__main__":
     i = 0
     listall = []
 
-    testTraj = (
-        "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/"
-        + "fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1"
-    )
+    #testTraj = (
+    #    "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/"
+    #    + "fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1"
+    #)
     # testTraj = "1c4/77d/1c477da411113327d1c0e43eea10b0f096031d45/" + \
     #           "35a315cecf0156381237417893bf6755b08ab3e8"
+    testTraj = (
+        "0a4/101/0a41017641414540973e921ed22528d1f3dc414b/"
+        + "3c0936e61fa40cce74fd1828a2697742709e91fb"
+    )
 
     eq_time_fname = "eq_times.json"
 
@@ -819,6 +827,7 @@ if __name__ == "__main__":
         # getting data from databank and preprocessing them
         # Start Parser
         if TEST:
+            print("TEST")
             parser = Parser(path, readme, eq_time_fname, testTraj)
         else:
             parser = Parser(path, readme, eq_time_fname)
