@@ -195,9 +195,9 @@ class Parser:
             print("Parser: Founder centered trajectory: centered.xtc")
             self.trj_name = f"{self.root}{self.indexingPath}/centered.xtc"
         # Look for whole.xtc
-        elif os.path.isfile(f"{self.root}{self.indexingPath}/whole_short.xtc"):
+        elif os.path.isfile(f"{self.root}{self.indexingPath}/whole.xtc"):
             print("Parser: Founder whole trajectory: whole.xtc")
-            self.trj_name = f"{self.root}{self.indexingPath}/whole_short.xtc"
+            self.trj_name = f"{self.root}{self.indexingPath}/whole.xtc"
         # Run gmx trjconv
         else:
             print("Parser: Making trajectory whole")
