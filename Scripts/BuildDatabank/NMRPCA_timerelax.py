@@ -307,25 +307,26 @@ class Topology:
     """
 
     def isMergeNeeded(self):
-        return (
-            True
-            if "RESIDUE" in self.mapping[list(self.mapping.keys())[0]].keys()
-            else False
-        )
+        if "RESIDUE" not in self.mapping[list(self.mapping.keys())[0]].keys():
+            return False
+        resnames = []
+        for key in self.mapping:
+            atom = self.mapping[key]["ATOMNAME"]
+            atomNames = self.atomNames()
+            if atom in atomNames:
+                resnames.append(self.mapping[key]["RESIDUE"])
+        resnames = set(resnames)
+        if len(resnames) > 1:
+            return resnames
+        return False
 
     """
     Helper function that gets the residue names for lipid, if merge is needed
     """
 
     def getLipidResnames(self):
+        resnames = self.isMergeNeeded()
         if self.isMergeNeeded():
-            resnames = []
-            atomNames = self.atomNames()
-            for key in self.mapping:
-                atom = self.mapping[key]["ATOMNAME"]
-                if atom in atomNames:
-                    resnames.append(self.mapping[key]["RESIDUE"])
-            resnames = set(resnames)
             return resnames
         # How can we end up here?
         # Since currently we only call this function when Merge is needed,
@@ -460,11 +461,11 @@ class Concatenator:
             f"resname {self.lipid_resname} and not name H*"
         )
 
-        n_lipid = heavy_atoms_topology.n_residues
-
         n_atoms_lipid = len(self.topology.atomNames())
-        # TODO: add check
-        # n_atoms_lipid == heavy_atoms_topology.n_atoms
+
+        n_lipid = heavy_atoms_topology.n_residues
+        if n_lipid * n_atoms_lipid != heavy_atoms_topology.n_atoms:
+            n_lipid = heavy_atoms_topology.n_atoms // n_atoms_lipid
 
         # Get all coordinates n_frames, n_lipid * n_atoms_lipid
         coords = (
@@ -734,7 +735,7 @@ class TimeEstimator:
             return A, A - 1
 
         if A == 0:
-            B = np.where(iterable < iterable[A])
+            B = np.where(iterable < iterable[A])[0][0]
         else:
             B = A - 1
         return A, B
@@ -810,17 +811,28 @@ if __name__ == "__main__":
     i = 0
     listall = []
 
-    #testTraj = (
+    # testTraj = (
     #    "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/"
     #    + "fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1"
-    #)
+    # )
     # testTraj = "1c4/77d/1c477da411113327d1c0e43eea10b0f096031d45/" + \
     #           "35a315cecf0156381237417893bf6755b08ab3e8"
+    # testTraj = (
+    #    "0a4/101/0a41017641414540973e921ed22528d1f3dc414b/"
+    #    + "3c0936e61fa40cce74fd1828a2697742709e91fb"
+    # )
+    # testTraj = (
+    #    "813/2bc/8132bc41c60e0156caeb7a99f11efb3206fa1619/" +
+    #    "69de81ab0e12664c93685826a4b1734bcde763fe"
+    # )
+    # testTraj = (
+    #    "b86/e1d/b86e1d05121438d07f56d447bf4a0ec1add4af0c/" +
+    #    "b7cad43d5423af6dee7da746eabe48b79e79c271"
+    #    )
     testTraj = (
-        "0a4/101/0a41017641414540973e921ed22528d1f3dc414b/"
-        + "3c0936e61fa40cce74fd1828a2697742709e91fb"
+        "387/6d8/3876d878edf3efd6e4b40a7e78661581b1dfd387/" +
+        "b048d322ae8d7ee95e888b26f87dda3ec6fd9350"
     )
-
     eq_time_fname = "eq_times.json"
 
     for readme in systems:
@@ -846,7 +858,7 @@ if __name__ == "__main__":
 
         if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
             continue
-        
+
         parser.downloadTraj()
         # Prepare trajectory
         parser.prepareTraj()
