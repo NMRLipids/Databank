@@ -856,6 +856,9 @@ if __name__ == "__main__":
         if readme['SOFTWARE'] == 'openMM':
             continue
 
+        if readme['TRAJECTORY_SIZE'] > 5000000000:
+            continue
+        
         if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
             continue
 
