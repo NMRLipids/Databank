@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.7424730
+
+SOFTWARE: openMM
+TRJ: traj_combined.dcd
+PDB: last_frame.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ DOPC:
+  NAME: DOPC
+  MAPPING: mappingDOPCcharmm.yaml
+ SOL:
+  NAME: HOH
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ CAL:
+  NAME: CA
+  MAPPING: mappingCAL.yaml
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCLA.yaml
+ 
+DIR_WRK: /home/peptid/Desktop/databank_wdir
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: DOPC_1000mM_CaCl2_at_303K_with_AMOEBA
+SOFTWARE_VERSION: v7.5.1
+
+FF: AMOEBA
+FF_SOURCE: OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in publication https://doi.org/10.1021/jacs.0c02394, original parameters  https://doi.org/10.1080/00268976.2018.1436201 
+FF_DATE:
+
