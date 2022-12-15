@@ -1,4 +1,5 @@
-DOI: 10.5281/zenodo.7424730
+DOI: 10.5281/zenodo.7424655
+
 
 SOFTWARE: openMM
 TRJ: traj_combined.dcd
@@ -16,17 +17,17 @@ COMPOSITION:
   MAPPING: mappingTIP3PCHARMMgui.yaml
  CAL:
   NAME: CA
-  MAPPING: mappingCAL.yaml
+  MAPPING: mappingCA.yaml
  CLA:
   NAME: Cl
-  MAPPING: mappingCLA.yaml
+  MAPPING: mappingCl.yaml
  
-DIR_WRK: /home/peptid/Desktop/databank_wdir
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION:
 AUTHORS_CONTACT: Kav, Batuhan
 
-SYSTEM: DOPC_1000mM_CaCl2_at_303K_with_AMOEBA
+SYSTEM: DOPC_450mM_CaCl2_at_303K_with_AMOEBA
 SOFTWARE_VERSION: v7.5.1
 
 FF: AMOEBA

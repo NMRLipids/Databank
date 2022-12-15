@@ -1,27 +1,32 @@
-DOI: 10.5281/zenodo.7415922
+DOI: 10.5281/zenodo.7424587
 
 SOFTWARE: openMM
 TRJ: traj_combined.dcd
-PDB: pope_charmm_last_frame.pdb
+PDB: last_frame.pdb
 PREEQTIME: 0
 TIMELEFTOUT: 0
 TEMPERATURE: 303
 
 COMPOSITION:
  DOPC:
-  NAME: POPE
-  MAPPING: mappingPOPEcharmm.yaml
+  NAME: DOPC
+  MAPPING: mappingDOPCcharmm.yaml
  SOL:
   NAME: HOH
   MAPPING: mappingTIP3PCHARMMgui.yaml
- CAL:
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCl.yaml
  
-DIR_WRK: /home/peptid/Desktop/databank_wdir
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION:
 AUTHORS_CONTACT: Kav, Batuhan
 
-SYSTEM: POPE_nosalt_at_303K_with_AMOEBA
+SYSTEM: DOPC_1000mM_NaCl_at_303K_with_AMOEBA
 SOFTWARE_VERSION: v7.5.1
 
 FF: AMOEBA
