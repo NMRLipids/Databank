@@ -1,10 +1,10 @@
-DOI: 10.5281/zenodo.5946836
+DOI: 10.5281/zenodo.7476579
 
 
 
 SOFTWARE: openMM
 
-TRJ: trajCORRECT1-2.dcd
+TRJ: traj1-2.xtc
 
 PDB: start.pdb
 
