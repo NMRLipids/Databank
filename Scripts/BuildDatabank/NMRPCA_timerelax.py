@@ -56,6 +56,7 @@ sys.path.insert(1, "/BuildDatabank/")
 SKIPLIPIDS = ["CHOL", "DCHOL"]
 
 mergeCutoff = 2.0
+trjSizeCutoff = 5000000000
 
 TAILSN1 = "sn-1"
 TAILSN2 = "sn-2"
@@ -104,21 +105,31 @@ class Parser:
         if self.verbose:
             print(f"Parser: Processing trajectory {self.indexingPath}")
         self.doi = readme["DOI"]
-        try:
-            self.trj = readme["TRJ"][0][0]
-            self.tpr = readme["TPR"][0][0]
-        except Exception:
-            print("Parser: Currently don't support non-GROMACS trajectories")
-            self.trj = ""
-            self.tpr = ""
-            self.error = 1
+        self.soft = readme["SOFTWARE"]
+        if self.soft == "openMM":
+            try:
+                self.trj = readme["TRJ"][0][0]
+                self.tpr = readme["PDB"][0][0]
+            except Exception:
+                print("Parser: Did not find trajectory or pdb for openMM")
+                self.error = 1
+        else:
+            try:
+                self.trj = readme["TRJ"][0][0]
+                self.tpr = readme["TPR"][0][0]
+            except Exception:
+                print("Parser: Did not find trajectory or tpr for GROMACS")
+                self.trj = ""
+                self.tpr = ""
+                self.error = 1
         self.trj_name = f"{self.root}{self.indexingPath}/{self.trj}"
         self.tpr_name = f"{self.root}{self.indexingPath}/{self.tpr}"
-        self.gro_name = f"{self.root}{self.indexingPath}/conf.gro"
         self.trj_url = download_link(self.doi, self.trj)
         self.tpr_url = download_link(self.doi, self.tpr)
         self.trjLen = readme["TRJLENGTH"] / 1000  # ns
         self.FF = readme.get("FF")
+
+        self.size = readme["TRAJECTORY_SIZE"]
 
         self.composition = readme["COMPOSITION"]
         lipids_list = list(lipids_dict.keys())
@@ -147,14 +158,14 @@ class Parser:
         if self.error > 0:
             # This is an error message. Printing even in silent mode
             print(
-                "Parser: Can't read TPR and TRJ from README for " +
+                "Parser: Can't read TPR/PDB and TRJ from README for " +
                 f"{self.indexingPath}")
         if self.verbose and not self.path:
             print(
                 "Parser: Iterating over all trajectories. "
                 + f"Current trajectory is {self.indexingPath}"
             )
-            return 0
+            return 
         if self.path == self.indexingPath:
             if os.path.isfile(f"{self.root}{self.indexingPath}" +
                               f"/{self.eq_time_fname}"):
@@ -173,6 +184,7 @@ class Parser:
     """
 
     def downloadTraj(self):
+        print("Downloading")
         if not os.path.isfile(self.tpr_name):
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading tpr ", self.doi)
@@ -189,7 +201,7 @@ class Parser:
     trajectory. The selected trajectory is loaded into Universe.
     """
 
-    def prepareTraj(self):
+    def prepareGMXTraj(self):
         # Look for centered.xtc
         if os.path.isfile(f"{self.root}{self.indexingPath}/centered.xtc"):
             print("Parser: Founder centered trajectory: centered.xtc")
@@ -208,11 +220,54 @@ class Parser:
             )
             self.trj_name = trj_out_name
 
+        # Skip frames for large trajectories
+        if self.size > trjSizeCutoff:
+            trj_out_name = f"{self.root}{self.indexingPath}/short.xtc"
+            os.system(
+                f"echo System | gmx trjconv -f {self.trj_name} -s "
+                + f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
+            )
+            self.trj_name = trj_out_name
+
+        # Create .gro file
+        if os.path.isfile(f"{self.root}{self.indexingPath}/conf.gro"):
+            print("Parser: Founder gro file")
+            self.gro_name = f"{self.root}{self.indexingPath}/conf.gro"
+        else:
+            print("Parser: Making a gro file from the first frame")
+            os.system(
+                f"echo System | gmx trjconv -s {self.tpr_name}"
+                + f" -f {self.trj_name} -dump 0 -o conf.gro"
+            )
+
         # Loading trajectory
         try:
             self.traj = mda.Universe(self.tpr_name, self.trj_name)
         except:
             self.traj = mda.Universe(self.gro_name, self.trj_name)
+
+    def prepareOpenMMTraj(self):
+        print("openMM")
+        if self.size > trjSizeCutoff:
+            trj_out_name = f"{self.root}{self.indexingPath}/short.xtc"
+            if os.path.isfile(f"{self.root}{self.indexingPath}/{trj_out_name}"):
+                print("Parser: Short trajectory is found")
+            else:
+                u = mda.Universe(self.tpr_name, self.trj_name)
+                with mda.Writer(trj_out_name, 
+                                u.select_atoms("all").n_atoms) as W:
+                    for ts in u.trajectory[::10]:
+                        W.write(u.select_atoms("all"))
+
+            self.trj_name = trj_out_name
+        
+        self.traj = mda.Universe(self.tpr_name, self.trj_name)
+
+    def prepareTraj(self):
+        if self.soft == "openMM":
+            self.prepareOpenMMTraj()
+        else:
+            self.prepareGMXTraj()
 
     """
     Create Concatenator and corresponding concatenated trajectories for
@@ -829,9 +884,13 @@ if __name__ == "__main__":
     #    "b86/e1d/b86e1d05121438d07f56d447bf4a0ec1add4af0c/" +
     #    "b7cad43d5423af6dee7da746eabe48b79e79c271"
     #    )
+    #testTraj = (
+    #    "387/6d8/3876d878edf3efd6e4b40a7e78661581b1dfd387/" +
+    #    "b048d322ae8d7ee95e888b26f87dda3ec6fd9350"
+    #)
     testTraj = (
-        "387/6d8/3876d878edf3efd6e4b40a7e78661581b1dfd387/" +
-        "b048d322ae8d7ee95e888b26f87dda3ec6fd9350"
+        "e69/c46/e69c46a7f69132e734a5dc908ef0bbfa03a91abd/" + 
+        "e69c46a7f69132e734a5dc908ef0bbfa03a91abd"
     )
     eq_time_fname = "eq_times.json"
 
@@ -853,11 +912,11 @@ if __name__ == "__main__":
         if os.path.isfile(eq_time_path):
             continue
 
-        if readme['SOFTWARE'] == 'openMM':
-            continue
+        #if readme['SOFTWARE'] == 'openMM':
+        #    continue
 
-        if readme['TRAJECTORY_SIZE'] > 5000000000:
-            continue
+        #if readme['TRAJECTORY_SIZE'] > 5000000000:
+            #continue
         
         if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
             continue
