@@ -165,19 +165,19 @@ class Parser:
                 "Parser: Iterating over all trajectories. "
                 + f"Current trajectory is {self.indexingPath}"
             )
-            return 
-        if self.path == self.indexingPath:
-            if os.path.isfile(f"{self.root}{self.indexingPath}" +
+            #return 
+        #if self.path == self.indexingPath:
+        if os.path.isfile(f"{self.root}{self.indexingPath}" +
                               f"/{self.eq_time_fname}"):
-                if self.verbose:
-                    print("Parser: Found file with equilibration data. " +
-                          "Not processing the trajectory")
-                    return -1
             if self.verbose:
-                print(f"Parser: Found trajectory {self.indexingPath}")
-            return 0
+                print("Parser: Found file with equilibration data. " +
+                          "Not processing the trajectory")
+                return -1
+        if self.verbose:
+            print(f"Parser: Found trajectory {self.indexingPath}")
+        return 0
 
-        return -1
+        #return -1
 
     """
     Basic trajectory and TPR download.
@@ -903,6 +903,9 @@ if __name__ == "__main__":
         else:
             parser = Parser(path, readme, eq_time_fname)
         # Check trajectory
+        print(path,testTraj, readme['path'])
+        print(parser.indexingPath)
+        print(parser.validatePath())
         if parser.validatePath() < 0:
             continue
         # Download files
