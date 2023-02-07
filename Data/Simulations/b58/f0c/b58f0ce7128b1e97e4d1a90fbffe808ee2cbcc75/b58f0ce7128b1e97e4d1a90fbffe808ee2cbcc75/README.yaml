@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.7602924
+SOFTWARE: openMM
+TRJ:
+- - traj.xtc
+PDB:
+- - last_frameT303K.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 310
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: HOH
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 2880
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Samuli Ollila
+SYSTEM: POPE_310K
+SOFTWARE_VERSION: null
+FF: AMOEBA
+FF_SOURCE: original parameters  https://doi.org/10.1080/00268976.2018.1436201
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 2130422484
+TRJLENGTH: 329670.0
+NUMBER_OF_ATOMS: 17640
+DATEOFRUNNING: 03/02/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 730
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE:
+      10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
+  FORMFACTOR: 10.1021/jp511159q/1

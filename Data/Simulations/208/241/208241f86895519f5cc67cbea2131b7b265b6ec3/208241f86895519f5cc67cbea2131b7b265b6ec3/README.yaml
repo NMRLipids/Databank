@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.7602770
+SOFTWARE: openMM
+TRJ:
+- - traj1-2.xtc
+PDB:
+- - step3_charmm2omm.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 10
+TEMPERATURE: 310
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmmDrude1.yaml
+    COUNT:
+    - 72
+    - 72
+  SOL:
+    NAME: SWM4
+    MAPPING: mappingSWM4water.yaml
+    COUNT: 5040
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Samuli Ollila
+SYSTEM: POPE_303K
+SOFTWARE_VERSION: null
+FF: Charmm-Drude
+FF_SOURCE: initial structures from CHARMM-GUI
+FF_DATE: Dec20222
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 8179881760
+TRJLENGTH: 360000.0
+NUMBER_OF_ATOMS: 51408
+DATEOFRUNNING: 03/02/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 731
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE:
+      10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
+  FORMFACTOR: 10.1021/jp511159q/1
