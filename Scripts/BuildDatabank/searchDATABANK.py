@@ -225,12 +225,18 @@ def findPairs(experiments):
         sim_total_lipid_concentration = simulation.totalLipidConcentration() 
         sim_ions = simulation.getIons(ions_list)
         t_sim = simulation.readme['TEMPERATURE']
-    
+
+        
         #calculate molar fractions from simulation
         sim_molar_fractions = {}
         for lipid in sim_lipids:
             sim_molar_fractions[lipid] = simulation.molarFraction(lipid)
-        
+
+
+        #print(print(simulation.readme))
+        #print(sim_lipids, sim_molar_fractions, sim_total_lipid_concentration, sim_ions, t_sim)
+
+            
         for experiment in experiments: 
 
             # check lipid composition matches the simulation
@@ -245,6 +251,7 @@ def findPairs(experiments):
             for molecule in ions_list:
                 sim_concentrations[molecule] = simulation.ionConcentration(molecule, exp_counter_ions)
 
+                
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
                 # compare molar fractions
@@ -334,8 +341,6 @@ pairsFF = findPairs(experimentsFormFactors)
 #print(experimentsOrderParameters)
 #print(len(simulations))
 
-print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
-print("Found form factor data for " + str(len(pairsFF)) + " pairs")
 for pair in pairsOP:
     print('#################')
     print(pair[0].readme)
@@ -343,5 +348,7 @@ for pair in pairsOP:
     print("#")
     print(pair[1].readme)         
 
+print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
+print("Found form factor data for " + str(len(pairsFF)) + " pairs")
 
 
