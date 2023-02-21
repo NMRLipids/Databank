@@ -49,9 +49,10 @@ from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
+sys.path.insert(1, "../BuildDatabank/")
+
 from databankLibrary import databank, download_link, lipids_dict
 
-sys.path.insert(1, "/BuildDatabank/")
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
 
@@ -337,7 +338,7 @@ class Topology:
 
     def loadMappingFile(self, mapping_file):
         mapping_dict = {}
-        with open(f"mapping_files/{mapping_file}", "r") as yaml_file:
+        with open(f"../BuildDatabank/mapping_files/{mapping_file}", "r") as yaml_file:
             mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         yaml_file.close()
         return mapping_dict
