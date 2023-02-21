@@ -1,7 +1,7 @@
-DOI: 10.5281/zenodo.5507323
+DOI: 10.5281/zenodo.7604627
 
 SOFTWARE: openMM
-TRJ: traj_combined.dcd
+TRJ: unwrapped_all_fixed_dt.xtc
 PDB: step2_drude.pdb
 PREEQTIME: 0
 TIMELEFTOUT: 50
@@ -15,7 +15,7 @@ COMPOSITION:
   NAME: SWM4
   MAPPING: mappingSWM4water.yaml
  
-DIR_WRK: /home/lara/Databank
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION:
 AUTHORS_CONTACT: Kav, Batuhan

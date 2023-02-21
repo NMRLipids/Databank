@@ -569,7 +569,10 @@ nstxout = 0
 
 Nframes=len(u.trajectory)
 timestep = u.trajectory.dt
- 
+
+print('Number of frames: ', Nframes)
+print('Timestep: ', timestep)
+
 trj_length = Nframes * timestep
    
 sim['TRJLENGTH'] = trj_length

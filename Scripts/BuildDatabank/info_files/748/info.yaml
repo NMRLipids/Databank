@@ -1,7 +1,7 @@
-DOI: 10.5281/zenodo.7418619
+DOI: 10.5281/zenodo.7604681
 
 SOFTWARE: openMM
-TRJ: traj_combined.dcd
+TRJ: unwrapped_all_fixed_dt.xtc
 PDB: last_frame.pdb
 PREEQTIME: 0
 TIMELEFTOUT: 0

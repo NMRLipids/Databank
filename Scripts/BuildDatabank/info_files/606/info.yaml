@@ -1,10 +1,10 @@
-DOI: 10.5281/zenodo.5507294
+DOI: 10.5281/zenodo.7596011
 
 SOFTWARE: openMM
-TRJ: wrapped.dcd
+TRJ: wrapped_full_fixed_dt.xtc
 PDB: step2_charmm2omm.pdb
 PREEQTIME: 100
-TIMELEFTOUT: 0
+TIMELEFTOUT: 100
 TEMPERATURE: 303
 
 COMPOSITION:
@@ -21,7 +21,7 @@ COMPOSITION:
   NAME: CLA
   MAPPING: mappingCLAcharmmPolarizable.yaml
  
-DIR_WRK: /home/lara/Databank
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
 PUBLICATION:
 AUTHORS_CONTACT: Kav, Batuhan
