@@ -1,8 +1,19 @@
-# This is the NMRlipids databank containing MD simulations lipid bilayers created by the [NMRlipids project](http://nmrlipids.blogspot.com/2021/03/second-online-meeting-on-nmrlipids.html). 
+# NMRlipids Databank 
+NMRlipids databank is a community-driven catalogue containing atomistic MD simulations of biologically relevant lipid membranes emerging from the [NMRlipids open collaboration](http://nmrlipids.blogspot.com/2021/03/second-online-meeting-on-nmrlipids.html). 
 
-This is overlay databank containing all essential information on simulations including the permanent location of simulation files, but not the trajectories themself. The databank format enables completely automatic analysis of contributed data. 
+NMRlipids databank is an overlay databank. For each simulation, there is a README.yaml which contains all the essential information for the data upcycling and reuse, including the permanent location of each simulation file. The description of the content in README.yaml files can be found from [here](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md). The README.yaml files are located in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) folder under subfolders named based on file hash identities. 
 
-Codes used to [add](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) and [analyze](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) data can be found from the [scripts folder](https://github.com/NMRLipids/Databank/tree/main/Scripts). The data entries are in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) folder under subfolders named based on file hash identities. 
+## NMRlipids Databank-GUI
+NMRlipids Databank-GUI, available at databank.nmrlipids.fi, provides easy access to the NMRlipids Databank content
+through a graphical user interface (GUI). Simulations can be searched based on their molecular composition, force field,
+temperature, membrane properties, and quality; the search results are ranked based on the simulation quality as evaluated
+against experimental data when available. Membranes can be visualized, and properties between different simulations and
+experiments compared.
+
+## NMRlipids Databank-API
+The databank format enables completely automatic analysis of contributed data. 
+
+Codes used to [add](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) and [analyze](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) data can be found from the [scripts folder](https://github.com/NMRLipids/Databank/tree/main/Scripts). 
 
 ## Instructions to add data
 
