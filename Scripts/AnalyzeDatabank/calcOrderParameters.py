@@ -27,7 +27,7 @@ for system in systems:
     for key in system['COMPOSITION']:
         outfilename = path + key + 'OrderParameters.json'
         #print(outfilename)
-        if os.path.isfile(outfilename):
+        if os.path.isfile(outfilename)  or ('WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']):
             FileFound = True
         elif key in lipids_dict:
             FileFound = False

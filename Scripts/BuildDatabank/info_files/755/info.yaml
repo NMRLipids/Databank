@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.7916287
+
+SOFTWARE: openMM
+TRJ: popc2ns.xtc
+PDB: popc72_drude.psf
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmmPolarizable2023.yaml
+ SOL:
+  NAME: SWM4
+  MAPPING: mappingSWM4water.yaml
+ 
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: POPC_CHARMMdrude2023_303K
+SOFTWARE_VERSION:
+
+FF: Charmm-Drude polarizable2023
+FF_SOURCE:
+FF_DATE:
+
+CHK:
+TOP:
+CRD:

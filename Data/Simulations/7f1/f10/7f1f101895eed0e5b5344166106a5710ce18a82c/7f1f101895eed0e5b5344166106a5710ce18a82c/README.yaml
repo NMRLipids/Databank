@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.7916494
+SOFTWARE: openMM
+TRJ:
+- - pope1ns.xtc
+PDB:
+- - pope72_drude.psf
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 308
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmmDrude2023.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SWM4
+    MAPPING: mappingSWM4water.yaml
+    COUNT: 2304
+DIR_WRK: /home/sosamuli/temp/DataBank/
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: POPE_CHARMMdrude2023_308K
+SOFTWARE_VERSION: null
+FF: Charmm-Drude polarizable2023
+FF_SOURCE: null
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 2165751444
+TRJLENGTH: 200000.0
+NUMBER_OF_ATOMS: 24624
+DATEOFRUNNING: 11/05/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 751
