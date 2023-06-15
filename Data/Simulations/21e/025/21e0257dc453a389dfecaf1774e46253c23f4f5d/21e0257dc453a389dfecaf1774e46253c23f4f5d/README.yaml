@@ -29,7 +29,7 @@ COMPOSITION:
 DIR_WRK: /home/peptid/drude
 PUBLICATION: null
 AUTHORS_CONTACT: Kav, Batuhan
-SYSTEM: POPC_790_NaCl_CHARMMdrude2023_303K
+SYSTEM: POPC_790_CaCl2_CHARMMdrude2023_303K
 SOFTWARE_VERSION: null
 FF: Charmm-Drude polarizable2023
 FF_SOURCE: https://doi.org/10.1021/acs.jctc.3c00203
