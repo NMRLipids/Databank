@@ -27,3 +27,7 @@ The NMRlipids Databank is open for additions of simulation data by anyone.
 `python3 AddData.py -f {path to the info file that you created}`.
 After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the README.yaml file of your system and calculated order parameters.
 5. Commit the created README.yaml file, and make a pull request to the master branch.
+
+## System requirements
+
+The codes have been tested in Linux environment with python 3 and recent Gromacs version installed.
