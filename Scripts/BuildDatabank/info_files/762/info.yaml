@@ -21,7 +21,7 @@ COMPOSITION:
   NAME: CLA
   MAPPING: mappingCLAcharmmPolarizable.yaml
  
-DIR_WRK: /home/peptid/drude
+DIR_WRK: /home/bkav/drude
 
 PUBLICATION:
 AUTHORS_CONTACT: Kav, Batuhan
