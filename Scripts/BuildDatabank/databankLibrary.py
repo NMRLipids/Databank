@@ -144,7 +144,11 @@ molecules_dict = {
                             "TYPE" : "string",
                         },
             'C20' : {"REQUIRED": False,
-                            "TYPE" : "string",}
+                            "TYPE" : "string",
+                            },
+            'C30' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                            },
                 }
 
 

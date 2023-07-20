@@ -146,6 +146,7 @@ CLA | chloride ion
 CAL | calcium ion 
 CES | caesium ion
 C20 | n-eicosane
+C30 | n-triacontane
 SOL | water 
     
 #### DIR\_WRK (compulsory)
