@@ -145,6 +145,7 @@ SOD | sodium ion
 CLA | chloride ion
 CAL | calcium ion 
 CES | caesium ion
+C20 | n-eicosane
 SOL | water 
     
 #### DIR\_WRK (compulsory)
