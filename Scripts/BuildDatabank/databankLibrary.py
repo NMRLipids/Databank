@@ -143,6 +143,8 @@ molecules_dict = {
             'SOL' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+            'C20' : {"REQUIRED": False,
+                            "TYPE" : "string",}
                 }
 
 
