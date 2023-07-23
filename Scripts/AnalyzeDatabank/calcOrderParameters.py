@@ -7,11 +7,11 @@ import MDAnalysis
 import urllib.request
 import yaml
 import re
-#import buildh
+import buildh
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
-#import buildH_calcOP_test
+import buildH_calcOP_test
 
 path = '../../Data/Simulations/'
 db_data = databank(path)
