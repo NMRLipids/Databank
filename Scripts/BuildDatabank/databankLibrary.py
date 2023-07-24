@@ -9,6 +9,7 @@
 
 import socket, urllib, logging
 from tqdm import tqdm
+logger = logging.getLogger("__name__")
 
 lipids_dict = {
             'POPC' : {"REQUIRED": False,
@@ -733,7 +734,7 @@ def download_ressource_from_uri(uri: str, dest: str, override_if_exists: bool=Fa
 
     # check if dest path already exists
     if not override_if_exists and os.path.isfile(dest):
-        logging.info(f"{dest}: file already exists, skipping")
+        logger.info(f"{dest}: file already exists, skipping")
         # print(f"{dest}: file already exists, skipping")
     else: 
         # download
@@ -752,8 +753,8 @@ def download_ressource_from_uri(uri: str, dest: str, override_if_exists: bool=Fa
                 raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")  
         
         except Exception as e:
-            logging.error(f"an error occured while attemping to download '{uri}'")
-            logging.error(e)
+            logger.error(f"an error occured while attemping to download '{uri}'")
+            logger.error(e)
     
 #Return mapping name of atom from mapping file        
 def read_mapping_file(mapping_file, atom1):
