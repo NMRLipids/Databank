@@ -9,6 +9,7 @@ from random import randint
 import argparse
 import yaml
 import logging
+import shutil
 
 from datetime import date
 
@@ -59,7 +60,7 @@ from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, groma
 
 
 # Download link
-from databankLibrary import download_link, resolve_doi_uri, download_ressource_from_uri
+from databankLibrary import download_link, resolve_doi_uri, download_resource_from_uri
 
 
 #parse input yaml file
@@ -77,7 +78,7 @@ logging_level = logging.DEBUG if args.debug else logging.INFO
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging_level)
 
 
-input_path = "./" + args.file
+input_path = os.path.join(".", args.file)
 
 #load input yaml file into empty dictionary
 sim = {}
@@ -88,7 +89,7 @@ with open(input_path) as yaml_file:
 yaml_file.close()
 
 # Show the input read
-print("\n Input read from " + input_path + " file:")
+print(f"\n Input read from {input_path} file:")
 print(yaml.dump(sim))
 
 # Working directory
@@ -105,7 +106,7 @@ for key in molecules_dict:
 # TODO this can be replaced by the new method in databankLibrary.py
 
 DOI_url = 'https://doi.org/' + sim['DOI']
-print("Data will be downloaded from: " + DOI_url)
+print(f"Data will be downloaded from: {DOI_url}")
 
 try:
     response = urllib.request.urlopen(DOI_url)
@@ -312,7 +313,7 @@ for key_sim, value_sim in sim.items(): # go over dict entries
             for fi in value_sim:
                 file_name = os.path.join(dir_sim, fi[0])
                 fi_uri = resolve_doi_uri(DOI, fi[0])
-                download_ressource_from_uri(fi_uri, file_name, override_if_exists=args.no_cache)
+                download_resource_from_uri(fi_uri, file_name, override_if_exists=args.no_cache)
 
 
 # ## Calculate hash of downloaded files
@@ -383,11 +384,11 @@ traj = ''
 
 # OTHER SOFTWARES THAN GROMACS!!!!
 if sim['SOFTWARE'] == 'gromacs':
-    top = str(dir_tmp) + '/' + sim['TPR'][0][0]
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
+    top = os.path.join(dir_tmp, sim['TPR'][0][0])
+    traj = os.path.join(dir_tmp, sim['TRJ'][0][0])
 elif sim['SOFTWARE'] == 'openMM':
-    traj = str(dir_tmp) + '/' + sim['TRJ'][0][0]
-    top = str(dir_tmp) + '/' + sim['PDB'][0][0]
+    traj = os.path.join(dir_tmp, sim['TRJ'][0][0])
+    top = os.path.join(dir_tmp, sim['PDB'][0][0])
     
 
 
@@ -397,8 +398,8 @@ leaflet2 = 0 #total number of lipids in lower leaflet
 #u = Universe(top, traj)
 #u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
-gro = str(dir_tmp) + '/frame0.gro'
-NewTraj = str(dir_tmp) + '/NewTraj.xtc'
+gro = os.path.join(dir_tmp, 'frame0.gro')
+NewTraj = os.path.join(dir_tmp, 'NewTraj.xtc')
 
 try:
     u = Universe(top, traj)
@@ -417,7 +418,7 @@ except:
 
 
 try:
-    groFORu0 = str(dir_tmp) + '/' + sim['GRO'][0][0]
+    groFORu0 = os.path.join(dir_tmp, sim['GRO'][0][0])
     print(groFORu0)
 except:
     groFORu0 = gro
@@ -432,7 +433,7 @@ for key_mol in lipids_dict:
     if key_mol in sim['COMPOSITION'].keys():
        m_file = sim['COMPOSITION'][key_mol]['MAPPING']
        mapping_dict = {}
-       with open('./mapping_files/'+m_file,"r") as yaml_file:
+       with open(os.path.join(os.getcwd(), 'mapping_files' , m_file) ,"r") as yaml_file:
            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
        yaml_file.close()
        for key in mapping_dict.keys():
@@ -480,7 +481,7 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim['COMPOSITION'].keys():
         m_file = sim['COMPOSITION'][key_mol]['MAPPING']
-        with open('./mapping_files/'+m_file,"r") as yaml_file:
+        with open(os.path.join(os.getcwd(), 'mapping_files' , m_file) ,"r") as yaml_file:
            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         yaml_file.close()
         for key in mapping_dict.keys():
@@ -554,7 +555,7 @@ sim['TRJLENGTH'] = trj_length
 
 #Read temperature from tpr
 if sim['SOFTWARE'] == 'gromacs':
-    file1 = str(dir_tmp) + '/tpr.txt'
+    file1 = os.path.join(dir_tmp, 'tpr.txt')
 
     print("Exporting information with gmx dump")                         #need to get temperature from trajectory not tpr !!!
     if 'WARNINGS' in sim and 'GROMACS_VERSION' in sim['WARNINGS'] and sim['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
@@ -595,7 +596,7 @@ number_of_atoms = 0
 for key_mol in all_molecules:
     mapping_dict = {}
     try:
-        mapping_file = './mapping_files/'+sim['COMPOSITION'][key_mol]['MAPPING']
+        mapping_file = os.path.join(os.getcwd(), 'mapping_files' , sim['COMPOSITION'][key_mol]['MAPPING'])
     except:
         continue
     else:
@@ -684,29 +685,35 @@ elif sim['SOFTWARE'] == 'openMM':
     
 print("Creating databank directories.")
 
-os.system('mkdir ../../Data/Simulations/' + str(head_dir))
-os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1))
-os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2))
-os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3))
+simulations_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir)) # two levels above
+directory_path = os.path.join(simulations_path, head_dir, sub_dir1, sub_dir2, sub_dir3)
+
+os.makedirs(directory_path, exist_ok = True)
+
+# os.system('mkdir ../../Data/Simulations/' + str(head_dir))
+# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1))
+# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2))
+# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3))
     
-DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3)
+#DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3)
 #    data_directory[str(ID)] = DATAdir
  
  #copy simulation trajectory and top files to DATAdir
-os.system('cp '+ traj + ' ' + DATAdir)
-os.system('cp '+ top + ' ' + DATAdir) 
+
+shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
+shutil.copyfile(top, os.path.join(directory_path, os.path.basename(traj))) 
 
 # dictionary saved in yaml format
-outfileDICT=str(dir_tmp)+ '/README.yaml'
+outfileDICT=os.path.join(dir_tmp, "README.yaml")
 
 with open(outfileDICT, 'w') as f:
     yaml.dump(sim,f, sort_keys=False)
        
-    os.system('cp ' + str(dir_tmp) + '/README.yaml ' + DATAdir)
+    shutil.copyfile(os.path.join(dir_tmp, 'README.yaml'), os.path.join(directory_path, 'README.yaml'))
  #   outfileDICT.write(str(sim))
 #outfileDICT.close()
    
-print('\033[1m' + "\n Writing the README.yaml dictionary to " + DATAdir + "\n" + '\033[0m')
+print('\033[1m' + "\n Writing the README.yaml dictionary to " + directory_path + "\n" + '\033[0m')
 
 
 
