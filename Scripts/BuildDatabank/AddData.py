@@ -8,6 +8,9 @@ import re
 from random import randint
 import argparse
 import yaml
+import logging
+
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
 from datetime import date
 
@@ -58,7 +61,7 @@ from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, groma
 
 
 # Download link
-from databankLibrary import download_link
+from databankLibrary import download_link, resolve_doi_uri, download_ressource_from_uri
 
 
 #parse input yaml file
@@ -91,6 +94,7 @@ for key in molecules_dict:
 
 
 # Checking that the DOI link is valid
+# TODO this can be replaced by the new method in databankLibrary.py
 
 DOI_url = 'https://doi.org/' + sim['DOI']
 print("Data will be downloaded from: " + DOI_url)
@@ -235,7 +239,7 @@ for key_sim, value_sim in sim.items():
         if "file" in entry_type and "txt" not in extension_type:
             for file_provided in value_sim:
                 #print("File={0}".format(file_provided[0]))
-                file_url = download_link(DOI, file_provided[0])
+                file_url = download_link(DOI, file_provided[0]) # TODO this can be replaced by the new method in databankLibrary.py
                 if file_url == "":
                     wrong_links += 1
                     continue
@@ -270,74 +274,36 @@ else:
 #print(sims_working_links)
 
 
-
-
 # ## Download files from links
-
-print("Starting to download data from " + DOI_url)
-
-socket.setdefaulttimeout(15)
-
-download_failed = False
 
 # Create temporary directory where to download files and analyze them
 dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
 
-print("The data will be processed in directory path " + dir_tmp)
+logging.info(f"The data will be processed in directory path {dir_tmp}")
 
 if (not os.path.isdir(dir_tmp)): 
-    os.mkdir(dir_tmp)
+    os.makedirs(dir_tmp)
 
-file_sizes={}
 software_sim = software_dict[sim['SOFTWARE'].upper()]
 dir_sim = dir_tmp
 DOI = sim['DOI']
-if (not os.path.isdir(dir_sim)): 
-    os.mkdir(dir_sim)
-for key_sim, value_sim in sim.items():
-    #print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
-    try:
-        entry_type = software_sim[key_sim]['TYPE']
-        extension_type = software_sim[key_sim]['EXTENSION']
-        #print("entry_type = {0}".format(entry_type))
-        if "file" in entry_type and "txt" not in extension_type:
-            for file_provided in tqdm(value_sim, desc = key_sim):
-                file_url = download_link(DOI, file_provided[0])
-                file_name = os.path.join(dir_sim, file_provided[0])
-                #get the size of the file to be downloaded
-                url_size = urllib.request.urlopen(file_url).length
-                if (not os.path.isfile(file_name)):
-                    print("downloading")
-                    try:
-                        response = urllib.request.urlretrieve(file_url, file_name)
-                    except ContentTooShortError:
-                        download_failed = True
-                        print("Content too short error.")
-                    except HTTPError as e:
-                        download_failed = True
-                        print(e)
-                    except URLError as ue:
-                        download_failed = True
-                        print("failed to download")
-                    except socket.timeout as se:
-                        download_failed = True
-                        print("socket time out")
-                    except Exception as ee:
-                        download_failed = True
-                        print(ee)
-                #check if the file is fully downloaded
-                size = os.path.getsize(file_name)
-                print("size of the file " + file_provided[0] + " to be downloaded: " + str(url_size))
-                print("size of the file " + file_provided[0] + " after download: " + str(size) )
-                if url_size != size:
-                    print("Download of the file " + file_provided[0] + " was interrupted.")
-                    quit()
-    except:#It is normal that fails for "ID" and "SOFTWARE"
-        continue
 
-if download_failed:
-    print("One of the downloads failed. Terminating the script.")
-    quit()
+if (not os.path.isdir(dir_sim)): 
+    os.makedirs(dir_sim)
+
+for key_sim, value_sim in sim.items(): # go over dict entries
+
+    # check if the file (type) needs to be downloaded depending on the software used
+    if key_sim in software_sim: 
+        # only download file entries with supported extension and if it's not a text file
+        # note: Not all software_sim items have a extension entry!
+        if ('TYPE' in software_sim[key_sim] and "file" in software_sim[key_sim]['TYPE'] and
+            'EXTENSION' in software_sim[key_sim] and "txt" not in software_sim[key_sim]['EXTENSION']):
+            logging.debug(f"key_sim = {key_sim} => value_sim = {value_sim}")
+            for fi in value_sim:
+                file_name = os.path.join(dir_sim, fi[0])
+                fi_uri = resolve_doi_uri(DOI, fi[0])
+                download_ressource_from_uri(fi_uri, file_name, override_if_exists=True) # TODO implement skipping download here
 
 
 # ## Calculate hash of downloaded files
