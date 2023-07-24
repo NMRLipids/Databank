@@ -7,6 +7,9 @@
 #
 # If you add a lipid which is not yet in the databank, you have to add it here
 
+import socket, urllib, logging
+from tqdm import tqdm
+
 lipids_dict = {
             'POPC' : {"REQUIRED": False,
                              "TYPE": "string",
@@ -676,12 +679,88 @@ def download_link(doi, file):
         print ("DOI provided: {0}".format(doi))
         print ("Repository not validated. Please upload the data for example to zenodo.org")
         return ""
+
+def resolve_doi_uri(doi: str, fi_name: str, validate_uri: bool = True) -> str:
+    """Resolve file URI from supported DOI with given filename
+
+    Args:
+        doi (str): DOI string
+        fi_name (str): name of the file to resolve from source
+        validate_uri (bool, optional): Check if URI exists. Defaults to True.
+
+    Raises:
+        NotImplementedError: Unsupported DOI repository
+        HTTPError: HTTP Error Status Code
+        URLError: Failed to reach the server
+
+    Returns:
+        str: file URI
+    """
+    if "zenodo" in doi.lower():
+        zenodo_entry_number = doi.split(".")[2]
+        uri = 'https://zenodo.org/record/' + zenodo_entry_number + '/files/' + fi_name
+        
+        # check if ressource exists, may throw exception
+        if validate_uri:    
+            socket.setdefaulttimeout(15) # seconds
+            res = urllib.request.urlopen(uri)
+        return uri
+    else:
+        raise NotImplementedError("Repository not validated. Please upload the data for example to zenodo.org")
+
+def download_ressource_from_uri(uri: str, dest: str, override_if_exists: bool=False) -> None:
+    """Download file ressource [from uri] to given file destination using urllib
+
+    Args:
+        uri (str): file URL
+        dest (str): file destination path
+        override_if_exists (bool, optional): Override dest. file if exists. Defaults to False.
+
+    Raises:
+        Exception: HTTPException: An error occured during download
+
+    Returns:
+        None
+    """
+    class RetrieveProgressBar(tqdm):
+        # uses tqdm.update(), see docs https://github.com/tqdm/tqdm#hooks-and-callbacks
+        def update_retrieve(self, b=1, bsize=1, tsize=None):
+            if tsize is not None:
+                self.total = tsize
+            return self.update(b * bsize - self.n)
+
+    fi_name = uri.split("/")[-1]
+
+    # check if dest path already exists
+    if not override_if_exists and os.path.isfile(dest):
+        logging.info(f"{dest}: file already exists, skipping")
+        # print(f"{dest}: file already exists, skipping")
+    else: 
+        # download
+        try:
+            socket.setdefaulttimeout(15) # seconds
+
+            url_size = urllib.request.urlopen(uri).length # download size
+
+            with RetrieveProgressBar(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name) as u:
+                response = urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
+            
+            #check if the file is fully downloaded
+            size = os.path.getsize(dest)
+
+            if url_size != size:
+                raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")  
+        
+        except Exception as e:
+            logging.error(f"an error occured while attemping to download '{uri}'")
+            logging.error(e)
+    
 #Return mapping name of atom from mapping file        
 def read_mapping_file(mapping_file, atom1):
-	with open(mapping_file, 'rt') as mapping_file:
-            mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
-            m_atom1 = mapping[atom1]['ATOMNAME']
-	return m_atom1
+    with open(mapping_file, 'rt') as mapping_file:
+        mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
+        m_atom1 = mapping[atom1]['ATOMNAME']
+    return m_atom1
 
 #Return mapping names of pair of atoms from mapping file
 def read_mapping_filePAIR(mapping_file, atom1, atom2):
