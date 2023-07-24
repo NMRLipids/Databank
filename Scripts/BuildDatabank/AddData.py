@@ -10,8 +10,6 @@ import argparse
 import yaml
 import logging
 
-logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
-
 from datetime import date
 
 # Working with files and directories
@@ -65,10 +63,20 @@ from databankLibrary import download_link, resolve_doi_uri, download_ressource_f
 
 
 #parse input yaml file
-parser = argparse.ArgumentParser(description="")
-parser.add_argument("-f","--file", help="Input file in yaml "
+parser = argparse.ArgumentParser(prog="AddData.py Script",
+                                  description="Add a new dataset to the NMRLipids databank")
+parser.add_argument("-f","--file", help="Input config file in yaml "
                         "format.")
+parser.add_argument("-d", "--debug", help="enable debug logging output", action='store_true')
+parser.add_argument("-n", "--no-cache", help="always redownload repository files", action='store_true')
 args = parser.parse_args()
+
+# configure logging
+logger = logging.getLogger()
+logging_level = logging.DEBUG if args.debug else logging.INFO
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging_level)
+
+
 input_path = "./" + args.file
 
 #load input yaml file into empty dictionary
@@ -277,9 +285,10 @@ else:
 # ## Download files from links
 
 # Create temporary directory where to download files and analyze them
-dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
 
-logging.info(f"The data will be processed in directory path {dir_tmp}")
+dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999))) if args.no_cache else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
+
+logger.info(f"The data will be processed in directory path {dir_tmp}")
 
 if (not os.path.isdir(dir_tmp)): 
     os.makedirs(dir_tmp)
@@ -288,22 +297,22 @@ software_sim = software_dict[sim['SOFTWARE'].upper()]
 dir_sim = dir_tmp
 DOI = sim['DOI']
 
-if (not os.path.isdir(dir_sim)): 
+if (not os.path.isdir(dir_sim)): # TODO is this really necessary?
     os.makedirs(dir_sim)
 
 for key_sim, value_sim in sim.items(): # go over dict entries
-
+    logger.debug(f"key_sim = {key_sim} => value_sim = {value_sim}")
     # check if the file (type) needs to be downloaded depending on the software used
-    if key_sim in software_sim: 
+    if key_sim in software_sim and value_sim is not None: 
         # only download file entries with supported extension and if it's not a text file
         # note: Not all software_sim items have a extension entry!
         if ('TYPE' in software_sim[key_sim] and "file" in software_sim[key_sim]['TYPE'] and
             'EXTENSION' in software_sim[key_sim] and "txt" not in software_sim[key_sim]['EXTENSION']):
-            logging.debug(f"key_sim = {key_sim} => value_sim = {value_sim}")
+            
             for fi in value_sim:
                 file_name = os.path.join(dir_sim, fi[0])
                 fi_uri = resolve_doi_uri(DOI, fi[0])
-                download_ressource_from_uri(fi_uri, file_name, override_if_exists=True) # TODO implement skipping download here
+                download_ressource_from_uri(fi_uri, file_name, override_if_exists=args.no_cache)
 
 
 # ## Calculate hash of downloaded files
