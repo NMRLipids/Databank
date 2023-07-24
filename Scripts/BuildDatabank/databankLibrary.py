@@ -709,8 +709,8 @@ def resolve_doi_uri(doi: str, fi_name: str, validate_uri: bool = True) -> str:
     else:
         raise NotImplementedError("Repository not validated. Please upload the data for example to zenodo.org")
 
-def download_ressource_from_uri(uri: str, dest: str, override_if_exists: bool=False) -> None:
-    """Download file ressource [from uri] to given file destination using urllib
+def download_resource_from_uri(uri: str, dest: str, override_if_exists: bool=False) -> None:
+    """Download file resource [from uri] to given file destination using urllib
 
     Args:
         uri (str): file URL
