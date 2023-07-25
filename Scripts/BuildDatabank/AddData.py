@@ -89,7 +89,7 @@ with open(input_path) as yaml_file:
 yaml_file.close()
 
 # Show the input read
-print(f"\n Input read from {input_path} file:")
+print(f"{os.linesep} Input read from {input_path} file:")
 print(yaml.dump(sim))
 
 # Working directory
@@ -160,10 +160,10 @@ for key_sim, value_sim in sim.items():
         print ("{0} NOT in {1}".format(key_sim, software_dict_name)) 
         wrong_key_entries += 1
 if wrong_key_entries:
-    print("Simulation has {0} unknown entry/ies and won't be longer considered, please correct.\n".format(wrong_key_entries))
+    print(f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct.{os.linesep}")
     quit()
 else:
-    msg_info = "All entries in simulation are understood and will be further processed\n"
+    msg_info = f"All entries in simulation are understood and will be further processed {os.linesep}"
     print(msg_info)
 #        sims_valid_entries.append(sim.copy())
 #print(sims_valid_entries)
@@ -201,7 +201,7 @@ for key_sim, value_sim in sim.items():
     try:
         entry_type = software_sim[key_sim]['TYPE']
         if entry_type == "file"  and len(value_sim) > 1:
-            print("Multiple values found in {0} and only one allowed (Please correct):\n {1}".format(key_sim,value_sim))
+            print(f"Multiple values found in {key_sim} and only one allowed (Please correct):{os.linesep} {value_sim}")
             files_issues += 1
     except: #It is notmal that fails for "ID" and "SOFTWARE"
         continue
@@ -228,10 +228,10 @@ for key, value in software_dict[sim['SOFTWARE'].upper()].items():
             missing_required_keys += 1
 if missing_required_keys:
     print("{0} missing required entry/ies, please correct.".format(missing_required_keys))
-    print("Entry will not be further processed.\n")
+    print(f"Entry will not be further processed.{os.linesep}")
     quit()
 else:
-    print("All required dictionary entries are present.\n")
+    print(f"All required dictionary entries are present.{os.linesep}")
 
 
 
@@ -258,7 +258,7 @@ for key_sim, value_sim in sim.items():
                     response = urllib.request.urlopen(file_url)
                     #print("Status of the DOI link: {0}".format(response.msg))
                 except HTTPError as e:
-                    print("\nkey={0} => file={1}".format(key_sim, file_provided[0]))
+                    print(f"{os.linesep}key={key_sim} => file={file_provided[0]}")
                     print(file_url)
                     print('The server couldn\'t fulfill the request.')
                     print('Error code: ', e.code)
@@ -271,14 +271,14 @@ for key_sim, value_sim in sim.items():
                     wrong_links += 1
                 else:
                     pass
-    except: #It is notmal that fails for "ID" and "SOFTWARE"
+    except: #It is normal that fails for "ID" and "SOFTWARE"
         continue
 if wrong_links:
     print("{0} link/s failed, please correct.".format(wrong_links))
-    print("Entry will not be further processed.\n")
+    print(f"Entry will not be further processed.{os.linesep}")
     quit()
 else:
-     print("All links work.\n")
+     print(f"All links work.{os.linesep}")
      #sims_working_links.append(sim.copy())
 #print(sims_working_links)
 
@@ -359,7 +359,7 @@ for key_sim, value_sim in sim_hashes.items():
     except: #It is notmal that fails for "ID" and "SOFTWARE"
         continue
 
-print("\n Summary of downloaded files: ")
+print(f"{os.linesep} Summary of downloaded files: ")
 print(df_files)
 #print("\n{0}\n".format(sha1_list_requied))      
 
@@ -377,7 +377,7 @@ print(df_files)
 #headgroup is used in the calculation.
 ################################################################################################################
 
-print("\n Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. \n If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
+print(f"{os.linesep} Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. {os.linesep} If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
 top = ''
 traj = ''
@@ -645,7 +645,7 @@ for key_mol in all_molecules:
         
 
 if number_of_atoms != number_of_atomsTRJ:
-    stop =  input("Number of atoms in trajectory (" +str(number_of_atomsTRJ) + ") and README.yaml (" + str(number_of_atoms) +") do no match. Check the mapping files and molecule names. \n If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?")
+    stop =  input(f"Number of atoms in trajectory {number_of_atomsTRJ} and README.yaml {number_of_atoms} do no match. Check the mapping files and molecule names. {os.linesep} If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?")
     if stop == "n":
         os._exit("Interrupted because atomnumbers did not match")
     if stop == "y":
@@ -713,8 +713,7 @@ with open(outfileDICT, 'w') as f:
  #   outfileDICT.write(str(sim))
 #outfileDICT.close()
    
-print('\033[1m' + "\n Writing the README.yaml dictionary to " + directory_path + "\n" + '\033[0m')
-
+print('\033[1m' + f"{os.linesep} Writing the README.yaml dictionary to {directory_path} {os.linesep}" + '\033[0m')
 
 
 
