@@ -7,8 +7,9 @@
 #
 # If you add a lipid which is not yet in the databank, you have to add it here
 
-import socket, urllib, logging
+import socket, urllib, logging, pprint
 from tqdm import tqdm
+
 logger = logging.getLogger("__name__")
 
 lipids_dict = {
@@ -752,7 +753,6 @@ def download_resource_from_uri(uri: str, dest: str, override_if_exists: bool=Fal
     # check if dest path already exists
     if not override_if_exists and os.path.isfile(dest):
         logger.info(f"{dest}: file already exists, skipping")
-        # print(f"{dest}: file already exists, skipping")
     else: 
         # download
         try:
@@ -772,6 +772,49 @@ def download_resource_from_uri(uri: str, dest: str, override_if_exists: bool=Fal
         except Exception as e:
             logger.error(f"an error occured while attemping to download '{uri}'")
             logger.error(e)
+
+def check_sim_software_entry_keys(sim: dict) -> None:
+    """check simulation software used and validate entry keys
+
+    Args:
+        sim (dict): _description_
+
+    Raises:
+        Exception: _description_
+        Exception: _description_
+    """
+    # check for supported sim software
+    if sim['SOFTWARE'].upper() in software_dict.keys():
+        logger.info(f"Simulation uses supported software '{sim['SOFTWARE'].upper()}' and will be further processed")
+    else:
+        logger.error(f"Simulation uses supported software '{sim['SOFTWARE'].upper()}' and will be further processed")
+        raise Exception("unsupported simulation software")
+            
+    # Check that all entry keys provided for each simulation are valid
+    wrong_key_entries = 0
+    software_dict_name = "{0}_dict".format(sim['SOFTWARE'].lower())
+    #print(sim.items())
+    for key_sim, value_sim in sim.items():
+            #print(key_sim, value_sim)
+            #print(key_sim.upper())
+        if key_sim.upper() in ("SOFTWARE"):
+                #print("NOT REQUIRED")
+            continue
+        #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
+        if ((key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and 
+            (key_sim.upper() not in molecules_dict.keys()) and 
+            (key_sim.upper() not in lipids_dict.keys()) and 
+            (key_sim.upper() not in molecule_ff_dict.keys())):
+            logger.error("{0} NOT in {1}".format(key_sim, software_dict_name)) 
+            wrong_key_entries += 1
+    if wrong_key_entries:
+        raise Exception(f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct.")
+        quit()
+    else:
+        logger.info(f"All entries in simulation are understood and will be further processed.")
+    logger.debug("valid sim entry keys:")
+    pp = pprint.PrettyPrinter(width=41, compact=True)
+    if logger.isEnabledFor(logging.DEBUG): pp.pprint(sim)
     
 #Return mapping name of atom from mapping file        
 def read_mapping_file(mapping_file, atom1):
