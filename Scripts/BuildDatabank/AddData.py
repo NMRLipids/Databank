@@ -10,7 +10,7 @@ import argparse
 import yaml
 import logging
 import shutil
-
+import pprint
 from datetime import date
 from pathlib import Path
 
@@ -73,12 +73,7 @@ from databankLibrary import (
 
 
 # Download link
-from databankLibrary import (
-    download_link,
-    resolve_doi_uri,
-    download_resource_from_uri,
-    create_databank_directories,
-)
+from databankLibrary import download_link, resolve_doi_uri, download_resource_from_uri
 
 
 # parse input yaml file
@@ -95,7 +90,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 # configure logging
-logger = logging.getLogger()
 logging_level = logging.DEBUG if args.debug else logging.INFO
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s]: %(message)s",
@@ -115,12 +109,15 @@ with open(input_path) as yaml_file:
 yaml_file.close()
 
 # Show the input read
-print(f"{os.linesep} Input read from {input_path} file:")
-print(yaml.dump(sim))
+logger.debug(f"{os.linesep} Input read from {input_path} file:")
+pp = pprint.PrettyPrinter(width=41, compact=True)
+if logger.isEnabledFor(logging.DEBUG):
+    pp.pprint(yaml.dump(sim))
 
 # Working directory
 dir_wrk = sim["DIR_WRK"]
 
+# TODO what does this do
 all_molecules = []
 for key in lipids_dict:
     all_molecules.append(key)
@@ -153,7 +150,9 @@ else:
     pass
 
 
-# ### Check software used by the simulation
+# ### Check software used by the simulation and that all entry keys provided for each simulation are valid
+
+check_sim_software_entry_keys(sim)
 
 # sims_valid_software = []
 
@@ -170,7 +169,29 @@ else:
 # print(sims_valid_software)
 
 
-# ### Check that all entry keys provided for each simulation are valid:
+# # ### Check that all entry keys provided for each simulation are valid:
+
+# wrong_key_entries = 0
+# software_dict_name = "{0}_dict".format(sim['SOFTWARE'].lower())
+# #print(sim.items())
+# for key_sim, value_sim in sim.items():
+#         #print(key_sim, value_sim)
+#         #print(key_sim.upper())
+#     if key_sim.upper() in ("SOFTWARE"):
+#             #print("NOT REQUIRED")
+#         continue
+#     #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
+#     if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
+#         print ("{0} NOT in {1}".format(key_sim, software_dict_name))
+#         wrong_key_entries += 1
+# if wrong_key_entries:
+#     print(f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct.{os.linesep}")
+#     quit()
+# else:
+#     msg_info = f"All entries in simulation are understood and will be further processed {os.linesep}"
+#     print(msg_info)
+# #        sims_valid_entries.append(sim.copy())
+# #print(sims_valid_entries)
 
 wrong_key_entries = 0
 software_dict_name = "{0}_dict".format(sim["SOFTWARE"].lower())
