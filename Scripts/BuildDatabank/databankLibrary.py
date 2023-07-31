@@ -672,7 +672,7 @@ class databank():
 #functions used in building and analyzing the databank
 
 # Download link
-def download_link(doi, file):
+def download_link(doi, file): # deprecated?
     if "zenodo" in doi.lower():
         zenodo_entry_number = doi.split(".")[2]
         return 'https://zenodo.org/record/' + zenodo_entry_number + '/files/' + file
@@ -680,8 +680,25 @@ def download_link(doi, file):
         print ("DOI provided: {0}".format(doi))
         print ("Repository not validated. Please upload the data for example to zenodo.org")
         return ""
+    
+def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
+    """Returns full doi link of given ressource, also checks if URL is valid.
 
-def resolve_doi_uri(doi: str, fi_name: str, validate_uri: bool = True) -> str:
+    Args:
+        doi (str): [doi] part from config
+        validate_uri (bool, optional): Check if URL is valid. Defaults to True.
+
+    Returns:
+        str: full doi link
+    """
+    res = 'https://doi.org/' + doi
+
+    if validate_uri:
+        socket.setdefaulttimeout(15) # seconds
+        _ = urllib.request.urlopen(res)
+    return res
+
+def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True) -> str:
     """Resolve file URI from supported DOI with given filename
 
     Args:

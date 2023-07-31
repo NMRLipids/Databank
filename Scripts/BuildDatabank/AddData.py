@@ -60,7 +60,7 @@ from databankLibrary import lipids_dict, molecules_dict, molecule_ff_dict, groma
 
 
 # Download link
-from databankLibrary import download_link, resolve_doi_uri, download_resource_from_uri
+from databankLibrary import download_link, resolve_download_file_url, download_resource_from_uri, resolve_doi_url
 
 
 #parse input yaml file
@@ -73,10 +73,9 @@ parser.add_argument("-n", "--no-cache", help="always redownload repository files
 args = parser.parse_args()
 
 # configure logging
-logger = logging.getLogger()
 logging_level = logging.DEBUG if args.debug else logging.INFO
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging_level)
-
+logger = logging.getLogger()
 
 input_path = os.path.join(".", args.file)
 
@@ -103,28 +102,8 @@ for key in molecules_dict:
 
 
 # Checking that the DOI link is valid
-# TODO this can be replaced by the new method in databankLibrary.py
-
-DOI_url = 'https://doi.org/' + sim['DOI']
-print(f"Data will be downloaded from: {DOI_url}")
-
-try:
-    response = urllib.request.urlopen(DOI_url)
-    print("Status of the DOI link: {0}".format(response.msg))
-except HTTPError as e:
-    print(DOI_url)
-    print('The server couldn\'t fulfill the request.')
-    print('Error code: ', e.code)
-    user_information = ""
-    print('The code will not proceed, please fix DOI')
-except URLError as e:
-    print(DOI_url)
-    print('We failed to reach a server.')
-    print('Reason: ', e.reason)
-    user_information = ""
-    print('The code will not proceed, please fix DOI')
-else:
-    pass
+DOI_url = resolve_doi_url(sim['DOI'])
+logger.info(f"Data will be downloaded from: {DOI_url}")
 
 
 # ### Check software used by the simulation
@@ -312,7 +291,7 @@ for key_sim, value_sim in sim.items(): # go over dict entries
             
             for fi in value_sim:
                 file_name = os.path.join(dir_sim, fi[0])
-                fi_uri = resolve_doi_uri(DOI, fi[0])
+                fi_uri = resolve_download_file_url(DOI, fi[0])
                 download_resource_from_uri(fi_uri, file_name, override_if_exists=args.no_cache)
 
 
