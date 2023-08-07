@@ -7,3 +7,6 @@ __pycache__/
 # development
 AddData-dev.ipynb
 test.py
+
+# os dependent
+**/.DS_Store
