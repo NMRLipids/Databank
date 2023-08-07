@@ -73,7 +73,7 @@ from databankLibrary import (
 
 
 # Download link
-from databankLibrary import download_link, resolve_doi_uri, download_resource_from_uri
+from databankLibrary import download_resource_from_uri, parse_valid_config_settings, resolve_download_file_url
 
 
 # parse input yaml file
@@ -87,6 +87,7 @@ parser.add_argument(
 parser.add_argument(
     "-n", "--no-cache", help="always redownload repository files", action="store_true"
 )
+parser.add_argument("-w", "--work-dir", help="override temporary working directory", default="")
 args = parser.parse_args()
 
 # configure logging
@@ -96,294 +97,80 @@ logging.basicConfig(
     datefmt="%m/%d/%Y %I:%M:%S %p",
     level=logging_level,
 )
+logger = logging.getLogger()
 
-
-input_path = os.path.join(".", args.file)
-
-# load input yaml file into empty dictionary
-sim = {}
-
-# open input file for reading and writing
-with open(input_path) as yaml_file:
-    sim = yaml.load(yaml_file, Loader=yaml.FullLoader)
-yaml_file.close()
-
-# Show the input read
-logger.debug(f"{os.linesep} Input read from {input_path} file:")
-pp = pprint.PrettyPrinter(width=41, compact=True)
-if logger.isEnabledFor(logging.DEBUG):
-    pp.pprint(yaml.dump(sim))
-
-# Working directory
-dir_wrk = sim["DIR_WRK"]
-
-# TODO what does this do
 all_molecules = []
 for key in lipids_dict:
     all_molecules.append(key)
 for key in molecules_dict:
     all_molecules.append(key)
 
+input_path = os.path.join(".", args.file)
 
-# Checking that the DOI link is valid
-# TODO this can be replaced by the new method in databankLibrary.py
+#load input yaml file into empty dictionary
+info_yaml = {}
 
-DOI_url = "https://doi.org/" + sim["DOI"]
-print(f"Data will be downloaded from: {DOI_url}")
+#open input file for reading and writing
+with open(input_path) as yaml_file:
+    info_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader) # TODO may throw yaml.YAMLError
+yaml_file.close()
 
+# Show the input read
+logger.debug(f"{os.linesep} Input read from {input_path} file:")
+pp = pprint.PrettyPrinter(width=41, compact=True)
+if logger.isEnabledFor(logging.DEBUG): pp.pprint(yaml.dump(info_yaml))
+
+# validate yaml entries and return updated sim dict
 try:
-    response = urllib.request.urlopen(DOI_url)
-    print("Status of the DOI link: {0}".format(response.msg))
-except HTTPError as e:
-    print(DOI_url)
-    print("The server couldn't fulfill the request.")
-    print("Error code: ", e.code)
-    user_information = ""
-    print("The code will not proceed, please fix DOI")
-except URLError as e:
-    print(DOI_url)
-    print("We failed to reach a server.")
-    print("Reason: ", e.reason)
-    user_information = ""
-    print("The code will not proceed, please fix DOI")
-else:
-    pass
+    sim, files = parse_valid_config_settings(info_yaml)
 
-
-# ### Check software used by the simulation and that all entry keys provided for each simulation are valid
-
-check_sim_software_entry_keys(sim)
-
-# sims_valid_software = []
-
-if sim["SOFTWARE"].upper() in software_dict.keys():
-    msg_info = "Simulation uses supported software {0} and will be further processed"
-    # print(msg_info.format(sim['ID'], sim['SOFTWARE'].upper()))
-    print(msg_info.format(sim["SOFTWARE"].upper()))
-#        sims_valid_software.append(sim.copy())
-else:
-    msg_err = "Simulation performed in an UNSUPPORTED software {0} and will NOT be further processed"
-    print(msg_err.format(sim["SOFTWARE"].upper()))
+    logger.info(f"all entries in simulation are understood and will be further processed")
+    logger.debug("valid sim entry keys:")
+    pp = pprint.PrettyPrinter(width=41, compact=True)
+    if logger.isEnabledFor(logging.DEBUG): pp.pprint(sim)
+except KeyError as e:
+    logger.error(f"missing entry key in yaml config: {e}")
+    quit()  
+except Exception as e:
+    logger.error(f"an '{type(e).__name__}' occured while processing '{input_path}', script has been aborted")
+    logger.error(e)
     quit()
-
-# print(sims_valid_software)
-
-
-# # ### Check that all entry keys provided for each simulation are valid:
-
-# wrong_key_entries = 0
-# software_dict_name = "{0}_dict".format(sim['SOFTWARE'].lower())
-# #print(sim.items())
-# for key_sim, value_sim in sim.items():
-#         #print(key_sim, value_sim)
-#         #print(key_sim.upper())
-#     if key_sim.upper() in ("SOFTWARE"):
-#             #print("NOT REQUIRED")
-#         continue
-#     #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-#     if (key_sim.upper() not in software_dict[sim['SOFTWARE'].upper()].keys()) and (key_sim.upper() not in molecules_dict.keys()) and (key_sim.upper() not in lipids_dict.keys()) and (key_sim.upper() not in molecule_ff_dict.keys()):
-#         print ("{0} NOT in {1}".format(key_sim, software_dict_name))
-#         wrong_key_entries += 1
-# if wrong_key_entries:
-#     print(f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct.{os.linesep}")
-#     quit()
-# else:
-#     msg_info = f"All entries in simulation are understood and will be further processed {os.linesep}"
-#     print(msg_info)
-# #        sims_valid_entries.append(sim.copy())
-# #print(sims_valid_entries)
-
-wrong_key_entries = 0
-software_dict_name = "{0}_dict".format(sim["SOFTWARE"].lower())
-# print(sim.items())
-for key_sim, value_sim in sim.items():
-    # print(key_sim, value_sim)
-    # print(key_sim.upper())
-    if key_sim.upper() in ("SOFTWARE"):
-        # print("NOT REQUIRED")
-        continue
-    # Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-    if (
-        (key_sim.upper() not in software_dict[sim["SOFTWARE"].upper()].keys())
-        and (key_sim.upper() not in molecules_dict.keys())
-        and (key_sim.upper() not in lipids_dict.keys())
-        and (key_sim.upper() not in molecule_ff_dict.keys())
-    ):
-        print("{0} NOT in {1}".format(key_sim, software_dict_name))
-        wrong_key_entries += 1
-if wrong_key_entries:
-    print(
-        f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct.{os.linesep}"
-    )
-    quit()
-else:
-    msg_info = f"All entries in simulation are understood and will be further processed {os.linesep}"
-    print(msg_info)
-#        sims_valid_entries.append(sim.copy())
-# print(sims_valid_entries)
-
-
-# PLEASE CLARIFY THIS COMMENT
-# ### Process entries with files information to contain file names in arrays
-
-software_sim = software_dict[sim["SOFTWARE"].upper()]
-for key_sim, value_sim in sim.items():
-    try:
-        entry_type = software_sim[key_sim]["TYPE"]
-        if "file" in entry_type:
-            if isinstance(value_sim, list):
-                continue
-            files_list = []
-            # print(value_sim)
-            # print("{0} will be downloaded".format(value_sim))
-            print(value_sim + " will be downloaded")
-            # Place filenames into arrays
-            for file_provided in value_sim.split(";"):
-                files_list.append([file_provided.strip()])
-            sim[key_sim] = files_list
-    except:  # It is notmal that fails for "ID" and "SOFTWARE"
-        continue
-# print(sims_files_to_array)
-# print(sims_valid_entries)
-
-
-# PLEASE CLARIFY THIS COMMENT
-# ### Check for multiple files in entries that can only contain one
-
-files_issues = 0
-software_sim = software_dict[sim["SOFTWARE"].upper()]
-for key_sim, value_sim in sim.items():
-    try:
-        entry_type = software_sim[key_sim]["TYPE"]
-        if entry_type == "file" and len(value_sim) > 1:
-            print(
-                f"Multiple values found in {key_sim} and only one allowed (Please correct):{os.linesep} {value_sim}"
-            )
-            files_issues += 1
-    except:  # It is notmal that fails for "ID" and "SOFTWARE"
-        continue
-if files_issues:
-    print("Sim will be no longer processed")
-    quit()
-else:
-    print("Files are ok")
-#        sims_valid_file_entries.append(sim.copy())
-# print(sims_valid_file_entries)
-
-
-# PLEASE CLARIFY THIS COMMENT
-# ### Check if the submitted simulation has rssion has all required files and information
-
-
-missing_required_keys = 0
-for key, value in software_dict[sim["SOFTWARE"].upper()].items():
-    if value["REQUIRED"]:
-        try:
-            sim[key]
-        except:
-            print("Entry not found: {0} {1}".format(key, value))
-            missing_required_keys += 1
-if missing_required_keys:
-    print(
-        "{0} missing required entry/ies, please correct.".format(missing_required_keys)
-    )
-    print(f"Entry will not be further processed.{os.linesep}")
-    quit()
-else:
-    print(f"All required dictionary entries are present.{os.linesep}")
-
-
-# ### Check status links
-
-wrong_links = 0
-software_sim = software_dict[sim["SOFTWARE"].upper()]
-for key_sim, value_sim in sim.items():
-    # print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
-    try:
-        entry_type = software_sim[key_sim]["TYPE"]
-        extension_type = software_sim[key_sim]["EXTENSION"]
-        # print("entry_type = {0}".format(entry_type))
-        if "file" in entry_type and "txt" not in extension_type:
-            for file_provided in value_sim:
-                # print("File={0}".format(file_provided[0]))
-                file_url = download_link(
-                    DOI, file_provided[0]
-                )  # TODO this can be replaced by the new method in databankLibrary.py
-                if file_url == "":
-                    wrong_links += 1
-                    continue
-                try:
-                    if key_sim == "INI":
-                        continue
-                    response = urllib.request.urlopen(file_url)
-                    # print("Status of the DOI link: {0}".format(response.msg))
-                except HTTPError as e:
-                    print(f"{os.linesep}key={key_sim} => file={file_provided[0]}")
-                    print(file_url)
-                    print("The server couldn't fulfill the request.")
-                    print("Error code: ", e.code)
-                    wrong_links += 1
-                except URLError as e:
-                    print(key_sim, file_provided[0])
-                    print(file_url)
-                    print("We failed to reach a server.")
-                    print("Reason: ", e.reason)
-                    wrong_links += 1
-                else:
-                    pass
-    except:  # It is normal that fails for "ID" and "SOFTWARE"
-        continue
-if wrong_links:
-    print("{0} link/s failed, please correct.".format(wrong_links))
-    print(f"Entry will not be further processed.{os.linesep}")
-    quit()
-else:
-    print(f"All links work.{os.linesep}")
-    # sims_working_links.append(sim.copy())
-# print(sims_working_links)
-
-
-# ## Download files from links
 
 # Create temporary directory where to download files and analyze them
 
-dir_tmp = (
-    os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
-    if args.no_cache
-    else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
-)
+dir_wrk = args.work_dir if args.work_dir else sim["DIR_WRK"] # cli argument allows overriding
+dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999))) if args.no_cache else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
 
-logger.info(f"The data will be processed in directory path {dir_tmp}")
+logger.info(f"The data will be processed in directory path '{dir_tmp}'")
 
-if not os.path.isdir(dir_tmp):
-    os.makedirs(dir_tmp)
+try:
+    os.makedirs(dir_tmp, exist_ok=True)
+except OSError as e:
+    logger.error(f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}")
+    quit()
 
-software_sim = software_dict[sim["SOFTWARE"].upper()]
-dir_sim = dir_tmp
-DOI = sim["DOI"]
+# Check link status and download files
 
-if not os.path.isdir(dir_sim):  # TODO is this really necessary?
-    os.makedirs(dir_sim)
+try:
+    download_links = [resolve_download_file_url(sim['DOI'], fi, validate_uri=True) for fi in files]
 
-for key_sim, value_sim in sim.items():  # go over dict entries
-    logger.debug(f"key_sim = {key_sim} => value_sim = {value_sim}")
-    # check if the file (type) needs to be downloaded depending on the software used
-    if key_sim in software_sim and value_sim is not None:
-        # only download file entries with supported extension and if it's not a text file
-        # note: Not all software_sim items have a extension entry!
-        if (
-            "TYPE" in software_sim[key_sim]
-            and "file" in software_sim[key_sim]["TYPE"]
-            and "EXTENSION" in software_sim[key_sim]
-            and "txt" not in software_sim[key_sim]["EXTENSION"]
-        ):
-            for fi in value_sim:
-                file_name = os.path.join(dir_sim, fi[0])
-                fi_uri = resolve_doi_uri(DOI, fi[0])
-                download_resource_from_uri(
-                    fi_uri, file_name, override_if_exists=args.no_cache
-                )
+    logger.info(f"Now downloading {len(files)} files ...")
 
+    for url, fi in zip(download_links, files):
+        download_resource_from_uri(url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache)
+
+    logger.info(f"Download of {len(files)} files was successful")
+
+except HTTPError as e:
+    match e.code:
+        case 404:
+            logger.error(f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?")
+        case _:
+            logger.error(f"Unexpected HTTPError {e.code} while trying to download the file '{e.url}'")
+    quit()
+except URLError as e:
+    logger.error(f"couldn't resolve network adress: {e.reason}. Please check your internet connection.")
+    quit()
 
 # ## Calculate hash of downloaded files
 
@@ -407,7 +194,7 @@ for key_sim, value_sim in sim_hashes.items():
         if "file" in entry_type:
             files_list = []
             for file_provided in value_sim:
-                file_name = os.path.join(dir_sim, file_provided[0])
+                file_name = os.path.join(dir_wrk, file_provided[0])
                 sha1_hash = hashlib.sha1()
                 with open(file_name, "rb") as f:
                     # Read and update hash string value in blocks of 4K

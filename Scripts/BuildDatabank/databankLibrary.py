@@ -7,9 +7,11 @@
 #
 # If you add a lipid which is not yet in the databank, you have to add it here
 
+import copy
 import socket, urllib, logging
 import shutil
 
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 from pathlib import Path
 
@@ -891,7 +893,7 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     res = "https://doi.org/" + doi
 
     if validate_uri:
-        socket.setdefaulttimeout(15)  # seconds
+        socket.setdefaulttimeout(5)  # seconds
         _ = urllib.request.urlopen(res)
     return res
 
@@ -918,7 +920,7 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
 
         # check if ressource exists, may throw exception
         if validate_uri:
-            socket.setdefaulttimeout(15)  # seconds
+            socket.setdefaulttimeout(5)  # seconds
             res = urllib.request.urlopen(uri)
         return uri
     else:
@@ -943,6 +945,7 @@ def download_resource_from_uri(
     Returns:
         None
     """
+    # TODO verify file size before skipping already existing download!
 
     class RetrieveProgressBar(tqdm):
         # uses tqdm.update(), see docs https://github.com/tqdm/tqdm#hooks-and-callbacks
@@ -981,59 +984,107 @@ def download_resource_from_uri(
             logger.error(e)
 
 
-def check_sim_software_entry_keys(sim: dict) -> None:
-    """check simulation software used and validate entry keys
+class YamlBadConfigException(Exception):
+      def __init__(self, *args, **kwargs) -> None:
+            Exception.__init__(self, *args, **kwargs)
+
+def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
+    """Parses, validates and updates dict entries from yaml configuration file.
 
     Args:
-        sim (dict): _description_
-
+        info_yaml (dict): info.yaml of database to add
     Raises:
-        Exception: _description_
-        Exception: _description_
+        KeyError: Missing required key in info.yaml
+        YamlBadConfigException: Incorrect or incompatible configuration
+    Returns:
+        _type_: updated sim dict
     """
-    # check for supported sim software
-    if sim["SOFTWARE"].upper() in software_dict.keys():
-        logger.info(
-            f"Simulation uses supported software '{sim['SOFTWARE'].upper()}' and will be further processed"
-        )
-    else:
-        logger.error(
-            f"Simulation uses supported software '{sim['SOFTWARE'].upper()}' and will be further processed"
-        )
-        raise Exception("unsupported simulation software")
 
-    # Check that all entry keys provided for each simulation are valid
-    wrong_key_entries = 0
-    software_dict_name = "{0}_dict".format(sim["SOFTWARE"].lower())
-    # print(sim.items())
-    for key_sim, value_sim in sim.items():
-        # print(key_sim, value_sim)
-        # print(key_sim.upper())
-        if key_sim.upper() in ("SOFTWARE"):
-            # print("NOT REQUIRED")
-            continue
-        # Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-        if (
-            (key_sim.upper() not in software_dict[sim["SOFTWARE"].upper()].keys())
-            and (key_sim.upper() not in molecules_dict.keys())
-            and (key_sim.upper() not in lipids_dict.keys())
-            and (key_sim.upper() not in molecule_ff_dict.keys())
-        ):
-            logger.error("{0} NOT in {1}".format(key_sim, software_dict_name))
-            wrong_key_entries += 1
-    if wrong_key_entries:
-        raise Exception(
-            f"Simulation has {wrong_key_entries} unknown entry/ies and won't be longer considered, please correct."
-        )
-        quit()
+    sim = copy.deepcopy(info_yaml) # mutable objects are called by reference in Python
+
+    # STEP 1 - check supported simulation software
+    if 'SOFTWARE' not in sim: raise KeyError("'SOFTWARE' Parameter missing in yaml")
+
+    if sim['SOFTWARE'].upper() in software_dict.keys():
+        logger.info(f"Simulation uses supported software '{sim['SOFTWARE'].upper()}'")
     else:
-        logger.info(
-            f"All entries in simulation are understood and will be further processed."
-        )
-    logger.debug("valid sim entry keys:")
-    pp = pprint.PrettyPrinter(width=41, compact=True)
-    if logger.isEnabledFor(logging.DEBUG):
-        pp.pprint(sim)
+        raise YamlBadConfigException(f"Simulation uses unsupported software '{sim['SOFTWARE'].upper()}'")
+    
+    software_sim = software_dict[sim['SOFTWARE'].upper()] # related to dicts in this file 
+
+    # STEP 2 - check required keys defined by sim software used
+    software_required_keys = [k for k, v in software_sim.items() if v["REQUIRED"]]
+
+    if not all(k in list(sim.keys()) for k in software_required_keys):
+          missing_keys = [k for k in list(sim.keys()) if k not in software_required_keys]
+          raise YamlBadConfigException(f"Required '{sim['SOFTWARE'].upper()}' sim keys missing in conf file: {', '.join(missing_keys)}")
+    
+    logger.debug(f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present")
+
+    # STEP 3 - check working directory
+    if 'DIR_WRK' not in sim: raise KeyError("'DIR_WRK' Parameter missing in yaml")
+    dir_wrk = sim['DIR_WRK']
+    
+    # STEP 4 - Check that all entry keys provided for each simulation are valid
+    software_sim = software_dict[sim['SOFTWARE'].upper()]
+
+    files_tbd = []
+
+    #   loop config entries
+    for key_sim, value_sim in sim.items():
+        
+        logger.debug(f"processing entry: sim['{key_sim}'] = {str(value_sim)}")                  
+
+        if key_sim.upper() in "SOFTWARE": # skip 'SOFTWARE' entry
+            continue
+
+        # STEP 4.1.
+        #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
+        if ((key_sim.upper() not in software_sim.keys()) and 
+            (key_sim.upper() not in molecules_dict.keys()) and 
+            (key_sim.upper() not in lipids_dict.keys()) and 
+            (key_sim.upper() not in molecule_ff_dict.keys())):
+            raise YamlBadConfigException(f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict'")
+
+        # STEP 4.2. 
+        # entries with files information to contain file names in arrays
+        if 'TYPE' in software_sim[key_sim]:
+            if "file" in software_sim[key_sim]['TYPE']: # entry_type
+                logger.debug(f"-> found '{key_sim}:{software_sim[key_sim]}' of 'TYPE' file") # DEBUG
+
+                if value_sim is None:
+                    logger.debug(f"entry '{key_sim}' has NoneType value, skipping")
+                # already a list -> ok
+                elif isinstance(value_sim, list): 
+                    logger.debug(f"value_sim '{value_sim}' is already a list, skipping")
+                    files_tbd.extend(value_sim)
+                else:
+                    value_sim_splitted = value_sim.split(";")
+
+                    # in case there are multiple files for one entry
+                    if len(value_sim_splitted) > 1:
+                        files_list = []
+                        for file_provided in value_sim.split(";"):
+                            files_list.append([file_provided.strip()])
+                        sim[key_sim] = files_list # replace ; separated string with list
+                    else:
+                        sim[key_sim] = value_sim_splitted
+                    files_tbd.extend(sim[key_sim])
+
+                # STEP 4.3.
+                # Batuhan: In conf file only one psf/tpr/pdb file allowed each (can coexist), multiple TRJ files are ok
+                # TODO true for all sim software?
+                # TODO add dict entry param "unique" instead?
+                if (key_sim.upper() in ["PSF", "TPR", "PDB"] and 
+                    len(sim[key_sim]) > 1):
+                      raise YamlBadConfigException(f"only one '{key_sim}' entry file allowed, but got {sim[key_sim]}")
+                  
+        else:
+              logger.warn(f"skipping key '{key_sim}': Not defined in software_sim library")
+    
+    logger.info(f"found {len(files_tbd)} files to be downloaded: {', '.join(files_tbd)}")
+
+    return sim, files_tbd
 
 
 # Return mapping name of atom from mapping file
