@@ -138,7 +138,12 @@ except Exception as e:
 
 # Create temporary directory where to download files and analyze them
 
-dir_wrk = args.work_dir if args.work_dir else sim["DIR_WRK"] # cli argument allows overriding
+if args.work_dir:
+    dir_wrk = args.work_dir
+    logger.warning(f"--work_dir override, ignoring 'DIR_WRK' from configuration file: {sim['DIR_WRK']}")
+else:
+    dir_wrk = sim["DIR_WRK"]
+
 dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999))) if args.no_cache else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
 
 logger.info(f"The data will be processed in directory path '{dir_tmp}'")

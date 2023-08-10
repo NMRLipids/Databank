@@ -10,6 +10,7 @@
 import copy
 import socket, urllib, logging
 import shutil
+from urllib.error import HTTPError
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -928,7 +929,6 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
             "Repository not validated. Please upload the data for example to zenodo.org"
         )
 
-
 def download_resource_from_uri(
     uri: str, dest: str, override_if_exists: bool = False
 ) -> None:
@@ -958,30 +958,41 @@ def download_resource_from_uri(
 
     # check if dest path already exists
     if not override_if_exists and os.path.isfile(dest):
-        logger.info(f"{dest}: file already exists, skipping")
-    else:
-        # download
         try:
-            socket.setdefaulttimeout(15)  # seconds
-
-            url_size = urllib.request.urlopen(uri).length  # download size
-
-            with RetrieveProgressBar(
-                unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
-            ) as u:
-                response = urllib.request.urlretrieve(
-                    uri, dest, reporthook=u.update_retrieve
-                )
-
-            # check if the file is fully downloaded
-            size = os.path.getsize(dest)
-
-            if url_size != size:
-                raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")
-
+            socket.setdefaulttimeout(5)  # seconds
+            
+            # compare filesize
+            fi_size = urllib.request.urlopen(uri).length  # download size
+            if fi_size == os.path.getsize(dest):
+                logger.info(f"{dest}: file already exists, skipping")
+                return
+            else:
+                logger.warning(f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ...")
         except Exception as e:
-            logger.error(f"an error occured while attemping to download '{uri}'")
-            logger.error(e)
+            logger.error(f"'{type(e).__name__}' while trying to verify filesize of '{fi_name}', redownloading...")
+
+    # download
+    try:
+        socket.setdefaulttimeout(5)  # seconds
+
+        url_size = urllib.request.urlopen(uri).length  # download size
+
+        with RetrieveProgressBar(
+            unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
+        ) as u:
+            response = urllib.request.urlretrieve(
+                uri, dest, reporthook=u.update_retrieve
+            )
+
+        # check if the file is fully downloaded
+        size = os.path.getsize(dest)
+
+        if url_size != size:
+            raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")
+
+    except Exception as e:
+        logger.error(f"an error occured while attemping to download '{uri}'")
+        logger.error(e)
 
 
 class YamlBadConfigException(Exception):
@@ -1082,7 +1093,7 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
         else:
               logger.warn(f"skipping key '{key_sim}': Not defined in software_sim library")
     
-    logger.info(f"found {len(files_tbd)} files to be downloaded: {', '.join(files_tbd)}")
+    logger.info(f"found {len(files_tbd)} ressources to download: {', '.join(files_tbd)}")
 
     return sim, files_tbd
 
