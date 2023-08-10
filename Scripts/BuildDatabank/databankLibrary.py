@@ -1088,7 +1088,7 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
                 # TODO add dict entry param "unique" instead?
                 if (key_sim.upper() in ["PSF", "TPR", "PDB"] and 
                     len(sim[key_sim]) > 1):
-                      raise YamlBadConfigException(f"only one '{key_sim}' entry file allowed, but got {sim[key_sim]}")
+                      raise YamlBadConfigException(f"only one '{key_sim}' entry file allowed, but got {len(sim[key_sim])}: {sim[key_sim]}")
                   
         else:
               logger.warn(f"skipping key '{key_sim}': Not defined in software_sim library")
