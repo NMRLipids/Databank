@@ -183,6 +183,8 @@ except URLError as e:
 # dir_tmp = os.path.join(dir_wrk, "tmp/")
 sim_hashes = deepcopy(sim)
 
+# pp.pprint(sim_hashes)
+
 software_sim = software_dict[sim["SOFTWARE"].upper()]
 
 # list_containing the sha1 sums for all required files
@@ -197,9 +199,11 @@ for key_sim, value_sim in sim_hashes.items():
         entry_type = software_sim[key_sim]["TYPE"]
         # print("entry_type = {0}".format(entry_type))
         if "file" in entry_type:
+            # print(f"'{key_sim}:{value_sim}' of type file!")
             files_list = []
             for file_provided in value_sim:
-                file_name = os.path.join(dir_wrk, file_provided[0])
+                file_name = os.path.join(dir_tmp, file_provided)
+                print(f"-> file provided: {file_provided} in '{file_name}'")
                 sha1_hash = hashlib.sha1()
                 with open(file_name, "rb") as f:
                     # Read and update hash string value in blocks of 4K
@@ -254,11 +258,14 @@ traj = ""
 
 # OTHER SOFTWARES THAN GROMACS!!!!
 if sim["SOFTWARE"] == "gromacs":
-    top = os.path.join(dir_tmp, sim["TPR"][0][0])
-    traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
+    top = os.path.join(dir_tmp, sim["TPR"][0])
+    traj = os.path.join(dir_tmp, sim["TRJ"][0])
 elif sim["SOFTWARE"] == "openMM":
-    traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
-    top = os.path.join(dir_tmp, sim["PDB"][0][0])
+    traj = os.path.join(dir_tmp, sim["TRJ"][0])
+    top = os.path.join(dir_tmp, sim["PDB"][0])
+
+print("traj used for hash = " +traj)
+print("top used for hash=" +top)
 
 
 leaflet1 = 0  # total number of lipids in upper leaflet
@@ -618,6 +625,9 @@ sim["TYPEOFSYSTEM"] = "lipid bilayer"
 #     )
 #   outfileDICT.write(str(sim))
 # outfileDICT.close()
+
+print("not saving for now")
+quit()
 
 create_databank_directories(sim, sim_hashes, dir_tmp, traj, top)
 
