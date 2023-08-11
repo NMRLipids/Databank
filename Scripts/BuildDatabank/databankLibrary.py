@@ -116,9 +116,12 @@ lipids_dict = {
             'SLiPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
-             'C20' : {"REQUIRED": False,
-                            "TYPE" : "string",}
-
+            'C20' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                        },
+            'C30' : {"REQUIRED": False,
+                            "TYPE" : "string",
+                            },
                 }
 
 
