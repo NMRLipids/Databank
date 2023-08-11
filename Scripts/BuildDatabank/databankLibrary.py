@@ -116,6 +116,9 @@ lipids_dict = {
             'SLiPC' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
+             'C20' : {"REQUIRED": False,
+                            "TYPE" : "string",}
+
                 }
 
 
@@ -143,8 +146,6 @@ molecules_dict = {
             'SOL' : {"REQUIRED": False,
                             "TYPE" : "string",
                         },
-            'C20' : {"REQUIRED": False,
-                            "TYPE" : "string",}
                 }
 
 
