@@ -10,7 +10,7 @@ TPR:
 - - C36_16C30_288DPPC_70C_15w_run3.tpr
 PREEQTIME: 200
 TIMELEFTOUT: 0
-DIR_WRK: /media/anika/data/PhD/MDsims/yaml_for_nmrlipidsdatabank/
+DIR_WRK: /home/sosamuli/temp/DataBank/
 COMPOSITION:
   DPPC:
     NAME: DPPC
@@ -21,7 +21,9 @@ COMPOSITION:
   C30:
     NAME: ALK
     MAPPING: mappingC30H62.yaml
-    COUNT: 16
+    COUNT:
+    - 4
+    - 12
   SOL:
     NAME: SOL
     MAPPING: mappingTIP3Pwater.yaml
@@ -32,5 +34,6 @@ TRAJECTORY_SIZE: 2005650464
 TRJLENGTH: 100010.0
 TEMPERATURE: 343.0
 NUMBER_OF_ATOMS: 51875
-DATEOFRUNNING: 20/07/2023
+DATEOFRUNNING: 11/08/2023
 TYPEOFSYSTEM: lipid bilayer
+ID: 756
