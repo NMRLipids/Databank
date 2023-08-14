@@ -1842,3 +1842,4 @@ def create_databank_directories(sim, sim_hashes, dir_tmp, traj, top):
             os.path.join(dir_tmp, "README.yaml"),
             os.path.join(directory_path, "README.yaml"),
         )
+    return directory_path
