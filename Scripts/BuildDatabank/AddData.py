@@ -629,7 +629,7 @@ sim["TYPEOFSYSTEM"] = "lipid bilayer"
 print("not saving for now")
 quit()
 
-create_databank_directories(sim, sim_hashes, dir_tmp, traj, top)
+directory_path = create_databank_directories(sim, sim_hashes, dir_tmp, traj, top)
 
 print(
     "\033[1m"
