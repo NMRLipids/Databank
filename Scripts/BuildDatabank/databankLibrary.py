@@ -1037,8 +1037,6 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
     dir_wrk = sim['DIR_WRK']
     
     # STEP 4 - Check that all entry keys provided for each simulation are valid
-    software_sim = software_dict[sim['SOFTWARE'].upper()]
-
     files_tbd = []
 
     #   loop config entries
@@ -1072,16 +1070,19 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
                 else:
                     value_sim_splitted = value_sim.split(";")
 
+                    if len(value_sim_splitted) == 0:
+                        raise YamlBadConfigException(f"found no file to download for entry '{key_sim}:{software_sim[key_sim]}'")
                     # in case there are multiple files for one entry
-                    if len(value_sim_splitted) > 1:
+                    elif len(value_sim_splitted) > 1:
                         files_list = []
                         for file_provided in value_sim.split(";"):
                             files_list.append([file_provided.strip()])
                         sim[key_sim] = files_list # replace ; separated string with list
                     else:
-                        sim[key_sim] = value_sim_splitted
-                    files_tbd.extend(sim[key_sim])
-
+                        # print(f"value_sim_splitted = {value_sim_splitted}")
+                        sim[key_sim] = [[f.strip()] for f in value_sim_splitted] # IMPORTANT: Needs to be list of lists for now
+                    files_tbd.extend(f[0] for f in sim[key_sim])
+                    # print(f"sim[{key_sim}] = {sim[key_sim]}")
                 # STEP 4.3.
                 # Batuhan: In conf file only one psf/tpr/pdb file allowed each (can coexist), multiple TRJ files are ok
                 # TODO true for all sim software?
@@ -1811,6 +1812,7 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
 def create_databank_directories(sim, sim_hashes, dir_tmp, traj, top):
     print("Creating databank directories.")
 
+    print(f"sim_hashes.get('TRJ') = {sim_hashes.get('TRJ')}")
     if sim["SOFTWARE"] == "gromacs":
         head_dir = sim_hashes.get("TPR")[0][1][0:3]
         sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]

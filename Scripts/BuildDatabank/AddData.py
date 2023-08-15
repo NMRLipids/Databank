@@ -60,6 +60,7 @@ import openmm_parser
 
 # import databank dictionaries
 from databankLibrary import (
+    create_databank_directories,
     lipids_dict,
     molecules_dict,
     molecule_ff_dict,
@@ -202,14 +203,14 @@ for key_sim, value_sim in sim_hashes.items():
             # print(f"'{key_sim}:{value_sim}' of type file!")
             files_list = []
             for file_provided in value_sim:
-                file_name = os.path.join(dir_tmp, file_provided)
-                print(f"-> file provided: {file_provided} in '{file_name}'")
+                file_name = os.path.join(dir_tmp, file_provided[0])
+                # print(f"-> file provided: {file_provided[0]} in '{file_name}'")
                 sha1_hash = hashlib.sha1()
                 with open(file_name, "rb") as f:
                     # Read and update hash string value in blocks of 4K
                     for byte_block in iter(lambda: f.read(4096), b""):
                         sha1_hash.update(byte_block)
-                        # print(file_provided, sha256_hash.hexdigest())
+                        # print(file_provided[0], sha256_hash.hexdigest())
                     df_files = df_files.append(
                         {
                             "NAME": file_provided[0],
@@ -258,14 +259,14 @@ traj = ""
 
 # OTHER SOFTWARES THAN GROMACS!!!!
 if sim["SOFTWARE"] == "gromacs":
-    top = os.path.join(dir_tmp, sim["TPR"][0])
-    traj = os.path.join(dir_tmp, sim["TRJ"][0])
+    top = os.path.join(dir_tmp, sim["TPR"][0][0])
+    traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
 elif sim["SOFTWARE"] == "openMM":
-    traj = os.path.join(dir_tmp, sim["TRJ"][0])
-    top = os.path.join(dir_tmp, sim["PDB"][0])
+    traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
+    top = os.path.join(dir_tmp, sim["PDB"][0][0])
 
-print("traj used for hash = " +traj)
-print("top used for hash=" +top)
+# print("traj used for hash = " +traj)
+# print("top used for hash=" +top)
 
 
 leaflet1 = 0  # total number of lipids in upper leaflet
@@ -576,58 +577,8 @@ print("Date of adding to the databank: " + sim["DATEOFRUNNING"])
 # When we go for other systems, this will be given by user.
 sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
-# BATUHAN: add openmm parser #
+# BATUHAN: add openmm parser
 # # Save to databank
-
-
-# Batuhan: Creating a nested directory structure as discussed on the Issue here https://github.com/NMRLipids/NMRlipidsVIpolarizableFFs/issues/3
-# below can be a single function like create_databank_dirs
-# if sim["SOFTWARE"] == "gromacs":
-#     head_dir = sim_hashes.get("TPR")[0][1][0:3]
-#     sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
-#     sub_dir2 = sim_hashes.get("TPR")[0][1]
-#     sub_dir3 = sim_hashes.get("TRJ")[0][1]
-# elif sim["SOFTWARE"] == "openMM":
-#     head_dir = sim_hashes.get("TRJ")[0][1][0:3]
-#     sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
-#     sub_dir2 = sim_hashes.get("TRJ")[0][1]
-#     sub_dir3 = sim_hashes.get("TRJ")[0][1]
-
-# print("Creating databank directories.")
-
-# simulations_path = str(Path(os.getcwd()).parents[1])  # two levels above
-# directory_path = os.path.join(simulations_path, head_dir, sub_dir1, sub_dir2, sub_dir3)
-
-# os.makedirs(directory_path, exist_ok=True)
-
-# os.system('mkdir ../../Data/Simulations/' + str(head_dir))
-# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1))
-# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2))
-# os.system('mkdir ../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3))
-
-# DATAdir = '../../Data/Simulations/' + str(head_dir) + '/' + str(sub_dir1) + '/' + str(sub_dir2) + '/' + str(sub_dir3)
-#    data_directory[str(ID)] = DATAdir
-
-# copy simulation trajectory and top files to DATAdir
-
-# shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
-# shutil.copyfile(top, os.path.join(directory_path, os.path.basename(traj)))
-
-# # dictionary saved in yaml format
-# outfileDICT = os.path.join(dir_tmp, "README.yaml")
-
-# with open(outfileDICT, "w") as f:
-#     yaml.dump(sim, f, sort_keys=False)
-#     # why not dump the same file to directory path ?
-#     shutil.copyfile(
-#         os.path.join(dir_tmp, "README.yaml"),
-#         os.path.join(directory_path, "README.yaml"),
-#     )
-#   outfileDICT.write(str(sim))
-# outfileDICT.close()
-
-print("not saving for now")
-quit()
 
 directory_path = create_databank_directories(sim, sim_hashes, dir_tmp, traj, top)
 
