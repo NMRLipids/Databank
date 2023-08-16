@@ -168,10 +168,9 @@ try:
     logger.info(f"Download of {len(files)} files was successful")
 
 except HTTPError as e:
-    match e.code:
-        case 404:
+    if e.code == 404:
             logger.error(f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?")
-        case _:
+    else:
             logger.error(f"Unexpected HTTPError {e.code} while trying to download the file '{e.url}'")
     quit()
 except URLError as e:
