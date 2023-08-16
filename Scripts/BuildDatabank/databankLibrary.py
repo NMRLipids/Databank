@@ -15,6 +15,7 @@ from urllib.error import HTTPError
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from pathlib import Path
+from typing import List
 
 logger = logging.getLogger("__name__")
 
@@ -999,7 +1000,7 @@ class YamlBadConfigException(Exception):
       def __init__(self, *args, **kwargs) -> None:
             Exception.__init__(self, *args, **kwargs)
 
-def parse_valid_config_settings(info_yaml: dict) -> (dict, list[str]):
+def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
     """Parses, validates and updates dict entries from yaml configuration file.
 
     Args:
