@@ -89,6 +89,8 @@ parser.add_argument(
     "-n", "--no-cache", help="always redownload repository files", action="store_true"
 )
 parser.add_argument("-w", "--work-dir", help="override temporary working directory", default="")
+parser.add_argument("-o", "--output-dir", help="set output directory", default=os.path.join(Path(os.getcwd()).parents[1].absolute(), "Data", "Simulations"))
+
 args = parser.parse_args()
 
 # configure logging
@@ -579,10 +581,22 @@ sim["TYPEOFSYSTEM"] = "lipid bilayer"
 # BATUHAN: add openmm parser
 # # Save to databank
 
-directory_path = create_databank_directories(sim, sim_hashes, dir_tmp, traj, top)
+directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
 
-print(
-    "\033[1m"
-    + f"{os.linesep} Writing the README.yaml dictionary to {directory_path} {os.linesep}"
-    + "\033[0m"
-)
+# copy previously downloaded files
+logger.info("copying previously downloaded files...")
+shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
+shutil.copyfile(top, os.path.join(directory_path, os.path.basename(traj)))
+
+# dictionary saved in yaml format
+outfileDICT = os.path.join(dir_tmp, "README.yaml")
+
+logger.info(f"Writing the README.yaml dictionary to '{directory_path}'")
+
+with open(outfileDICT, "w") as f:
+    yaml.dump(sim, f, sort_keys=False)
+    # why not dump the same file to directory path ?
+    shutil.copyfile(
+        os.path.join(dir_tmp, "README.yaml"),
+        os.path.join(directory_path, "README.yaml"),
+    )
