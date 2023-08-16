@@ -31,3 +31,9 @@ After this is finished, you should see a new folder in [Data/simulations](https:
 ## System requirements
 
 The codes have been tested in Linux environment with python 3 and recent Gromacs version installed.
+
+Setup using conda as distribution:
+
+    $ conda create --name databank python==3.7.16 MDAnalysis MDAnalysisTests
+    $ conda activate databank
+    $ (databank) pip install tqdm pyyaml
