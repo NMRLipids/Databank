@@ -1810,10 +1810,21 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
 ###############################################################################################################
 
 
-def create_databank_directories(sim, sim_hashes, dir_tmp, traj, top):
-    print("Creating databank directories.")
+def create_databank_directories(sim, sim_hashes, out) -> str:
+    """create nested output directory structure to save results
 
-    print(f"sim_hashes.get('TRJ') = {sim_hashes.get('TRJ')}")
+    Args:
+        sim (_type_): Processed simulation entries
+        sim_hashes (_type_): file hashes needed for directory structure
+        out (_type_): output base path
+
+    Raises:
+        NotImplementedError: unsupported simulation software
+
+    Returns:
+        str: output directory
+    """
+    # resolve output dir naming
     if sim["SOFTWARE"] == "gromacs":
         head_dir = sim_hashes.get("TPR")[0][1][0:3]
         sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
@@ -1824,25 +1835,20 @@ def create_databank_directories(sim, sim_hashes, dir_tmp, traj, top):
         sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
         sub_dir2 = sim_hashes.get("TRJ")[0][1]
         sub_dir3 = sim_hashes.get("TRJ")[0][1]
+    else:
+        raise NotImplementedError(f"sim software '{sim['SOFTWARE']}' not supported")
 
-    simulations_path = str(Path(os.getcwd()).parents[1])  # two levels above
     directory_path = os.path.join(
-        simulations_path, head_dir, sub_dir1, sub_dir2, sub_dir3
+        out, head_dir, sub_dir1, sub_dir2, sub_dir3
     )
 
-    os.makedirs(directory_path, exist_ok=True)
+    logger.debug(f"output_dir = {directory_path}")
 
-    shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
-    shutil.copyfile(top, os.path.join(directory_path, os.path.basename(traj)))
+    # create directories
+    try:
+        os.makedirs(directory_path, exist_ok=True)
+    except OSError as e:
+        logger.error(f"couldn't create output directory '{directory_path}': {e.args[1]}")
+        quit()
 
-    # dictionary saved in yaml format
-    outfileDICT = os.path.join(dir_tmp, "README.yaml")
-
-    with open(outfileDICT, "w") as f:
-        yaml.dump(sim, f, sort_keys=False)
-        # why not dump the same file to directory path ?
-        shutil.copyfile(
-            os.path.join(dir_tmp, "README.yaml"),
-            os.path.join(directory_path, "README.yaml"),
-        )
     return directory_path
