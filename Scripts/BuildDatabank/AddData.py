@@ -2,9 +2,6 @@
 
 # IMPORTING LIBRARIES
 
-import sys
-import importlib
-import re
 from random import randint
 import argparse
 import yaml
@@ -18,16 +15,12 @@ from pathlib import Path
 import os
 
 # For quering webs
-import urllib.request
-from urllib.error import URLError, HTTPError, ContentTooShortError
+from urllib.error import URLError, HTTPError
 
 # From time monitoring
-from tqdm import tqdm
 
-import socket
 
 # Python program to find SHA256 hash string of a file
-import hashlib
 
 # For dealing with excel and cvs
 import pandas as pd
@@ -40,23 +33,18 @@ pd.set_option("display.max_colwidth", 1000)
 # To make real independent copies of lists
 from copy import deepcopy
 
-import MDAnalysis
 from MDAnalysis import Universe
 
 # for calculating order parameters
 from OrderParameter import *
-import warnings
 
 # from corrtimes import *
-import subprocess
 
-import json
 import sys
 
 # for building hydrogens to united atom simulations
 
 
-import openmm_parser
 
 # import databank dictionaries
 from databankLibrary import (
@@ -64,12 +52,6 @@ from databankLibrary import (
     create_databank_directories,
     lipids_dict,
     molecules_dict,
-    molecule_ff_dict,
-    gromacs_dict,
-    amber_dict,
-    namd_dict,
-    charmm_dict,
-    openmm_dict,
     software_dict,
 )
 
