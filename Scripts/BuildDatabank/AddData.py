@@ -2,7 +2,8 @@
 
 # IMPORTING LIBRARIES
 
-from random import randint
+# Working with files and directories
+import os
 import argparse
 import yaml
 import logging
@@ -10,19 +11,9 @@ import shutil
 import pprint
 from datetime import date
 from pathlib import Path
-
-# Working with files and directories
-import os
-
-# For quering webs
+from random import randint
 from urllib.error import URLError, HTTPError
-
-# From time monitoring
-
-
-# Python program to find SHA256 hash string of a file
-
-# For dealing with excel and cvs
+from copy import deepcopy
 import pandas as pd
 
 pd.set_option("display.max_rows", 500)
@@ -30,21 +21,8 @@ pd.set_option("display.max_columns", 500)
 pd.set_option("display.width", 1000)
 pd.set_option("display.max_colwidth", 1000)
 
-# To make real independent copies of lists
-from copy import deepcopy
-
 from MDAnalysis import Universe
-
-# for calculating order parameters
 from OrderParameter import *
-
-# from corrtimes import *
-
-import sys
-
-# for building hydrogens to united atom simulations
-
-
 
 # import databank dictionaries
 from databankLibrary import (
@@ -56,8 +34,15 @@ from databankLibrary import (
 )
 
 
-# Download link
-from databankLibrary import download_resource_from_uri, parse_valid_config_settings, resolve_download_file_url
+# helpers
+from databankLibrary import (
+    download_resource_from_uri,
+    parse_valid_config_settings,
+    resolve_download_file_url,
+)
+
+
+# for building hydrogens to united atom simulations
 
 
 # parse input yaml file
@@ -71,8 +56,17 @@ parser.add_argument(
 parser.add_argument(
     "-n", "--no-cache", help="always redownload repository files", action="store_true"
 )
-parser.add_argument("-w", "--work-dir", help="override temporary working directory", default="")
-parser.add_argument("-o", "--output-dir", help="set output directory", default=os.path.join(Path(os.getcwd()).parents[1].absolute(), "Data", "Simulations"))
+parser.add_argument(
+    "-w", "--work-dir", help="override temporary working directory", default=""
+)
+parser.add_argument(
+    "-o",
+    "--output-dir",
+    help="set output directory",
+    default=os.path.join(
+        Path(os.getcwd()).parents[1].absolute(), "Data", "Simulations"
+    ),
+)
 
 args = parser.parse_args()
 
@@ -93,32 +87,40 @@ for key in molecules_dict:
 
 input_path = os.path.join(".", args.file)
 
-#load input yaml file into empty dictionary
+# load input yaml file into empty dictionary
 info_yaml = {}
 
-#open input file for reading and writing
+# open input file for reading and writing
 with open(input_path) as yaml_file:
-    info_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader) # TODO may throw yaml.YAMLError
+    info_yaml = yaml.load(
+        yaml_file, Loader=yaml.FullLoader
+    )  # TODO may throw yaml.YAMLError
 yaml_file.close()
 
 # Show the input read
 logger.debug(f"{os.linesep} Input read from {input_path} file:")
 pp = pprint.PrettyPrinter(width=41, compact=True)
-if logger.isEnabledFor(logging.DEBUG): pp.pprint(yaml.dump(info_yaml))
+if logger.isEnabledFor(logging.DEBUG):
+    pp.pprint(yaml.dump(info_yaml))
 
 # validate yaml entries and return updated sim dict
 try:
     sim, files = parse_valid_config_settings(info_yaml)
 
-    logger.info(f"all entries in simulation are understood and will be further processed")
+    logger.info(
+        f"all entries in simulation are understood and will be further processed"
+    )
     logger.debug("valid sim entry keys:")
     pp = pprint.PrettyPrinter(width=41, compact=True)
-    if logger.isEnabledFor(logging.DEBUG): pp.pprint(sim)
+    if logger.isEnabledFor(logging.DEBUG):
+        pp.pprint(sim)
 except KeyError as e:
     logger.error(f"missing entry key in yaml config: {e}")
-    quit()  
+    quit()
 except Exception as e:
-    logger.error(f"an '{type(e).__name__}' occured while processing '{input_path}', script has been aborted")
+    logger.error(
+        f"an '{type(e).__name__}' occured while processing '{input_path}', script has been aborted"
+    )
     logger.error(e)
     quit()
 
@@ -126,40 +128,58 @@ except Exception as e:
 
 if args.work_dir:
     dir_wrk = args.work_dir
-    logger.warning(f"--work_dir override, ignoring 'DIR_WRK' from configuration file: {sim['DIR_WRK']}")
+    logger.warning(
+        f"--work_dir override, ignoring 'DIR_WRK' from configuration file: {sim['DIR_WRK']}"
+    )
 else:
     dir_wrk = sim["DIR_WRK"]
 
-dir_tmp = os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999))) if args.no_cache else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
+dir_tmp = (
+    os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
+    if args.no_cache
+    else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
+)
 
 logger.info(f"The data will be processed in directory path '{dir_tmp}'")
 
 try:
     os.makedirs(dir_tmp, exist_ok=True)
 except OSError as e:
-    logger.error(f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}")
+    logger.error(
+        f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}"
+    )
     quit()
 
 # Check link status and download files
 
 try:
-    download_links = [resolve_download_file_url(sim['DOI'], fi, validate_uri=True) for fi in files]
+    download_links = [
+        resolve_download_file_url(sim["DOI"], fi, validate_uri=True) for fi in files
+    ]
 
     logger.info(f"Now downloading {len(files)} files ...")
 
     for url, fi in zip(download_links, files):
-        download_resource_from_uri(url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache)
+        download_resource_from_uri(
+            url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache
+        )
 
     logger.info(f"Download of {len(files)} files was successful")
 
 except HTTPError as e:
     if e.code == 404:
-            logger.error(f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?")
+        logger.error(
+            f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?"
+        )
     else:
-            logger.error(f"Unexpected HTTPError {e.code} while trying to download the file '{e.url}'")
+        logger.error(
+            f"Unexpected HTTPError {e.code} while trying to download the file '{e.url}'"
+        )
     quit()
 except URLError as e:
-    logger.error(f"couldn't resolve network adress: {e.reason}. Please check your internet connection.")
+    logger.error(
+        f"couldn't resolve network adress: {e.reason}. Please check your internet connection."
+    )
     quit()
 
 # ## Calculate hash of downloaded files
@@ -180,9 +200,12 @@ for key_sim, value_sim in sim_hashes.items():
         entry_type = software_sim[key_sim]["TYPE"]
         if "file" in entry_type:
             files_list = []
-            is_required = software_dict[sim_hashes['SOFTWARE'].upper()][key_sim]['REQUIRED']
+            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim][
+                "REQUIRED"
+            ]
 
-            if not is_required and value_sim is None: continue # skip not required NoneType (empty) file entries
+            if not is_required and value_sim is None:
+                continue  # skip not required NoneType (empty) file entries
 
             for file_provided in value_sim:
                 file_name = os.path.join(dir_tmp, file_provided[0])
@@ -200,7 +223,8 @@ for key_sim, value_sim in sim_hashes.items():
                 files_list.append([file_provided[0], file_hash])
 
                 # Find the keys of the required files to calculate the master_hash
-                if is_required: sha1_list_requied.append(file_hash)
+                if is_required:
+                    sha1_list_requied.append(file_hash)
 
                 sim_hashes[key_sim] = files_list  # TODO Problematic
     except KeyError as e:  # It is notmal that fails for "ID" and "SOFTWARE"
@@ -223,8 +247,12 @@ print(df_files)
 # headgroup is used in the calculation.
 ################################################################################################################
 
-logger.info("Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids.")
-logger.info("If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
+logger.info(
+    "Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids."
+)
+logger.info(
+    "If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used."
+)
 
 top = ""
 traj = ""
@@ -255,7 +283,7 @@ except:
     logger.info(
         "Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version"
     )
-    
+
     if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
         os.system(
             "echo System | trjconv -s " + top + " -f " + traj + " -dump 22000 -o " + gro
@@ -400,7 +428,9 @@ for key_mol in molecules_dict:
     else:
         mol_number = u0.select_atoms("resname " + mol_name).n_residues
         sim["COMPOSITION"][key_mol]["COUNT"] = mol_number
-        logger.info(f"Number of '{key_mol}': {str(sim['COMPOSITION'][key_mol]['COUNT'])}")
+        logger.info(
+            f"Number of '{key_mol}': {str(sim['COMPOSITION'][key_mol]['COUNT'])}"
+        )
 
 # Anne: Read trajectory size and length
 
