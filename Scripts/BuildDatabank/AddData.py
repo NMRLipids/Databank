@@ -182,11 +182,7 @@ except URLError as e:
 
 # ## Calculate hash of downloaded files
 
-
-# dir_tmp = os.path.join(dir_wrk, "tmp/")
 sim_hashes = deepcopy(sim)
-
-# pp.pprint(sim_hashes)
 
 software_sim = software_dict[sim["SOFTWARE"].upper()]
 
@@ -200,7 +196,6 @@ for key_sim, value_sim in sim_hashes.items():
     # print(f"sim_hashes['{key_sim}'] = {value_sim}")
     try:
         entry_type = software_sim[key_sim]["TYPE"]
-        # print("entry_type = {0}".format(entry_type))
         if "file" in entry_type:
             files_list = []
             is_required = software_dict[sim_hashes['SOFTWARE'].upper()][key_sim]['REQUIRED']
@@ -209,7 +204,6 @@ for key_sim, value_sim in sim_hashes.items():
 
             for file_provided in value_sim:
                 file_name = os.path.join(dir_tmp, file_provided[0])
-                # print(f"-> file provided: {file_provided[0]} in '{file_name}'")
                 logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
                 file_hash = calc_file_sha1_hash(file_name)
                 df_files = df_files.append(
@@ -231,6 +225,7 @@ for key_sim, value_sim in sim_hashes.items():
         continue
 print(f"{os.linesep} Summary of downloaded files: ")
 print(df_files)
+
 # print("\n{0}\n".format(sha1_list_requied))
 
 # Calculate the hash of a file contaning the hashes of each of the required files
@@ -246,9 +241,8 @@ print(df_files)
 # headgroup is used in the calculation.
 ################################################################################################################
 
-print(
-    f"{os.linesep} Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids. {os.linesep} If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used."
-)
+logger.info("Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids.")
+logger.info("If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.")
 
 top = ""
 traj = ""
@@ -260,9 +254,6 @@ if sim["SOFTWARE"] == "gromacs":
 elif sim["SOFTWARE"] == "openMM":
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
     top = os.path.join(dir_tmp, sim["PDB"][0][0])
-
-# print("traj used for hash = " +traj)
-# print("top used for hash=" +top)
 
 
 leaflet1 = 0  # total number of lipids in upper leaflet
@@ -279,9 +270,10 @@ try:
     u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
 except:
     # conf = str(dir_tmp) + '/conf.gro'
-    print(
+    logger.info(
         "Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version"
     )
+    
     if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
         os.system(
             "echo System | trjconv -s " + top + " -f " + traj + " -dump 22000 -o " + gro
@@ -298,7 +290,7 @@ except:
 
 try:
     groFORu0 = os.path.join(dir_tmp, sim["GRO"][0][0])
-    print(groFORu0)
+    logger.debug(groFORu0)
 except:
     groFORu0 = gro
 
@@ -307,7 +299,7 @@ lipids = []
 
 # select lipids
 for key_mol in lipids_dict:
-    print("Calculating number of " + key_mol + " lipids")
+    logger.info(f"Calculating number of '{key_mol}' lipids")
     selection = ""
     if key_mol in sim["COMPOSITION"].keys():
         m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
@@ -356,7 +348,7 @@ if lipids != []:
         # print("membrane")
         # print(membrane)
     R_membrane_z = membrane.center_of_mass()[2]
-print("Center of the mass of the membrane " + str(R_membrane_z))
+logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
 
 #####number of each lipid per leaflet
 
@@ -394,9 +386,9 @@ for key_mol in lipids_dict:
     #                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
     #                    break
     selection = selection.rstrip(" or ")
-    print(selection)
+    logger.info(selection)
     molecules = u0.select_atoms(selection)
-    print(molecules.residues)
+    logger.info(molecules.residues)
 
     if molecules.n_residues > 0:
         for mol in molecules.residues:
@@ -413,8 +405,8 @@ for key_mol in lipids_dict:
     except KeyError:
         continue
     else:
-        print("Number of " + key_mol + " in upper leaflet: " + str(leaflet1))
-        print("Number of " + key_mol + " in lower leaflet: " + str(leaflet2))
+        logger.info(f"Number of '{key_mol}' in upper leaflet: {str(leaflet1)}")
+        logger.info(f"Number of '{key_mol}' in lower leaflet: {str(leaflet2)}")
 
 ###########################################################################################
 # numbers of other molecules
@@ -426,7 +418,7 @@ for key_mol in molecules_dict:
     else:
         mol_number = u0.select_atoms("resname " + mol_name).n_residues
         sim["COMPOSITION"][key_mol]["COUNT"] = mol_number
-        print("Number of " + key_mol + ": " + str(sim["COMPOSITION"][key_mol]["COUNT"]))
+        logger.info(f"Number of '{key_mol}': {str(sim['COMPOSITION'][key_mol]['COUNT'])}")
 
 # Anne: Read trajectory size and length
 
@@ -439,8 +431,8 @@ nstxout = 0
 Nframes = len(u.trajectory)
 timestep = u.trajectory.dt
 
-print("Number of frames: ", Nframes)
-print("Timestep: ", timestep)
+logger.info(f"Number of frames: {Nframes}")
+logger.info(f"Timestep: {timestep}")
 
 trj_length = Nframes * timestep
 
@@ -450,7 +442,7 @@ sim["TRJLENGTH"] = trj_length
 if sim["SOFTWARE"] == "gromacs":
     file1 = os.path.join(dir_tmp, "tpr.txt")
 
-    print(
+    logger.info(
         "Exporting information with gmx dump"
     )  # need to get temperature from trajectory not tpr !!!
     if (
@@ -482,9 +474,9 @@ if sim["SOFTWARE"] == "gromacs":
 #            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
 #            break
 
-print("Parameters read from input files:")
-print("TEMPERATURE: " + str(sim["TEMPERATURE"]))
-print("LENGTH OF THE TRAJECTORY: " + str(sim["TRJLENGTH"]))
+logger.info("Parameters read from input files:")
+logger.info(f"TEMPERATURE: {str(sim['TEMPERATURE'])}")
+logger.info(f"LENGTH OF THE TRAJECTORY: {str(sim['TRJLENGTH'])}")
 
 
 ## Check that the number of atoms between data and README.yaml match
@@ -554,12 +546,12 @@ if number_of_atoms != number_of_atomsTRJ:
     if stop == "n":
         os._exit("Interrupted because atomnumbers did not match")
     if stop == "y":
-        print(
+        logger.warning(
             "Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!"
         )
 
 sim["NUMBER_OF_ATOMS"] = number_of_atomsTRJ
-print("Number of atoms in the system: " + str(sim["NUMBER_OF_ATOMS"]))
+logger.info(f"Number of atoms in the system: {str(sim['NUMBER_OF_ATOMS'])}")
 
 
 #####DATE OF RUNNING#####
@@ -567,7 +559,7 @@ today = date.today().strftime("%d/%m/%Y")
 # print(today)
 sim["DATEOFRUNNING"] = today
 
-print("Date of adding to the databank: " + sim["DATEOFRUNNING"])
+logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
 
 # Type of system is currently hard coded because only lipid bilayers are currently added.
 # When we go for other systems, this will be given by user.
