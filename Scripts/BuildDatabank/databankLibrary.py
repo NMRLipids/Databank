@@ -1027,12 +1027,12 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
     software_sim = software_dict[sim['SOFTWARE'].upper()] # related to dicts in this file 
 
     # STEP 2 - check required keys defined by sim software used
-    # TODO check if REQUIRED yaml entries (dict keys) are empty? (value_sim of NoneType)
     software_required_keys = [k for k, v in software_sim.items() if v["REQUIRED"]]
 
-    if not all(k in list(sim.keys()) for k in software_required_keys):
+    # are ALL required keys are present in sim dict and defined (not of NoneType) ?
+    if not all((k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys):
           missing_keys = [k for k in list(sim.keys()) if k not in software_required_keys]
-          raise YamlBadConfigException(f"Required '{sim['SOFTWARE'].upper()}' sim keys missing in conf file: {', '.join(missing_keys)}")
+          raise YamlBadConfigException(f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or not defined in conf file: {', '.join(missing_keys)}")
     
     logger.debug(f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present")
 
