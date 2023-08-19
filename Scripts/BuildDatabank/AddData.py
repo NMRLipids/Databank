@@ -60,6 +60,7 @@ import openmm_parser
 
 # import databank dictionaries
 from databankLibrary import (
+    calc_file_sha1_hash,
     create_databank_directories,
     lipids_dict,
     molecules_dict,
@@ -196,44 +197,38 @@ sha1_list_requied = []
 df_files = pd.DataFrame(columns=["NAME", "TYPE", "REQUIRED", "HASH"], dtype=object)
 
 for key_sim, value_sim in sim_hashes.items():
-    # print("key_sim = {0} => value_sim = {1}".format(key_sim, value_sim))
+    # print(f"sim_hashes['{key_sim}'] = {value_sim}")
     try:
         entry_type = software_sim[key_sim]["TYPE"]
         # print("entry_type = {0}".format(entry_type))
         if "file" in entry_type:
-            # print(f"'{key_sim}:{value_sim}' of type file!")
             files_list = []
+            is_required = software_dict[sim_hashes['SOFTWARE'].upper()][key_sim]['REQUIRED']
+
+            if not is_required and value_sim is None: continue # skip not required NoneType (empty) file entries
+
             for file_provided in value_sim:
                 file_name = os.path.join(dir_tmp, file_provided[0])
                 # print(f"-> file provided: {file_provided[0]} in '{file_name}'")
-                sha1_hash = hashlib.sha1()
-                with open(file_name, "rb") as f:
-                    # Read and update hash string value in blocks of 4K
-                    for byte_block in iter(lambda: f.read(4096), b""):
-                        sha1_hash.update(byte_block)
-                        # print(file_provided[0], sha256_hash.hexdigest())
-                    df_files = df_files.append(
-                        {
-                            "NAME": file_provided[0],
-                            "TYPE": key_sim,
-                            "REQUIRED": software_dict[sim_hashes["SOFTWARE"].upper()][
-                                key_sim
-                            ]["REQUIRED"],
-                            "HASH": sha1_hash.hexdigest(),
-                        },
-                        ignore_index=True,
-                    )
-                files_list.append([file_provided[0], sha1_hash.hexdigest()])
-                # Find the keys of the required files to calculate the master_hash
-            if (
-                software_dict[sim_hashes["SOFTWARE"].upper()][key_sim]["REQUIRED"]
-                == True
-            ):
-                sha1_list_requied.append(sha1_hash.hexdigest())
-            sim_hashes[key_sim] = files_list  # Problematic
-    except:  # It is notmal that fails for "ID" and "SOFTWARE"
-        continue
+                logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
+                file_hash = calc_file_sha1_hash(file_name)
+                df_files = df_files.append(
+                    {
+                        "NAME": file_provided[0],
+                        "TYPE": key_sim,
+                        "REQUIRED": is_required,
+                        "HASH": file_hash,
+                    },
+                    ignore_index=True,
+                )
+                files_list.append([file_provided[0], file_hash])
 
+                # Find the keys of the required files to calculate the master_hash
+                if is_required: sha1_list_requied.append(file_hash)
+
+                sim_hashes[key_sim] = files_list  # TODO Problematic
+    except KeyError as e:  # It is notmal that fails for "ID" and "SOFTWARE"
+        continue
 print(f"{os.linesep} Summary of downloaded files: ")
 print(df_files)
 # print("\n{0}\n".format(sha1_list_requied))
@@ -578,15 +573,15 @@ print("Date of adding to the databank: " + sim["DATEOFRUNNING"])
 # When we go for other systems, this will be given by user.
 sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
-# BATUHAN: add openmm parser
 # # Save to databank
+# BATUHAN: add openmm parser
 
 directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
 
 # copy previously downloaded files
-logger.info("copying previously downloaded files...")
+logger.info("copying previously downloaded files to databank...")
 shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
-shutil.copyfile(top, os.path.join(directory_path, os.path.basename(traj)))
+shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
 
 # dictionary saved in yaml format
 outfileDICT = os.path.join(dir_tmp, "README.yaml")

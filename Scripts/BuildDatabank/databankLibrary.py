@@ -8,6 +8,8 @@
 # If you add a lipid which is not yet in the databank, you have to add it here
 
 import copy
+import hashlib
+from io import BufferedReader
 import socket, urllib, logging
 import shutil
 from urllib.error import HTTPError
@@ -1025,6 +1027,7 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
     software_sim = software_dict[sim['SOFTWARE'].upper()] # related to dicts in this file 
 
     # STEP 2 - check required keys defined by sim software used
+    # TODO check if REQUIRED yaml entries (dict keys) are empty? (value_sim of NoneType)
     software_required_keys = [k for k, v in software_sim.items() if v["REQUIRED"]]
 
     if not all(k in list(sim.keys()) for k in software_required_keys):
@@ -1809,6 +1812,15 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
 
 ###############################################################################################################
 
+def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
+    sha1_hash = hashlib.sha1()
+    with open(fi, "rb") as f:
+        with tqdm(total=math.ceil(os.path.getsize(fi)/step)) as pbar:
+            # Read and update hash string value in blocks of 4K
+            for byte_block in iter(lambda: f.read(step), b""):
+                sha1_hash.update(byte_block)
+                pbar.update(1)
+    return sha1_hash.hexdigest()
 
 def create_databank_directories(sim, sim_hashes, out) -> str:
     """create nested output directory structure to save results
@@ -1843,6 +1855,10 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
     )
 
     logger.debug(f"output_dir = {directory_path}")
+
+    # destination directory is not empty
+    if os.path.exists(directory_path) and os.listdir(directory_path) != 0:
+        logger.warning(f"output directory '{directory_path}' is not empty. Data may be overriden.")
 
     # create directories
     try:
