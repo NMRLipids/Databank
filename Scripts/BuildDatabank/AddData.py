@@ -211,15 +211,31 @@ for key_sim, value_sim in sim_hashes.items():
                 file_name = os.path.join(dir_tmp, file_provided[0])
                 logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
                 file_hash = calc_file_sha1_hash(file_name)
-                df_files = df_files.append(
-                    {
-                        "NAME": file_provided[0],
-                        "TYPE": key_sim,
-                        "REQUIRED": is_required,
-                        "HASH": file_hash,
-                    },
+                df_files = pd.concat(
+                    [
+                        df_files,
+                        pd.DataFrame(
+                            [
+                                {
+                                    "NAME": file_provided[0],
+                                    "TYPE": key_sim,
+                                    "REQUIRED": is_required,
+                                    "HASH": file_hash,
+                                }
+                            ]
+                        ),
+                    ],
                     ignore_index=True,
                 )
+                # df_files = df_files.append(
+                #     {
+                #         "NAME": file_provided[0],
+                #         "TYPE": key_sim,
+                #         "REQUIRED": is_required,
+                #         "HASH": file_hash,
+                #     },
+                #     ignore_index=True,
+                # )
                 files_list.append([file_provided[0], file_hash])
 
                 # Find the keys of the required files to calculate the master_hash
