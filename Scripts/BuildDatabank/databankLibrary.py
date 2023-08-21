@@ -897,7 +897,7 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     res = "https://doi.org/" + doi
 
     if validate_uri:
-        socket.setdefaulttimeout(5)  # seconds
+        socket.setdefaulttimeout(10)  # seconds
         _ = urllib.request.urlopen(res)
     return res
 
@@ -924,7 +924,7 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
 
         # check if ressource exists, may throw exception
         if validate_uri:
-            socket.setdefaulttimeout(5)  # seconds
+            socket.setdefaulttimeout(10)  # seconds
             res = urllib.request.urlopen(uri)
         return uri
     else:
@@ -962,45 +962,33 @@ def download_resource_from_uri(
 
     # check if dest path already exists
     if not override_if_exists and os.path.isfile(dest):
-        try:
-            socket.setdefaulttimeout(5)  # seconds
+        socket.setdefaulttimeout(10)  # seconds
 
-            # compare filesize
-            fi_size = urllib.request.urlopen(uri).length  # download size
-            if fi_size == os.path.getsize(dest):
-                logger.info(f"{dest}: file already exists, skipping")
-                return
-            else:
-                logger.warning(
-                    f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ..."
-                )
-        except Exception as e:
-            logger.error(
-                f"'{type(e).__name__}' while trying to verify filesize of '{fi_name}', redownloading..."
+        # compare filesize
+        fi_size = urllib.request.urlopen(uri).length  # download size
+        if fi_size == os.path.getsize(dest):
+            logger.info(f"{dest}: file already exists, skipping")
+            return
+        else:
+            logger.warning(
+                f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ..."
             )
 
     # download
-    try:
-        socket.setdefaulttimeout(5)  # seconds
+    socket.setdefaulttimeout(10)  # seconds
 
-        url_size = urllib.request.urlopen(uri).length  # download size
+    url_size = urllib.request.urlopen(uri).length  # download size
 
-        with RetrieveProgressBar(
-            unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
-        ) as u:
-            response = urllib.request.urlretrieve(
-                uri, dest, reporthook=u.update_retrieve
-            )
+    with RetrieveProgressBar(
+        unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
+    ) as u:
+        response = urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
 
-        # check if the file is fully downloaded
-        size = os.path.getsize(dest)
+    # check if the file is fully downloaded
+    size = os.path.getsize(dest)
 
-        if url_size != size:
-            raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")
-
-    except Exception as e:
-        logger.error(f"an error occured while attemping to download '{uri}'")
-        logger.error(e)
+    if url_size != size:
+        raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")
 
 
 class YamlBadConfigException(Exception):
