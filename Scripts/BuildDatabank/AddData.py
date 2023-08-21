@@ -237,8 +237,9 @@ for key_sim, value_sim in sim_hashes.items():
                 sim_hashes[key_sim] = files_list  # TODO Problematic
     except KeyError as e:  # It is notmal that fails for "ID" and "SOFTWARE"
         continue
-print(f"{os.linesep} Summary of downloaded files: ")
+print(f"Summary of downloaded files: ")
 print(df_files)
+print()
 
 # Calculate the hash of a file contaning the hashes of each of the required files
 # This should be always invariant as it will be used unique identifier for a simualtion
@@ -278,22 +279,34 @@ NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
 try:
     u = Universe(top, traj)
     u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
-except:
+except Exception as e:
+    logger.warning(e)
     logger.info(
-        "Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version"
+        "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ..."
     )
-
     if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
+        logger.debug(
+            f"executing 'echo System | trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
+        )
         os.system(
             "echo System | trjconv -s " + top + " -f " + traj + " -dump 22000 -o " + gro
         )
     else:
+        logger.debug(
+            f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 0 -o {gro}'"
+        )
         os.system(
             "echo System | gmx trjconv -s " + top + " -f " + traj + " -dump 0 -o " + gro
         )
-    u = Universe(gro, traj)
-    u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
-
+    try:
+        u = Universe(gro, traj)
+        u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
+    except Exception as e:
+        logger.warning(e)
+finally:
+    if not os.path.isfile(gro):
+        logger.error(f"'{gro}' could not be found, aborting")
+        quit()
 
 try:
     groFORu0 = os.path.join(dir_tmp, sim["GRO"][0][0])
