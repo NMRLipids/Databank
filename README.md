@@ -25,12 +25,32 @@ The NMRlipids Databank is open for additions of simulation data by anyone.
 3. Create info.yaml file into the folder with the help of [instructions](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md).
 4. Return to the [Databank/Scripts/BuildDatabank/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) folder and run
 `python3 AddData.py -f {path to the info file that you created}`.
-After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the README.yaml file of your system and calculated order parameters.
+
+Optional: See `python3 AddData.py --help` for available command line arguments:
+```
+usage: AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR]
+                         [-o OUTPUT_DIR]
+
+Add a new dataset to the NMRLipids databank
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILE, --file FILE  Input config file in yaml format.
+  -d, --debug           enable debug logging output
+  -n, --no-cache        always redownload repository files
+  -w WORK_DIR, --work-dir WORK_DIR
+                        set custom temporary working directory
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        set custom output directory
+```
+
+After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the **README.yaml** file of your system and calculated order parameters.
+
 5. Commit the created README.yaml file, and make a pull request to the master branch.
 
 ## System requirements
 
-The codes have been tested in Linux environment with python 3 and recent Gromacs version installed.
+The code has been tested in Linux environment with python 3.7 or newer and recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version installed.
 
 Setup using conda as distribution:
 

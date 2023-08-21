@@ -58,12 +58,12 @@ parser.add_argument(
     "-n", "--no-cache", help="always redownload repository files", action="store_true"
 )
 parser.add_argument(
-    "-w", "--work-dir", help="override temporary working directory", default=""
+    "-w", "--work-dir", help="set custom temporary working directory", default=""
 )
 parser.add_argument(
     "-o",
     "--output-dir",
-    help="set output directory",
+    help="set custom output directory",
     default=os.path.join(
         Path(os.getcwd()).parents[1].absolute(), "Data", "Simulations"
     ),
