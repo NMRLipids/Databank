@@ -1076,9 +1076,28 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
             and (key_sim.upper() not in lipids_dict.keys())
             and (key_sim.upper() not in molecule_ff_dict.keys())
         ):
-            raise YamlBadConfigException(
-                f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict'"
+            logger.error(
+                f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' : {key_sim.upper() in software_sim.keys()}"
             )
+            logger.error(
+                f"key_sim '{key_sim}' in molecules_dict : {key_sim.upper() in molecules_dict.keys()}"
+            )
+            logger.error(
+                f"key_sim '{key_sim}' in lipids_dict : {key_sim.upper() in lipids_dict.keys()}"
+            )
+            logger.error(
+                f"key_sim '{key_sim}' in molecule_ff_dict : {key_sim.upper() in molecule_ff_dict.keys()}"
+            )
+            raise YamlBadConfigException(
+                f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict', 'molecules_dict', 'lipids_dict' and 'molecule_ff_dict'"
+            )
+        elif (
+            key_sim.upper() not in software_sim.keys()
+        ):  # hotfix for unkown yaml keys. TODO improve check 4.1?
+            logger.warning(
+                f"ignoring yaml entry '{key_sim}', not found in '{sim['SOFTWARE'].lower()}_dict'"
+            )
+            continue
 
         # STEP 4.2.
         # entries with files information to contain file names in arrays
@@ -1116,6 +1135,7 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
                         ]  # IMPORTANT: Needs to be list of lists for now
                     files_tbd.extend(f[0] for f in sim[key_sim])
                     # print(f"sim[{key_sim}] = {sim[key_sim]}")
+
                 # STEP 4.3.
                 # Batuhan: In conf file only one psf/tpr/pdb file allowed each (can coexist), multiple TRJ files are ok
                 # TODO true for all sim software?

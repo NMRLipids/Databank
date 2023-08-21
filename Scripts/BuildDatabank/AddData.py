@@ -9,6 +9,7 @@ import yaml
 import logging
 import shutil
 import pprint
+import traceback
 from datetime import date
 from pathlib import Path
 from random import randint
@@ -106,16 +107,9 @@ if logger.isEnabledFor(logging.DEBUG):
 # validate yaml entries and return updated sim dict
 try:
     sim, files = parse_valid_config_settings(info_yaml)
-
-    logger.info(
-        f"all entries in simulation are understood and will be further processed"
-    )
-    logger.debug("valid sim entry keys:")
-    pp = pprint.PrettyPrinter(width=41, compact=True)
-    if logger.isEnabledFor(logging.DEBUG):
-        pp.pprint(sim)
 except KeyError as e:
-    logger.error(f"missing entry key in yaml config: {e}")
+    logger.error(f"missing entry key in yaml config: {e}, aborting")
+    logger.error(traceback.format_exc())
     quit()
 except Exception as e:
     logger.error(
@@ -123,6 +117,14 @@ except Exception as e:
     )
     logger.error(e)
     quit()
+else:
+    logger.info(
+        f"all entries in simulation are understood and will be further processed"
+    )
+    logger.debug("valid sim entry keys:")
+    pp = pprint.PrettyPrinter(width=41, compact=True)
+    if logger.isEnabledFor(logging.DEBUG):
+        pp.pprint(sim)
 
 # Create temporary directory where to download files and analyze them
 
