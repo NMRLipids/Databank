@@ -174,15 +174,20 @@ except HTTPError as e:
             f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?"
         )
     else:
-        logger.error(
-            f"Unexpected HTTPError {e.code} while trying to download the file '{e.url}'"
-        )
+        logger.error(f"HTTPError {e.code} while trying to download the file '{e.url}'")
     quit()
 except URLError as e:
     logger.error(
         f"couldn't resolve network adress: {e.reason}. Please check your internet connection."
     )
     quit()
+except Exception as e:
+    logger.error(
+        f"'{type(e).__name__}' while attempting to download ressources, aborting"
+    )
+    logger.error(traceback.format_exc())
+    quit()
+
 
 # ## Calculate hash of downloaded files
 
