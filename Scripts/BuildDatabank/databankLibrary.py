@@ -992,6 +992,8 @@ def download_resource_from_uri(
 
 
 class YamlBadConfigException(Exception):
+    """Custom Exception class for parsing the yaml configuration"""
+
     def __init__(self, *args, **kwargs) -> None:
         Exception.__init__(self, *args, **kwargs)
 
@@ -1005,7 +1007,8 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
         KeyError: Missing required key in info.yaml
         YamlBadConfigException: Incorrect or incompatible configuration
     Returns:
-        _type_: updated sim dict
+        dict: updated sim dict
+        list[str]: list of filenames to download
     """
 
     sim = copy.deepcopy(info_yaml)  # mutable objects are called by reference in Python
@@ -1745,6 +1748,15 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
 
 
 def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
+    """Calculates sha1 hash of given file using hashlib
+
+    Args:
+        fi (str): path to file
+        step (int, optional): file read bytes step. Defaults to 4096.
+
+    Returns:
+        str: sha1 filehash of 40 char length
+    """
     sha1_hash = hashlib.sha1()
     with open(fi, "rb") as f:
         with tqdm(total=math.ceil(os.path.getsize(fi) / step)) as pbar:
@@ -1761,10 +1773,11 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
     Args:
         sim (_type_): Processed simulation entries
         sim_hashes (_type_): file hashes needed for directory structure
-        out (_type_): output base path
+        out (str): output base path
 
     Raises:
         NotImplementedError: unsupported simulation software
+        OSError: Error while creating the output directory
 
     Returns:
         str: output directory
@@ -1794,12 +1807,6 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
         )
 
     # create directories
-    try:
-        os.makedirs(directory_path, exist_ok=True)
-    except OSError as e:
-        logger.error(
-            f"couldn't create output directory '{directory_path}': {e.args[1]}"
-        )
-        quit()
+    os.makedirs(directory_path, exist_ok=True)
 
     return directory_path
