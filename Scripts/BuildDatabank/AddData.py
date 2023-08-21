@@ -199,7 +199,9 @@ software_sim = software_dict[sim["SOFTWARE"].upper()]
 sha1_list_requied = []
 
 # Make empty dataframe with the desired columns
-df_files = pd.DataFrame(columns=["NAME", "TYPE", "REQUIRED", "HASH"], dtype=object)
+df_files = pd.DataFrame(
+    columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"], dtype=object
+)
 
 for key_sim, value_sim in sim_hashes.items():
     try:
@@ -217,6 +219,8 @@ for key_sim, value_sim in sim_hashes.items():
                 file_name = os.path.join(dir_tmp, file_provided[0])
                 logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
                 file_hash = calc_file_sha1_hash(file_name)
+                file_size_mb = f"{(os.path.getsize(file_name)/1024/1024):.2f}"
+
                 df_files = pd.concat(
                     [
                         df_files,
@@ -226,6 +230,7 @@ for key_sim, value_sim in sim_hashes.items():
                                     "NAME": file_provided[0],
                                     "TYPE": key_sim,
                                     "REQUIRED": is_required,
+                                    "SIZE_MB": file_size_mb,
                                     "HASH": file_hash,
                                 }
                             ]
@@ -242,7 +247,8 @@ for key_sim, value_sim in sim_hashes.items():
                 sim_hashes[key_sim] = files_list  # TODO Problematic
     except KeyError as e:  # It is notmal that fails for "ID" and "SOFTWARE"
         continue
-print(f"Summary of downloaded files: ")
+
+logger.info(f"Summary of downloaded files:{os.linesep}")
 print(df_files)
 print()
 
@@ -557,3 +563,5 @@ with open(outfileDICT, "w") as f:
         os.path.join(dir_tmp, "README.yaml"),
         os.path.join(directory_path, "README.yaml"),
     )
+
+logger.info("Script completed successfully!")
