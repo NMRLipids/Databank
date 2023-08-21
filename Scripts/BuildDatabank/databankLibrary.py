@@ -932,6 +932,7 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
             "Repository not validated. Please upload the data for example to zenodo.org"
         )
 
+
 def download_resource_from_uri(
     uri: str, dest: str, override_if_exists: bool = False
 ) -> None:
@@ -963,16 +964,20 @@ def download_resource_from_uri(
     if not override_if_exists and os.path.isfile(dest):
         try:
             socket.setdefaulttimeout(5)  # seconds
-            
+
             # compare filesize
             fi_size = urllib.request.urlopen(uri).length  # download size
             if fi_size == os.path.getsize(dest):
                 logger.info(f"{dest}: file already exists, skipping")
                 return
             else:
-                logger.warning(f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ...")
+                logger.warning(
+                    f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ..."
+                )
         except Exception as e:
-            logger.error(f"'{type(e).__name__}' while trying to verify filesize of '{fi_name}', redownloading...")
+            logger.error(
+                f"'{type(e).__name__}' while trying to verify filesize of '{fi_name}', redownloading..."
+            )
 
     # download
     try:
@@ -999,8 +1004,9 @@ def download_resource_from_uri(
 
 
 class YamlBadConfigException(Exception):
-      def __init__(self, *args, **kwargs) -> None:
-            Exception.__init__(self, *args, **kwargs)
+    def __init__(self, *args, **kwargs) -> None:
+        Exception.__init__(self, *args, **kwargs)
+
 
 def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
     """Parses, validates and updates dict entries from yaml configuration file.
@@ -1014,91 +1020,119 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
         _type_: updated sim dict
     """
 
-    sim = copy.deepcopy(info_yaml) # mutable objects are called by reference in Python
+    sim = copy.deepcopy(info_yaml)  # mutable objects are called by reference in Python
 
     # STEP 1 - check supported simulation software
-    if 'SOFTWARE' not in sim: raise KeyError("'SOFTWARE' Parameter missing in yaml")
+    if "SOFTWARE" not in sim:
+        raise KeyError("'SOFTWARE' Parameter missing in yaml")
 
-    if sim['SOFTWARE'].upper() in software_dict.keys():
+    if sim["SOFTWARE"].upper() in software_dict.keys():
         logger.info(f"Simulation uses supported software '{sim['SOFTWARE'].upper()}'")
     else:
-        raise YamlBadConfigException(f"Simulation uses unsupported software '{sim['SOFTWARE'].upper()}'")
-    
-    software_sim = software_dict[sim['SOFTWARE'].upper()] # related to dicts in this file 
+        raise YamlBadConfigException(
+            f"Simulation uses unsupported software '{sim['SOFTWARE'].upper()}'"
+        )
+
+    software_sim = software_dict[
+        sim["SOFTWARE"].upper()
+    ]  # related to dicts in this file
 
     # STEP 2 - check required keys defined by sim software used
     software_required_keys = [k for k, v in software_sim.items() if v["REQUIRED"]]
 
     # are ALL required keys are present in sim dict and defined (not of NoneType) ?
-    if not all((k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys):
-          missing_keys = [k for k in list(sim.keys()) if k not in software_required_keys]
-          raise YamlBadConfigException(f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or not defined in conf file: {', '.join(missing_keys)}")
-    
-    logger.debug(f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present")
+    if not all(
+        (k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys
+    ):
+        missing_keys = [k for k in list(sim.keys()) if k not in software_required_keys]
+        raise YamlBadConfigException(
+            f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or not defined in conf file: {', '.join(missing_keys)}"
+        )
+
+    logger.debug(
+        f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present"
+    )
 
     # STEP 3 - check working directory
-    if 'DIR_WRK' not in sim: raise KeyError("'DIR_WRK' Parameter missing in yaml")
-    dir_wrk = sim['DIR_WRK']
-    
+    if "DIR_WRK" not in sim:
+        raise KeyError("'DIR_WRK' Parameter missing in yaml")
+    dir_wrk = sim["DIR_WRK"]
+
     # STEP 4 - Check that all entry keys provided for each simulation are valid
     files_tbd = []
 
     #   loop config entries
     for key_sim, value_sim in sim.items():
-        
-        logger.debug(f"processing entry: sim['{key_sim}'] = {str(value_sim)}")                  
+        logger.debug(f"processing entry: sim['{key_sim}'] = {str(value_sim)}")
 
-        if key_sim.upper() in "SOFTWARE": # skip 'SOFTWARE' entry
+        if key_sim.upper() in "SOFTWARE":  # skip 'SOFTWARE' entry
             continue
 
         # STEP 4.1.
-        #Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
-        if ((key_sim.upper() not in software_sim.keys()) and 
-            (key_sim.upper() not in molecules_dict.keys()) and 
-            (key_sim.upper() not in lipids_dict.keys()) and 
-            (key_sim.upper() not in molecule_ff_dict.keys())):
-            raise YamlBadConfigException(f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict'")
+        # Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
+        if (
+            (key_sim.upper() not in software_sim.keys())
+            and (key_sim.upper() not in molecules_dict.keys())
+            and (key_sim.upper() not in lipids_dict.keys())
+            and (key_sim.upper() not in molecule_ff_dict.keys())
+        ):
+            raise YamlBadConfigException(
+                f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict'"
+            )
 
-        # STEP 4.2. 
+        # STEP 4.2.
         # entries with files information to contain file names in arrays
-        if 'TYPE' in software_sim[key_sim]:
-            if "file" in software_sim[key_sim]['TYPE']: # entry_type
-                logger.debug(f"-> found '{key_sim}:{software_sim[key_sim]}' of 'TYPE' file") # DEBUG
+        if "TYPE" in software_sim[key_sim]:
+            if "file" in software_sim[key_sim]["TYPE"]:  # entry_type
+                logger.debug(
+                    f"-> found '{key_sim}:{software_sim[key_sim]}' of 'TYPE' file"
+                )  # DEBUG
 
                 if value_sim is None:
                     logger.debug(f"entry '{key_sim}' has NoneType value, skipping")
                 # already a list -> ok
-                elif isinstance(value_sim, list): 
+                elif isinstance(value_sim, list):
                     logger.debug(f"value_sim '{value_sim}' is already a list, skipping")
                     files_tbd.extend(value_sim)
                 else:
                     value_sim_splitted = value_sim.split(";")
 
                     if len(value_sim_splitted) == 0:
-                        raise YamlBadConfigException(f"found no file to download for entry '{key_sim}:{software_sim[key_sim]}'")
+                        raise YamlBadConfigException(
+                            f"found no file to download for entry '{key_sim}:{software_sim[key_sim]}'"
+                        )
                     # in case there are multiple files for one entry
                     elif len(value_sim_splitted) > 1:
                         files_list = []
                         for file_provided in value_sim.split(";"):
                             files_list.append([file_provided.strip()])
-                        sim[key_sim] = files_list # replace ; separated string with list
+                        sim[
+                            key_sim
+                        ] = files_list  # replace ; separated string with list
                     else:
                         # print(f"value_sim_splitted = {value_sim_splitted}")
-                        sim[key_sim] = [[f.strip()] for f in value_sim_splitted] # IMPORTANT: Needs to be list of lists for now
+                        sim[key_sim] = [
+                            [f.strip()] for f in value_sim_splitted
+                        ]  # IMPORTANT: Needs to be list of lists for now
                     files_tbd.extend(f[0] for f in sim[key_sim])
                     # print(f"sim[{key_sim}] = {sim[key_sim]}")
                 # STEP 4.3.
                 # Batuhan: In conf file only one psf/tpr/pdb file allowed each (can coexist), multiple TRJ files are ok
                 # TODO true for all sim software?
                 # TODO add dict entry param "unique" instead?
-                if (key_sim.upper() in ["PSF", "TPR", "PDB"] and 
-                    len(sim[key_sim]) > 1):
-                      raise YamlBadConfigException(f"only one '{key_sim}' entry file allowed, but got {len(sim[key_sim])}: {sim[key_sim]}")
-                  
+                if key_sim.upper() in ["PSF", "TPR", "PDB"] and len(sim[key_sim]) > 1:
+                    raise YamlBadConfigException(
+                        f"only one '{key_sim}' entry file allowed, but got {len(sim[key_sim])}: {sim[key_sim]}"
+                    )
+
         else:
-              logger.warn(f"skipping key '{key_sim}': Not defined in software_sim library")
-    
-    logger.info(f"found {len(files_tbd)} ressources to download: {', '.join(files_tbd)}")
+            logger.warn(
+                f"skipping key '{key_sim}': Not defined in software_sim library"
+            )
+
+    logger.info(
+        f"found {len(files_tbd)} ressources to download: {', '.join(files_tbd)}"
+    )
 
     return sim, files_tbd
 
@@ -1269,12 +1303,6 @@ def calcDihedrals(lipids, DIHatoms):
                             except FileNotFoundError or OSError:
                                 continue
 
-                                #             #try:
-                                #             #    traj = mdtraj.load(xtcwhole, top = gro_name)
-                                #                 #print(lipid)
-                                #             #except FileNotFoundError or OSError:
-                                #             #    continue
-
                             mapping_file = (
                                 "../BuildDatabank/mapping_files/"
                                 + readme["MAPPING_DICT"][molname]
@@ -1286,19 +1314,14 @@ def calcDihedrals(lipids, DIHatoms):
                                 atom4 = read_mapping_file(mapping_file, DIHatoms[3])
                                 print(atom1, atom2, atom3, atom4)
                             except:
-                                # print(atom1 + " and " + atom2 + " not found in the mapping file.")
                                 print("Some atom not found in the mapping file.")
                                 continue
-
-                            # print(traj.residues.n_residues)
 
                             ags = []
                             orders = []
                             for residue in traj.select_atoms(
                                 "name {} {} {} {}".format(atom1, atom2, atom3, atom4)
                             ).residues:
-                                # print(residue.resid)
-                                # print(residue.atoms.names)
                                 atoms = traj.select_atoms(
                                     "name {} {} {} {} and resid {}".format(
                                         atom1, atom2, atom3, atom4, str(residue.resid)
@@ -1316,7 +1339,6 @@ def calcDihedrals(lipids, DIHatoms):
                                             np.where(atoms.names == atom4)[0][0],
                                         ]
                                     )
-                            # print(len(ags))
                             R = DihedralFromAtoms(ags, orders).run()
                             dihRESULT = R.angles.T
 
@@ -1326,12 +1348,6 @@ def calcDihedrals(lipids, DIHatoms):
                                 distSUM += np.histogram(
                                     i, np.arange(0, 361, 1), density=True
                                 )[0]
-                            # dihRESULT = [make_positive_angles(x) for x in dihRESULT ]
-                            # dist = [ 0 for i in range(len(dihRESULT))]
-                            # distSUM = [ 0 for i in range(360)]
-                            # for i in range(len(dihRESULT)):
-                            # 	dist[i] =  plt.hist(dihRESULT[i], range(360),density=True);
-                            # 	distSUM = np.add(distSUM,dist[i][0])
 
                             distSUM = [x / len(dihRESULT) for x in distSUM]
                             xaxis = (
@@ -1342,14 +1358,6 @@ def calcDihedrals(lipids, DIHatoms):
                                     1
                                 ][:-1]
                             ) / 2.0
-                            # xaxis = [ 0 for i in range(len(dist[0][1])-1)]
-                            # for i in range(len(dist[0][1])-1):
-                            # 	xaxis[i]=(dist[0][1][i])
-
-                            # plt.plot(xaxis,distSUM,color=colors[molname], label = readme.get('SYSTEM'))[0]
-                            # plt.legend()
-                            # plt.xlabel("Angle (°)")
-                            # plt.show()
 
                             dihedralFOLDERS = subdir.replace("Simulations", "dihedral")
                             os.system("mkdir -p {}".format(dihedralFOLDERS))
@@ -1376,7 +1384,6 @@ def calcDihedrals(lipids, DIHatoms):
                                     str(xaxis[i]) + " " + str(distSUM[i]) + "\n"
                                 )
                             outfile.close()
-                            # plt.close()
 
 
 #######################ORDER PARAMETERS######################################
@@ -1474,7 +1481,6 @@ class OrderParameter:
         calculates Order Parameter according to equation
         S = 1/2 * (3*cos(theta)^2 -1)
         """
-        # print(atoms)
         vec = atoms[1].position - atoms[0].position
         d2 = np.square(vec).sum()
 
@@ -1562,38 +1568,18 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         op.selection = selection
 
     # go through trajectory frame-by-frame
-    #    #Nres=len(op.selection)
-    # Nres = len(op.selection)
     Nframes = len(mol.trajectory)
-    # print(Nres,Nframes)
     for op in ordPars:
         Nres = len(op.selection)
         op.traj = [0] * Nres
-    #        op.traj=[0]*Nres
-    #        if len(op.traj) == 0:
-    #            print(op.atAname + " " + op.atBname)
-    #        print("op.traj length " + str(len(op.traj)))
 
     for frame in mol.trajectory:
         for op in ordPars:  # .values():
             Nres = len(op.selection)
             for i in range(0, Nres):
-                #             for i, op in enumerate(ordPars,1):
                 residue = op.selection[i]
-                #                print(residue)
                 S = op.calc_OP(residue)
-                # print(S)
-                #                    print(op.atAname + " " + op.atBname)
-                #                    print(i)
-                #                op.traj.append(S/Nframes)
                 op.traj[i] = op.traj[i] + S / Nframes
-            # op.traj.append(np.mean(tmp))
-
-        # print "--", mol.atoms[0].position
-
-
-#    for op in ordPars:
-#        op.traj=op.traj/Nframes
 
 
 def parse_op_input(mapping_file, lipid_name):
@@ -1601,14 +1587,6 @@ def parse_op_input(mapping_file, lipid_name):
     atomC = []
     atomH = []
     resname = lipid_name
-
-    #    try:
-    #    with open(fname,"r") as f:
-    #        for ind, line in enumerate(f,1):
-    #            if line.startswith("#Whole molecules"):
-    #                print(getline(f.name, ind + 1).split())
-    #                resname = getline(f.name, ind + 1).split()[1]
-    #                break
 
     mapping_dict = {}
     with open("../BuildDatabank/mapping_files/" + mapping_file, "r") as yaml_file:
@@ -1641,7 +1619,6 @@ def parse_op_input(mapping_file, lipid_name):
             or regexp3_H.search(mapping_key)
         ):
             atomH = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-        #            print(atomH)
         else:
             atomC = []
             atomH = []
@@ -1651,36 +1628,6 @@ def parse_op_input(mapping_file, lipid_name):
             #               print(resname + " " + atomH[1])
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])
             ordPars.append(op)
-
-    #    with open(fname, "r") as f:
-    #        for line in f.readlines():
-    #            if not line.startswith("#"):
-    #                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-    #                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-    #                regexp3_H = re.compile(r'M_C[0-9]*H[0-9]*_M')
-    #                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-    #                regexp2_C = re.compile(r'M_G[0-9]_M')
-    #                regexp3_C = re.compile(r'M_C[0-9]_M')
-
-    #                if regexp1_C.search(line) or regexp2_C.search(line) or regexp3_C.search(line):
-    #                    atomC = line.split()
-    #                    atomH = []
-    #                elif regexp1_H.search(line) or regexp2_H.search(line) or regexp3_H.search(line):
-    #                    atomH = line.split()
-    #                    if len(line.split())> 2:
-    #                        resname = line.split()[2]
-    #                else:
-    #                    atomC = []
-    #                    atomH = []
-
-    #                if atomH:
-    #                    items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-    #                    print(resname + " " + atomH[1])
-    #                    op = OrderParameter(resname, items[0], items[1], items[2], items[3])
-    #                    ordPars.append(op)
-    #    except:
-    #        inpf=opts.inp_fname
-    #        raise RuntimeError("Couldn't read input file >> {inpf} <<")
     return ordPars
 
 
@@ -1716,18 +1663,12 @@ def parse_op_input(mapping_file, lipid_name):
 def find_OP(inp_fname, top_fname, traj_fname, lipid_name):
     ordPars = parse_op_input(inp_fname, lipid_name)
 
-    #   for file_name in os.listdir(os.getcwd()):
-    #       if file_name.startswith(traj_fname):
-    #           trajs.append(file_name)
-
     read_trajs_calc_OPs(ordPars, top_fname, traj_fname)
 
     return ordPars
 
 
 #######################################################################################
-# Anne: Added calc_angle from https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py#Anne: Added calc_angle from https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py
-# Anne: removed self from function arguments
 
 
 def calc_angle(atoms, com):
@@ -1760,7 +1701,6 @@ def calc_z_dim(gro):
 
 def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
     mol = mda.Universe(top_fname, traj_fname)
-    #    z_dim = calc_z_dim(gro_fname)
 
     selection = mol.select_atoms(
         "resname " + molname + " and (name " + atoms[0] + ")",
@@ -1774,7 +1714,6 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
     Nframes = len(mol.trajectory)
     angles = np.zeros((Nres, Nframes))
 
-    #    sumsResAngles = [0]*Nres
     resAverageAngles = [0] * Nres
     resSTDerror = [0] * Nres
     j = 0
@@ -1782,12 +1721,8 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
     for frame in mol.trajectory:
         for i in range(0, Nres):
             residue = selection[i]
-            # print(residue)
             angles[i, j] = calc_angle(residue, com[2])
         j = j + 1
-    #        sumsResAngles = map(add,sumsResAngles, frameAngles)
-
-    #    resAverageAngles = [x / Nframes for x in sumsResAngles]
     for i in range(0, Nres):
         resAverageAngles[i] = sum(angles[i, :]) / Nframes
         resSTDerror[i] = np.std(angles[i, :])
@@ -1795,32 +1730,22 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
     totalAverage = sum(resAverageAngles) / Nres
     totalSTDerror = np.std(resAverageAngles) / np.sqrt(Nres)
 
-    # standard errors
-
-    #    for i in range(0,Nres):
-    #        residue = selection[i]
-    #        PNangles = []
-    #        for frame in mol.trajectory:
-    #            PNangle = calc_angle(residue)
-    #            PNangles.append(PNangle)
-    #
-    #        averageAngle = sum(PNangles) / Nframes
-    #        resAveragePNangles.append(averageAngle)
-
     return angles, resAverageAngles, totalAverage, totalSTDerror
 
 
 ###############################################################################################################
 
+
 def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
     sha1_hash = hashlib.sha1()
     with open(fi, "rb") as f:
-        with tqdm(total=math.ceil(os.path.getsize(fi)/step)) as pbar:
+        with tqdm(total=math.ceil(os.path.getsize(fi) / step)) as pbar:
             # Read and update hash string value in blocks of 4K
             for byte_block in iter(lambda: f.read(step), b""):
                 sha1_hash.update(byte_block)
                 pbar.update(1)
     return sha1_hash.hexdigest()
+
 
 def create_databank_directories(sim, sim_hashes, out) -> str:
     """create nested output directory structure to save results
@@ -1850,21 +1775,23 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
     else:
         raise NotImplementedError(f"sim software '{sim['SOFTWARE']}' not supported")
 
-    directory_path = os.path.join(
-        out, head_dir, sub_dir1, sub_dir2, sub_dir3
-    )
+    directory_path = os.path.join(out, head_dir, sub_dir1, sub_dir2, sub_dir3)
 
     logger.debug(f"output_dir = {directory_path}")
 
     # destination directory is not empty
     if os.path.exists(directory_path) and os.listdir(directory_path) != 0:
-        logger.warning(f"output directory '{directory_path}' is not empty. Data may be overriden.")
+        logger.warning(
+            f"output directory '{directory_path}' is not empty. Data may be overriden."
+        )
 
     # create directories
     try:
         os.makedirs(directory_path, exist_ok=True)
     except OSError as e:
-        logger.error(f"couldn't create output directory '{directory_path}': {e.args[1]}")
+        logger.error(
+            f"couldn't create output directory '{directory_path}': {e.args[1]}"
+        )
         quit()
 
     return directory_path
