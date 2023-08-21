@@ -313,6 +313,7 @@ finally:
         logger.error(f"'{gro}' could not be found, aborting")
         quit()
 
+# TODO refactor this
 try:
     groFORu0 = os.path.join(dir_tmp, sim["GRO"][0][0])
     logger.debug(groFORu0)
@@ -531,17 +532,24 @@ sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
 # # Save to databank
 
-directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
+try:
+    directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
+except NotImplementedError as e:
+    logger.error(e)
+    quit()
+except OSError as e:
+    logger.error(f"couldn't create output directory: {e.args[1]}")
+    quit()
+
+logger.info(f"saving results to '{directory_path}'")
 
 # copy previously downloaded files
-logger.info("copying previously downloaded files to databank...")
+logger.info("copying previously downloaded files ...")
 shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
 shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
 
 # dictionary saved in yaml format
 outfileDICT = os.path.join(dir_tmp, "README.yaml")
-
-logger.info(f"Writing the README.yaml dictionary to '{directory_path}'")
 
 with open(outfileDICT, "w") as f:
     yaml.dump(sim, f, sort_keys=False)
