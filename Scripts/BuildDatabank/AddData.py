@@ -195,7 +195,6 @@ sha1_list_requied = []
 df_files = pd.DataFrame(columns=["NAME", "TYPE", "REQUIRED", "HASH"], dtype=object)
 
 for key_sim, value_sim in sim_hashes.items():
-    # print(f"sim_hashes['{key_sim}'] = {value_sim}")
     try:
         entry_type = software_sim[key_sim]["TYPE"]
         if "file" in entry_type:
@@ -227,15 +226,6 @@ for key_sim, value_sim in sim_hashes.items():
                     ],
                     ignore_index=True,
                 )
-                # df_files = df_files.append(
-                #     {
-                #         "NAME": file_provided[0],
-                #         "TYPE": key_sim,
-                #         "REQUIRED": is_required,
-                #         "HASH": file_hash,
-                #     },
-                #     ignore_index=True,
-                # )
                 files_list.append([file_provided[0], file_hash])
 
                 # Find the keys of the required files to calculate the master_hash
@@ -248,15 +238,10 @@ for key_sim, value_sim in sim_hashes.items():
 print(f"{os.linesep} Summary of downloaded files: ")
 print(df_files)
 
-# print("\n{0}\n".format(sha1_list_requied))
-
 # Calculate the hash of a file contaning the hashes of each of the required files
 # This should be always invariant as it will be used unique identifier for a simualtion
 # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
-# print(sim_hashes)
 
-
-# Anne:Read molecule numbers from tpr or gro file.
 # Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre
 # of mass the membrane each the centre of mass of a lipid molecule is.
 # If a lipid molecule is split so that headgroup and tails are their own residues, the centre of mass of the
@@ -273,7 +258,6 @@ logger.info(
 top = ""
 traj = ""
 
-# OTHER SOFTWARES THAN GROMACS!!!!
 if sim["SOFTWARE"] == "gromacs":
     top = os.path.join(dir_tmp, sim["TPR"][0][0])
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
@@ -285,8 +269,6 @@ elif sim["SOFTWARE"] == "openMM":
 leaflet1 = 0  # total number of lipids in upper leaflet
 leaflet2 = 0  # total number of lipids in lower leaflet
 
-# u = Universe(top, traj)
-# u.atoms.write(dir_tmp+'/frame0.gro', frames=u.trajectory[[0]]) #write first frame into gro file
 
 gro = os.path.join(dir_tmp, "frame0.gro")
 NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
@@ -295,7 +277,6 @@ try:
     u = Universe(top, traj)
     u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
 except:
-    # conf = str(dir_tmp) + '/conf.gro'
     logger.info(
         "Generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version"
     )
@@ -304,8 +285,6 @@ except:
         os.system(
             "echo System | trjconv -s " + top + " -f " + traj + " -dump 22000 -o " + gro
         )
-        # os.system('echo System | trjconv -s '+ top + ' -f '+ traj + ' -o ' + NewTraj)
-        # u = Universe(gro, NewTraj)
     else:
         os.system(
             "echo System | gmx trjconv -s " + top + " -f " + traj + " -dump 0 -o " + gro
@@ -346,24 +325,11 @@ for key_mol in lipids_dict:
             else:
                 selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                 break
-    #       with open('./mapping_files/'+m_file,"r") as f:
-    #           for line in f:
-    #               if len(line.split()) > 2 and "Individual atoms" not in line:
-    #                   selection = selection + "(resname " + line.split()[2] + " and name " + line.split()[1] + ") or "
-    #               elif "Individual atoms" in line:
-    #                   continue
-    #               else:
-    #                   selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-    #                   #print(selection)
-    #                   break
     selection = selection.rstrip(" or ")
-    # print("selection    " + selection)
     molecules = u0.select_atoms(selection)
-    # print("molecules")
-    # print(molecules)
     if molecules.n_residues > 0:
         lipids.append(u0.select_atoms(selection))
-        # print(lipids)
+
 # join all the selected the lipids together to make a selection of the entire membrane and calculate the
 # z component of the centre of mass of the membrane
 membrane = u0.select_atoms("")
@@ -371,8 +337,6 @@ R_membrane_z = 0
 if lipids != []:
     for i in range(0, len(lipids)):
         membrane = membrane + lipids[i]
-        # print("membrane")
-        # print(membrane)
     R_membrane_z = membrane.center_of_mass()[2]
 logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
 
@@ -401,16 +365,6 @@ for key_mol in lipids_dict:
             else:
                 selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                 break
-
-    #        with open('./mapping_files/'+m_file,"r") as f:
-    #            for line in f:
-    #                if len(line.split()) > 2 and "Individual atoms" not in line:
-    #                    selection = selection + "resname " + line.split()[2] + " and name " + line.split()[1] + " or "
-    #                elif "Individual atoms" in line:
-    #                    continue
-    #                else:
-    #                    selection = "resname " + sim['COMPOSITION'][key_mol]['NAME']
-    #                    break
     selection = selection.rstrip(" or ")
     logger.info(selection)
     molecules = u0.select_atoms(selection)
@@ -422,10 +376,9 @@ for key_mol in lipids_dict:
 
             if R[2] - R_membrane_z > 0:
                 leaflet1 = leaflet1 + 1
-                # print('layer1  ' + str(leaflet1))
             elif R[2] - R_membrane_z < 0:
                 leaflet2 = leaflet2 + 1
-                # print('layer2  ' + str(leaflet2))
+
     try:
         sim["COMPOSITION"][key_mol]["COUNT"] = [leaflet1, leaflet2]
     except KeyError:
@@ -470,9 +423,7 @@ sim["TRJLENGTH"] = trj_length
 if sim["SOFTWARE"] == "gromacs":
     file1 = os.path.join(dir_tmp, "tpr.txt")
 
-    logger.info(
-        "Exporting information with gmx dump"
-    )  # need to get temperature from trajectory not tpr !!!
+    logger.info("Exporting information with gmx dump")
     if (
         "WARNINGS" in sim
         and "GROMACS_VERSION" in sim["WARNINGS"]
@@ -488,19 +439,6 @@ if sim["SOFTWARE"] == "gromacs":
         for line in tpr_info:
             if TemperatureKey in line:
                 sim["TEMPERATURE"] = float(line.split()[1])
-# read temperature from xml or inp
-# elif sim['SOFTWARE'] == 'openMM':
-##Use parser written by batuhan to read inp and xml files
-#    for key in ['INP','XML']:
-#        try:
-#            file1 = str(dir_tmp) + '/' + sim[key][0][0]
-#        except KeyError:
-#            print(key + ' file does not exist')
-#            continue
-#        else:
-#            type = key.lower()
-#            sim['TEMPERATURE'] = openmm_parser.openmmParser(file1,type).temperature
-#            break
 
 logger.info("Parameters read from input files:")
 logger.info(f"TEMPERATURE: {str(sim['TEMPERATURE'])}")
@@ -534,14 +472,6 @@ for key_mol in all_molecules:
             else:
                 mapping_file_length += 1
 
-    # if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
-    #    lines = open(mapping_file).readlines(  )
-    #    mapping_file_length = 0
-    #    for line in lines:
-    #        if 'H' in line.split(" ")[0]:
-    #            continue
-    #        else:
-    #            mapping_file_length += 1
     else:
         mapping_file_length = len(mapping_dict.keys())
 
@@ -551,20 +481,6 @@ for key_mol in all_molecules:
         )
     except:
         continue
-#    if sim.get('UNITEDATOM_DICT') and not 'SOL' in key_mol:
-#        lines = open(mapping_file).readlines(  )
-#        mapping_file_length = 0
-#        for line in lines:
-#            if 'H' in line:
-#                continue
-#            else:
-#                mapping_file_length += 1
-#    else:
-#        mapping_file_length = len(open(mapping_file).readlines(  ))
-#    try:
-#        number_of_atoms += np.sum(sim['COMPOSITION'][key_mol]['COUNT']) * mapping_file_length
-#    except:
-#        continue
 
 
 if number_of_atoms != number_of_atomsTRJ:
@@ -594,7 +510,6 @@ logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
 sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
 # # Save to databank
-# BATUHAN: add openmm parser
 
 directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
 
@@ -610,7 +525,6 @@ logger.info(f"Writing the README.yaml dictionary to '{directory_path}'")
 
 with open(outfileDICT, "w") as f:
     yaml.dump(sim, f, sort_keys=False)
-    # why not dump the same file to directory path ?
     shutil.copyfile(
         os.path.join(dir_tmp, "README.yaml"),
         os.path.join(directory_path, "README.yaml"),
