@@ -297,10 +297,15 @@ except Exception as e:
     )
     if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
         logger.debug(
-            f"executing 'echo System | trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
+            f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
         )
         os.system(
-            "echo System | trjconv -s " + top + " -f " + traj + " -dump 22000 -o " + gro
+            "echo System | gmx trjconv -s "
+            + top
+            + " -f "
+            + traj
+            + " -dump 22000 -o "
+            + gro
         )
     else:
         logger.debug(
