@@ -839,6 +839,21 @@ import yaml
 
 
 class databank:
+    """ After intialized, this class contains the list of simulations in the NMR lipids databank. 
+    
+    As an argument, it takes the local location of /Data/Simulations/ folder.
+    
+    Example usage to loop over systems: 
+
+    path = '../../Data/Simulations/'
+    db_data = databank(path)
+    systems = db_data.get_systems()
+
+    for system in systems:
+       print(system)
+    
+
+    """
     def __init__(self, path=r"../../Data/Simulations/"):
         self.path = path
         self.systems = []
