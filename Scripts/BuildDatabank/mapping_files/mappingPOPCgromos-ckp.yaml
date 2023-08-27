@@ -149,6 +149,9 @@ M_G1C17H1_M:
   ATOMNAME: H501
   FRAGMENT: sn-1
 M_G1C17H2_M:
+  ATOMNAME: H502
+  FRAGMENT: sn-1
+M_G1C17H3_M:
   ATOMNAME: H503
   FRAGMENT: sn-1
 M_G2_M:
@@ -159,7 +162,7 @@ M_G2H1_M:
   FRAGMENT: glycerol backbone
 M_G2O1_M:
   ATOMNAME: O14
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2C2_M:
   ATOMNAME: C15
   FRAGMENT: sn-2
@@ -327,7 +330,7 @@ M_G3H2_M:
   FRAGMENT: glycerol backbone
 M_G3O1_M:
   ATOMNAME: O11
-  FRAGMENT: headgroup
+  FRAGMENT: glycerol backbone
 M_G3P2_M:
   ATOMNAME: P8
   FRAGMENT: headgroup

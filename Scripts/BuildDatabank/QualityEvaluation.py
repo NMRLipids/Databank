@@ -15,6 +15,7 @@ from random import randint
 from matplotlib import cm
 #from scipy.stats import norm
 import scipy.stats
+import scipy.signal
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
@@ -79,8 +80,14 @@ def prob_S_in_g(OP_exp, exp_error, OP_sim, op_sim_sd):
     #
     #
     #P_S = -scipy.stats.norm.sf(b, loc=OP_sim, scale=op_sim_sd) + scipy.stats.norm.sf(a, loc=OP_sim, scale=op_sim_sd)
-    P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
-
+    #P_S = -scipy.stats.t.sf(b, df=1, loc=OP_sim, scale=op_sim_sd) + scipy.stats.t.sf(a, df=1, loc=OP_sim, scale=op_sim_sd)
+    #print(P_S)
+    
+    A = (OP_sim-a)/op_sim_sd
+    B = (OP_sim-b)/op_sim_sd
+    P_S = scipy.stats.t.sf(B, df=1, loc=0, scale=1) - scipy.stats.t.sf(A, df=1, loc=0, scale=1)
+    #print(A,B,P_S)
+    
     if math.isnan(P_S) :
         return P_S
 
@@ -499,10 +506,72 @@ def calc_k_e(SimExpData):
     else:
         return ""
 
+
+
+def FormFactorMinFromData(FormFactor):
+    FFtmp = []
+    for i in FormFactor:
+        FFtmp.append(-i[1])
+
+    w = scipy.signal.savgol_filter(FFtmp, 31, 1)
+
+    #min = 1000
+    #iprev = FormFactor[0][1]
+    #iprevD = 0
+    minX = []
+    #for i in  w:
+        ##iD = i[1]-iprev
+        #if iD > 0 and iprevD < 0 and i[0] > 0.1:
+        #    minX.append(i[0])
+        #iprevD = i[1]-iprev
+        #iprev = i[1]
+
+    peak_ind = scipy.signal.find_peaks(w)
+
+    #print(FormFactor, FFtmp, w, peak_ind[0])
+    
+    for i in peak_ind[0]:
+        #print(i)
+        if FormFactor[i][0] > 0.1:
+            minX.append(FormFactor[i][0])
+
+    print(minX)
+    return(minX)
+    
+def formfactorQuality(simFFdata, expFFdata):
+    """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
+
+    # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
+    SimExpData = []   
+    for SimValues in simFFdata:
+        for ExpValues in expFFdata:
+            if np.abs(SimValues[0]-ExpValues[0]) < 0.0005: # and ExpValues[0] < 0.41:
+                SimExpData.append([ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]])
+
+    # Calculates the scaling factor for plotting
+    k_e = calc_k_e(SimExpData)
+
+    SimMin = FormFactorMinFromData(simFFdata)
+    ExpMin = FormFactorMinFromData(expFFdata)
+
+#    SQsum = 0
+#    for i in [0,1]:
+#        SQsum += (SimMin[i]-ExpMin[i])**2
+
+    SQsum = (SimMin[0]-ExpMin[0])**2
+    khi2 = np.sqrt(SQsum)*100
+    N = len(SimExpData)
+
+    print(SimMin, ExpMin, khi2)
+    
+    if N > 0:
+        return khi2, k_e
+    else:
+        return ""
     
 
 
-def formfactorQuality(simFFdata, expFFdata):
+def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
     """Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5 """
 
     # SAMULI: This creates a array containing experiments and simualtions with the overlapping x-axis values
@@ -525,7 +594,7 @@ def formfactorQuality(simFFdata, expFFdata):
         F_s = SimExpData[i][3]
         #print(SimExpData[i])
         
-        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / deltaF_e**2
+        sum1 = sum1 + (np.abs(F_s) - k_e*np.abs(F_e))**2 / (k_e*deltaF_e)**2
     
         khi2 = np.sqrt(sum1) / np.sqrt(N - 1)
 
@@ -633,7 +702,7 @@ for simulation in simulations:
     #fragment_quality_output = {}
     #system_qual_output = {}    
 
-    os.system('git rm ' + DATAdir + '/*uality.json')
+    #os.system('git rm ' + DATAdir + '/*uality.json')
 
    
     #Order Parameters 
@@ -873,7 +942,7 @@ for simulation in simulations:
     
     simFFdata = simulation.FFdata
 
-    if len(expFFpath) > 0:
+    if len(expFFpath) > 0 and len(simFFdata) > 0:
         ffQuality = formfactorQuality(simFFdata, expFFdata)
         outfile3 = DATAdir + '/FormFactorQuality.json'
         with open(outfile3,'w') as f:
