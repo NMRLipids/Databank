@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6943086
+
+SOFTWARE: gromacs
+TRJ: DOPC_323_medium.xtc
+TPR: DOPC_323_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: DOPC
+  MAPPING: mappingDOPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 256DOPC_12800SOL_323K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: DOPC_323_medium.cpt
+LOG:
+TOP: DOPC_medium.top
+GRO: DOPC_323_medium.gro

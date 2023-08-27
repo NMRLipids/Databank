@@ -1,12 +1,47 @@
-# User input
-The databank entries are given as yaml files locating in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/) with integer names.
-The dictionary variables that are used for indexing the data entries are described here.
-The necessary parameters required for the analyses are described first and are marked as ''compulsory''. 
-Because also other than compulsory parameters may be highly useful in upcycling the data, we strong recommend that all the possible parameters are given upon entry.
+# User input and content of README.yaml files
+README.yaml files in subfolders of [Data/Simulations/](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) contain all the essential information of the simulations in the NMRlipids databank. 
+These files are build based on information given in files locating in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/). 
+Each entry is in subfolder with integer name.
+The manually (compulsory and optional) entered and automatically exctracted information in the README.yaml files are listed in the table below.
+The necessary parameters required for the analyses are compulsory, but addition of also optional parameters is highly recommended whenever possible.
 
 The already existing info files in 
 subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/)
 serve as useful examples when preparing the new entry files.
+
+key | description | type  
+----|--------|------
+DOI | DOI from where the raw data is found | user given (compulsory) 
+SOFTWARE | Software used to run the simulation (e.g. Gromacs, Amber, NAMD, etc.) | 
+TRJ | Name of the trajectory file found from DOI | 
+TPR | Name of the topology file found from DOI (tpr file in the case of Gromacs) | 
+PREEQTIME | Pre-equilibrate time simulated before the uploaded trajectory in nanoseconds. For example, if you upload 100-200 ns part of total 200 ns simulation, this should value should be 100. | 
+TIMELEFTOUT | Equilibration period in the uploaded trajectory that should be discarded in analyses. For example, if you upload 0-200 ns part of total 200 ns simulation where the first 100 ns should be considered as an equilibration, this value should be 100. 
+COMPOSITION | Molecules names used in the simulation and corresponding mapping files. For more detailed description see below. | 
+DIR\_WRK | Temporary working directory in your local computer. 
+UNITEDATOM\_DICT | Information for constructing hydrogens for united atom simulations, empty for all atom simulations | 
+TYPEOFSYSTEM | Lipid bilayer or something else | 
+||
+PUBLICATION | Give reference to a publication(s) related to the data. | User given (optional)
+AUTHORS\_CONTACT | Name and email of the main author(s) of the data. | 
+SYSTEM | System description in the free text format | 
+SOFTWARE\_VERSION | Version of the used software | 
+FF | Name of the used force field | 
+FF\_SOURCE | Source of the force field parameters, e.g, CHARMM-GUI, webpage, citation to a publication, etc. | 
+FF\_DATE |  Date when force field parameters were accessed in the given source (day/month/year). | 
+FF{molename} | Molecule specific force field information, e.g., water model with FFSOL and sodium parameters with FFSOD. | 
+CPT | Name of the Gromacs checkpoint file. | 
+LOG | Name of the Gromacs log file. | 
+TOP | Name of the Gromacs top file. | 
+GRO | Name of the Gromacs gro file. | 
+||
+TRAJECTORY\_SIZE | Size of the trajectory file in bytes | automatically extracted data. 
+TRJLENGTH | Lenght of the trajectory (ps). | 
+TEMPERATURE | Temperature of the simulation. | 
+NUMBER\_OF\_ATOMS | Number of atoms in the simulation. | 
+DATEOFRUNNIG | Date when added into the databank | 
+EXPERIMENT | Potentially connected experimental data | 
+COMPOSITION | Numbers of lipid molecules (NPOPC, NPOPG, etc.) per membrane leaflet are calculated by determining on which side of the center of mass of the membrane the center of mass of the head group of each lipid molecule is located. Numbers of other molecules such as solvent and ions (NSOL, NPOT, NSOD, etc.) are read from the topology file. | 
 
 #### DOI (compulsory)
 Give the DOI identity for the location of simulation files. 
@@ -74,6 +109,7 @@ POPC |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPG |  1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoglycerol
 POPS | 1-palmitoyl-2-oleoyl-sn-glycero-3-phospho-L-serine
 POPE | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine
+PYPC | 1-(16:0)-2-(16:1$^\Delta9$)-sn-glycero-3-phosphocholine
 PAzePCprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine protonated
 PAzePCdeprot | 1-palmitoyl-2-azelaoyl-sn-glycero-3-phosphocholine deprotonated
 DMPC | 1,2-dimyristoyl-sn-glycero-3-phosphocholine
@@ -81,17 +117,25 @@ DPPC | 1,2-dipalmitoyl-sn-glycero-3-phosphocholine
 DPPE | 1,2-dipalmitoyl-sn-glycero-3-phosphoethanolamine
 DPPG | 1,2-dipalmitoyl-sn-glycero-3-phospho-(1'-rac-glycerol) (sodium salt)
 DEPC | 1,2-dierucoyl-sn-glycero-3-phosphocholine
+DRPC | 1,2-(14:1$^\Delta9$)-sn-glycero-3-phosphocholine
+DYPC | 1,2-(16:1$^\Delta9$)-sn-glycero-3-phosphocholine
 DLPC | 1,2-dilauroyl-sn-glycero-3-phosphocholine
 DLIPC| 1,2-dilinoleoyl-sn-glycero-3-phosphocholine
+DOG  | 1,2-dioleoyl-sn-glycerol
 DOPC | 1,2-dioleoyl-sn-glycero-3-phosphocholine
 DOPE | 1,2-dioleoyl-sn-glycero-3-phosphoethanolamine
 DDOPC| 1,2-didocosahexaenoyl-sn-glycero-3-phosphocholine
 DOPS | 1,2-dioleoyl-sn-glycero-3-phospho-L-serine
 DSPC | 1,2-distearoyl-sn-glycero-3-phosphocholine
 DAPC | 1,2-diarachidonoyl-sn-glycero-3-phosphocholine
+SLiPC | 1-(18:0)-2-(18:2 $^{\Delta9,12}$)-sn-glycero-3-phosphocholine 
+DMTAP | 1,2-dimyristoyl-3-trimethylammonium-propane
+SOPC | 1-stearoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPI | 
 SAPI | 
 SLPI | 
+SDG | 1-stearoyl-2-docosahexaenoyl-sn-glycerol
+SDPE | 1-stearoyl-2-docosahexaenoyl-sn-glycero-3-phosphoethanolamine
 CER  | N-palmitoyl-D-erythro-sphingosine
 CHOL | cholesterol 
 DCHOL | 18,19-di-nor-cholesterol
@@ -101,9 +145,9 @@ SOD | sodium ion
 CLA | chloride ion
 CAL | calcium ion 
 CES | caesium ion
+C20 | n-eicosane
 SOL | water 
     
-
 #### DIR\_WRK (compulsory)
 Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here. 
 

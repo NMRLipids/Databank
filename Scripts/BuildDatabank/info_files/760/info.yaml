@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.8000133
+
+SOFTWARE: openMM
+TRJ: traj.xtc
+PDB: step2_drude.psf
+PREEQTIME: 200
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmmPolarizable2023.yaml
+ SOL:
+  NAME: SWM4
+  MAPPING: mappingSWM4water.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSODcharmmPolarizable.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLAcharmmPolarizable.yaml
+ 
+DIR_WRK: /home/peptid/drude
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: POPC_1000_NaCl_CHARMMdrude2023_303K
+SOFTWARE_VERSION:
+
+FF: Charmm-Drude polarizable2023
+FF_SOURCE: https://doi.org/10.1021/acs.jctc.3c00203
+FF_DATE: 
+
+CHK:
+TOP:
+CRD:

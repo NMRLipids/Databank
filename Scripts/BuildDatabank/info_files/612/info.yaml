@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.7604627
+
+SOFTWARE: openMM
+TRJ: unwrapped_all_fixed_dt.xtc
+PDB: step2_drude.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEcharmmDrude1.yaml
+ SOL:
+  NAME: SWM4
+  MAPPING: mappingSWM4water.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: 72POPE_5040SOL_303K
+SOFTWARE_VERSION: 7.5.0
+
+FF: Charmm-Drude
+FF_SOURCE: initial structures from CHARMM-GUI v3.2.2
+FF_DATE: 3/22/21
+
+CHK:
+TOP:
+CRD:

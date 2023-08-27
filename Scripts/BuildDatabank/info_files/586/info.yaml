@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.34488
+
+SOFTWARE: gromacs
+TRJ: popcRUN_10-60ns.xtc
+TPR: popcRUN.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+ POPC: Orange_POPC
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCorange.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Ollila, O. H. Samuli; Määttä, Jukka; Monticelli, Luca
+
+SYSTEM: 72POPC_2880SOL_298K
+SOFTWARE_VERSION: 4.5
+
+FF: Orange
+FF_SOURCE: http://perso.ibcp.fr/luca.monticelli/research/index.html
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO:

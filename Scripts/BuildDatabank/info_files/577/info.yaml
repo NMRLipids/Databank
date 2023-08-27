@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6582985
+
+SOFTWARE: gromacs
+TRJ: popchydr44_0-500ns.xtc
+TPR: analyze.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPC-OPLS3e.yaml
+ SOL:
+  NAME: SPC
+  MAPPING: mappingwaterlipid14.yaml
+ 
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Milla Lindström
+
+SYSTEM: 200POPC_8859SOL_300K
+SOFTWARE_VERSION:
+
+FF: OPLS3e
+FF_SOURCE:
+FF_DATE:
+
+CPT: desmond_md_popc200lip500ns.cpt
+LOG:
+TOP: desmond_md_popc200lip500ns-in_converted.top
+GRO: desmond_md_popc200lip500ns-in_converted.gro

@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.14594
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+
+UNITEDATOM_DICT:
+ DPPC: GROMOS53A6L_DPPC
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCGROMOS53A6L.yaml
+ SOL:
+  NAME: SOL
+  MAPPING: mappingSPCwater.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/acs.jpcb.5b04878
+AUTHORS_CONTACT: Fuchs, Patrick F.J.
+
+SYSTEM: 128DPPC_5841SOL_323K
+SOFTWARE_VERSION: 4.0.7
+
+FF: Poger GROMOS 53A6_L
+FF_SOURCE: dx.doi.org/10.1002/jcc.21396
+FF_DATE:
+
+CPT:
+LOG:
+TOP: example_lipids.top
+GRO: em.gro

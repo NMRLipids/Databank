@@ -1,0 +1,71 @@
+DOI: 10.5281/zenodo.6656031
+
+
+
+SOFTWARE: gromacs
+
+TRJ: popcRUN2.trr
+
+TPR: popcRUN2.tpr
+
+PREEQTIME: 0
+
+TIMELEFTOUT: 0
+
+
+
+UNITEDATOM_DICT:
+
+  POPC: ChiuGromos_POPC
+
+
+
+COMPOSITION:
+
+ POPC:
+
+  NAME: POPC
+
+  MAPPING: mappingPOPCchiuGromos.yaml
+
+ SOL:
+
+  NAME: SOL
+
+  MAPPING: mappingSPCwater.yaml
+
+ 
+
+DIR_WRK: /home/ohs/NMRlipids/temp/
+
+
+
+PUBLICATION: http://dx.doi.org/10.1021/jp807056c
+
+AUTHORS_CONTACT: Ollila Samuli
+
+
+
+SYSTEM: 128POPC_3552SOL_298K
+
+SOFTWARE_VERSION: 4.5
+
+
+
+FF: Chiu Gromos
+
+FF_SOURCE: http://dx.doi.org/10.1021/jp807056c
+
+FF_DATE:
+
+
+
+CPT:
+
+LOG:
+
+TOP: popc.top
+
+GRO: popcRUN2.gro
+
+

@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.7591753
+
+SOFTWARE: openMM
+TRJ: wrapped_full_fixed_dt.xtc
+PDB: step2_charmm2omm.pdb
+PREEQTIME: 100
+TIMELEFTOUT: 100
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmmPolarizable.yaml
+ SOL:
+  NAME: SWM4
+  MAPPING: mappingSWM4water.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSODcharmmPolarizable.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLAcharmmPolarizable.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: 128POPC_6400SOL_51NaCl_303K
+SOFTWARE_VERSION: 7.4.1
+
+FF: Charmm-Drude polarizable; system has been equilibriated using Charmm36
+FF_SOURCE:
+FF_DATE:
+
+CHK:
+TOP:
+CRD:

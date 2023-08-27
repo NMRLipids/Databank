@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.17237
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 60
+
+UNITEDATOM_DICT:
+  DPPC: BergerOPLSAA-compatible_DPPC
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCbergerOPLSAA-compatible.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Määttä, Jukka
+
+SYSTEM: 72DPPC_2880SOL_323K_Berger
+SOFTWARE_VERSION: 5.1-beta
+
+FF: OPLSAA-compatible Berger-DPPC-06
+FF_SOURCE: 10.1088/0953--8984/18/28/S07
+FF_DATE:
+
+CPT: md.cpt
+LOG: md.log
+TOP: topol.top
+GRO: md.gro

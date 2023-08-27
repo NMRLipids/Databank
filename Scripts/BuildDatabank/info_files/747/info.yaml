@@ -1,0 +1,29 @@
+DOI: 10.5281/zenodo.7622838
+
+SOFTWARE: openMM
+TRJ: wrapped_full.xtc
+PDB: pope_charmm_last_frame.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEcharmm.yaml
+ SOL:
+  NAME: HOH
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: POPE_nosalt_at_303K_with_AMOEBA
+SOFTWARE_VERSION: v7.5.1
+
+FF: AMOEBA
+FF_SOURCE: OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in publication https://doi.org/10.1021/jacs.0c02394, original parameters  https://doi.org/10.1080/00268976.2018.1436201 
+FF_DATE:
+
