@@ -1,0 +1,38 @@
+DOI: 10.5281/zenodo.1129419
+
+SOFTWARE: gromacs
+TRJ: md-berger_DOPS_v2_400-500ns_skip10.xtc
+TPR: for-md-berger_DOPS_303K_v2.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  DOPS: Berger_DOPS
+
+COMPOSITION:
+ DOPS:
+  NAME: DOPS
+  MAPPING: mappingDOPSberger.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Thomas Piggot
+
+SYSTEM: 128DOPS_4480SOL_128SOD_303K_v2
+SOFTWARE_VERSION:
+
+FF: Berger
+FF_SOURCE: starting structure from the CHARMM-GUI with the appropriate hydrogen atoms removed
+FF_DATE:
+
+CPT:
+LOG:
+TOP:
+GRO: md-berger_DOPS_303K_v2.gro

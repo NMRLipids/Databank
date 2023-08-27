@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.3865283
+SOFTWARE: openMM
+TRJ:
+- - production_after_equilibration_400ns_nowater.dcd
+PDB:
+- - production_last_frame_nowater.pdb
+PREEQTIME: 100
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmmPolarizable.yaml
+    COUNT:
+    - 34
+    - 38
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: 72POPC_303K
+SOFTWARE_VERSION: 7.4.1
+FF: Charmm-Drude polarizable; system has been equilibriated using Charmm36
+FF_SOURCE: null
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 6708175668
+TRJLENGTH: 1955.62617642
+NUMBER_OF_ATOMS: 13968
+DATEOFRUNNING: 12/07/2022
+TYPEOFSYSTEM: lipid bilayer
+WARNINGS:
+  NOWATER: true
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
+ID: 562

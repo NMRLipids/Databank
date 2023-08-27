@@ -1,0 +1,44 @@
+DOI: 10.5281/zenodo.6992065
+SOFTWARE: gromacs
+TRJ:
+- - CHOL0_small.xtc
+TPR:
+- - CHOL0_small.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: PC
+    MAPPING: mappingPOPClipid17.yaml
+    COUNT:
+    - 32
+    - 32
+  SOL:
+    NAME: TP3
+    MAPPING: mappingTIP3Plipid17.yaml
+    COUNT: 3200
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen
+SYSTEM: Lipid17_POPC_S
+SOFTWARE_VERSION: 2021
+FF: Lipid17
+FF_SOURCE: null
+FF_DATE: null
+CPT:
+- - CHOL0_small.cpt
+LOG: null
+TOP:
+- - CHOL0_small.top
+TRAJECTORY_SIZE: 65954432
+TRJLENGTH: 1001000.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 18176
+DATEOFRUNNING: 17/10/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
+ID: 715

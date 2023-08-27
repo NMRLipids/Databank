@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.7586915
+SOFTWARE: openMM
+TRJ:
+- - wrapped_full_fixed_dt.xtc
+PDB:
+- - step2_charmm2omm.pdb
+PREEQTIME: 100
+TIMELEFTOUT: 100
+TEMPERATURE: 303
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmmPolarizable.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SWM4
+    MAPPING: mappingSWM4water.yaml
+    COUNT: 6400
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSODcharmmPolarizable.yaml
+    COUNT: 41
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLAcharmmPolarizable.yaml
+    COUNT: 41
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: 128POPC_6400SOL_41NaCl_303K
+SOFTWARE_VERSION: 7.4.1
+FF: Charmm-Drude polarizable; system has been equilibriated using Charmm36
+FF_SOURCE: null
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 22274156376
+TRJLENGTH: 513660.0
+NUMBER_OF_ATOMS: 56996
+DATEOFRUNNING: 08/02/2023
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
+ID: 733

@@ -1,0 +1,56 @@
+DOI: 10.5281/zenodo.30892
+SOFTWARE: gromacs
+TRJ:
+- - 015_popc_ulm_200.xtc
+TPR:
+- - run_200ns_gpu.tpr
+PREEQTIME: 5
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Ulmschneider_POPC
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCulmschneider.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 5120
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 12
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 12
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Girych Mykhailo; Ollila O. H. Samuli
+SYSTEM: 128POPC_5120SOL_12SOD_12CLA_298K
+SOFTWARE_VERSION: 5.0.3
+FF: Ulmschneider
+FFSOD: OPLS-AA
+FFCLA: OPLS-AA
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - confout.gro
+TRAJECTORY_SIZE: 1633953356
+TRJLENGTH: 200010.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 22040
+DATEOFRUNNING: 16/06/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
+ID: 444

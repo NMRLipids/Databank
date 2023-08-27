@@ -1,0 +1,52 @@
+DOI: 10.5281/zenodo.6943929
+SOFTWARE: gromacs
+TRJ:
+- - CHOL4_medium.xtc
+TPR:
+- - CHOL4_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCcharmm.yaml
+    COUNT:
+    - 128
+    - 128
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 17
+    - 15
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 14400
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Javanainen, Matti
+SYSTEM: 256DOPC_32CHOL_14400SOL_333K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: null
+CPT:
+- - CHOL4_medium.cpt
+LOG: null
+TOP:
+- - CHOL4_medium.top
+GRO:
+- - CHOL4_medium.gro
+TRAJECTORY_SIZE: 298074564
+TRJLENGTH: 1001000.0
+TEMPERATURE: 333.15
+NUMBER_OF_ATOMS: 80896
+DATEOFRUNNING: 20/09/2022
+TYPEOFSYSTEM: lipid bilayer
+ID: 647
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPC: {}
+    CHOL: {}
+  FORMFACTOR: {}

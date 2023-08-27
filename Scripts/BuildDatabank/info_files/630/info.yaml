@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6943413
+
+SOFTWARE: gromacs
+TRJ: DLIPC_medium.xtc
+TPR: DLIPC_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DLIPC:
+  NAME: DLIPC
+  MAPPING: mappingDLIPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 256DLIPC_12800SOL_333K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: DLIPC_medium.cpt
+LOG:
+TOP: DLIPC_medium.top
+GRO: DLIPC_medium.gro

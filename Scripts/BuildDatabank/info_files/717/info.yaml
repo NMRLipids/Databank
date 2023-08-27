@@ -1,0 +1,31 @@
+DOI: 10.5281/zenodo.7103807
+
+SOFTWARE: gromacs
+TRJ: OMPC_s.xtc
+TPR: OMPC_s.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+
+COMPOSITION:
+ POPC:
+  NAME: OMPC
+  MAPPING: mappingOMPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Matti Javanainen
+
+SYSTEM: OMPC_S
+SOFTWARE_VERSION: 2021
+
+FF: CHARMM36
+FF_SOURCE:
+FF_DATE:
+
+CPT: OMPC_s.cpt
+LOG: 
+TOP: OMPC_s.top

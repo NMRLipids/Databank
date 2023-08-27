@@ -11,7 +11,7 @@ EXPERIMENT:
 FF_SOURCE: NMRlipidsIV
 COMPOSITION:
   POPG:
-    NAME: POPG
+    NAME: PGR
     COUNT:
     - 44
     - 44
@@ -53,3 +53,4 @@ TRJ:
 - - 100-400ns.xtc
 TEMPERATURE: 298.0
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+ID: 417

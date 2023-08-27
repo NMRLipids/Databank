@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.1129419
+SOFTWARE: gromacs
+TRJ:
+- - md-berger_DOPS_v1_400-500ns_skip10.xtc
+TPR:
+- - for-md-berger_DOPS_303K_v1.tpr
+PREEQTIME: 400
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  DOPS: Berger_DOPS
+COMPOSITION:
+  DOPS:
+    NAME: DOPS
+    MAPPING: mappingDOPSberger.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 4480
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 128
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Thomas Piggot
+SYSTEM: 128DOPS_4480SOL_128SOD_303K_v1
+SOFTWARE_VERSION: null
+FF: Berger
+FF_SOURCE: starting structure from the CHARMM-GUI with the appropriate hydrogen atoms
+  removed
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO:
+- - md-berger_DOPS_303K_v1.gro
+TRAJECTORY_SIZE: 155266888
+TRJLENGTH: 100050.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 20864
+DATEOFRUNNING: 20/04/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPS: {}
+  FORMFACTOR: {}
+ID: 436

@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.209360
+SOFTWARE: openMM
+TRJ:
+- - traj_openMM.dcd
+PDB:
+- - traj_openMM_every1ns.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+COMPOSITION:
+  POPC:
+    NAME: POP
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 42
+    - 42
+  CHOL:
+    NAME: CLO
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 19
+    - 17
+  SOL:
+    NAME: TIP
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 4800
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 84POPC_36CHOL_4800SOL_303K
+SOFTWARE_VERSION: v7
+FF: CHARMM36 additive force field parameters
+FF_SOURCE: MacKerell lab website (http://mackerell.umaryland.edu/charmm_ff.shtml)
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 3399200276
+TRJLENGTH: 100000.00029814057
+NUMBER_OF_ATOMS: 28320
+DATEOFRUNNING: 08/07/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}
+ID: 137

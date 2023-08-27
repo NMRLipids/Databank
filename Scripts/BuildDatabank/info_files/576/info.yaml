@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.6778072
+
+SOFTWARE: gromacs 
+TRJ: run_pope_dog_lipid17-0to2100ns.xtc
+TPR: run_pope_dog_lipid17.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 100 
+
+UNITEDATOM_DICT:
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPElipid17_2.yaml
+ DOG:
+  NAME: DOG
+  MAPPING: mappingDOGlipid17.yaml
+ SOL: 
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
+AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
+
+SYSTEM: 9.4%DOGinPOPEwithLipid17
+SOFTWARE_VERSION: 18.6
+
+FF: Lipid17
+FF_SOURCE: Amber tools
+FF_DATE: 2019
+
+WARNINGS:
+  AMBIGUOUS_ATOMNAMES: [POPE]

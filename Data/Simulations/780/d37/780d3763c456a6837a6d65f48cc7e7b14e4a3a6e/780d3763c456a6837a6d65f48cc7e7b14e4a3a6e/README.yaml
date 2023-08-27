@@ -1,0 +1,41 @@
+DOI: 10.5281/zenodo.7916287
+SOFTWARE: openMM
+TRJ:
+- - popc3ns.xtc
+PDB:
+- - popc72_drude.psf
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmmPolarizable2023.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SWM4
+    MAPPING: mappingSWM4water.yaml
+    COUNT: 2239
+DIR_WRK: /home/sosamuli/temp/DataBank/
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: POPC_CHARMMdrude2023_303K
+SOFTWARE_VERSION: null
+FF: Charmm-Drude polarizable2023
+FF_SOURCE: null
+FF_DATE: null
+CHK: null
+TOP: null
+CRD: null
+TRAJECTORY_SIZE: 2217463352
+TRJLENGTH: 200000.0
+NUMBER_OF_ATOMS: 25163
+DATEOFRUNNING: 11/05/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 752
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2

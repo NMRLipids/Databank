@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.7602924
+
+SOFTWARE: openMM
+TRJ: traj.xtc
+PDB: last_frameT303K.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 310
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEcharmm.yaml
+ SOL:
+  NAME: HOH
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Samuli Ollila
+
+SYSTEM: POPE_310K
+SOFTWARE_VERSION:
+
+FF: AMOEBA
+FF_SOURCE: original parameters  https://doi.org/10.1080/00268976.2018.1436201 
+FF_DATE: 
+
+CHK:
+TOP:
+CRD:

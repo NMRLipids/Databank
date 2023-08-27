@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.7916494
+
+SOFTWARE: openMM
+TRJ: pope2ns.xtc
+PDB: pope72_drude.psf
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 308
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEcharmmDrude2023.yaml
+ SOL:
+  NAME: SWM4
+  MAPPING: mappingSWM4water.yaml
+ 
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: POPE_CHARMMdrude2023_308K
+SOFTWARE_VERSION:
+
+FF: Charmm-Drude polarizable2023
+FF_SOURCE:
+FF_DATE:
+
+CHK:
+TOP:
+CRD:

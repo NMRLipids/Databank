@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.7604842
+SOFTWARE: openMM
+TRJ:
+- - unwrapped_all_fixed_dt.xtc
+PDB:
+- - last_frame.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+COMPOSITION:
+  DOPC:
+    NAME: DOPC
+    MAPPING: mappingDOPCcharmm.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: HOH
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 2880
+  CAL:
+    NAME: CA
+    MAPPING: mappingCA.yaml
+    COUNT: 16
+  CLA:
+    NAME: Cl
+    MAPPING: mappingCl.yaml
+    COUNT: 32
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Kav, Batuhan
+SYSTEM: DOPC_450mM_CaCl2_at_303K_with_AMOEBA
+SOFTWARE_VERSION: v7.5.1
+FF: AMOEBA
+FF_SOURCE: OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in
+  publication https://doi.org/10.1021/jacs.0c02394, original parameters  https://doi.org/10.1080/00268976.2018.1436201
+FF_DATE: null
+TRAJECTORY_SIZE: 1493479544
+TRJLENGTH: 218400.0
+NUMBER_OF_ATOMS: 18624
+DATEOFRUNNING: 08/02/2023
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DOPC: {}
+  FORMFACTOR: {}
+ID: 741

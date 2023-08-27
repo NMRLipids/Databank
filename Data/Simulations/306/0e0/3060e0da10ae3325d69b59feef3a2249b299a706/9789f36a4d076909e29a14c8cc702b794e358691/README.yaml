@@ -9,23 +9,25 @@ TIMELEFTOUT: 0
 COMPOSITION:
   POPE:
     NAME: PE
+    MOLTYPE: system1
     MAPPING: mappingPOPElipid17.yaml
     COUNT:
     - 187
     - 187
   POPG:
     NAME: PGR
+    MOLTYPE: system2
     MAPPING: mappingPOPGlipid17.yaml
     COUNT:
     - 63
     - 63
   SOD:
     NAME: Na+
-    MAPPING: mappingNA+.yaml
+    MAPPING: mappingNa+.yaml
     COUNT: 176
   CLA:
     NAME: Cl-
-    MAPPING: mappingCL-.yaml
+    MAPPING: mappingCl-.yaml
     COUNT: 50
   SOL:
     NAME: WAT
@@ -54,3 +56,4 @@ EXPERIMENT:
     POPE: {}
     POPG: {}
   FORMFACTOR: {}
+ID: 458

@@ -1,0 +1,37 @@
+DOI: 10.5281/zenodo.6823118
+
+SOFTWARE: gromacs 
+TRJ: run_sdpe_dog_chol_lipid17_0-1us.xtc
+TPR: run_sdpe_dog_chol_lipid17.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 100 
+
+UNITEDATOM_DICT:
+
+COMPOSITION:
+ SDPE:
+  NAME: PE
+  MAPPING: mappingSDPElipid17.yaml
+ DOG:
+  NAME: DOG
+  MAPPING: mappingDOGlipid17.yaml
+ CHOL:
+  NAME: CHL
+  MAPPING: mappingCHOLESTEROLlipid14.yaml
+ SOL: 
+  NAME: SOL
+  MAPPING: mappingTIP3Pwater.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
+AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
+
+SYSTEM: DOGandCHOLinSDPEwithLipid17
+SOFTWARE_VERSION: 18.7
+
+FF: Lipid17
+FF_SOURCE: Amber tools
+FF_DATE: 2019
+
+

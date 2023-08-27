@@ -1,0 +1,56 @@
+DOI: 10.5281/zenodo.46152
+SOFTWARE: gromacs
+TRJ:
+- - md.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 60
+UNITEDATOM_DICT:
+  DPPC: BergerOPLSAA-compatible_DPPC
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCbergerOPLSAA-compatible.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 2778
+  SOD:
+    NAME: NA
+    MAPPING: mappingNA.yaml
+    COUNT: 51
+  CLA:
+    NAME: CL
+    MAPPING: mappingCL.yaml
+    COUNT: 51
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "M\xE4\xE4tt\xE4, Jukka"
+SYSTEM: 72DPPC_2778SOL_51SOD_51CLA_323K
+SOFTWARE_VERSION: 5.0.4
+FF: OPLSAA-compatible Berger-DPPC-06
+FFSOD: "\xC5qvist parameters"
+FFCLA: "\xC5qvist parameters"
+FF_SOURCE: 10.1088/0953--8984/18/28/S07
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - md.gro
+TRAJECTORY_SIZE: 262886084
+TRJLENGTH: 120020.0
+TEMPERATURE: 323.0
+NUMBER_OF_ATOMS: 12036
+DATEOFRUNNING: 20/04/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DPPC: {}
+  FORMFACTOR: {}
+ID: 20

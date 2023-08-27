@@ -1,0 +1,53 @@
+DOI: 10.5281/zenodo.6822850
+SOFTWARE: gromacs
+TRJ:
+- - run_pope_dog_chol_lipid17_0-1us.xtc
+TPR:
+- - run_pope_dog_chol_lipid17.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 100
+UNITEDATOM_DICT: null
+COMPOSITION:
+  POPE:
+    NAME: PE
+    MAPPING: mappingPOPElipid17.yaml
+    COUNT:
+    - 37
+    - 37
+  DOG:
+    NAME: DOG
+    MAPPING: mappingDOGlipid17.yaml
+    COUNT:
+    - 6
+    - 6
+  CHOL:
+    NAME: CHL
+    MAPPING: mappingCHOLESTEROLlipid14.yaml
+    COUNT:
+    - 21
+    - 21
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 6400
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
+AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen
+SYSTEM: DOGandCHOLinPOPEwithLipid17
+SOFTWARE_VERSION: 18.7
+FF: Lipid17
+FF_SOURCE: Amber tools
+FF_DATE: 2019
+TRAJECTORY_SIZE: 6096554608
+TRJLENGTH: 1000020.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 32950
+DATEOFRUNNING: 15/11/2022
+TYPEOFSYSTEM: lipid bilayer
+ID: 718
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE: {}
+    DOG: {}
+    CHOL: {}
+  FORMFACTOR: {}

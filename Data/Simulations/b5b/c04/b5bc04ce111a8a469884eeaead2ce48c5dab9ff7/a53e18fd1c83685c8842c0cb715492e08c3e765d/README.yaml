@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.34488
+SOFTWARE: gromacs
+TRJ:
+- - popcRUN_10-60ns.xtc
+TPR:
+- - popcRUN.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Orange_POPC
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCorange.yaml
+    COUNT:
+    - 36
+    - 36
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 2880
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: "Ollila, O. H. Samuli; M\xE4\xE4tt\xE4, Jukka; Monticelli, Luca"
+SYSTEM: 72POPC_2880SOL_298K
+SOFTWARE_VERSION: 4.5
+FF: Orange
+FF_SOURCE: http://perso.ibcp.fr/luca.monticelli/research/index.html
+FF_DATE: null
+CPT: null
+LOG: null
+TOP: null
+GRO: null
+TRAJECTORY_SIZE: 224597804
+TRJLENGTH: 50010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 12384
+DATEOFRUNNING: 16/06/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
+ID: 38

@@ -14,13 +14,13 @@ M_G1O1_M:
   FRAGMENT: glycerol backbone
 M_G1O1D_M:
   ATOMNAME: DO31
-  FRAGMENT: sn-1
+  FRAGMENT: glycerol backbone
 M_G1O1LPMC_M:
   ATOMNAME: LMPC
-  FRAGMENT: sn-1
+  FRAGMENT: glycerol backbone
 M_G1O1LPMD_M:
   ATOMNAME: LMPD
-  FRAGMENT: sn-1
+  FRAGMENT: glycerol backbone
 M_G1C2_M:
   ATOMNAME: C31
   FRAGMENT: sn-1
@@ -232,16 +232,16 @@ M_G2H1_M:
   FRAGMENT: glycerol backbone
 M_G2O1_M:
   ATOMNAME: O21
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2O1D_M:
   ATOMNAME: DO21
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2O1LPMA_M:
   ATOMNAME: LPMA
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2O1LPMB_M:
   ATOMNAME: LPMB
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2C2_M:
   ATOMNAME: C21
   FRAGMENT: sn-2
@@ -475,10 +475,10 @@ M_G3H2_M:
   FRAGMENT: glycerol backbone
 M_G3O1_M:
   ATOMNAME: O11
-  FRAGMENT: headgroup
+  FRAGMENT: glycerol backbone
 M_G3O1D_M:
   ATOMNAME: DO11
-  FRAGMENT: headgroup
+  FRAGMENT: glycerol backbone
 M_G3P2_M:
   ATOMNAME: P
   FRAGMENT: headgroup

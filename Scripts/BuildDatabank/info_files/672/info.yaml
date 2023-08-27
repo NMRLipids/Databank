@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.6943929
+
+SOFTWARE: gromacs
+TRJ: CHOL8_medium.xtc
+TPR: CHOL8_medium.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DOPC:
+  NAME: DOPC 
+  MAPPING: mappingDOPCcharmm.yaml
+ CHOL:
+  NAME: CHL1
+  MAPPING: mappingCHOLESTEROLcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 256DOPC_64CHOL_16000SOL_333K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: CHOL8_medium.cpt
+LOG:
+TOP: CHOL8_medium.top
+GRO: CHOL8_medium.gro

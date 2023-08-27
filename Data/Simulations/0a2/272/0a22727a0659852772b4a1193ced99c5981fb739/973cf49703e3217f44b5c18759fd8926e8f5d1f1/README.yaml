@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.1230170
+SOFTWARE: gromacs
+TRJ:
+- - traj10-50ns.trr
+TPR:
+- - topol_10-11.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: Berger_PLA
+COMPOSITION:
+  POPC:
+    NAME: PLA
+    MAPPING: mappingPOPCberger.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 3655
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1021/jp065424f
+AUTHORS_CONTACT: Ollila O. H. Samuli
+SYSTEM: POPClipidbilayer_310K_Berger
+SOFTWARE_VERSION: 3.1.4
+FF: Berger
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc.top
+GRO:
+- - confout_49-50.gro
+WARNINGS:
+  GROMACS_VERSION: gromacs3
+TRAJECTORY_SIZE: 2517393276
+TRJLENGTH: 40010.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 17621
+DATEOFRUNNING: 21/06/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
+ID: 344

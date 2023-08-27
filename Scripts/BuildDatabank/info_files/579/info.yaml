@@ -1,0 +1,63 @@
+DOI: 10.5281/zenodo.6336691
+
+
+
+SOFTWARE: gromacs
+
+TRJ: centered-40-500ns.xtc
+
+TPR: production.tpr
+
+PREEQTIME: 40
+
+TIMELEFTOUT: 0
+
+
+
+COMPOSITION:
+
+ POPC:
+
+  NAME: POPC
+
+  MAPPING: mappingPOPCcharmm.yaml
+
+ SOL:
+
+  NAME: TIP3
+
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+ 
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+
+
+PUBLICATION:
+
+AUTHORS_CONTACT: Milla Lindström
+
+
+
+SYSTEM: 200POPC_8880SOL_300K
+
+SOFTWARE_VERSION: 2019.5
+
+
+
+FF: CHARMM36
+
+FF_SOURCE:
+
+FF_DATE:
+
+
+
+CPT:
+
+LOG:
+
+TOP: topol.top
+
+GRO:

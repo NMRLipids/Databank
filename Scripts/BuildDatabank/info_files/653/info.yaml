@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.6943413
+
+SOFTWARE: gromacs
+TRJ: SLPC_large.xtc
+TPR: SLPC_large.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ SLiPC:
+  NAME: SLPC 
+  MAPPING: mappingSLiPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Javanainen, Matti
+
+SYSTEM: 1024SLiPC_51200SOL_333K
+SOFTWARE_VERSION:
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: SLPC_large.cpt
+LOG:
+TOP: SLPC_large.top
+GRO: SLPC_large.gro

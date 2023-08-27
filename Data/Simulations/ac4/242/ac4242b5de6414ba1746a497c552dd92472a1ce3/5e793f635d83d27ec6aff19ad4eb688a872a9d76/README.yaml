@@ -1,0 +1,47 @@
+DOI: 10.5281/zenodo.6656031
+SOFTWARE: gromacs
+TRJ:
+- - popcRUN2.trr
+TPR:
+- - popcRUN2.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  POPC: ChiuGromos_POPC
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCchiuGromos.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 3552
+DIR_WRK: /home/ohs/NMRlipids/temp/
+PUBLICATION: http://dx.doi.org/10.1021/jp807056c
+AUTHORS_CONTACT: Ollila Samuli
+SYSTEM: 128POPC_3552SOL_298K
+SOFTWARE_VERSION: 4.5
+FF: Chiu Gromos
+FF_SOURCE: http://dx.doi.org/10.1021/jp807056c
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - popc.top
+GRO:
+- - popcRUN2.gro
+TRAJECTORY_SIZE: 2078455608
+TRJLENGTH: 50010.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 17312
+DATEOFRUNNING: 29/06/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
+ID: 422

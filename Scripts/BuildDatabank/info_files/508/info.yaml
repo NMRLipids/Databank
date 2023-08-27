@@ -13,19 +13,19 @@ UNITEDATOM_DICT:
 COMPOSITION:
  POPC:
   NAME: POPC
-  MAPPING: mappingPOPCberger.txt
+  MAPPING: mappingPOPCberger.yaml
  POPS:
   NAME: POPS
-  MAPPING: mappingPOPSberger.txt
+  MAPPING: mappingPOPSberger.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
  POT:
   NAME: XK
-  MAPPING: mappingXK.txt
+  MAPPING: mappingXK.yaml
  CLA:
   NAME: Cl
-  MAPPING: mappingCl.txt
+  MAPPING: mappingCl.yaml
 
 DIR_WRK: /home/lara/Databank
 

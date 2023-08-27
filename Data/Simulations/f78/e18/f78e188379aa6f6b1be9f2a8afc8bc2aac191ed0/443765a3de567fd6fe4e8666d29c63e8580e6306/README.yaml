@@ -1,0 +1,65 @@
+DOI: 10.5281/zenodo.51750
+SOFTWARE: gromacs
+TRJ:
+- - tap75s10_11-121ns.xtc
+TPR:
+- - tap75s10_1ns.tpr
+PREEQTIME: 11
+TIMELEFTOUT: 0
+UNITEDATOM_DICT:
+  DMPC: Berger_DMPC
+  DMTAP: Berger_DMTA
+COMPOSITION:
+  DMPC:
+    NAME: DMPC
+    MAPPING: mappingDMPCBergerGROMOS53A6.yaml
+    COUNT:
+    - 16
+    - 16
+  DMTAP:
+    NAME: DMTA
+    MAPPING: mappingDMTAPberger.yaml
+    COUNT:
+    - 48
+    - 48
+  SOD:
+    NAME: Na
+    MAPPING: mappingNa.yaml
+    COUNT: 96
+  CLA:
+    NAME: Cl
+    MAPPING: mappingCl.yaml
+    COUNT: 192
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 5304
+DIR_WRK: /home/lara/Databank
+PUBLICATION: 10.1021/jp810233q; ISBN 978-952-60-3194-1
+AUTHORS_CONTACT: Miettinen, Markus S.; Gurtovenko, Andrey A.
+SYSTEM: 32DMPC_96DMTAP_96SOD_192CLA_5304SOL_323K
+SOFTWARE_VERSION: 3.x
+FF: Berger with DMTAP modification by Gurtovenko et al.
+FFSOL: SPC
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - tap75s10.top
+GRO:
+- - tap75s10_100ns.gro
+WARNINGS:
+  GROMACS_VERSION: gromacs3
+TRAJECTORY_SIZE: 860492676
+TRJLENGTH: 110010.0
+TEMPERATURE: 323.0
+NUMBER_OF_ATOMS: 21416
+DATEOFRUNNING: 21/06/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    DMPC: {}
+    DMTAP: {}
+  FORMFACTOR: {}
+ID: 240

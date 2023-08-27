@@ -11,13 +11,13 @@ EXPERIMENT:
 FF_SOURCE: ??
 COMPOSITION:
   POPG:
-    NAME: system2
+    NAME: PGR
     COUNT:
     - 75
     - 75
     MAPPING: mappingPOPGlipid17.yaml
   POPC:
-    NAME: system1
+    NAME: PC
     COUNT:
     - 175
     - 175
@@ -43,3 +43,4 @@ TPR:
 TRJ:
 - - total_4_500.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+ID: 286

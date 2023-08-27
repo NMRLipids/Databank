@@ -1,0 +1,53 @@
+DOI: 10.5281/zenodo.3434396
+SOFTWARE: gromacs
+TRJ:
+- - NB-Fix-sodium_56mM.xtc
+TPR:
+- - NB-Fix-sodium_56mM.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 9000
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 9
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 9
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Nencini, Ricky
+SYSTEM: 200POPC_9000SOL_9SOD_9CLA_310K
+SOFTWARE_VERSION: null
+FF: CHARMM36
+FFSOL: TIP3P
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG:
+- - NB-Fix-sodium_56mM.log
+TOP:
+- - NB-Fix-sodium_56mM.top
+GRO: null
+TRAJECTORY_SIZE: 1328229016
+TRJLENGTH: 667200.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 53818
+DATEOFRUNNING: 06/05/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
+ID: 318

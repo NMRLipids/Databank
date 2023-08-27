@@ -1,0 +1,51 @@
+DOI: 10.5281/zenodo.163345
+SOFTWARE: openMM
+TRJ:
+- - step8_1.dcd
+PDB:
+- - step5_charmm2omm.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 40
+    - 40
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 40
+    - 40
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 7200
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Melcr, Josef
+SYSTEM: 80POPC_80CHOL_7200SOL_303K
+SOFTWARE_VERSION: v7
+FF: CHARMM36
+FF_SOURCE: starting structure from CHARMM-GUI Membrane Builder v1.7 (http://www.charmm-gui.org/)
+FF_DATE: null
+CHK:
+- - step8_1.chk
+TOP:
+- - step5_charmm2omm.psf
+CRD:
+- - step5_charmm2omm.crd
+TRAJECTORY_SIZE: 4589600276
+TRJLENGTH: 100000.00029814057
+NUMBER_OF_ATOMS: 38240
+DATEOFRUNNING: 05/07/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}
+ID: 451

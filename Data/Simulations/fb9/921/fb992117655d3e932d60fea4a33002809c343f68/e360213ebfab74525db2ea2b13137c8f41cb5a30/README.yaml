@@ -1,0 +1,50 @@
+DOI: 10.5281/zenodo.7022749
+SOFTWARE: gromacs
+TRJ:
+- - CHOL13_large.xtc
+TPR:
+- - CHOL13_large.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 512
+    - 512
+  SOL:
+    NAME: TP3
+    MAPPING: mappingTIP3Plipid17.yaml
+    COUNT: 72000
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 208
+    - 208
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Matti Javanainen
+SYSTEM: Slipids_POPC_CHOL29_L
+SOFTWARE_VERSION: 2021
+FF: Slipids
+FF_SOURCE: CHARMM-GUI
+FF_DATE: null
+CPT:
+- - CHOL13_large.cpt
+LOG: null
+TOP:
+- - CHOL13_large.top
+TRAJECTORY_SIZE: 1445589296
+TRJLENGTH: 1001000.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 384000
+DATEOFRUNNING: 17/10/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}
+ID: 709

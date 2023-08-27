@@ -1,0 +1,46 @@
+DOI: 10.5281/zenodo.51747
+
+SOFTWARE: gromacs
+TRJ: tap75W_31-140ns.xtc
+TPR: tap75W_140ns.tpr
+PREEQTIME: 31
+TIMELEFTOUT: 0
+
+UNITEDATOM_DICT:
+  DMPC: Berger_DMPC
+  DMTAP: Berger_DMTA
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCBergerGROMOS53A6.yaml
+ DMTAP:
+  NAME: DMTA
+  MAPPING: mappingDMTAPberger.yaml
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCl.yaml
+ SOL:
+  NAME: SOL 
+  MAPPING: mappingSPCwater.yaml 
+
+DIR_WRK: /home/lara/Databank
+
+PUBLICATION: 10.1021/jp810233q; ISBN 978-952-60-3194-1
+AUTHORS_CONTACT: Miettinen, Markus S.; Gurtovenko, Andrey A.
+
+SYSTEM: 32DMPC_96DMTAP_96CLA_5496SOL_323K
+SOFTWARE_VERSION: 3.x
+
+FF: Berger with DMTAP modification by Gurtovenko et al.
+FFSOL: SPC
+FF_SOURCE:
+FF_DATE:
+
+CPT:
+LOG:
+TOP: tap75W.top
+GRO: tap75W_140ns.gro
+
+WARNINGS:
+  GROMACS_VERSION: gromacs3

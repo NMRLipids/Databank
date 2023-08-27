@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.7022749
+
+SOFTWARE: gromacs
+TRJ: CHOL13_small.xtc
+TPR: CHOL13_small.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCslipids.yaml
+ SOL:
+  NAME: TP3
+  MAPPING: mappingTIP3Plipid17.yaml
+ CHOL:
+  NAME: CHL1
+  MAPPING: mappingCHOLESTEROLslipid.yaml
+
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Matti Javanainen
+
+SYSTEM: Slipids_POPC_CHOL29_S
+SOFTWARE_VERSION: 2021
+
+FF: Slipids
+FF_SOURCE: CHARMM-GUI
+FF_DATE:
+
+CPT: CHOL13_small.cpt
+LOG: 
+TOP: CHOL13_small.top

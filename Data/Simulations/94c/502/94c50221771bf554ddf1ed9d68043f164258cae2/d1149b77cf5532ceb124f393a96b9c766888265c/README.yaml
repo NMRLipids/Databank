@@ -48,4 +48,5 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPC: {}
     CHOL: {}
-  FORMFACTOR: unpublished/NMRlipidsIII/6
+  FORMFACTOR: {}
+ID: 298

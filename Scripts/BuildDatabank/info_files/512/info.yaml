@@ -13,13 +13,13 @@ UNITEDATOM_DICT:
 COMPOSITION:
  POPC:
   NAME: PLA
-  MAPPING: mappingPOPCberger.txt
+  MAPPING: mappingPOPCberger.yaml
  PAzePCprot: 
   NAME: PZPC
-  MAPPING: mappingPAZEPCberger.txt
+  MAPPING: mappingPAZEPCberger.yaml
  SOL:
   NAME: SOL 
-  MAPPING: mappingSPCwater.txt 
+  MAPPING: mappingSPCwater.yaml 
 
 DIR_WRK: /home/lara/Databank
 

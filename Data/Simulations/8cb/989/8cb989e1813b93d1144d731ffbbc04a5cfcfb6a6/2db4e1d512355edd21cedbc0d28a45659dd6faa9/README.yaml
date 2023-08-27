@@ -10,7 +10,7 @@ EXPERIMENT:
       10.1039/c2cp42738a: 10.1039/c2cp42738a/5
     POPC:
       10.1039/c2cp42738a: 10.1039/c2cp42738a/5
-  FORMFACTOR: unpublished/NMRlipidsIII/9
+  FORMFACTOR: unpublished/NMRlipidsIII/10
 COMPOSITION:
   CHOL:
     NAME: CHL1
@@ -41,3 +41,4 @@ TPR:
 TRJ:
 - - popc50_T298_every100ps.xtc
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+ID: 82

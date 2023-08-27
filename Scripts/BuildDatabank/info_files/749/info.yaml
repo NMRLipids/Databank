@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.7625844
+
+SOFTWARE: openMM
+TRJ: unwrapped_all_fixed_dt.xtc
+PDB: last_frame.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ DOPC:
+  NAME: DOPC
+  MAPPING: mappingDOPCcharmm.yaml
+ SOL:
+  NAME: HOH
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD:
+  NAME: NA
+  MAPPING: mappingNA.yaml
+ CLA:
+  NAME: Cl
+  MAPPING: mappingCl.yaml
+ 
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+PUBLICATION:
+AUTHORS_CONTACT: Kav, Batuhan
+
+SYSTEM: DOPC_1000mM_NaCl_at_303K_with_AMOEBA
+SOFTWARE_VERSION: v7.5.1
+
+FF: AMOEBA
+FF_SOURCE: OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in publication https://doi.org/10.1021/jacs.0c02394, original parameters  https://doi.org/10.1080/00268976.2018.1436201 
+FF_DATE:
+

@@ -217,7 +217,7 @@ M_G2H1_M:
 M_G2O1_M:
   ATOMNAME: O21
   RESIDUE: PC
-  FRAGMENT: sn-2
+  FRAGMENT: glycerol backbone
 M_G2C2_M:
   ATOMNAME: C21
   RESIDUE: PC
@@ -441,7 +441,7 @@ M_G3H2_M:
 M_G3O1_M:
   ATOMNAME: O31
   RESIDUE: PC
-  FRAGMENT: headgroup
+  FRAGMENT: glycerol backbone
 M_G3P2_M:
   ATOMNAME: P31
   RESIDUE: PC

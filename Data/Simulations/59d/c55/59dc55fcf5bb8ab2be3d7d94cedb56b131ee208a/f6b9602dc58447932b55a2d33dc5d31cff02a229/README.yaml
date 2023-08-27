@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.6778161
+SOFTWARE: gromacs
+TRJ:
+- - run_sdpe_dog_lipid17-0to2100ns.xtc
+TPR:
+- - run_sdpe_dog_lipid17.tpr
+PREEQTIME: 20
+TIMELEFTOUT: 100
+UNITEDATOM_DICT: null
+COMPOSITION:
+  SDPE:
+    NAME: SDPE
+    MAPPING: mappingSDPElipid17_2.yaml
+    COUNT:
+    - 58
+    - 58
+  DOG:
+    NAME: DOG
+    MAPPING: mappingDOGlipid17.yaml
+    COUNT:
+    - 6
+    - 6
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 6400
+DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
+AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen
+SYSTEM: 9.4%DOGinSDPEwithLipid17
+SOFTWARE_VERSION: 18.6
+FF: Lipid17
+FF_SOURCE: Amber tools
+FF_DATE: 2019
+TRAJECTORY_SIZE: 13993891124
+TRJLENGTH: 2100020.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 36020
+DATEOFRUNNING: 19/08/2022
+TYPEOFSYSTEM: lipid bilayer
+WARNINGS:
+  AMBIGUOUS_ATOMNAMES:
+  - SDPE
+EXPERIMENT:
+  ORDERPARAMETER:
+    SDPE: {}
+    DOG: {}
+  FORMFACTOR: {}
+ID: 183
