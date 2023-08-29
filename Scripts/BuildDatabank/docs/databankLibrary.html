@@ -48,6 +48,9 @@ from pathlib import Path
 from typing import List
 
 import json
+import sys
+
+__pdoc__ = {}
 
 logger = logging.getLogger(&#34;__name__&#34;)
 
@@ -915,6 +918,7 @@ class databank:
 # functions used in building and analyzing the databank
 
 def initialize_databank(databankPath):
+    &#34;&#34;&#34; This function intializes the databank. `databankPath` should the path for the local location of the NMRlipids databank. Output is the list of dictionaries that contain the content of README.yaml files for each system.  &#34;&#34;&#34;
     #sys.path.insert(1, databankPath + &#39;/Scripts/BuildDatabank/&#39;)
     #from databankLibrary import download_link, lipids_dict, databank
     path = databankPath + &#39;/Data/Simulations/&#39;
@@ -924,6 +928,7 @@ def initialize_databank(databankPath):
 
 
 def print_README(system):
+    &#34;&#34;&#34; This function prints the content of `system` dictionary in human readable format. &#34;&#34;&#34;
     if system == &#39;example&#39;:
         readmePath = &#39;../data/simulations/READMEexplanations.yaml&#39;
         with open(readmePath, &#39;r&#39;) as file:
@@ -938,7 +943,11 @@ def print_README(system):
 
 
 def CalcAreaPerMolecule(system):
-    &#34;&#34;&#34; Calculates average area per lipid from apl.json file where area per lipid calculated by the calcAPL.py is stored. `system` should be the system dictionary. &#34;&#34;&#34;
+    &#34;&#34;&#34; 
+    Calculates average area per lipid for a simulation defined with `system`. 
+    It is using the apl.json file where area per lipid calculated by the calcAPL.py is stored. 
+    `system` is the NMRlipids databank dictionary defining a simulation. 
+    &#34;&#34;&#34;
     APLpath = system[&#39;path&#39;] + &#39;apl.json&#39;
     try:
         f = open(APLpath)
@@ -953,6 +962,314 @@ def CalcAreaPerMolecule(system):
     except:
         print(&#39;apl.json not found from&#39; + system[&#39;path&#39;])
         
+
+def GetThickness(system):
+    &#34;&#34;&#34; 
+    Gets thickness for a simulation defined with `system` from the thickness.json file 
+    where thickness calculated by the calc_thickness.py is stored. 
+    `system` is the NMRlipids databank dictionary defining a simulation. 
+    &#34;&#34;&#34;
+    ThicknessPath = system[&#39;path&#39;] + &#39;thickness.json&#39;
+    try:
+        f = open(ThicknessPath)
+        thickness = json.load(f)
+        return(thickness)
+    except:
+        return 0
+        #print(&#39;thickness.json not found from&#39; + system[&#39;path&#39;])
+
+
+def ShowEquilibrationTimes(system):
+    &#34;&#34;&#34; 
+    Prints relative equilibration time for each lipid within a simulation defined by `system`. 
+    Relative equilibration times are calculated with NMRPCA_timerelax.py and stored in eq_times.json files.
+    &#34;&#34;&#34;
+    
+    EqTimesPath = system[&#39;path&#39;] + &#39;eq_times.json&#39;
+    
+    try:
+        #if (os.path.isfile(EqTimesPath)):
+        with open(EqTimesPath) as f:
+            EqTimeDict = json.load(f)
+    except:
+        print(&#39;eq_times.json not found&#39;)
+        exit()
+
+    for i in EqTimeDict:
+        print(i+&#39;:&#39;, EqTimeDict[i])
+            
+
+__pdoc__[&#39;plotFormFactor&#39;] = False
+def plotFormFactor(expFormFactor,k,legend,PlotColor):
+    xValues = []
+    yValues = []
+    for i in expFormFactor:
+        xValues.append(i[0])
+        yValues.append(k*i[1])
+    plt.plot(xValues,yValues,label = legend,color=PlotColor,linewidth=4.0)
+    plt.xlabel(r&#39;$q_{z} [Å^{-1}]$&#39;,size=20)
+    plt.ylabel(r&#39;$|F(q_{z})|$&#39;,size=20)
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    #plt.yticks(color = &#39;w&#39;)
+    plt.xlim([0,0.69])
+    plt.ylim([-10,250])
+    plt.legend(loc=&#34;upper right&#34;)
+    plt.savefig(&#39;FormFactor.pdf&#39;)
+
+
+__pdoc__[&#39;plotOrderParameters&#39;] = False
+def plotOrderParameters(OPsim, OPexp):
+    xValuesHG = []
+    xValuesSN1 = []
+    xValuesSN2 = []
+    
+    yValuesHGsim = []
+    yValuesSN1sim = []
+    yValuesSN2sim = []
+    yValuesHGsimERR = []
+    yValuesSN1simERR = []
+    yValuesSN2simERR = []
+    yValuesHGexp = []
+    yValuesSN1exp = []
+    yValuesSN2exp = []
+    xValuesHGexp = []
+    xValuesSN1exp = []
+    xValuesSN2exp = []
+
+    sn1carbons = {&#39;M_G1C3_M M_G1C3H1_M&#39; :2,
+                  &#39;M_G1C3_M M_G1C3H2_M&#39; :2,
+                  &#39;M_G1C4_M M_G1C4H1_M&#39; :3,
+                  &#39;M_G1C4_M M_G1C4H2_M&#39; :3,
+                  &#39;M_G1C5_M M_G1C5H1_M&#39; :4,
+                  &#39;M_G1C5_M M_G1C5H2_M&#39; :4,
+                  &#39;M_G1C6_M M_G1C6H1_M&#39; :5,
+                  &#39;M_G1C6_M M_G1C6H2_M&#39; :5,
+                  &#39;M_G1C7_M M_G1C7H1_M&#39; :6,
+                  &#39;M_G1C7_M M_G1C7H2_M&#39; :6,
+                  &#39;M_G1C8_M M_G1C8H1_M&#39; :7,
+                  &#39;M_G1C8_M M_G1C8H2_M&#39; :7,
+                  &#39;M_G1C9_M M_G1C9H1_M&#39; :8,
+                  &#39;M_G1C9_M M_G1C9H2_M&#39; :8,
+                  &#39;M_G1C10_M M_G1C10H1_M&#39; :9,
+                  &#39;M_G1C10_M M_G1C10H2_M&#39; :9,
+                  &#39;M_G1C11_M M_G1C11H1_M&#39; :10,
+                  &#39;M_G1C11_M M_G1C11H2_M&#39; :10,
+                  &#39;M_G1C12_M M_G1C12H1_M&#39; :11,
+                  &#39;M_G1C12_M M_G1C12H2_M&#39; :11,
+                  &#39;M_G1C13_M M_G1C13H1_M&#39; :12,
+                  &#39;M_G1C13_M M_G1C13H2_M&#39; :12,
+                  &#39;M_G1C14_M M_G1C14H1_M&#39; :13,
+                  &#39;M_G1C14_M M_G1C14H2_M&#39; :13,
+                  &#39;M_G1C15_M M_G1C15H1_M&#39; :14,
+                  &#39;M_G1C15_M M_G1C15H2_M&#39; :14,
+                  &#39;M_G1C16_M M_G1C16H1_M&#39; :15,
+                  &#39;M_G1C16_M M_G1C16H2_M&#39; :15,
+                  &#39;M_G1C17_M M_G1C17H1_M&#39; :16,
+                  &#39;M_G1C17_M M_G1C17H2_M&#39; :16,
+                  &#39;M_G1C17_M M_G1C17H3_M&#39; :16,
+                 }
+    
+    sn2carbons = {&#39;M_G2C3_M M_G2C3H1_M&#39; :2,
+                  &#39;M_G2C3_M M_G2C3H2_M&#39; :2,
+                  &#39;M_G2C4_M M_G2C4H1_M&#39; :3,
+                  &#39;M_G2C4_M M_G2C4H2_M&#39; :3,
+                  &#39;M_G2C5_M M_G2C5H1_M&#39; :4,
+                  &#39;M_G2C5_M M_G2C5H2_M&#39; :4,
+                  &#39;M_G2C6_M M_G2C6H1_M&#39; :5,
+                  &#39;M_G2C6_M M_G2C6H2_M&#39; :5,
+                  &#39;M_G2C7_M M_G2C7H1_M&#39; :6,
+                  &#39;M_G2C7_M M_G2C7H2_M&#39; :6,
+                  &#39;M_G2C8_M M_G2C8H1_M&#39; :7,
+                  &#39;M_G2C8_M M_G2C8H2_M&#39; :7,
+                  &#39;M_G2C9_M M_G2C9H1_M&#39; :8,
+                  &#39;M_G2C9_M M_G2C9H2_M&#39; :8,
+                  &#39;M_G2C10_M M_G2C10H1_M&#39; :9,
+                  &#39;M_G2C10_M M_G2C10H2_M&#39; :9,
+                  &#39;M_G2C11_M M_G2C11H1_M&#39; :10,
+                  &#39;M_G2C11_M M_G2C11H2_M&#39; :10,
+                  &#39;M_G2C12_M M_G2C12H1_M&#39; :11,
+                  &#39;M_G2C12_M M_G2C12H2_M&#39; :11,
+                  &#39;M_G2C13_M M_G2C13H1_M&#39; :12,
+                  &#39;M_G2C13_M M_G2C13H2_M&#39; :12,
+                  &#39;M_G2C14_M M_G2C14H1_M&#39; :13,
+                  &#39;M_G2C14_M M_G2C14H2_M&#39; :13,
+                  &#39;M_G2C15_M M_G2C15H1_M&#39; :14,
+                  &#39;M_G2C15_M M_G2C15H2_M&#39; :14,
+                  &#39;M_G2C16_M M_G2C16H1_M&#39; :15,
+                  &#39;M_G2C16_M M_G2C16H2_M&#39; :15,
+                  &#39;M_G2C17_M M_G2C17H1_M&#39; :16,
+                  &#39;M_G2C17_M M_G2C17H2_M&#39; :16,
+                  &#39;M_G2C17_M M_G2C17H3_M&#39; :16,
+                  &#39;M_G2C18_M M_G2C18H1_M&#39; :17,
+                  &#39;M_G2C18_M M_G2C18H2_M&#39; :17,
+                  &#39;M_G2C18_M M_G2C18H3_M&#39; :17,
+                  &#39;M_G2C19_M M_G2C19H1_M&#39; :18,
+                  &#39;M_G2C19_M M_G2C19H2_M&#39; :18,
+                  &#39;M_G2C19_M M_G2C19H3_M&#39; :18,
+                 }
+    
+    HGcarbons = {&#39;M_G3N6C1_M M_G3N6C1H1_M&#39; : 1,
+                 &#39;M_G3N6C1_M M_G3N6C1H2_M&#39; : 1,
+                 &#39;M_G3N6C1_M M_G3N6C1H3_M&#39; : 1,
+                 &#39;M_G3N6C2_M M_G3N6C2H1_M&#39; : 1,
+                 &#39;M_G3N6C2_M M_G3N6C2H2_M&#39; : 1,
+                 &#39;M_G3N6C2_M M_G3N6C2H3_M&#39; : 1,
+                 &#39;M_G3N6C3_M M_G3N6C3H1_M&#39; : 1,
+                 &#39;M_G3N6C3_M M_G3N6C3H2_M&#39; : 1,
+                 &#39;M_G3N6C3_M M_G3N6C3H3_M&#39; : 1,
+                 &#39;M_G3C5_M M_G3C5H1_M&#39; : 2,
+                 &#39;M_G3C5_M M_G3C5H2_M&#39; : 2,
+                 &#39;M_G3C4_M M_G3C4H1_M&#39; : 3,
+                 &#39;M_G3C4_M M_G3C4H2_M&#39; : 3,
+                 &#39;M_G3_M M_G3H1_M&#39; : 4,
+                 &#39;M_G3_M M_G3H2_M&#39; : 4,
+                 &#39;M_G2_M M_G2H1_M&#39; : 5,
+                 &#39;M_G1_M M_G1H1_M&#39; : 6,
+                 &#39;M_G1_M M_G1H2_M&#39; : 6,
+                 }
+    
+    
+    for key in OPsim:
+        if &#39;M_G1C&#39; in key:
+            try:
+                xValuesSN1.append(sn1carbons[key])
+                yValuesSN1sim.append(float(OPsim[key][0][0]))
+                yValuesSN1simERR.append(float(OPsim[key][0][2]))
+                yValuesSN1exp.append(OPexp[key][0][0])
+                xValuesSN1exp.append(sn1carbons[key])
+            except:
+                pass
+        elif &#39;M_G2C&#39; in key:
+            try:
+                xValuesSN2.append(sn2carbons[key])
+                yValuesSN2sim.append(float(OPsim[key][0][0]))
+                yValuesSN2simERR.append(float(OPsim[key][0][2]))
+                yValuesSN2exp.append(OPexp[key][0][0])
+                xValuesSN2exp.append(sn2carbons[key])
+            except:
+                pass
+        elif &#39;M_G3&#39; in key or &#39;M_G2_M&#39; in key or &#39;M_G1_M&#39; in key:
+            try:
+                xValuesHG.append(HGcarbons[key])
+                yValuesHGsim.append(float(OPsim[key][0][0]))
+                yValuesHGsimERR.append(float(OPsim[key][0][2]))
+                yValuesHGexp.append(OPexp[key][0][0])
+                xValuesHGexp.append(HGcarbons[key])
+            except:
+                pass
+    #print(xValues,yValues)
+    plt.rc(&#39;font&#39;, size=15)
+    #plt.plot(xValuesHG,yValuesHGsim,&#39;.&#39;,color=&#39;red&#39;,markersize=15)
+    plt.errorbar(xValuesHGexp,yValuesHGexp, yerr = 0.02,fmt=&#39;.&#39;,color=&#39;black&#39;,markersize=25)
+    plt.errorbar(xValuesHG,yValuesHGsim, yerr = yValuesHGsimERR,fmt=&#39;.&#39;,color=&#39;red&#39;,markersize=20)
+    #plt.plot(xValuesHG,yValuesHGexp,&#39;.&#39;,color=&#39;black&#39;,markersize=15)
+    my_xticks = [&#39;\u03B3&#39;,&#39;\u03B2&#39;,&#39;\u03B1&#39;,&#39;$g_{1}$&#39;,&#39;$g_{2}$&#39;,&#39;$g_{3}$&#39;]
+    plt.xticks([1,2,3,4,5,6], my_xticks,size=20)
+    #plt.xlabel(&#39;Carbon&#39;)
+    plt.ylim([-0.25,0.25])
+    plt.yticks(size=20)
+    #plt.yticks(color = &#39;w&#39;)
+    plt.ylabel(r&#39;$S_{CH}$&#39;,size=25)
+    plt.savefig(&#39;HG.pdf&#39;)
+    plt.show()
+    
+    plt.text(2, -0.04, &#39;sn-1&#39;, fontsize=25)
+    plt.xticks(np.arange(min(xValuesSN1), max(xValuesSN1)+1, 2.0))
+    plt.plot(xValuesSN1,yValuesSN1sim,color=&#39;red&#39;)
+    plt.plot(xValuesSN1exp,yValuesSN1exp,color=&#39;black&#39;)
+    plt.errorbar(xValuesSN1,yValuesSN1sim, yerr = yValuesSN1simERR,fmt=&#39;.&#39;,color=&#39;red&#39;,markersize=25)
+    plt.errorbar(xValuesSN1exp,yValuesSN1exp, yerr = 0.02, fmt=&#39;.&#39;,color=&#39;black&#39;,markersize=20)
+    #plt.xlabel(&#39;Carbon&#39;)
+    plt.ylabel(r&#39;$S_{CH}$&#39;,size=25)
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    #plt.yticks(color = &#39;w&#39;)
+    plt.ylim([-0.3,0.01])
+    plt.savefig(&#39;sn-1.pdf&#39;)
+    plt.show()
+    
+    plt.text(2, -0.04, &#39;sn-2&#39;, fontsize=25)
+    plt.xticks(np.arange(min(xValuesSN2), max(xValuesSN2)+1, 2.0))
+    plt.plot(xValuesSN2,yValuesSN2sim,color=&#39;red&#39;)
+    plt.plot(xValuesSN2exp,yValuesSN2exp,color=&#39;black&#39;)
+    plt.errorbar(xValuesSN2,yValuesSN2sim,yValuesSN2simERR,fmt=&#39;.&#39;,color=&#39;red&#39;,markersize=25)
+    plt.errorbar(xValuesSN2exp,yValuesSN2exp, yerr = 0.02, fmt=&#39;.&#39;,color=&#39;black&#39;,markersize=20)
+    plt.xlabel(&#39;Carbon&#39;,size=25)
+    plt.ylabel(r&#39;$S_{CH}$&#39;,size=25)
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    #plt.yticks(color = &#39;w&#39;)
+    plt.ylim([-0.25,0.01])
+    plt.savefig(&#39;sn-2.pdf&#39;)
+    plt.show()
+
+
+def plotSimulation(ID, lipid):
+    &#34;&#34;&#34;
+    Creates plots of form factor and C-H bond order parameters for a selected `lipid` from a simulation with the given `ID` number. 
+    &#34;&#34;&#34;
+    DataBankPath = &#39;../../Databank/Data/&#39;
+    systems = initialize_databank(DataBankPath + &#39;../&#39;)
+    #print(systems)
+    for system in systems:
+        #print(system)
+        if system[&#39;ID&#39;] == ID:
+             path = DataBankPath + system[&#39;path&#39;]
+    #lipid = &#39;POPC&#39;
+    FFpathSIM = path + &#39;FormFactor.json&#39;
+    OPpathSIM = path + lipid + &#39;OrderParameters.json&#39;
+    READMEfilepath = path + &#39;/README.yaml&#39;
+    FFQualityFilePath = path + &#39;/FormFactorQuality.json&#39;
+
+    
+    with open(READMEfilepath) as yaml_file:
+        readme = yaml.load(yaml_file, Loader=yaml.FullLoader)
+   
+    print(&#39;DOI: &#39;, readme[&#39;DOI&#39;])
+    
+    try:
+        with open(FFQualityFilePath) as json_file:
+            FFq = json.load(json_file)
+        print(&#39;Form factor quality: &#39;, FFq[0])
+        for subdir, dirs, files in os.walk(DataBankPath + &#39;experiments/FormFactors/&#39; + readme[&#39;EXPERIMENT&#39;][&#39;FORMFACTOR&#39;] + &#39;/&#39;):
+            for filename in files:
+                #filepath = &#39;../../Data/experiments/FormFactors/&#39; + expFFpath + &#39;/&#39; + filename
+                if filename.endswith(&#39;_FormFactor.json&#39;):
+                    FFpathEXP = subdir + filename
+        #FFpathEXP =  DataBankPath + &#39;experiments/FormFactors/&#39; + readme[&#39;EXPERIMENT&#39;][&#39;FORMFACTOR&#39;] + &#39;/POPS_ULV_25Cin0D_SHE_FormFactor.json&#39;
+        with open(FFpathEXP) as json_file:
+            FFexp = json.load(json_file)
+    
+    except:
+        print(&#39;Force field quality not found&#39;)
+    
+    
+    with open(OPpathSIM) as json_file:
+        OPsim = json.load(json_file)
+
+    OPexp = {}
+    for expOPfolder in list(readme[&#39;EXPERIMENT&#39;][&#39;ORDERPARAMETER&#39;][lipid].values()):
+        #expOPfolder = list(readme[&#39;EXPERIMENT&#39;][&#39;ORDERPARAMETER&#39;][lipid].values())[0]
+        OPpathEXP =  DataBankPath + &#39;experiments/OrderParameters/&#39; + expOPfolder + &#39;/&#39; + lipid + &#39;_Order_Parameters.json&#39;
+        #print(OPpathEXP)
+        with open(OPpathEXP) as json_file:
+            OPexp.update(json.load(json_file))
+    #print(OPexp)
+
+    try:
+        with open(FFpathSIM) as json_file:
+            FFsim = json.load(json_file)
+        plotFormFactor(FFsim,1, &#39;Simulation&#39;,&#39;red&#39;)
+        plotFormFactor(FFexp,FFq[1], &#39;Experiment&#39;,&#39;black&#39;)
+        plt.show()
+    except:
+        print(&#39;Form factor plotting failed&#39;)
+    
+    plotOrderParameters(OPsim, OPexp)
+    #print(OPsim)
+    #print(OPexp)
+
         
 # Return mapping name of atom from mapping file
 def read_mapping_file(mapping_file, atom1):
@@ -1690,13 +2007,19 @@ def parse_valid_config_settings(info_yaml: dict) -&gt; (dict, List[str]):
 <span>def <span class="ident">CalcAreaPerMolecule</span></span>(<span>system)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Calculates average area per lipid from apl.json file where area per lipid calculated by the calcAPL.py is stored. <code>system</code> should be the system dictionary.</p></div>
+<div class="desc"><p>Calculates average area per lipid for a simulation defined with <code>system</code>.
+It is using the apl.json file where area per lipid calculated by the calcAPL.py is stored.
+<code>system</code> is the NMRlipids databank dictionary defining a simulation.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def CalcAreaPerMolecule(system):
-    &#34;&#34;&#34; Calculates average area per lipid from apl.json file where area per lipid calculated by the calcAPL.py is stored. `system` should be the system dictionary. &#34;&#34;&#34;
+    &#34;&#34;&#34; 
+    Calculates average area per lipid for a simulation defined with `system`. 
+    It is using the apl.json file where area per lipid calculated by the calcAPL.py is stored. 
+    `system` is the NMRlipids databank dictionary defining a simulation. 
+    &#34;&#34;&#34;
     APLpath = system[&#39;path&#39;] + &#39;apl.json&#39;
     try:
         f = open(APLpath)
@@ -1710,6 +2033,63 @@ def parse_valid_config_settings(info_yaml: dict) -&gt; (dict, List[str]):
         return(APL)
     except:
         print(&#39;apl.json not found from&#39; + system[&#39;path&#39;])</code></pre>
+</details>
+</dd>
+<dt id="databankLibrary.GetThickness"><code class="name flex">
+<span>def <span class="ident">GetThickness</span></span>(<span>system)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets thickness for a simulation defined with <code>system</code> from the thickness.json file
+where thickness calculated by the calc_thickness.py is stored.
+<code>system</code> is the NMRlipids databank dictionary defining a simulation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def GetThickness(system):
+    &#34;&#34;&#34; 
+    Gets thickness for a simulation defined with `system` from the thickness.json file 
+    where thickness calculated by the calc_thickness.py is stored. 
+    `system` is the NMRlipids databank dictionary defining a simulation. 
+    &#34;&#34;&#34;
+    ThicknessPath = system[&#39;path&#39;] + &#39;thickness.json&#39;
+    try:
+        f = open(ThicknessPath)
+        thickness = json.load(f)
+        return(thickness)
+    except:
+        return 0
+        #print(&#39;thickness.json not found from&#39; + system[&#39;path&#39;])</code></pre>
+</details>
+</dd>
+<dt id="databankLibrary.ShowEquilibrationTimes"><code class="name flex">
+<span>def <span class="ident">ShowEquilibrationTimes</span></span>(<span>system)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prints relative equilibration time for each lipid within a simulation defined by <code>system</code>.
+Relative equilibration times are calculated with NMRPCA_timerelax.py and stored in eq_times.json files.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ShowEquilibrationTimes(system):
+    &#34;&#34;&#34; 
+    Prints relative equilibration time for each lipid within a simulation defined by `system`. 
+    Relative equilibration times are calculated with NMRPCA_timerelax.py and stored in eq_times.json files.
+    &#34;&#34;&#34;
+    
+    EqTimesPath = system[&#39;path&#39;] + &#39;eq_times.json&#39;
+    
+    try:
+        #if (os.path.isfile(EqTimesPath)):
+        with open(EqTimesPath) as f:
+            EqTimeDict = json.load(f)
+    except:
+        print(&#39;eq_times.json not found&#39;)
+        exit()
+
+    for i in EqTimeDict:
+        print(i+&#39;:&#39;, EqTimeDict[i])</code></pre>
 </details>
 </dd>
 <dt id="databankLibrary.calc_angle"><code class="name flex">
@@ -2000,12 +2380,13 @@ Calculates the center of mass of the selected atoms to invert bottom leaflet vec
 <span>def <span class="ident">initialize_databank</span></span>(<span>databankPath)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This function intializes the databank. <code>databankPath</code> should the path for the local location of the NMRlipids databank. Output is the list of dictionaries that contain the content of README.yaml files for each system.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def initialize_databank(databankPath):
+    &#34;&#34;&#34; This function intializes the databank. `databankPath` should the path for the local location of the NMRlipids databank. Output is the list of dictionaries that contain the content of README.yaml files for each system.  &#34;&#34;&#34;
     #sys.path.insert(1, databankPath + &#39;/Scripts/BuildDatabank/&#39;)
     #from databankLibrary import download_link, lipids_dict, databank
     path = databankPath + &#39;/Data/Simulations/&#39;
@@ -2250,16 +2631,92 @@ Calculates the center of mass of the selected atoms to invert bottom leaflet vec
     return sim, files_tbd</code></pre>
 </details>
 </dd>
+<dt id="databankLibrary.plotSimulation"><code class="name flex">
+<span>def <span class="ident">plotSimulation</span></span>(<span>ID, lipid)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates plots of form factor and C-H bond order parameters for a selected <code>lipid</code> from a simulation with the given <code>ID</code> number.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plotSimulation(ID, lipid):
+    &#34;&#34;&#34;
+    Creates plots of form factor and C-H bond order parameters for a selected `lipid` from a simulation with the given `ID` number. 
+    &#34;&#34;&#34;
+    DataBankPath = &#39;../../Databank/Data/&#39;
+    systems = initialize_databank(DataBankPath + &#39;../&#39;)
+    #print(systems)
+    for system in systems:
+        #print(system)
+        if system[&#39;ID&#39;] == ID:
+             path = DataBankPath + system[&#39;path&#39;]
+    #lipid = &#39;POPC&#39;
+    FFpathSIM = path + &#39;FormFactor.json&#39;
+    OPpathSIM = path + lipid + &#39;OrderParameters.json&#39;
+    READMEfilepath = path + &#39;/README.yaml&#39;
+    FFQualityFilePath = path + &#39;/FormFactorQuality.json&#39;
+
+    
+    with open(READMEfilepath) as yaml_file:
+        readme = yaml.load(yaml_file, Loader=yaml.FullLoader)
+   
+    print(&#39;DOI: &#39;, readme[&#39;DOI&#39;])
+    
+    try:
+        with open(FFQualityFilePath) as json_file:
+            FFq = json.load(json_file)
+        print(&#39;Form factor quality: &#39;, FFq[0])
+        for subdir, dirs, files in os.walk(DataBankPath + &#39;experiments/FormFactors/&#39; + readme[&#39;EXPERIMENT&#39;][&#39;FORMFACTOR&#39;] + &#39;/&#39;):
+            for filename in files:
+                #filepath = &#39;../../Data/experiments/FormFactors/&#39; + expFFpath + &#39;/&#39; + filename
+                if filename.endswith(&#39;_FormFactor.json&#39;):
+                    FFpathEXP = subdir + filename
+        #FFpathEXP =  DataBankPath + &#39;experiments/FormFactors/&#39; + readme[&#39;EXPERIMENT&#39;][&#39;FORMFACTOR&#39;] + &#39;/POPS_ULV_25Cin0D_SHE_FormFactor.json&#39;
+        with open(FFpathEXP) as json_file:
+            FFexp = json.load(json_file)
+    
+    except:
+        print(&#39;Force field quality not found&#39;)
+    
+    
+    with open(OPpathSIM) as json_file:
+        OPsim = json.load(json_file)
+
+    OPexp = {}
+    for expOPfolder in list(readme[&#39;EXPERIMENT&#39;][&#39;ORDERPARAMETER&#39;][lipid].values()):
+        #expOPfolder = list(readme[&#39;EXPERIMENT&#39;][&#39;ORDERPARAMETER&#39;][lipid].values())[0]
+        OPpathEXP =  DataBankPath + &#39;experiments/OrderParameters/&#39; + expOPfolder + &#39;/&#39; + lipid + &#39;_Order_Parameters.json&#39;
+        #print(OPpathEXP)
+        with open(OPpathEXP) as json_file:
+            OPexp.update(json.load(json_file))
+    #print(OPexp)
+
+    try:
+        with open(FFpathSIM) as json_file:
+            FFsim = json.load(json_file)
+        plotFormFactor(FFsim,1, &#39;Simulation&#39;,&#39;red&#39;)
+        plotFormFactor(FFexp,FFq[1], &#39;Experiment&#39;,&#39;black&#39;)
+        plt.show()
+    except:
+        print(&#39;Form factor plotting failed&#39;)
+    
+    plotOrderParameters(OPsim, OPexp)
+    #print(OPsim)
+    #print(OPexp)</code></pre>
+</details>
+</dd>
 <dt id="databankLibrary.print_README"><code class="name flex">
 <span>def <span class="ident">print_README</span></span>(<span>system)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This function prints the content of <code>system</code> dictionary in human readable format.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_README(system):
+    &#34;&#34;&#34; This function prints the content of `system` dictionary in human readable format. &#34;&#34;&#34;
     if system == &#39;example&#39;:
         readmePath = &#39;../data/simulations/READMEexplanations.yaml&#39;
         with open(readmePath, &#39;r&#39;) as file:
@@ -2863,6 +3320,8 @@ for system in systems:
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="databankLibrary.CalcAreaPerMolecule" href="#databankLibrary.CalcAreaPerMolecule">CalcAreaPerMolecule</a></code></li>
+<li><code><a title="databankLibrary.GetThickness" href="#databankLibrary.GetThickness">GetThickness</a></code></li>
+<li><code><a title="databankLibrary.ShowEquilibrationTimes" href="#databankLibrary.ShowEquilibrationTimes">ShowEquilibrationTimes</a></code></li>
 <li><code><a title="databankLibrary.calc_angle" href="#databankLibrary.calc_angle">calc_angle</a></code></li>
 <li><code><a title="databankLibrary.calc_file_sha1_hash" href="#databankLibrary.calc_file_sha1_hash">calc_file_sha1_hash</a></code></li>
 <li><code><a title="databankLibrary.calc_z_dim" href="#databankLibrary.calc_z_dim">calc_z_dim</a></code></li>
@@ -2873,6 +3332,7 @@ for system in systems:
 <li><code><a title="databankLibrary.initialize_databank" href="#databankLibrary.initialize_databank">initialize_databank</a></code></li>
 <li><code><a title="databankLibrary.parse_op_input" href="#databankLibrary.parse_op_input">parse_op_input</a></code></li>
 <li><code><a title="databankLibrary.parse_valid_config_settings" href="#databankLibrary.parse_valid_config_settings">parse_valid_config_settings</a></code></li>
+<li><code><a title="databankLibrary.plotSimulation" href="#databankLibrary.plotSimulation">plotSimulation</a></code></li>
 <li><code><a title="databankLibrary.print_README" href="#databankLibrary.print_README">print_README</a></code></li>
 <li><code><a title="databankLibrary.read_mapping_file" href="#databankLibrary.read_mapping_file">read_mapping_file</a></code></li>
 <li><code><a title="databankLibrary.read_mapping_filePAIR" href="#databankLibrary.read_mapping_filePAIR">read_mapping_filePAIR</a></code></li>
