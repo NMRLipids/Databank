@@ -970,7 +970,15 @@ def ShowEquilibrationTimes(system):
     for i in EqTimeDict:
         print(i+':', EqTimeDict[i])
             
+def GetNlipids(system):
+    Nlipid = 0
+    for molecule in system['COMPOSITION']:
+        if molecule in lipids_dict:
+            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    return Nlipid
 
+
+        
 __pdoc__['plotFormFactor'] = False
 def plotFormFactor(expFormFactor,k,legend,PlotColor):
     xValues = []
