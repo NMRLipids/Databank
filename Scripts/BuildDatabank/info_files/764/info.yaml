@@ -8,7 +8,7 @@ TRJ: C36_12C20_72DPPC_60C_16w_traj_run3.xtc
 TPR: C36_12C20_72DPPC_60C_16w_run3.tpr
 PREEQTIME: 200
 TIMELEFTOUT: 0
-DIR_WRK: /media/anika/data/PhD/MDsims/yaml_for_nmrlipidsdatabank/
+DIR_WRK: /home/sosamuli/temp/DataBank/
 COMPOSITION:
   DPPC:
     NAME: DPPC
