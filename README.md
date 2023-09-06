@@ -19,15 +19,40 @@ Minimum example for looping over available simulations is available in [here](ht
 
 ## Instructions to add data into the databank
 
-The NMRlipids Databank is open for additions of simulation data by anyone.
-1. Clone this repo to your own computer.
-2. Make a new directory with the next free integer into [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files) folder.
-3. Create info.yaml file into the folder with the help of [instructions](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md).
-4. Return to the [Databank/Scripts/BuildDatabank/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) folder and run
-`python3 AddData.py -f {path to the info file that you created}`.
-After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the README.yaml file of your system and calculated order parameters.
-5. Commit the created README.yaml file, and make a pull request to the master branch.
+The NMRlipids Databank is open for additions of simulation data by anyone. Quick instructions to add data:
+1. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a [Zenodo](https://zenodo.org/) repository.
+2. Create an `info.yaml` file containing the essential information on your simulation by filling the [template](https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml). Further [instructions](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md) and [examples](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files) are also available.
+3. Save the created `info.yaml` file into a new directory with the next free integer into [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files) folder.
+4. Commit the addition of `info.yaml` file into the [NMRlipids databank GitHub repository](https://github.com/NMRLipids/Databank) and make a pull request to the master branch. **You can stop here or continue to create `README.yaml` file in step 5.** 
+5. To create the `README.yaml` file for the databank yourself return to the [Databank/Scripts/BuildDatabank/](https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank) folder and run
+`python3 AddData.py -f {path to the info.yaml file that you created}`.
+You can run `python3 AddData.py --help` for available command line arguments:
+```
+usage: AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR]
+                         [-o OUTPUT_DIR]
+
+Add a new dataset to the NMRLipids databank
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILE, --file FILE  Input config file in yaml format.
+  -d, --debug           enable debug logging output
+  -n, --no-cache        always redownload repository files
+  -w WORK_DIR, --work-dir WORK_DIR
+                        set custom temporary working directory
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        set custom output directory
+```
+After this is finished, you should see a new folder in [Data/simulations](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations) which contains the `README.yaml` file of your system. Commit also the created README.yaml file, and make a pull request to the master branch.
+
+ If you want to use other repository than Zenodo, please do not hesitat to open an [GitHub issue](https://github.com/NMRLipids/Databank/issues) on this.
 
 ## System requirements
 
-The codes have been tested in Linux environment with python 3 and recent Gromacs version installed.
+The code has been tested in Linux environment with python 3.7 or newer and recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version installed.
+
+Setup using conda as distribution:
+
+    $ conda create --name databank python==3.7.16 MDAnalysis MDAnalysisTests
+    $ conda activate databank
+    $ (databank) pip install tqdm pyyaml

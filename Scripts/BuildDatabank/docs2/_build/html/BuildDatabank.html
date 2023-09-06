@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>BuildDatabank package &#8212; NMRlipids 24.8.2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
+    
+    <script src="_static/documentation_options.js?v=039cf055"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="BuildDatabank" href="modules.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="BuildDatabank"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRlipids 24.8.2023 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">BuildDatabank</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">BuildDatabank package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="builddatabank-package">
+<h1>BuildDatabank package<a class="headerlink" href="#builddatabank-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-adddata-module">
+<h2>BuildDatabank.AddData module<a class="headerlink" href="#builddatabank-adddata-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-orderparameter-module">
+<h2>BuildDatabank.OrderParameter module<a class="headerlink" href="#builddatabank-orderparameter-module" title="Link to this heading">¶</a></h2>
+<blockquote id="module-BuildDatabank.OrderParameter">
+<div><p>calculation of order parameters of lipid bilayers
+from a MD trajectory</p>
+<p>Made by Joe,  Last edit 2017/02/02</p>
+</div></blockquote>
+<blockquote>
+<div><p>output: order parameters (2 textfiles)</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.Dihedrals">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_1_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_3_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_4_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.Dihedrals" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.OrderParameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">OrderParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_B_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_B_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#OrderParameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.OrderParameter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing&amp;manipulating
+order parameter (OP) related metadata (definition, name, …)
+and OP trajectories
+and methods to evaluate OPs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.OrderParameter.calc_OP">
+<span class="sig-name descname"><span class="pre">calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#OrderParameter.calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.OrderParameter.calc_OP" title="Link to this definition">¶</a></dt>
+<dd><p>calculates Order Parameter according to equation
+S = 1/2 * (3*cos(theta)^2 -1)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.OrderParameter.get_avg_std_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_OP</span></span><a class="headerlink" href="#BuildDatabank.OrderParameter.OrderParameter.get_avg_std_OP" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.OrderParameter.get_avg_std_stem_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_stem_OP</span></span><a class="headerlink" href="#BuildDatabank.OrderParameter.OrderParameter.get_avg_std_stem_OP" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.OrderParameter.get_op_res">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_op_res</span></span><a class="headerlink" href="#BuildDatabank.OrderParameter.OrderParameter.get_op_res" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.calc_angle">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">calc_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#calc_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.calc_angle" title="Link to this definition">¶</a></dt>
+<dd><p>calculates the angle between the vector and z-axis in degrees
+no PBC check!
+Calculates the center of mass of the selected atoms to invert bottom leaflet vector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.calc_z_dim">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">calc_z_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gro</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#calc_z_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.calc_z_dim" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.find_OP">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">find_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#find_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.find_OP" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.parseDihedralInput">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">parseDihedralInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#parseDihedralInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.parseDihedralInput" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.parse_op_input">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">parse_op_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#parse_op_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.parse_op_input" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.read_trajs_calc_OPs">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">read_trajs_calc_OPs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#read_trajs_calc_OPs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.read_trajs_calc_OPs" title="Link to this definition">¶</a></dt>
+<dd><p>procedure that
+creates MDAnalysis Universe with top,
+reads in trajectories trajs and then
+goes through every frame and
+evaluates each Order Parameter “S” from the list of OPs ordPars.
+ordPars : list of OrderParameter class</p>
+<blockquote>
+<div><p>each item in this list describes an Order parameter to be calculated in the trajectory</p>
+</div></blockquote>
+<dl class="simple">
+<dt>top<span class="classifier">str</span></dt><dd><p>filename of a top file (e.g. conf.gro)</p>
+</dd>
+<dt>trajs<span class="classifier">list of strings</span></dt><dd><p>filenames of trajectories</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.OrderParameter.read_trj_PN_angles">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.OrderParameter.</span></span><span class="sig-name descname"><span class="pre">read_trj_PN_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gro_fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/OrderParameter.html#read_trj_PN_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.OrderParameter.read_trj_PN_angles" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="builddatabank-qualityevaluation-module">
+<h2>BuildDatabank.QualityEvaluation module<a class="headerlink" href="#builddatabank-qualityevaluation-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-buildh-calcop-test-module">
+<h2>BuildDatabank.buildH_calcOP_test module<a class="headerlink" href="#builddatabank-buildh-calcop-test-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-check-bonds-module">
+<h2>BuildDatabank.check_bonds module<a class="headerlink" href="#builddatabank-check-bonds-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-check-densities-module">
+<h2>BuildDatabank.check_densities module<a class="headerlink" href="#builddatabank-check-densities-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-check-mappings-module">
+<h2>BuildDatabank.check_mappings module<a class="headerlink" href="#builddatabank-check-mappings-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-createids-module">
+<h2>BuildDatabank.createIDs module<a class="headerlink" href="#builddatabank-createids-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-createpdbs-module">
+<h2>BuildDatabank.createPDBs module<a class="headerlink" href="#builddatabank-createpdbs-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="databanklibrary">
+<h2>databankLibrary<a class="headerlink" href="#databanklibrary" title="Link to this heading">¶</a></h2>
+<dl class="py function" id="module-BuildDatabank.databankLibrary">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.CalcAreaPerMolecule">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">CalcAreaPerMolecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#CalcAreaPerMolecule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.CalcAreaPerMolecule" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates average area per lipid for a simulation defined with <cite>system</cite>.
+It is using the apl.json file where area per lipid calculated by the calcAPL.py is stored.
+<cite>system</cite> is the NMRlipids databank dictionary defining a simulation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.GetNlipids">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetNlipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#GetNlipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.GetNlipids" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.GetThickness">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetThickness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#GetThickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.GetThickness" title="Link to this definition">¶</a></dt>
+<dd><p>Gets thickness for a simulation defined with <cite>system</cite> from the thickness.json file
+where thickness calculated by the calc_thickness.py is stored.
+<cite>system</cite> is the NMRlipids databank dictionary defining a simulation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.OrderParameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">OrderParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_B_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_B_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#OrderParameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.OrderParameter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing&amp;manipulating
+order parameter (OP) related metadata (definition, name, …)
+and OP trajectories
+and methods to evaluate OPs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.OrderParameter.calc_OP">
+<span class="sig-name descname"><span class="pre">calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#OrderParameter.calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.OrderParameter.calc_OP" title="Link to this definition">¶</a></dt>
+<dd><p>calculates Order Parameter according to equation
+S = 1/2 * (3*cos(theta)^2 -1)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.OrderParameter.get_avg_std_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_OP</span></span><a class="headerlink" href="#BuildDatabank.databankLibrary.OrderParameter.get_avg_std_OP" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.OrderParameter.get_avg_std_stem_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_stem_OP</span></span><a class="headerlink" href="#BuildDatabank.databankLibrary.OrderParameter.get_avg_std_stem_OP" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.OrderParameter.get_op_res">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_op_res</span></span><a class="headerlink" href="#BuildDatabank.databankLibrary.OrderParameter.get_op_res" title="Link to this definition">¶</a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.ShowEquilibrationTimes">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">ShowEquilibrationTimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#ShowEquilibrationTimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.ShowEquilibrationTimes" title="Link to this definition">¶</a></dt>
+<dd><p>Prints relative equilibration time for each lipid within a simulation defined by <cite>system</cite>.
+Relative equilibration times are calculated with NMRPCA_timerelax.py and stored in eq_times.json files.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.YamlBadConfigException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">YamlBadConfigException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#YamlBadConfigException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.YamlBadConfigException" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom Exception class for parsing the yaml configuration</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.calc_angle">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calc_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#calc_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.calc_angle" title="Link to this definition">¶</a></dt>
+<dd><p>calculates the angle between the vector and z-axis in degrees
+no PBC check!
+Calculates the center of mass of the selected atoms to invert bottom leaflet vector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.calc_file_sha1_hash">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calc_file_sha1_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4096</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#calc_file_sha1_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.calc_file_sha1_hash" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates sha1 hash of given file using hashlib</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fi</strong> (<em>str</em>) – path to file</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – file read bytes step. Defaults to 4096.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>sha1 filehash of 40 char length</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.calc_z_dim">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calc_z_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gro</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#calc_z_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.calc_z_dim" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.create_databank_directories">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">create_databank_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_hashes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#create_databank_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.create_databank_directories" title="Link to this definition">¶</a></dt>
+<dd><p>create nested output directory structure to save results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>_type_</em>) – Processed simulation entries</p></li>
+<li><p><strong>sim_hashes</strong> (<em>_type_</em>) – file hashes needed for directory structure</p></li>
+<li><p><strong>out</strong> (<em>str</em>) – output base path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – unsupported simulation software</p></li>
+<li><p><strong>OSError</strong> – Error while creating the output directory</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>output directory</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.databank">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">databank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'../../Data/Simulations/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#databank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.databank" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of all simulation in the NMR lipids databank.</p>
+<p><cite>path</cite> should be the local location of /Data/Simulations/ in the NMRlipids databank folder. Example usage to loop over systems:</p>
+<blockquote>
+<div><p>path = ‘../../Data/Simulations/’
+db_data = databank(path)
+systems = db_data.get_systems()</p>
+<dl class="simple">
+<dt>for system in systems:</dt><dd><p>print(system)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.databank.get_systems">
+<span class="sig-name descname"><span class="pre">get_systems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#databank.get_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.databank.get_systems" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a list of all systems in the NMRlipids databank</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.download_link">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">download_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#download_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.download_link" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.download_resource_from_uri">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">download_resource_from_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_if_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#download_resource_from_uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.download_resource_from_uri" title="Link to this definition">¶</a></dt>
+<dd><p>Download file resource [from uri] to given file destination using urllib</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uri</strong> (<em>str</em>) – file URL</p></li>
+<li><p><strong>dest</strong> (<em>str</em>) – file destination path</p></li>
+<li><p><strong>override_if_exists</strong> (<em>bool</em><em>, </em><em>optional</em>) – Override dest. file if exists. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – HTTPException: An error occured during download</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.find_OP">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">find_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#find_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.find_OP" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.initialize_databank">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">initialize_databank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databankPath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#initialize_databank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.initialize_databank" title="Link to this definition">¶</a></dt>
+<dd><p>This function intializes the databank. <cite>databankPath</cite> should the path for the local location of the NMRlipids databank. Output is the list of dictionaries that contain the content of README.yaml files for each system.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.parse_op_input">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">parse_op_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#parse_op_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.parse_op_input" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.parse_valid_config_settings">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">parse_valid_config_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">info_yaml:</span> <span class="pre">dict)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">typing.List[str]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#parse_valid_config_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.parse_valid_config_settings" title="Link to this definition">¶</a></dt>
+<dd><p>Parses, validates and updates dict entries from yaml configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>info_yaml</strong> (<em>dict</em>) – info.yaml of database to add</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – Missing required key in info.yaml</p></li>
+<li><p><a class="reference internal" href="#BuildDatabank.databankLibrary.YamlBadConfigException" title="BuildDatabank.databankLibrary.YamlBadConfigException"><strong>YamlBadConfigException</strong></a> – Incorrect or incompatible configuration</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>updated sim dict
+list[str]: list of filenames to download</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.plotFormFactor">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">plotFormFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expFormFactor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotColor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#plotFormFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.plotFormFactor" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.plotOrderParameters">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">plotOrderParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">OPsim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OPexp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#plotOrderParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.plotOrderParameters" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.plotSimulation">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">plotSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#plotSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.plotSimulation" title="Link to this definition">¶</a></dt>
+<dd><p>Creates plots of form factor and C-H bond order parameters for a selected <cite>lipid</cite> from a simulation with the given <cite>ID</cite> number.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.print_README">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">print_README</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#print_README"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.print_README" title="Link to this definition">¶</a></dt>
+<dd><p>This function prints the content of <cite>system</cite> dictionary in human readable format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.read_mapping_file">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_mapping_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#read_mapping_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.read_mapping_file" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.read_mapping_filePAIR">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_mapping_filePAIR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#read_mapping_filePAIR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.read_mapping_filePAIR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.read_mapping_file_res">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_mapping_file_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#read_mapping_file_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.read_mapping_file_res" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.read_trajs_calc_OPs">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_trajs_calc_OPs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#read_trajs_calc_OPs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.read_trajs_calc_OPs" title="Link to this definition">¶</a></dt>
+<dd><p>procedure that
+creates MDAnalysis Universe with top,
+reads in trajectories trajs and then
+goes through every frame and
+evaluates each Order Parameter “S” from the list of OPs ordPars.
+ordPars : list of OrderParameter class</p>
+<blockquote>
+<div><p>each item in this list describes an Order parameter to be calculated in the trajectory</p>
+</div></blockquote>
+<dl class="simple">
+<dt>top<span class="classifier">str</span></dt><dd><p>filename of a top file (e.g. conf.gro)</p>
+</dd>
+<dt>trajs<span class="classifier">list of strings</span></dt><dd><p>filenames of trajectories</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.read_trj_PN_angles">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_trj_PN_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gro_fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#read_trj_PN_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.read_trj_PN_angles" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.resolve_doi_url">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">resolve_doi_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#resolve_doi_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.resolve_doi_url" title="Link to this definition">¶</a></dt>
+<dd><p>Returns full doi link of given ressource, also checks if URL is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doi</strong> (<em>str</em>) – [doi] part from config</p></li>
+<li><p><strong>validate_uri</strong> (<em>bool</em><em>, </em><em>optional</em>) – Check if URL is valid. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>full doi link</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.databankLibrary.resolve_download_file_url">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">resolve_download_file_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fi_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/BuildDatabank/databankLibrary.html#resolve_download_file_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.databankLibrary.resolve_download_file_url" title="Link to this definition">¶</a></dt>
+<dd><p>Resolve file URI from supported DOI with given filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doi</strong> (<em>str</em>) – DOI string</p></li>
+<li><p><strong>fi_name</strong> (<em>str</em>) – name of the file to resolve from source</p></li>
+<li><p><strong>validate_uri</strong> (<em>bool</em><em>, </em><em>optional</em>) – Check if URI exists. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – Unsupported DOI repository</p></li>
+<li><p><strong>HTTPError</strong> – HTTP Error Status Code</p></li>
+<li><p><strong>URLError</strong> – Failed to reach the server</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>file URI</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="builddatabank-dic-lipids-module">
+<h2>BuildDatabank.dic_lipids module<a class="headerlink" href="#builddatabank-dic-lipids-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="builddatabank-openmm-parser-module">
+<span id="module-BuildDatabank.dic_lipids"></span><h2>BuildDatabank.openmm_parser module<a class="headerlink" href="#builddatabank-openmm-parser-module" title="Link to this heading">¶</a></h2>
+<dl class="py class" id="module-BuildDatabank.openmm_parser">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmmParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.openmm_parser.</span></span><span class="sig-name descname"><span class="pre">openmmParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmmParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmmParser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmmParser.setDt">
+<span class="sig-name descname"><span class="pre">setDt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmmParser.setDt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmmParser.setDt" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmmParser.setPType">
+<span class="sig-name descname"><span class="pre">setPType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ptype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmmParser.setPType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmmParser.setPType" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmmParser.setPressure">
+<span class="sig-name descname"><span class="pre">setPressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmmParser.setPressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmmParser.setPressure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmmParser.setTempurature">
+<span class="sig-name descname"><span class="pre">setTempurature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmmParser.setTempurature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmmParser.setTempurature" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.openmm_input">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.openmm_parser.</span></span><span class="sig-name descname"><span class="pre">openmm_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#openmm_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.openmm_input" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.read_inp_input">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.openmm_parser.</span></span><span class="sig-name descname"><span class="pre">read_inp_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#read_inp_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.read_inp_input" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BuildDatabank.openmm_parser.read_xml_input">
+<span class="sig-prename descclassname"><span class="pre">BuildDatabank.openmm_parser.</span></span><span class="sig-name descname"><span class="pre">read_xml_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/openmm_parser.html#read_xml_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.openmm_parser.read_xml_input" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="builddatabank-searchdatabank-module">
+<h2>BuildDatabank.searchDATABANK module<a class="headerlink" href="#builddatabank-searchdatabank-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<span class="target" id="module-BuildDatabank"></span></section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">BuildDatabank package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#builddatabank-adddata-module">BuildDatabank.AddData module</a></li>
+<li><a class="reference internal" href="#builddatabank-orderparameter-module">BuildDatabank.OrderParameter module</a><ul>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.Dihedrals"><code class="docutils literal notranslate"><span class="pre">Dihedrals</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.OrderParameter"><code class="docutils literal notranslate"><span class="pre">OrderParameter</span></code></a><ul>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.OrderParameter.calc_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.calc_OP()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.OrderParameter.get_avg_std_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_avg_std_OP</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.OrderParameter.get_avg_std_stem_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_avg_std_stem_OP</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.OrderParameter.get_op_res"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_op_res</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.calc_angle"><code class="docutils literal notranslate"><span class="pre">calc_angle()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.calc_z_dim"><code class="docutils literal notranslate"><span class="pre">calc_z_dim()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.find_OP"><code class="docutils literal notranslate"><span class="pre">find_OP()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.parseDihedralInput"><code class="docutils literal notranslate"><span class="pre">parseDihedralInput()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.parse_op_input"><code class="docutils literal notranslate"><span class="pre">parse_op_input()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.read_trajs_calc_OPs"><code class="docutils literal notranslate"><span class="pre">read_trajs_calc_OPs()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.OrderParameter.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#builddatabank-qualityevaluation-module">BuildDatabank.QualityEvaluation module</a></li>
+<li><a class="reference internal" href="#builddatabank-buildh-calcop-test-module">BuildDatabank.buildH_calcOP_test module</a></li>
+<li><a class="reference internal" href="#builddatabank-check-bonds-module">BuildDatabank.check_bonds module</a></li>
+<li><a class="reference internal" href="#builddatabank-check-densities-module">BuildDatabank.check_densities module</a></li>
+<li><a class="reference internal" href="#builddatabank-check-mappings-module">BuildDatabank.check_mappings module</a></li>
+<li><a class="reference internal" href="#builddatabank-createids-module">BuildDatabank.createIDs module</a></li>
+<li><a class="reference internal" href="#builddatabank-createpdbs-module">BuildDatabank.createPDBs module</a></li>
+<li><a class="reference internal" href="#databanklibrary">databankLibrary</a><ul>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.CalcAreaPerMolecule"><code class="docutils literal notranslate"><span class="pre">CalcAreaPerMolecule()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.GetNlipids"><code class="docutils literal notranslate"><span class="pre">GetNlipids()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.GetThickness"><code class="docutils literal notranslate"><span class="pre">GetThickness()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.OrderParameter"><code class="docutils literal notranslate"><span class="pre">OrderParameter</span></code></a><ul>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.OrderParameter.calc_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.calc_OP()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.OrderParameter.get_avg_std_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_avg_std_OP</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.OrderParameter.get_avg_std_stem_OP"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_avg_std_stem_OP</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.OrderParameter.get_op_res"><code class="docutils literal notranslate"><span class="pre">OrderParameter.get_op_res</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.ShowEquilibrationTimes"><code class="docutils literal notranslate"><span class="pre">ShowEquilibrationTimes()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.YamlBadConfigException"><code class="docutils literal notranslate"><span class="pre">YamlBadConfigException</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.calc_angle"><code class="docutils literal notranslate"><span class="pre">calc_angle()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.calc_file_sha1_hash"><code class="docutils literal notranslate"><span class="pre">calc_file_sha1_hash()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.calc_z_dim"><code class="docutils literal notranslate"><span class="pre">calc_z_dim()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.create_databank_directories"><code class="docutils literal notranslate"><span class="pre">create_databank_directories()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.databank"><code class="docutils literal notranslate"><span class="pre">databank</span></code></a><ul>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.databank.get_systems"><code class="docutils literal notranslate"><span class="pre">databank.get_systems()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.download_link"><code class="docutils literal notranslate"><span class="pre">download_link()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.download_resource_from_uri"><code class="docutils literal notranslate"><span class="pre">download_resource_from_uri()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.find_OP"><code class="docutils literal notranslate"><span class="pre">find_OP()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.initialize_databank"><code class="docutils literal notranslate"><span class="pre">initialize_databank()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.parse_op_input"><code class="docutils literal notranslate"><span class="pre">parse_op_input()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.parse_valid_config_settings"><code class="docutils literal notranslate"><span class="pre">parse_valid_config_settings()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.plotFormFactor"><code class="docutils literal notranslate"><span class="pre">plotFormFactor()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.plotOrderParameters"><code class="docutils literal notranslate"><span class="pre">plotOrderParameters()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.plotSimulation"><code class="docutils literal notranslate"><span class="pre">plotSimulation()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.print_README"><code class="docutils literal notranslate"><span class="pre">print_README()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.read_mapping_file"><code class="docutils literal notranslate"><span class="pre">read_mapping_file()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.read_mapping_filePAIR"><code class="docutils literal notranslate"><span class="pre">read_mapping_filePAIR()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.read_mapping_file_res"><code class="docutils literal notranslate"><span class="pre">read_mapping_file_res()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.read_trajs_calc_OPs"><code class="docutils literal notranslate"><span class="pre">read_trajs_calc_OPs()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.resolve_doi_url"><code class="docutils literal notranslate"><span class="pre">resolve_doi_url()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.databankLibrary.resolve_download_file_url"><code class="docutils literal notranslate"><span class="pre">resolve_download_file_url()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#builddatabank-dic-lipids-module">BuildDatabank.dic_lipids module</a></li>
+<li><a class="reference internal" href="#builddatabank-openmm-parser-module">BuildDatabank.openmm_parser module</a><ul>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmmParser"><code class="docutils literal notranslate"><span class="pre">openmmParser</span></code></a><ul>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmmParser.setDt"><code class="docutils literal notranslate"><span class="pre">openmmParser.setDt()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmmParser.setPType"><code class="docutils literal notranslate"><span class="pre">openmmParser.setPType()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmmParser.setPressure"><code class="docutils literal notranslate"><span class="pre">openmmParser.setPressure()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmmParser.setTempurature"><code class="docutils literal notranslate"><span class="pre">openmmParser.setTempurature()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.openmm_input"><code class="docutils literal notranslate"><span class="pre">openmm_input()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.read_inp_input"><code class="docutils literal notranslate"><span class="pre">read_inp_input()</span></code></a></li>
+<li><a class="reference internal" href="#BuildDatabank.openmm_parser.read_xml_input"><code class="docutils literal notranslate"><span class="pre">read_xml_input()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#builddatabank-searchdatabank-module">BuildDatabank.searchDATABANK module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="modules.html"
+                          title="previous chapter">BuildDatabank</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/BuildDatabank.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="BuildDatabank"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">NMRlipids 24.8.2023 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >BuildDatabank</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">BuildDatabank package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Samuli Ollila.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.3.
+    </div>
+  </body>
+</html>
