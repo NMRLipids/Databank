@@ -12,9 +12,9 @@ serve as useful examples when preparing the new entry files.
 key | description | type  
 ----|--------|------
 DOI | DOI from where the raw data is found | user given (compulsory) 
-SOFTWARE | Software used to run the simulation (e.g. Gromacs, Amber, NAMD, etc.) | 
 TRJ | Name of the trajectory file found from DOI | 
 TPR | Name of the topology file found from DOI (tpr file in the case of Gromacs) | 
+SOFTWARE | Software used to run the simulation (e.g. Gromacs, Amber, NAMD, etc.) | 
 PREEQTIME | Pre-equilibrate time simulated before the uploaded trajectory in nanoseconds. For example, if you upload 100-200 ns part of total 200 ns simulation, this should value should be 100. | 
 TIMELEFTOUT | Equilibration period in the uploaded trajectory that should be discarded in analyses. For example, if you upload 0-200 ns part of total 200 ns simulation where the first 100 ns should be considered as an equilibration, this value should be 100. 
 COMPOSITION | Molecules names used in the simulation and corresponding mapping files. For more detailed description see below. | 
