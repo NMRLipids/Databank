@@ -981,6 +981,7 @@ def GetNlipids(system):
         
 __pdoc__['plotFormFactor'] = False
 def plotFormFactor(expFormFactor,k,legend,PlotColor):
+    """:meta private:"""
     xValues = []
     yValues = []
     for i in expFormFactor:
@@ -1000,6 +1001,7 @@ def plotFormFactor(expFormFactor,k,legend,PlotColor):
 
 __pdoc__['plotOrderParameters'] = False
 def plotOrderParameters(OPsim, OPexp):
+    """:meta private:"""
     xValuesHG = []
     xValuesSN1 = []
     xValuesSN2 = []
