@@ -171,8 +171,11 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "SM16": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
 }
->>>>>>> development
 
 
 # Dictionary of other than lipid molecules.
@@ -209,7 +212,6 @@ molecules_dict = {
         "TYPE": "string",
     },
 }
->>>>>>> development
 
 
 # Dictionary containing the force fields for molecules given by the contributor
@@ -352,6 +354,10 @@ molecule_ff_dict = {
         "TYPE": "string",
     },
     "FFDPPG": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFSM16": {
         "REQUIRED": False,
         "TYPE": "string",
     },
