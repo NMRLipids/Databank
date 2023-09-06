@@ -172,6 +172,7 @@ lipids_dict = {
         "TYPE": "string",
     },
 }
+>>>>>>> development
 
 
 # Dictionary of other than lipid molecules.
@@ -208,6 +209,7 @@ molecules_dict = {
         "TYPE": "string",
     },
 }
+>>>>>>> development
 
 
 # Dictionary containing the force fields for molecules given by the contributor
