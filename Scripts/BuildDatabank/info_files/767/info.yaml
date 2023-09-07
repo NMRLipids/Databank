@@ -98,7 +98,7 @@ COMPOSITION:
   MAPPING: mappingPOPCslipids.yaml     # name of mapping file
  CHOL: 
   NAME: CHL1
-  MAPPIG: mappingCHOLESTEROLslipid.yaml
+  MAPPING: mappingCHOLESTEROLslipid.yaml
  SM16:
   NAME: SM16 
   MAPPING: mappingSM16slipids.yaml
@@ -121,7 +121,7 @@ UNITEDATOM_DICT:
 # Give a local working directory for temporary files (compulsory, if you run AddData.py yourself, otherwise can be empty). For example:
 # DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
-DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 
 # Give publication related to the contributed simulation data if available. Can be left empty. For example:
 # PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
@@ -190,4 +190,4 @@ TOP: 1k_pop40prc+psm40prc+chl20prc+wat.top
 # If you have something atypical in your simulation (e.g. old Gromacs version, non-standard bilayer orientation, phase separation, etc.),
 # you can mention this in the WARNINGS dictionary
 
-WARNINGS: 
+# WARNINGS: 
