@@ -22,6 +22,8 @@ from typing import List
 import json
 import sys
 
+import pandas as pd
+
 __pdoc__ = {}
 
 logger = logging.getLogger("__name__")
@@ -1290,6 +1292,41 @@ def read_mapping_file_res(mapping_file, atom1):
                 m_res = line.split()[2]
     return m_res
 
+
+def ShowTable(SortedQualities, quality):
+    """
+    Shows a table of sorted qualities.
+    """
+    rounding = ['headgroup', 'sn-1', 'sn-2', 'total', 'tails', 'FFQuality']
+    QualityTable = []
+    pd.set_option('display.max_rows', None)
+    for i in SortedQualities:
+        StoredToTable = []
+        #
+        #
+        #print(i)
+        for k, v in i[quality].items():
+            #print(k,v)
+            if k in rounding:
+                #print(len(v))
+                if v and v != float("inf") and not math.isnan(v):
+                    i[quality][k] = round(float(v), 2)
+        #
+        #
+        StoredToTable = i[quality]
+        StoredToTable['Forcefield'] = i['system']['FF']
+        molecules = ''
+        MolNumbers = ''
+        for lipid in i['system']['COMPOSITION']:
+            #print(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))
+            molecules = molecules + lipid + ':'
+            MolNumbers = MolNumbers + str(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))  + ':'
+        StoredToTable['Molecules'] = molecules[:-1]
+        StoredToTable['Number of molecules'] = ' (' + MolNumbers[:-1] + ')'
+        StoredToTable['Temperature'] = i['system']['TEMPERATURE']
+        StoredToTable['ID'] = i['system']['ID']
+        QualityTable.append(StoredToTable)    
+    display(pd.json_normalize(QualityTable))
 
 
 
