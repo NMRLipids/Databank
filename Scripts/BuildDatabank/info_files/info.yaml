@@ -98,7 +98,7 @@ COMPOSITION:
   MAPPING:      # name of mapping file
  MOLECULE2: 
   NAME:
-  MAPPIG:
+  MAPPING:
  SOL: 
   NAME: 
   MAPPING: 
@@ -123,7 +123,7 @@ DIR_WRK:
 # Give publication related to the contributed simulation data if available. Can be left empty. For example:
 # PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
 
-PUBLICAION: 
+PUBLICATION: 
 
 # Give contact and/or names of authors. For example:
 # AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
