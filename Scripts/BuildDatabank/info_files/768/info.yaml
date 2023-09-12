@@ -17,14 +17,14 @@
 # Give DOI from where the raw data is found (compulsory). For example:
 # DOI: 10.5281/zenodo.6822850
 
-DOI:
+DOI: 10.5281/zenodo.8333993
 
 
 
 # Give name of the trajectory file that can be found from the DOI defined above (compulsory). For example: 
 #TRJ: run_pope_dog_chol_lipid17_0-1us.xtc
 
-TRJ:
+TRJ: NPT.xtc
 
 
 # Give name of the topology file that can be found from the DOI defined above (compulsory).
@@ -32,7 +32,7 @@ TRJ:
 # For example:
 # TPR: run_pope_dog_chol_lipid17.tpr
 
-TPR: 
+TPR: NPT.tpr
 
 
 # Give software used to run the simulation (compulsory). Currently supported are Gromacs and openMM.
@@ -41,7 +41,7 @@ TPR:
 # For example:
 # SOFTWARE: gromacs 
 
-SOFTWARE:
+SOFTWARE: gromacs
 
 
 
@@ -50,7 +50,7 @@ SOFTWARE:
 # The example simulation has been ran 20ns before 1000ns production run, therefore:
 # PREEQTIME: 20
 
-PREEQTIME:
+PREEQTIME: 0
 
 
 
@@ -59,7 +59,7 @@ PREEQTIME:
 # This time is 100ns in the example simulations, therefore:
 # TIMELEFTOUT: 100 
 
-TIMELEFTOUT:
+TIMELEFTOUT: 50
 
 
 
@@ -92,16 +92,13 @@ TIMELEFTOUT:
 #  NAME: SOL
 #  MAPPING: mappingTIP3Pwater.yaml
 
-COMPOSITION:
- MOLECULE1:     # universal name
-  NAME:         # simulation specific name
-  MAPPING:      # name of mapping file
- MOLECULE2: 
-  NAME:
-  MAPPING:
+COMPOSITION: 
+ SM18:
+  NAME: SSM    # simulation specific name
+  MAPPING: mappingSM18charmm.yaml
  SOL: 
-  NAME: 
-  MAPPING: 
+  NAME: TIP3
+  MAPPING: mappingTIP3PwaterSlipids.yaml
 
 
 # Give information for constructing hydrogens for united atom (UA) simulations (compulsory for UA simulations, empty for all atom simulations)
@@ -118,7 +115,7 @@ UNITEDATOM_DICT:
 # Give a local working directory for temporary files (compulsory, if you run AddData.py yourself, otherwise can be empty). For example:
 # DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 
-DIR_WRK: 
+DIR_WRK: /home/sosamuli/temp/DataBank/
 
 # Give publication related to the contributed simulation data if available. Can be left empty. For example:
 # PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
@@ -128,32 +125,32 @@ PUBLICATION:
 # Give contact and/or names of authors. For example:
 # AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
 
-AUTHORS_CONTACT:
+AUTHORS_CONTACT: Kai Stroh, Jelger Risselada, Luca Monticelli
 
 # Give description of system in free format. For example:
 # SYSTEM: DOGandCHOLinPOPEwithLipid17
 
-SYSTEM: 
+SYSTEM: SSM bilayer in water, 328K
 
 # Give the version of the software used. For example:
 # SOFTWARE_VERSION: 18.7
 
-SOFTWARE_VERSION:
+SOFTWARE_VERSION: 2020.4 and 2021.4
 
 # Give the name of the force field used used in the simulation (e.g., CHARMM36, Slipids, etc.). In the example:
 # FF: Lipid17
 
-FF:
+FF: CHARMM36
 
 # Describe the source of the force field parameters. For example, CHARMM-GUI, link to webpage where parameters were downloaded, or citation to a paper. For example:
 #FF_SOURCE: Amber tools
 
-FF_SOURCE:
+FF_SOURCE: CHARMM GUI
 
 # Give the date when parameters were accessed or created. The format is day/month/year. For example:
 # FF_DATE: 2019
 
-FF_DATE:
+FF_DATE: 2023
 
 # Individual force field names for molecules can be also given. This is useful when special force fields are used for certain molecules,
 # such as ions. Water model would good to specify always (FFSOL).
@@ -180,10 +177,10 @@ LOG:
 
 # You can give the name of the Gromacs top file that is found from the DOI given above.
 
-TOP:
+TOP: topol.top
 
 
 # If you have something atypical in your simulation (e.g. old Gromacs version, non-standard bilayer orientation, phase separation, etc.),
 # you can mention this in the WARNINGS dictionary
 
-WARNINGS: 
+# WARNINGS: 

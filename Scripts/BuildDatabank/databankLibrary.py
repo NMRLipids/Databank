@@ -22,6 +22,8 @@ from typing import List
 import json
 import sys
 
+import pandas as pd
+
 __pdoc__ = {}
 
 logger = logging.getLogger("__name__")
@@ -171,8 +173,15 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "SM16": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "SM18": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
 }
->>>>>>> development
 
 
 # Dictionary of other than lipid molecules.
@@ -209,7 +218,6 @@ molecules_dict = {
         "TYPE": "string",
     },
 }
->>>>>>> development
 
 
 # Dictionary containing the force fields for molecules given by the contributor
@@ -352,6 +360,14 @@ molecule_ff_dict = {
         "TYPE": "string",
     },
     "FFDPPG": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFSM16": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFSM18": {
         "REQUIRED": False,
         "TYPE": "string",
     },
@@ -846,7 +862,8 @@ import yaml
 
 
 class databank:
-    """ Representation of all simulation in the NMR lipids databank. 
+    """ :meta private: 
+    Representation of all simulation in the NMR lipids databank. 
 
         `path` should be the local location of /Data/Simulations/ in the NMRlipids databank folder. Example usage to loop over systems: 
    
@@ -892,7 +909,12 @@ class databank:
 # functions used in building and analyzing the databank
 
 def initialize_databank(databankPath):
-    """ This function intializes the databank. `databankPath` should the path for the local location of the NMRlipids databank. Output is the list of dictionaries that contain the content of README.yaml files for each system.  """
+    """ 
+    Intializes the NMRlipids databank.
+
+    :param databankPath: path for the local location of the NMRlipids databank, for example ``../../Databank``
+    :return: list of dictionaries that contain the content of README.yaml files for each system.  
+    """
     #sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
     #from databankLibrary import download_link, lipids_dict, databank
     path = databankPath + '/Data/Simulations/'
@@ -902,7 +924,12 @@ def initialize_databank(databankPath):
 
 
 def print_README(system):
-    """ This function prints the content of `system` dictionary in human readable format. """
+    """ 
+    Prints the content of ``system`` dictionary in human readable format. 
+
+    :param system: NMRlipids databank dictionary defining a simulation.
+
+    """
     if system == 'example':
         readmePath = '../data/simulations/READMEexplanations.yaml'
         with open(readmePath, 'r') as file:
@@ -918,9 +945,10 @@ def print_README(system):
 
 def CalcAreaPerMolecule(system):
     """ 
-    Calculates average area per lipid for a simulation defined with `system`. 
-    It is using the apl.json file where area per lipid calculated by the calcAPL.py is stored. 
-    `system` is the NMRlipids databank dictionary defining a simulation. 
+    Calculates average area per lipid for a simulation defined with ``system``. 
+    It is using the ``apl.json`` file where area per lipid as a function of time calculated by the ``calcAPL.py`` is stored. 
+
+    :param system: NMRlipids databank dictionary defining a simulation.
     """
     APLpath = system['path'] + 'apl.json'
     try:
@@ -939,9 +967,10 @@ def CalcAreaPerMolecule(system):
 
 def GetThickness(system):
     """ 
-    Gets thickness for a simulation defined with `system` from the thickness.json file 
-    where thickness calculated by the calc_thickness.py is stored. 
-    `system` is the NMRlipids databank dictionary defining a simulation. 
+    Gets thickness for a simulation defined with ``system`` from the ``thickness.json`` file 
+    where thickness calculated by the ``calc_thickness.py`` is stored. 
+
+    :param system: NMRlipids databank dictionary defining a simulation.
     """
     ThicknessPath = system['path'] + 'thickness.json'
     try:
@@ -955,8 +984,10 @@ def GetThickness(system):
 
 def ShowEquilibrationTimes(system):
     """ 
-    Prints relative equilibration time for each lipid within a simulation defined by `system`. 
-    Relative equilibration times are calculated with NMRPCA_timerelax.py and stored in eq_times.json files.
+    Prints relative equilibration time for each lipid within a simulation defined by ``system``. 
+    Relative equilibration times are calculated with ``NMRPCA_timerelax.py`` and stored in ``eq_times.json`` files.
+
+    :param system: NMRlipids databank dictionary defining a simulation.
     """
     
     EqTimesPath = system['path'] + 'eq_times.json'
@@ -973,6 +1004,11 @@ def ShowEquilibrationTimes(system):
         print(i+':', EqTimeDict[i])
             
 def GetNlipids(system):
+    """ 
+    Returns the total number of lipids in a simulation defined by ``system``. 
+
+    :param system: NMRlipids databank dictionary defining a simulation.
+    """
     Nlipid = 0
     for molecule in system['COMPOSITION']:
         if molecule in lipids_dict:
@@ -1191,7 +1227,11 @@ def plotOrderParameters(OPsim, OPexp):
 
 def plotSimulation(ID, lipid):
     """
-    Creates plots of form factor and C-H bond order parameters for a selected `lipid` from a simulation with the given `ID` number. 
+    Creates plots of form factor and C-H bond order parameters for the selected ``lipid`` from a simulation with the given ``ID`` number. 
+
+    :param ID: NMRlipids databank ID number of the simulation
+    :param lipid: universal molecul name of the lipid
+
     """
     DataBankPath = '../../Databank/Data/'
     systems = initialize_databank(DataBankPath + '../')
@@ -1255,16 +1295,30 @@ def plotSimulation(ID, lipid):
     #print(OPexp)
 
         
-# Return mapping name of atom from mapping file
 def read_mapping_file(mapping_file, atom1):
+    """
+    Get force field specific atom name corresponding to universal atom name.
+
+    :param mapping_file: path for the mapping file
+    :param atom1: universal atom name
+
+    """
     with open(mapping_file, "rt") as mapping_file:
         mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
         m_atom1 = mapping[atom1]["ATOMNAME"]
     return m_atom1
 
 
-# Return mapping names of pair of atoms from mapping file
 def read_mapping_filePAIR(mapping_file, atom1, atom2):
+    """
+    :meta private:
+    
+    Return mapping names of pair of atoms from mapping file
+
+    :param mapping_file: path for the mapping file
+    :param atom1: universal atom name
+    :param atom2: universal atom name
+    """
     with open(mapping_file, "rt") as mapping_file:
         print(mapping_file)
         for line in mapping_file:
@@ -1278,6 +1332,7 @@ def read_mapping_filePAIR(mapping_file, atom1, atom2):
 
 
 def read_mapping_file_res(mapping_file, atom1):
+    """:meta private:"""
     with open(mapping_file, "rt") as mapping_file:
         for line in mapping_file:
             if atom1 in line:
@@ -1285,12 +1340,52 @@ def read_mapping_file_res(mapping_file, atom1):
     return m_res
 
 
+def ShowTable(SortedQualities, quality):
+    """
+    Shows a table of simulation qualities against experimental data.
+
+    :param SortedQualities: list of dictionaries to be shown, available in folder ``Data/Ranking/``
+    :param quality: should be either ``TotalQuality`` or universal lipid name. First one shows the system total quality. Latter shows the individual lipid quality.
+
+    """
+    rounding = ['headgroup', 'sn-1', 'sn-2', 'total', 'tails', 'FFQuality']
+    QualityTable = []
+    pd.set_option('display.max_rows', None)
+    for i in SortedQualities:
+        StoredToTable = []
+        #
+        #
+        #print(i)
+        for k, v in i[quality].items():
+            #print(k,v)
+            if k in rounding:
+                #print(len(v))
+                if v and v != float("inf") and not math.isnan(v):
+                    i[quality][k] = round(float(v), 2)
+        #
+        #
+        StoredToTable = i[quality]
+        StoredToTable['Forcefield'] = i['system']['FF']
+        molecules = ''
+        MolNumbers = ''
+        for lipid in i['system']['COMPOSITION']:
+            #print(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))
+            molecules = molecules + lipid + ':'
+            MolNumbers = MolNumbers + str(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))  + ':'
+        StoredToTable['Molecules'] = molecules[:-1]
+        StoredToTable['Number of molecules'] = ' (' + MolNumbers[:-1] + ')'
+        StoredToTable['Temperature'] = i['system']['TEMPERATURE']
+        StoredToTable['ID'] = i['system']['ID']
+        QualityTable.append(StoredToTable)    
+    display(pd.json_normalize(QualityTable))
+
 
 
 
 
 #######################ORDER PARAMETERS######################################
 """
+    :meta private:
  calculation of order parameters of lipid bilayers
  from a MD trajectory
  
@@ -1329,6 +1424,8 @@ bond_len_max_sq = bond_len_max**2
 # %%
 class OrderParameter:
     """
+    :meta private:
+
     Class for storing&manipulating
     order parameter (OP) related metadata (definition, name, ...)
     and OP trajectories
@@ -1430,6 +1527,8 @@ class OrderParameter:
 
 def read_trajs_calc_OPs(ordPars, top, trajs):
     """
+    :meta private:
+
     procedure that
     creates MDAnalysis Universe with top,
     reads in trajectories trajs and then
@@ -1486,6 +1585,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
 
 
 def parse_op_input(mapping_file, lipid_name):
+    """:meta private:"""
     ordPars = []
     atomC = []
     atomH = []
@@ -1564,6 +1664,7 @@ def parse_op_input(mapping_file, lipid_name):
 
 
 def find_OP(inp_fname, top_fname, traj_fname, lipid_name):
+    """    :meta private:"""
     ordPars = parse_op_input(inp_fname, lipid_name)
 
     read_trajs_calc_OPs(ordPars, top_fname, traj_fname)
@@ -1576,6 +1677,7 @@ def find_OP(inp_fname, top_fname, traj_fname, lipid_name):
 
 def calc_angle(atoms, com):
     """
+    :meta private:
     calculates the angle between the vector and z-axis in degrees
     no PBC check!
     Calculates the center of mass of the selected atoms to invert bottom leaflet vector
@@ -1597,12 +1699,21 @@ def calc_angle(atoms, com):
 
 
 def calc_z_dim(gro):
+    """
+    Returns the simulation box dimension in z-direction
+    
+    :param gro: coordinate in ``gro``, ``pdb`` or corresponding format.
+    
+    """
     u = mda.Universe(gro)
     z = u.dimensions[2]
     return z
 
 
-def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
+def read_trj_PN_angles(molname, atoms, top_fname, traj_fname):
+    """
+    Calculates the P-N vector angles with respect to membrane normal. More documentation should be added.
+    """
     mol = mda.Universe(top_fname, traj_fname)
 
     selection = mol.select_atoms(
@@ -1640,7 +1751,9 @@ def read_trj_PN_angles(molname, atoms, top_fname, traj_fname, gro_fname):
 
 
 def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
-    """Calculates sha1 hash of given file using hashlib
+    """
+    :meta private:
+    Calculates sha1 hash of given file using hashlib
 
     Args:
         fi (str): path to file
@@ -1660,7 +1773,9 @@ def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
 
 
 def create_databank_directories(sim, sim_hashes, out) -> str:
-    """create nested output directory structure to save results
+    """
+    :meta private:
+    create nested output directory structure to save results
 
     Args:
         sim (_type_): Processed simulation entries
@@ -1706,6 +1821,7 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
 
 # Download link
 def download_link(doi, file):  # deprecated?
+    """    :meta private:"""
     if "zenodo" in doi.lower():
         zenodo_entry_number = doi.split(".")[2]
         return "https://zenodo.org/record/" + zenodo_entry_number + "/files/" + file
