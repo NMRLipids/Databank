@@ -1,0 +1,58 @@
+DOI: 10.5281/zenodo.8337239
+TRJ:
+- - NPT.xtc
+TPR:
+- - NPT.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 50
+COMPOSITION:
+  SM18:
+    NAME: SSM
+    MAPPING: mappingSM18charmm.yaml
+    COUNT:
+    - 50
+    - 50
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 50
+    - 50
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 50
+    - 50
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PwaterSlipids.yaml
+    COUNT: 9000
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 18
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 18
+UNITEDATOM_DICT: null
+DIR_WRK: /home/sosamuli/temp/DataBank/
+PUBLICATION: null
+AUTHORS_CONTACT: Kai Stroh, Jelger Risselada, Luca MONTICELLI
+SYSTEM: POPC/SSM/CHOL bilayer in water (with ions), 321.15 K, NPT
+SOFTWARE_VERSION: 2020.4 and 2021.4
+FF: CHARMM36
+FF_SOURCE: CHARMM GUI
+FF_DATE: 2023
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 684888780
+TRJLENGTH: 300100.0
+TEMPERATURE: 321.15
+NUMBER_OF_ATOMS: 61136
+DATEOFRUNNING: 12/09/2023
+TYPEOFSYSTEM: lipid bilayer
