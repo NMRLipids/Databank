@@ -1,0 +1,186 @@
+# This is a template for info.yaml file that is used to add a simulation into the NMRlipids databank.
+# The first seven keys (DOI, TRJ, TPR, SOFTWARE, PREEQTIME, TIMELEFTOUT, and COMPOSITION) are compulsory for all simulations.
+# For united atom simulations also UNITEDATOM_DICT is compulsory. Information for additional keys are recommended but not compulsory.
+# Each key is explained here and accomppanied with the input from an example entry:
+# https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/742/info.yaml
+# Values for the first six keys should be straightforward to fill, but defining the COMPOSITION dictionary might require more work.
+# The COMPOSITION dictionary connects the universal molecule and atom names to simulation specific naming convention.
+# Please do not hesitate to ask support for generating info.yaml this via GitHub issues (https://github.com/NMRLipids/Databank/issues). 
+#
+# After filling this file, save it to a new folder named with the next free number in this folder
+# https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files.
+# The simulation can be then added into the NMRlipids databank by using AddData.py script.
+
+
+
+
+# Give DOI from where the raw data is found (compulsory). For example:
+# DOI: 10.5281/zenodo.6822850
+
+DOI: 10.5281/zenodo.8333993
+
+
+
+# Give name of the trajectory file that can be found from the DOI defined above (compulsory). For example: 
+#TRJ: run_pope_dog_chol_lipid17_0-1us.xtc
+
+TRJ: NPT.xtc
+
+
+# Give name of the topology file that can be found from the DOI defined above (compulsory).
+# This should be tpr file in the case of Gromacs simulations and pdb or corresponding for other programs
+# For example:
+# TPR: run_pope_dog_chol_lipid17.tpr
+
+TPR: NPT.tpr
+
+
+# Give software used to run the simulation (compulsory). Currently supported are Gromacs and openMM.
+# If you want to contribute a simulation ran with some other software (Amber, NAMD, etc.),
+# please open an issue in the GitHub (https://github.com/NMRLipids/Databank)
+# For example:
+# SOFTWARE: gromacs 
+
+SOFTWARE: gromacs
+
+
+
+# Give the time for pre-equilibration simulated before the uploaded trajectory in nanoseconds (compulsory).
+# If there is no pre-equilibration time, set value to zero.
+# The example simulation has been ran 20ns before 1000ns production run, therefore:
+# PREEQTIME: 20
+
+PREEQTIME: 0
+
+
+
+# Give equilibration period in nanoseconds in the uploaded trajectory that should be discarded in analyses (compulsory).
+# If all data can be used, set the value to zero.
+# This time is 100ns in the example simulations, therefore:
+# TIMELEFTOUT: 100 
+
+TIMELEFTOUT: 50
+
+
+
+# Give information required to determine the composition of the simulation, i.e., the number of each molecule in the system (compulsory).
+# This is done by initializing the COMPOSITION dictionary.
+# The first keys of this this dictionary are universal molecule names for each molecule that you have in your simulation.
+# The example simulation contains POPE (1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine), DOG (1,2-dioleoyl-sn-glycerol),
+# CHOL (cholesterol), and SOL (water). The list of universal molecule names used in NMRlipids databank are available from table in here
+# https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/README.md.
+# A subdictionary is then created for each molecule. For this subdictionary you need to define the name of each molecule's
+# residue name in your simulation for key called NAME. In the example simulation, POPE is called PE and so on. 
+# Subdictionary needs also the name of the mapping file for each molecule for the key called MAPPING.
+# The mapping file connects the atom names in your simulation to the universal atom names defined in the NMRlipids databank.
+# This enables automatic analyses over all simulations independently on the naming conventions.
+# Mapping files are found from https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files.
+# If mapping file for your molecule does not exist yet, it needs to be created. Please do no hesitate to ask assistance on this via GitHub issues.
+# The COMPOSITION dictionary for our example systems looks like this:
+#
+#COMPOSITION:
+# POPE:
+#  NAME: PE
+#  MAPPING: mappingPOPElipid17.yaml
+# DOG:
+#  NAME: DOG
+#  MAPPING: mappingDOGlipid17.yaml
+# CHOL:
+#  NAME: CHL
+#  MAPPING: mappingCHOLESTEROLlipid14.yaml
+# SOL: 
+#  NAME: SOL
+#  MAPPING: mappingTIP3Pwater.yaml
+
+COMPOSITION: 
+ SM18:
+  NAME: SSM    # simulation specific name
+  MAPPING: mappingSM18charmm.yaml
+ SOL: 
+  NAME: TIP3
+  MAPPING: mappingTIP3PwaterSlipids.yaml
+
+
+# Give information for constructing hydrogens for united atom (UA) simulations (compulsory for UA simulations, empty for all atom simulations)
+# Order parameters from UA simulations are calculated using the [buildH code](https://github.com/patrickfuchs/buildH). 
+# For this, you need to tell how hydrogens are added based on definitions in 
+# the https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/dic_lipids.py dictionary. 
+# This is done by giving a dictionary where the key is the universal name of each molecule  
+# and the value is the correct dictionary key in (https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/dic_lipids.py). 
+# If correct dictionary key is not yet found, you need to add it. Please do not hesitate to ask advice in GitHub issues.
+
+UNITEDATOM_DICT:
+
+
+# Give a local working directory for temporary files (compulsory, if you run AddData.py yourself, otherwise can be empty). For example:
+# DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+# Give publication related to the contributed simulation data if available. Can be left empty. For example:
+# PUBLICATION: doi.org/10.1016/j.bbamem.2022.183961
+
+PUBLICATION: 
+
+# Give contact and/or names of authors. For example:
+# AUTHORS_CONTACT: Saara Lautala and Suvi Heinonen 
+
+AUTHORS_CONTACT: Kai Stroh, Jelger Risselada, Luca Monticelli
+
+# Give description of system in free format. For example:
+# SYSTEM: DOGandCHOLinPOPEwithLipid17
+
+SYSTEM: SSM bilayer in water, 328K
+
+# Give the version of the software used. For example:
+# SOFTWARE_VERSION: 18.7
+
+SOFTWARE_VERSION: 2020.4 and 2021.4
+
+# Give the name of the force field used used in the simulation (e.g., CHARMM36, Slipids, etc.). In the example:
+# FF: Lipid17
+
+FF: CHARMM36
+
+# Describe the source of the force field parameters. For example, CHARMM-GUI, link to webpage where parameters were downloaded, or citation to a paper. For example:
+#FF_SOURCE: Amber tools
+
+FF_SOURCE: CHARMM GUI
+
+# Give the date when parameters were accessed or created. The format is day/month/year. For example:
+# FF_DATE: 2019
+
+FF_DATE: 2023
+
+# Individual force field names for molecules can be also given. This is useful when special force fields are used for certain molecules,
+# such as ions. Water model would good to specify always (FFSOL).
+# Force field names can be separately defined for individual molecules using keys FF+{univeral molecule name}, i.e., FFPOPC, FFPOT, FFSOL etc.
+#
+# FFPOPE:
+# FFDOG:
+# FFCHOL:
+# FFSOL: 
+
+
+
+# You can give the name of the Gromacs checkpoint file that is found from the DOI given above with CPT key.
+
+CPT: 
+
+
+
+# You can give the name of the Gromacs log file that is found from the DOI given above with LOG key.
+
+LOG: 
+
+
+
+# You can give the name of the Gromacs top file that is found from the DOI given above.
+
+TOP: topol.top
+
+
+# If you have something atypical in your simulation (e.g. old Gromacs version, non-standard bilayer orientation, phase separation, etc.),
+# you can mention this in the WARNINGS dictionary
+
+# WARNINGS: 
