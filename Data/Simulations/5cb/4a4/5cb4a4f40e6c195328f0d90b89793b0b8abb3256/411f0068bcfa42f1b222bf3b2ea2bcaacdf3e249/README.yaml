@@ -1,0 +1,59 @@
+DOI: 10.5281/zenodo.8307369
+TRJ:
+- - 100ns.xtc
+TPR:
+- - md50ns_chunk01.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCslipids.yaml
+    COUNT:
+    - 204
+    - 204
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLslipid.yaml
+    COUNT:
+    - 104
+    - 104
+  SM16:
+    NAME: SM16
+    MAPPING: mappingSM16slipids.yaml
+    COUNT:
+    - 204
+    - 204
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 35840
+UNITEDATOM_DICT: null
+DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Fernando Favela
+SYSTEM: Ternary mixture of POPC/PSM/Chol (2:2:1) at 295 K Slipids
+SOFTWARE_VERSION: 5.1.4
+FF: Slipids
+FF_SOURCE: null
+FF_DATE: 2013
+CPT:
+- - md50ns_chunk02.cpt
+LOG:
+- - md50ns_chunk02.log
+TOP:
+- - 1k_pop40prc+psm40prc+chl20prc+wat.top
+TRAJECTORY_SIZE: 4297922952
+TRJLENGTH: 100020.0
+TEMPERATURE: 295.0
+NUMBER_OF_ATOMS: 229400
+DATEOFRUNNING: 06/09/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 762
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+    SM16: {}
+  FORMFACTOR: {}

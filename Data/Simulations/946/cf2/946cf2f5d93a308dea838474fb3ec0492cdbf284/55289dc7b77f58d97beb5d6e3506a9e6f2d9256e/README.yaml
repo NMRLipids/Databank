@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.8299506
+SOFTWARE: gromacs
+TRJ:
+- - PurePOPC_md.xtc
+TPR:
+- - PurePOPC_md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 300.0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCsage.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: TIP3P
+    MAPPING: mappingTIP3PwaterSage.yaml
+    COUNT: 5000
+DIR_WRK: /Users/patrickfrankel/Desktop/lipid_database/Databank/
+PUBLICATION: null
+AUTHORS_CONTACT: Frankel, Patrick
+SYSTEM: POPC_128_OPENFF_300K
+FF: OpenFF
+FF_SOURCE: https://docs.openforcefield.org/en/latest/
+FF_DATE: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 4708052932
+TRJLENGTH: 200005.0
+NUMBER_OF_ATOMS: 32152
+DATEOFRUNNING: 01/09/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 761
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
