@@ -1795,7 +1795,7 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
         sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
         sub_dir2 = sim_hashes.get("TPR")[0][1]
         sub_dir3 = sim_hashes.get("TRJ")[0][1]
-    elif sim["SOFTWARE"] == "openMM":
+    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
         head_dir = sim_hashes.get("TRJ")[0][1][0:3]
         sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
         sub_dir2 = sim_hashes.get("TRJ")[0][1]

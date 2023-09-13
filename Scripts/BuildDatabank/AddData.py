@@ -275,7 +275,7 @@ traj = ""
 if sim["SOFTWARE"] == "gromacs":
     top = os.path.join(dir_tmp, sim["TPR"][0][0])
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
-elif sim["SOFTWARE"] == "openMM":
+elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
     top = os.path.join(dir_tmp, sim["PDB"][0][0])
 
