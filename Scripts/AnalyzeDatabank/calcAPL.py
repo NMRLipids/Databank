@@ -55,7 +55,7 @@ for system in systems:
             else:
                 os.system('echo System | gmx trjconv -s '+ tpr_name + ' -f '+ trj_name + ' -dump 0 -o ' + conf)
             u = MDAnalysis.Universe(conf, trj_name)
-    elif 'openMM' in software:
+    elif 'openMM' or 'NAMD' in software:
         pdb = system.get('PDB')
         pdb_name = path + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
@@ -63,7 +63,7 @@ for system in systems:
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
         u = MDAnalysis.Universe(pdb_name, trj_name)
     else:
-        print('APL calculation for other than gromacs and openMM are yet to be implemented.')
+        print('APL calculation for other than gromacs, openMM or NAMD are yet to be implemented.')
         continue
             
     apl = {}

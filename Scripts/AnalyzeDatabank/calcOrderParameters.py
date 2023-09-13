@@ -78,14 +78,14 @@ for system in systems:
                 os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
             else:
                 os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
-    elif 'openMM' in software:
+    elif 'openMM' in software or 'NAMD' in software:
         pdb = system.get('PDB')
         pdb_name = path + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
         if (not os.path.isfile(pdb_name)):
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
     else:
-        print('Order parameter calculation for other than gromacs and openMM are yet to be implemented.')
+        print('Order parameter calculation for other than gromacs, openMM and NAMD are yet to be implemented.')
         continue
 
 
@@ -217,7 +217,7 @@ for system in systems:
                         print('Using tpr did not work, trying with gro')
                         OrdParam=find_OP(mapping_file,gro,xtcwhole,resname)
 
-                if 'openMM' in software:
+                if 'openMM' in software or 'NAMD' in software:
                     OrdParam=find_OP(mapping_file,pdb_name,trj_name,resname)
                         
                 line1="Atom     Average OP     OP stem"+'\n'
