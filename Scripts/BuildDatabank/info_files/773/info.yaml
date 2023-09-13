@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.8338253
+
+SOFTWARE: NAMD
+TRJ: traj_center.dcd
+PDB: struct.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 328.15
+
+COMPOSITION:
+ SM16:
+  NAME: PSM
+  MAPPING: mappingSM16charmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION: Doktorova et al. 2020 J. Phys. Chem. B. article (DOI 10.1021/acs.jpcb.0c03389)
+AUTHORS_CONTACT: Milka Doktorova 
+
+SYSTEM: PSM NAMD
+SOFTWARE_VERSION: 
+
+FF: Charmm36
+FF_SOURCE:
+FF_DATE:
+
+TOP:

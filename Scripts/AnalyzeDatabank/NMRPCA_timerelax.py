@@ -107,12 +107,12 @@ class Parser:
             print(f"Parser: Processing trajectory {self.indexingPath}")
         self.doi = readme["DOI"]
         self.soft = readme["SOFTWARE"]
-        if self.soft == "openMM":
+        if self.soft == "openMM" or self.soft == "NAMD":
             try:
                 self.trj = readme["TRJ"][0][0]
                 self.tpr = readme["PDB"][0][0]
             except Exception:
-                print("Parser: Did not find trajectory or pdb for openMM")
+                print("Parser: Did not find trajectory or pdb for openMM or NAMD")
                 self.error = 1
         else:
             try:
@@ -248,7 +248,7 @@ class Parser:
             self.traj = mda.Universe(self.gro_name, self.trj_name)
 
     def prepareOpenMMTraj(self):
-        print("openMM")
+        print("openMM or NAMD")
         if self.size > trjSizeCutoff:
             trj_out_name = f"{self.root}{self.indexingPath}/short.xtc"
             if os.path.isfile(f"{self.root}{self.indexingPath}/{trj_out_name}"):
@@ -265,7 +265,7 @@ class Parser:
         self.traj = mda.Universe(self.tpr_name, self.trj_name)
 
     def prepareTraj(self):
-        if self.soft == "openMM":
+        if self.soft == "openMM" or self.soft == "NAMD":
             self.prepareOpenMMTraj()
         else:
             self.prepareGMXTraj()

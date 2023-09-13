@@ -126,7 +126,7 @@ for system in systems:
                 if url_size != size:
                     print("Download of the file "  + " was interrupted.")
                
-    if 'openMM' in software:
+    if 'openMM' or 'NAMD' in software:
         pdb = system.get('PDB')
         pdb_name = system['path'] + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
@@ -245,7 +245,7 @@ for system in systems:
             try:
                 if 'gromacs' in system['SOFTWARE']:
                     form_factor.FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
-                if 'openMM' in system['SOFTWARE']:
+                if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
                     form_factor.FormFactor(system_path, pdb_name, trj_name, 200, output_name,  system)
             except ValueError as e:
                 #print(e)
