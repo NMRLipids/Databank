@@ -341,7 +341,7 @@ pairsFF = findPairs(experimentsFormFactors)
 #print(experimentsOrderParameters)
 #print(len(simulations))
 
-for pair in pairsOP:
+for pair in pairsFF:
     print('#################')
     print(pair[0].readme)
     print(pair[0].indexingPath)
