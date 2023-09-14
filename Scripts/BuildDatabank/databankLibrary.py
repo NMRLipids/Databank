@@ -1187,7 +1187,7 @@ def plotOrderParameters(OPsim, OPexp):
     my_xticks = ['\u03B3','\u03B2','\u03B1','$g_{1}$','$g_{2}$','$g_{3}$']
     plt.xticks([1,2,3,4,5,6], my_xticks,size=20)
     #plt.xlabel('Carbon')
-    plt.ylim([-0.25,0.25])
+    #plt.ylim([-0.25,0.25])
     plt.yticks(size=20)
     #plt.yticks(color = 'w')
     plt.ylabel(r'$S_{CH}$',size=25)
@@ -1205,7 +1205,7 @@ def plotOrderParameters(OPsim, OPexp):
     plt.xticks(size=20)
     plt.yticks(size=20)
     #plt.yticks(color = 'w')
-    plt.ylim([-0.3,0.01])
+    #plt.ylim([-0.3,0.01])
     plt.savefig('sn-1.pdf')
     plt.show()
     
@@ -1220,7 +1220,7 @@ def plotOrderParameters(OPsim, OPexp):
     plt.xticks(size=20)
     plt.yticks(size=20)
     #plt.yticks(color = 'w')
-    plt.ylim([-0.25,0.01])
+    #plt.ylim([-0.25,0.01])
     plt.savefig('sn-2.pdf')
     plt.show()
 
