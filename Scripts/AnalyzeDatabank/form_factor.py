@@ -242,7 +242,7 @@ class FormFactor:
       
         pairs_residue = listNamePairs(self.system_mapping[molname], molname)
         
-     #   print(pairs_residue)
+        #print(pairs_residue)
         
         # if lipid is split to multiple residues
         selection_txt = ""
@@ -262,9 +262,9 @@ class FormFactor:
                 #find generic mapping name matching to forcefield atom name
                 index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
                 #print(atom, index_list)
+                #print(atom_i1)
                 atom_i1 = index_list.index(True)
                 #print("atom_i1")
-                #print(atom_i1)
   
                 mapping_name = pairs_residue[res][atom_i1][0] 
                 e_atom_i = self.getElectrons(mapping_name) #get number of electrons in an atom i of residue
