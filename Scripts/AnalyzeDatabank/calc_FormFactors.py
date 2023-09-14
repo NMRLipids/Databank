@@ -126,7 +126,9 @@ for system in systems:
                 if url_size != size:
                     print("Download of the file "  + " was interrupted.")
                
-    if 'openMM' or 'NAMD' in software:
+    if 'openMM' in software or 'NAMD' in software:
+        #print(system)
+        #print(software)
         pdb = system.get('PDB')
         pdb_name = system['path'] + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
@@ -181,7 +183,10 @@ for system in systems:
             try:
                 G3atom = mapping['M_G3_M']['ATOMNAME']
             except:
-                pass
+                try:
+                    G3atom = mapping['M_C32_M']['ATOMNAME']
+                except:
+                    pass
         
             for Cindex in range(1,30):
                 atom = 'M_G1C' + str(Cindex) + '_M'
@@ -189,6 +194,17 @@ for system in systems:
                     lastAtom = mapping[atom]['ATOMNAME']
                 except:
                     continue
+            try:
+                lastAtom
+            except:
+                for Cindex in range(1,30):
+                    atom = 'M_CA' + str(Cindex) + '_M'
+                    try:
+                        lastAtom = mapping[atom]['ATOMNAME']
+                    except:
+                        continue
+        
+                
     print(lastAtom, G3atom)
 
 

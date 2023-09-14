@@ -181,6 +181,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "TOCL": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
 }
 
 
@@ -368,6 +372,10 @@ molecule_ff_dict = {
         "TYPE": "string",
     },
     "FFSM18": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFTOCL": {
         "REQUIRED": False,
         "TYPE": "string",
     },
@@ -1627,8 +1635,8 @@ def parse_op_input(mapping_file, lipid_name):
             atomH = []
 
         if atomH:
+            #print(resname + " " + atomH[1])
             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
-            #               print(resname + " " + atomH[1])
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])
             ordPars.append(op)
     return ordPars

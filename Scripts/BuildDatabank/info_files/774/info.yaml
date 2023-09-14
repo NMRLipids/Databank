@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.8341624
+
+SOFTWARE: NAMD
+TRJ: traj_center.dcd
+PDB: struct.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ TOCL:
+  NAME: TOCL
+  MAPPING: mappingTOCLcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ POT:
+  NAME: POT
+  MAPPING: mappingPOT.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION: Doktorova et al. 2017 Phys. Chem. Chem. Phys. article (DOI 10.1039/c7cp01921a)
+AUTHORS_CONTACT: Milka Doktorova 
+
+SYSTEM: TOCL NAMD
+SOFTWARE_VERSION: 
+
+FF: Charmm36
+FF_SOURCE:
+FF_DATE:
+
+TOP:
