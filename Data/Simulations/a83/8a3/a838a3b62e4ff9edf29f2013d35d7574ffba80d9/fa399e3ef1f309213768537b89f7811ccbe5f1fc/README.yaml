@@ -1,0 +1,80 @@
+DOI: 10.5281/zenodo.8331752
+TRJ:
+- - step7_1.trr
+TPR:
+- - step7_1.tpr
+SOFTWARE: gromacs
+PREEQTIME: 2
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 48
+    - 48
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 76
+    - 76
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.yaml
+    COUNT:
+    - 10
+    - 10
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 40
+    - 40
+  SM16:
+    NAME: PSM
+    MAPPING: mappingSM16charmm.yaml
+    COUNT:
+    - 18
+    - 18
+  GM1:
+    NAME: BGLC
+    MAPPING: mappingGM1charmm.yaml
+    COUNT:
+    - 8
+    - 8
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 19348
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 92
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 56
+PUBLICATION: null
+AUTHORS_CONTACT: Suman Samantray
+SYSTEM: POPC_POPE_POPS_SM_CHOL_GM1_NaCL
+SOFTWARE_VERSION: 2020.4
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 2023
+CPT:
+- - step7_1.cpt
+LOG:
+- - step7_1.log
+TOP:
+- - topol.top
+DIR_WRK: /home/sosamuli/temp/DataBank/
+TRAJECTORY_SIZE: 11591326488
+TRJLENGTH: 300100.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 107288
+DATEOFRUNNING: 21/09/2023
+TYPEOFSYSTEM: lipid bilayer
+WARNINGS:
+  SKIP_EQTIMES: null
+ID: 767
