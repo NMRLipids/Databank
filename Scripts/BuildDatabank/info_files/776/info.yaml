@@ -1,0 +1,65 @@
+DOI: 10.5281/zenodo.8331752
+
+TRJ: step7_1.trr
+
+TPR: step7_1.tpr
+
+SOFTWARE: gromacs
+
+PREEQTIME: 2
+
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ POPE:     # universal name
+  NAME: POPE     # simulation specific name
+  MAPPING: mappingPOPEcharmm.yaml     # name of mapping file
+ POPC:   
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ POPS:  
+  NAME: POPS
+  MAPPING: mappingPOPScharmm.yaml
+ CHOL:  
+  NAME: CHL1
+  MAPPING: mappingCHOLESTEROLcharmm.yaml
+ SM16: 
+  NAME: PSM
+  MAPPING: mappingSM16charmm.yaml
+ GM1: 
+  NAME: BGLC
+  MAPPING: mappingGM1charmm.yaml  
+ SOL: 
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD: 
+  NAME: SOD
+  MAPPING: mappingSOD.yaml
+ CLA: 
+  NAME: CLA
+  MAPPING: mappingCLA.yaml 
+
+
+PUBLICATION: 
+
+AUTHORS_CONTACT: Suman Samantray
+
+SYSTEM: POPC_POPE_POPS_SM_CHOL_GM1_NaCL
+
+SOFTWARE_VERSION: 2020.4
+
+FF: Charmm36
+
+FF_SOURCE: CHARMM-GUI
+
+FF_DATE: 2023
+
+CPT: step7_1.cpt
+
+LOG: step7_1.log
+
+TOP: topol.top
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+

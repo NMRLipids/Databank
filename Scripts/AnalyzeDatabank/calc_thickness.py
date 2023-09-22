@@ -18,14 +18,15 @@ import socket
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, databank
 
-path = '../../Data/Simulations/'
+path = '../../'
 
 db_data = databank(path)
 systems = db_data.get_systems()
 
 for system in systems:
-    WaterDensity_name = system['path'] + 'WaterDensity.json'
-    LipidDensity_name = system['path'] + 'LipidDensity.json'
+    WaterDensity_name = '../../' + system['path'] + 'WaterDensity.json'
+    LipidDensity_name = '../../' + system['path'] + 'LipidDensity.json'
+    print(LipidDensity_name)
     try:
         f = open(WaterDensity_name)
         WaterDensity = json.load(f)
@@ -39,7 +40,7 @@ for system in systems:
         idx = np.argwhere(np.diff(np.sign(wd - ld ))).flatten()
         #print(system['path'])
         thickness = WaterDensity[idx[1]][0] - WaterDensity[idx[0]][0]
-        f = open(system['path'] + '/thickness.json', 'w')
+        f = open('../../' + system['path'] + '/thickness.json', 'w')
         json.dump(thickness,f)
     except:
         print('Calculation failed for ' +  system['path'])

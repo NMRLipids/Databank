@@ -385,7 +385,7 @@ for key_mol in lipids_dict:
             mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         yaml_file.close()
         for key in mapping_dict.keys():
-            if "RESIDUE" in mapping_dict[key].keys():
+            if "RESIDUE" in sim["COMPOSITION"].keys():
                 selection = (
                     selection
                     + "resname "
@@ -394,14 +394,18 @@ for key_mol in lipids_dict:
                     + mapping_dict[key]["ATOMNAME"]
                     + " or "
                 )
+                break
+                #print(selection)
             else:
                 selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                 break
     selection = selection.rstrip(" or ")
     logger.info(selection)
     molecules = u0.select_atoms(selection)
+    print(molecules)
     logger.info(molecules.residues)
 
+    # print(molecules.residues)
     if molecules.n_residues > 0:
         for mol in molecules.residues:
             R = mol.atoms.center_of_mass()
