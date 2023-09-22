@@ -331,7 +331,11 @@ try:
 except:
     groFORu0 = gro
 
-u0 = Universe(groFORu0)
+if sim["SOFTWARE"] == "gromacs":
+    u0 = Universe(groFORu0)
+elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
+    u0 = Universe(top)
+    
 lipids = []
 
 # select lipids

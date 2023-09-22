@@ -1,0 +1,36 @@
+DOI: 10.5281/zenodo.8360345
+
+SOFTWARE: gromacs
+TRJ: PC_CL_540Run.xtc
+TPR: PC_CL_Run.gro
+PREEQTIME: 0
+TIMELEFTOUT: 40
+TEMPERATURE: 310
+
+COMPOSITION:
+ TOCL:
+  NAME: TOCL2
+  MAPPING: mappingTOCLcharmm.yaml
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSOD.yaml
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION: Castillo et al, 2022, Mol. Pharmaceutics. 19:1839-1852 (https://doi.org/10.1021/acs.molpharmaceut.1c00926)
+AUTHORS_CONTACT: Milka Doktorova 
+
+SYSTEM: POPC/TOCL mixture
+SOFTWARE_VERSION: 
+
+FF: Charmm36
+FF_SOURCE:
+FF_DATE:
+
+TOP:

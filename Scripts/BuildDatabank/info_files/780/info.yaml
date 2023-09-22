@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.8357123
+
+SOFTWARE: NAMD
+TRJ: traj_center.dcd
+PDB: struct.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 298
+
+COMPOSITION:
+ SM16:
+  NAME: PSM
+  MAPPING: mappingSM16charmm.yaml
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSOD.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+
+
+DIR_WRK: /home/sosamuli/temp/DataBank/
+
+PUBLICATION: Doktorova et al. 2017 Phys. Chem. Chem. Phys. article (DOI 10.1039/c7cp01921a)
+AUTHORS_CONTACT: Milka Doktorova 
+
+SYSTEM: POPC/PSM (70/30) NAMD
+SOFTWARE_VERSION: 
+
+FF: Charmm36
+FF_SOURCE:
+FF_DATE:
+
+TOP:
