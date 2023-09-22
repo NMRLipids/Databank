@@ -9,23 +9,30 @@ import yaml
 import re
 import buildh
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
-import buildH_calcOP_test
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
+### Initializing the databank
 
+### This is the NMRlipids databank repository path
+databankPath = '../../'
+
+sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
+from databankLibrary import *
+
+systems = initialize_databank(databankPath)
+
+
+## intialize counters for analyzed systems
 ready = 0
 skipped = 0
+
+
+## loop over simulations
 for system in systems:
-    Nlipid = 0
     path = system['path']
 
-    
+    ## Check if order parameters are calculated or something in the system prevents order parameter calculation
     for key in system['COMPOSITION']:
-        outfilename = path + key + 'OrderParameters.json'
+        outfilename = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
         #print(outfilename)
         if os.path.isfile(outfilename)  or ('WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']):
             FileFound = True
@@ -37,40 +44,37 @@ for system in systems:
         skipped += 1
         continue
 
-    print('Analyzing: ', system['path'])
+    ## If order parameters are not calculated and system ok, then continue to calculating order parameters
+    print('Analyzing: ', path)
 
 
-                
-    doi = system.get('DOI')
-    trj = system.get('TRJ')
-    trj_name = path + system.get('TRJ')[0][0]
-    trj_url = download_link(doi, trj[0][0])
-    #print(trj_name,tpr_name)
-    
-                        
-    if (not os.path.isfile(trj_name)):
-        response = urllib.request.urlretrieve(trj_url, trj_name)
+    ## Download the simulations and create MDAnalysis universe (the universe is not used here but this script downloads the data)
+    u = system2MDanalysisUniverse(system)
 
+    ## Store the local path of the trajectory
+    trj_name = databankPath + '/Data/Simulations/' + path + system.get('TRJ')[0][0]
+
+    ## Software and time for equilibration period
     software=system['SOFTWARE']
     EQtime=float(system['TIMELEFTOUT'])*1000
+
+    ## Check if all or united atom simulation
     try:
         unitedAtom = system['UNITEDATOM_DICT']
     except:
         unitedAtom = False
 
+    ## Check relevant warnings
     if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
         trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
     else:
         trjconvCOMMAND = 'gmx trjconv'
-        
-    if 'gromacs' in software:
-        tpr = system.get('TPR')
-        tpr_name = path + system.get('TPR')[0][0]
-        tpr_url = download_link(doi, tpr[0][0])
-        if (not os.path.isfile(tpr_name)):
-            response = urllib.request.urlretrieve(tpr_url, tpr_name)
 
-        xtcwhole= path + '/whole.xtc'
+    ## Set topology file names and make Gromacs trajectories whole
+    if 'gromacs' in software:
+        tpr_name = databankPath + '/Data/Simulations/' + path + system.get('TPR')[0][0]
+
+        xtcwhole= databankPath + '/Data/Simulations/' + path + '/whole.xtc'
         if (not os.path.isfile(xtcwhole)):
             print("Make molecules whole in the trajectory")
             if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
@@ -79,9 +83,7 @@ for system in systems:
             else:
                 os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
     elif 'openMM' in software or 'NAMD' in software:
-        pdb = system.get('PDB')
-        pdb_name = path + system.get('PDB')[0][0]
-        pdb_url = download_link(doi, pdb[0][0])
+        pdb_name = databankPath + '/Data/Simulations/' + path + system.get('PDB')[0][0]
         if (not os.path.isfile(pdb_name)):
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
     else:
@@ -89,8 +91,10 @@ for system in systems:
         continue
 
 
+
+    ## Calculate order parameters
     if unitedAtom and 'gromacs' in software:
-        topfile = path + '/frame0.gro'
+        topfile = databankPath + '/Data/Simulations/' + path + '/frame0.gro'
         if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
             os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + topfile )
         else:
@@ -105,7 +109,7 @@ for system in systems:
                 mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
             yaml_file.close()
             
-            def_fileNAME = path + key + '.def' 
+            def_fileNAME = databankPath + '/Data/Simulations/' + path + key + '.def' 
             def_file = open(def_fileNAME, 'w')
 
             
@@ -138,7 +142,7 @@ for system in systems:
             def_file.close()            
              
             #Add hydrogens to trajectory and calculate order parameters with buildH
-            ordPfile = path + key + 'OrderParameters.dat' 
+            ordPfile = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.dat' 
 
             lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
 
@@ -157,7 +161,7 @@ for system in systems:
             outfile.write(line1)
         
             data = {}
-            outfile2= path + key + 'OrderParameters.json'
+            outfile2= databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
         
             with open(ordPfile + '.buildH') as OPfile:
                 lines=OPfile.readlines()
@@ -183,7 +187,7 @@ for system in systems:
     else:
         if 'gromacs' in software:
             #trj = str(DATAdir) + '/' + str(trj)
-            gro = path + '/conf.gro'
+            gro = databankPath + '/Data/Simulations/' + path + '/conf.gro'
             
             #make gro file
             print("\n Makin gro file")
@@ -203,8 +207,8 @@ for system in systems:
                 print('Calculating ', key,' order parameters')
                 mapping_file = system['COMPOSITION'][key]['MAPPING']
                 resname = system['COMPOSITION'][key]['NAME']
-                outfilename = path + key + 'OrderParameters.dat'
-                outfilename2 = path + key + 'OrderParameters.json'
+                outfilename = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.dat'
+                outfilename2 = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
                 if (os.path.isfile(outfilename2)):
                     print('Order parameter file already found')
                     continue
@@ -228,6 +232,7 @@ for system in systems:
 
                 for i,op in enumerate(OrdParam):
                     resops =op.get_op_res
+                    #print(i,op.get_op_res)
                     (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP
                     line2=str(op.name)+" "+str(op.avg)+" "+str(op.stem)+'\n'
                     outfile.write(line2)

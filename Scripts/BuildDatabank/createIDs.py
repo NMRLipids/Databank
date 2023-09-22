@@ -7,12 +7,19 @@ import MDAnalysis
 import urllib.request
 import yaml
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+#sys.path.insert(1, '../BuildDatabank/')
+#from databankLibrary import download_link, lipids_dict, databank
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
+#path = '../../Data/Simulations/'
+#db_data = databank(path)
+#systems = db_data.get_systems()
+
+
+databankPath =  '../../'
+sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
+from databankLibrary import * 
+systems = initialize_databank(databankPath)
+
 
 IDs = []
 for system in systems:
@@ -24,7 +31,8 @@ for system in systems:
     if 'ID' not in system.keys():
         NewID = max(IDs) + 1
         system['ID'] = NewID
-        READMEpath = system['path'] + 'README.yaml'
+        READMEpath = '../../Data/Simulations/' + system['path'] + 'README.yaml'
+        #print(READMEpath)
         system.pop('path',None)
         with open(READMEpath, 'w') as f:
             yaml.dump(system,f, sort_keys=False)

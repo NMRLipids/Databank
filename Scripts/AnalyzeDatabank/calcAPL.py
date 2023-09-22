@@ -7,65 +7,42 @@ import MDAnalysis
 import urllib.request
 import yaml
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+### Initializing the databank
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
+### This is the NMRlipids databank repository path
+databankPath = '../../'
 
+sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
+from databankLibrary import *
+
+
+systems = initialize_databank(databankPath)
+
+
+### Loop over simulations in the databank
 for system in systems:
+    ## reading software and file path for simulations
     software=system['SOFTWARE']
-    Nlipid = 0
     path = system['path']
-    outfilename = path + 'apl.json'
+
+    ## this is checking if area per lipid is already calculated for the systems
+    outfilename = databankPath + '/Data/Simulations/' +  path + 'apl.json'
     if os.path.isfile(outfilename):
         continue
 
-    print('Analyzing: ', system['path'])
+    print('Analyzing: ', path)
 
-    for molecule in system['COMPOSITION']:
-        if molecule in lipids_dict:
-            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    ## calculates the total number of lipids
+    Nlipid = GetNlipids(system)
 
-    doi = system.get('DOI')
-    trj = system.get('TRJ')
-    trj_name = path + system.get('TRJ')[0][0]
-    trj_url = download_link(doi, trj[0][0])
-    #print(trj_name,tpr_name)
-    
-                        
-    if (not os.path.isfile(trj_name)):
-        response = urllib.request.urlretrieve(trj_url, trj_name)
+    ## makes MDAnalysis universe from the system. This also downloads the data if not yet locally available
+    u = system2MDanalysisUniverse(system)
 
-    if 'gromacs' in software: 
-        tpr = system.get('TPR')
-        tpr_name = path + system.get('TPR')[0][0]
-        tpr_url = download_link(doi, tpr[0][0])
-        if (not os.path.isfile(tpr_name)):
-            response = urllib.request.urlretrieve(tpr_url, tpr_name)
-            
-        try:
-            u = MDAnalysis.Universe(tpr_name, trj_name)
-        except:
-            conf = path + '/conf.gro'
-            print("Generating conf.gro because MDAnalysis cannot read tpr version")
-            if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
-                os.system('echo System | editconf -f '+ tpr_name + ' -o ' + conf)
-            else:
-                os.system('echo System | gmx trjconv -s '+ tpr_name + ' -f '+ trj_name + ' -dump 0 -o ' + conf)
-            u = MDAnalysis.Universe(conf, trj_name)
-    elif 'openMM' or 'NAMD' in software:
-        pdb = system.get('PDB')
-        pdb_name = path + system.get('PDB')[0][0]
-        pdb_url = download_link(doi, pdb[0][0])
-        if (not os.path.isfile(pdb_name)):
-            response = urllib.request.urlretrieve(pdb_url, pdb_name)
-        u = MDAnalysis.Universe(pdb_name, trj_name)
-    else:
-        print('APL calculation for other than gromacs, openMM or NAMD are yet to be implemented.')
+    if u is None:
+        print('Generation of MDAnalysis universe failed in folder', path)
         continue
-            
+    
+    ## this calculates the area per lipid as a function of time and stores it in the databank
     apl = {}
     for ts in u.trajectory:
         if u.trajectory.time >= system['TIMELEFTOUT']*1000:

@@ -185,6 +185,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "GM1": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
 }
 
 
@@ -376,6 +380,10 @@ molecule_ff_dict = {
         "TYPE": "string",
     },
     "FFTOCL": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFGM1": {
         "REQUIRED": False,
         "TYPE": "string",
     },
@@ -888,17 +896,19 @@ class databank:
         self.path = path
         self.systems = []
         self.__load_systems__(path)
+        print('Databank initialized from the folder:', os.path.realpath(path))
 
     def __load_systems__(self, path):
         for subdir, dirs, files in os.walk(path):
             for filename in files:
                 filepath = os.path.join(subdir, filename)
-                # print(filepath)
+                #print(filepath)
                 if filename == "README.yaml":
                     with open(filepath) as yaml_file:
                         content = yaml.load(yaml_file, Loader=yaml.FullLoader)
                         size = len(filepath)
-                        content["path"] = filepath[: size - 11]
+                        sizePath = len(path)
+                        content["path"] = filepath[sizePath : size - 11]
                         self.systems.append(content)
 
     def get_systems(self):
@@ -957,8 +967,10 @@ def CalcAreaPerMolecule(system):
     It is using the ``apl.json`` file where area per lipid as a function of time calculated by the ``calcAPL.py`` is stored. 
 
     :param system: NMRlipids databank dictionary defining a simulation.
+
+    :return: area per lipid (Å^2)
     """
-    APLpath = system['path'] + 'apl.json'
+    APLpath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'apl.json'
     try:
         f = open(APLpath)
         APLdata = json.load(f)
@@ -970,7 +982,7 @@ def CalcAreaPerMolecule(system):
         APL = sumAPL/sumIND
         return(APL)
     except:
-        print('apl.json not found from' + system['path'])
+        print('apl.json not found from' + APLpath)
         
 
 def GetThickness(system):
@@ -979,8 +991,10 @@ def GetThickness(system):
     where thickness calculated by the ``calc_thickness.py`` is stored. 
 
     :param system: NMRlipids databank dictionary defining a simulation.
+
+    :return: membrane thickess (nm)
     """
-    ThicknessPath = system['path'] + 'thickness.json'
+    ThicknessPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'thickness.json'
     try:
         f = open(ThicknessPath)
         thickness = json.load(f)
@@ -998,7 +1012,7 @@ def ShowEquilibrationTimes(system):
     :param system: NMRlipids databank dictionary defining a simulation.
     """
     
-    EqTimesPath = system['path'] + 'eq_times.json'
+    EqTimesPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'eq_times.json'
     
     try:
         #if (os.path.isfile(EqTimesPath)):
@@ -1016,6 +1030,8 @@ def GetNlipids(system):
     Returns the total number of lipids in a simulation defined by ``system``. 
 
     :param system: NMRlipids databank dictionary defining a simulation.
+
+    :return: the total number of lipids in the ``system``.
     """
     Nlipid = 0
     for molecule in system['COMPOSITION']:
@@ -1023,6 +1039,38 @@ def GetNlipids(system):
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     return Nlipid
 
+def getLipids(system, molecules=lipids_dict.keys()):
+    """
+    Returns a string using MDAnalysis notation that can used to select all lipids from the ``system``.
+
+    :param system: NMRlipids databank dictionary defining a simulation.
+
+    :return: a string using MDAnalysis notation that can used to select all lipids from the ``system``.
+    """
+    lipids = 'resname '
+
+    for key in system['COMPOSITION'].keys():
+        if key in molecules:
+            m_file = system['COMPOSITION'][key]['MAPPING']
+            with open('../../Databank/Scripts/BuildDatabank/mapping_files/'+m_file,"r") as yaml_file:
+                mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                #for line in f:
+                #    if len(line.split()) > 2 and "Individual atoms" not in line:
+            for atom in mapping_dict:
+                print(mapping_dict[atom])
+                try:
+                    #        if line.split()[2] not in lipids:
+                    lipids = lipids + mapping_dict[atom]['RESIDUE'] + ' or resname '
+                except:
+                    lipids = lipids + system['COMPOSITION'][key]['NAME'] + ' or resname '
+                    break
+                    #continue
+                    #else:
+
+                 
+    lipids = lipids[:-12]
+    print(lipids)
+    return lipids
 
         
 __pdoc__['plotFormFactor'] = False
@@ -1241,13 +1289,13 @@ def plotSimulation(ID, lipid):
     :param lipid: universal molecul name of the lipid
 
     """
-    DataBankPath = '../../Databank/Data/'
-    systems = initialize_databank(DataBankPath + '../')
+    DataBankPath =  os.path.dirname(os.path.realpath(__file__)) + '/../../'
+    systems = initialize_databank(DataBankPath)
     #print(systems)
     for system in systems:
         #print(system)
         if system['ID'] == ID:
-             path = DataBankPath + system['path']
+             path = DataBankPath + 'Data/Simulations/' + system['path']
     #lipid = 'POPC'
     FFpathSIM = path + 'FormFactor.json'
     OPpathSIM = path + lipid + 'OrderParameters.json'
@@ -1264,7 +1312,7 @@ def plotSimulation(ID, lipid):
         with open(FFQualityFilePath) as json_file:
             FFq = json.load(json_file)
         print('Form factor quality: ', FFq[0])
-        for subdir, dirs, files in os.walk(DataBankPath + 'experiments/FormFactors/' + readme['EXPERIMENT']['FORMFACTOR'] + '/'):
+        for subdir, dirs, files in os.walk(DataBankPath + 'Data/experiments/FormFactors/' + readme['EXPERIMENT']['FORMFACTOR'] + '/'):
             for filename in files:
                 #filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
                 if filename.endswith('_FormFactor.json'):
@@ -1283,7 +1331,7 @@ def plotSimulation(ID, lipid):
     OPexp = {}
     for expOPfolder in list(readme['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
         #expOPfolder = list(readme['EXPERIMENT']['ORDERPARAMETER'][lipid].values())[0]
-        OPpathEXP =  DataBankPath + 'experiments/OrderParameters/' + expOPfolder + '/' + lipid + '_Order_Parameters.json'
+        OPpathEXP =  DataBankPath + 'Data/experiments/OrderParameters/' + expOPfolder + '/' + lipid + '_Order_Parameters.json'
         #print(OPpathEXP)
         with open(OPpathEXP) as json_file:
             OPexp.update(json.load(json_file))
@@ -1303,49 +1351,72 @@ def plotSimulation(ID, lipid):
     #print(OPexp)
 
         
-def read_mapping_file(mapping_file, atom1):
+def simulation2universal_atomnames(system,molecule,atom):
     """
-    Get force field specific atom name corresponding to universal atom name.
+    Get force field specific atom name corresponding to universal atom name from the ``system``.
 
     :param mapping_file: path for the mapping file
     :param atom1: universal atom name
 
+    :return: force field specific atom name
+    """
+
+    mapping_file = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + system['COMPOSITION'][molecule]['MAPPING']
+    with open(mapping_file, "rt") as mapping_file:
+        mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
+        try:
+            m_atom1 = mapping[atom]["ATOMNAME"]
+        except:
+            print(atom, ' was not found from ', str(mapping_file))
+            return   
+    return m_atom1
+
+def read_mapping_file(mapping_file, atom1):
+    """
+    Get force field specific atom name corresponding to universal atom name from the mapping file.
+
+    :param mapping_file: path for the mapping file
+    :param atom1: universal atom name
+
+    :return: force field specific atom name
     """
     with open(mapping_file, "rt") as mapping_file:
         mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
         m_atom1 = mapping[atom1]["ATOMNAME"]
     return m_atom1
 
+def loadMappingFile(mapping_file):
+    """ 
+    Load mapping file into a dictionary
 
-def read_mapping_filePAIR(mapping_file, atom1, atom2):
-    """
-    :meta private:
+    :param: name of the mapping file
     
-    Return mapping names of pair of atoms from mapping file
-
-    :param mapping_file: path for the mapping file
-    :param atom1: universal atom name
-    :param atom2: universal atom name
+    :return: mapping dictionary
     """
-    with open(mapping_file, "rt") as mapping_file:
-        print(mapping_file)
-        for line in mapping_file:
-            if atom1 in line:
-                m_atom1 = line.split()[1]
-            #                    print(m_atom1)
-            if atom2 in line:
-                m_atom2 = line.split()[1]
-    #                    print(m_atom2)
-    return m_atom1, m_atom2
+    mapping_dict = {}
+    with open(os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + mapping_file, "r") as yaml_file:
+        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    yaml_file.close()
+    
+    return mapping_dict
 
+def getAtoms(system, lipid):
+    """
+    Return system specific atom names of a lipid
 
-def read_mapping_file_res(mapping_file, atom1):
-    """:meta private:"""
-    with open(mapping_file, "rt") as mapping_file:
-        for line in mapping_file:
-            if atom1 in line:
-                m_res = line.split()[2]
-    return m_res
+    :param system: system dictionary
+    :param lipid: universal lipid name
+
+    :return: string of system specific atom names
+    """
+    
+    atoms = ""
+    path_to_mapping_file = system['COMPOSITION'][lipid]['MAPPING']
+    mapping_dict = loadMappingFile(path_to_mapping_file)
+    for key in mapping_dict:
+        atoms = atoms + ' ' + mapping_dict[key]['ATOMNAME']
+  
+    return atoms
 
 
 def ShowTable(SortedQualities, quality):
@@ -1560,7 +1631,8 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                 rnm=op.resname, atA=op.atAname, atB=op.atBname
             )
         ).atoms.split("residue")
-        # print(op.resname + " " + op.atAname + " " + op.atBname)
+        #print(op.resname + " " + op.atAname + " " + op.atBname)
+
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
             if res.n_atoms != 2:
@@ -1580,6 +1652,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
     # go through trajectory frame-by-frame
     Nframes = len(mol.trajectory)
     for op in ordPars:
+        #print(op.selection)
         Nres = len(op.selection)
         op.traj = [0] * Nres
 
@@ -1612,6 +1685,7 @@ def parse_op_input(mapping_file, lipid_name):
     regexp3_C = re.compile(r"M_C[0-9]_M")
 
     for mapping_key in mapping_dict.keys():
+        #print(mapping_key)
         if (
             regexp1_C.search(mapping_key)
             or regexp2_C.search(mapping_key)
@@ -1622,7 +1696,6 @@ def parse_op_input(mapping_file, lipid_name):
                 resname = mapping_dict[mapping_key]["RESIDUE"]
             except:
                 pass
-            #            print(atomC)
             atomH = []
         elif (
             regexp1_H.search(mapping_key)
@@ -1634,10 +1707,14 @@ def parse_op_input(mapping_file, lipid_name):
             atomC = []
             atomH = []
 
+        #print(atomC)
+        #print(atomH)
+
         if atomH:
-            #print(resname + " " + atomH[1])
+            #print(resname, atomC[1], atomH[1], atomC[0], atomH[0])
             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+            #print(op.avg,op.resname,op.atAname,op.atBname,op.selection)
             ordPars.append(op)
     return ordPars
 
@@ -1708,28 +1785,101 @@ def calc_angle(atoms, com):
 
 def calc_z_dim(gro):
     """
-    Returns the simulation box dimension in z-direction
+    :meta private:
+    Returns the simulation box dimension in z-direction from coordinate file.
     
     :param gro: coordinate in ``gro``, ``pdb`` or corresponding format.
-    
+
+    :return: size of box z-direction.
     """
     u = mda.Universe(gro)
     z = u.dimensions[2]
     return z
 
+def system2MDanalysisUniverse(system):
+    """
+    Takes the ``system`` dictionary as an input, downloads the required files to the NMRlipids databank directory and retuns MDAnalysis universe corressponding the ``system``.
 
-def read_trj_PN_angles(molname, atoms, top_fname, traj_fname):
+    :param system: NMRlipids databank dictionary describing the simulation.
+
+    :return: MDAnalysis universe
     """
-    Calculates the P-N vector angles with respect to membrane normal. More documentation should be added.
+    print(os.path.dirname(os.path.realpath(__file__)))
+    systemPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] 
+    doi = system.get('DOI')
+    trj = system.get('TRJ')
+    trj_name = systemPath + system.get('TRJ')[0][0]
+    trj_url = download_link(doi, trj[0][0])
+    software=system['SOFTWARE']
+    #print(trj_name,tpr_name)
+                            
+    if (not os.path.isfile(trj_name)):
+        print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'], ' to ', system['path'])
+        response = urllib.request.urlretrieve(trj_url, trj_name)
+
+    if 'gromacs' in software: 
+        tpr = system.get('TPR')
+        tpr_name = systemPath + system.get('TPR')[0][0]
+        tpr_url = download_link(doi, tpr[0][0])
+        if (not os.path.isfile(tpr_name)):
+            response = urllib.request.urlretrieve(tpr_url, tpr_name)
+            
+        try:
+            u = mda.Universe(tpr_name, trj_name)
+        except:
+            conf = systemPath + '/conf.gro'
+            if (not os.path.isfile(tpr_name)):
+                print("Generating conf.gro because MDAnalysis cannot read tpr version")
+                if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+                    os.system('echo System | editconf -f '+ tpr_name + ' -o ' + conf)
+                else:
+                    os.system('echo System | gmx trjconv -s '+ tpr_name + ' -f '+ trj_name + ' -dump 0 -o ' + conf)
+            u = mda.Universe(conf, trj_name)
+
+    elif 'openMM' or 'NAMD' in software:
+        pdb = system.get('PDB')
+        pdb_name = path + system.get('PDB')[0][0]
+        pdb_url = download_link(doi, pdb[0][0])
+        if (not os.path.isfile(pdb_name)):
+            response = urllib.request.urlretrieve(pdb_url, pdb_name)
+        u = mda.Universe(pdb_name, trj_name)
+
+    else:
+        print('Other than gromacs, openMM or NAMD are yet to be implemented.')
+        u = None
+        
+    return u
+
+
+def read_trj_PN_angles(molname, atom1, atom2, MDAuniverse):
     """
-    mol = mda.Universe(top_fname, traj_fname)
+    Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe. 
+
+    :param molename: residue name of the molecule for which the P-N vector angle will be calculated
+    :param atom1: name of the P atom in the simulation
+    :param atom2: name of the N atom in the simulation
+    :param MDAuniverse: MDAnalysis universe of the simulation to be analyzed
+
+    :return: list where the first element are the angles of all molecules as a function of time, second element contains time averages for each molecule, third element contains the average angle over time and molecules, and fourth element is the error of the mean calculated over molecules. 
+    """
+
+    #systemPath = os.path.dirname(os.path.realpath(__file__)) + system['path'] 
+    
+    #if 'gromacs' in system['SOFTWARE']:
+    #    print(systemPath, system['TPR'][0][0])
+    #    top_fname = systemPath + system['TPR'][0][0]
+    #else:
+    #    top_fname = system['PDB']
+    #traj_fname =  systemPath +  system['TRJ'][0][0]
+
+    mol = MDAuniverse #mda.Universe(top_fname, traj_fname)
 
     selection = mol.select_atoms(
-        "resname " + molname + " and (name " + atoms[0] + ")",
-        "resname " + molname + " and (name " + atoms[1] + ")",
+        "resname " + molname + " and (name " + atom1 + ")",
+        "resname " + molname + " and (name " + atom2 + ")",
     ).atoms.split("residue")
     com = mol.select_atoms(
-        "resname " + molname + " and (name " + atoms[0] + " or name " + atoms[1] + ")"
+        "resname " + molname + " and (name " + atom1 + " or name " + atom2 + ")"
     ).center_of_mass()
 
     Nres = len(selection)
@@ -1841,7 +1991,9 @@ def download_link(doi, file):  # deprecated?
 
 
 def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
-    """Returns full doi link of given ressource, also checks if URL is valid.
+    """
+    :meta private:
+    Returns full doi link of given ressource, also checks if URL is valid.
 
     Args:
         doi (str): [doi] part from config
@@ -1859,7 +2011,9 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
 
 
 def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True) -> str:
-    """Resolve file URI from supported DOI with given filename
+    """
+    :meta private:
+    Resolve file URI from supported DOI with given filename
 
     Args:
         doi (str): DOI string
@@ -1892,7 +2046,9 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
 def download_resource_from_uri(
     uri: str, dest: str, override_if_exists: bool = False
 ) -> None:
-    """Download file resource [from uri] to given file destination using urllib
+    """
+    :meta private:
+    Download file resource [from uri] to given file destination using urllib
 
     Args:
         uri (str): file URL
@@ -1948,14 +2104,19 @@ def download_resource_from_uri(
 
 
 class YamlBadConfigException(Exception):
-    """Custom Exception class for parsing the yaml configuration"""
+    """
+    :meta private:
+    Custom Exception class for parsing the yaml configuration
+    """
 
     def __init__(self, *args, **kwargs) -> None:
         Exception.__init__(self, *args, **kwargs)
 
 
 def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
-    """Parses, validates and updates dict entries from yaml configuration file.
+    """
+    :meta private:
+    Parses, validates and updates dict entries from yaml configuration file.
 
     Args:
         info_yaml (dict): info.yaml of database to add
