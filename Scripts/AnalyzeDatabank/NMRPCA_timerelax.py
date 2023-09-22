@@ -102,7 +102,9 @@ class Parser:
         self.eq_time_fname = eq_time_fname
 
         # Extracting data from readme
-        self.indexingPath = "/".join(readme["path"].split("/")[4:8])
+        #self.indexingPath = "/".join(readme["path"].split("/")[4:8])
+        self.indexingPath = root + readme["path"]
+        print('INdexing path:', self.indexingPath)
         if self.verbose:
             print(f"Parser: Processing trajectory {self.indexingPath}")
         self.doi = readme["DOI"]
@@ -896,6 +898,7 @@ if __name__ == "__main__":
     eq_time_fname = "eq_times.json"
 
     for readme in systems:
+        print(readme)
         # getting data from databank and preprocessing them
         # Start Parser
         if TEST:
@@ -924,6 +927,10 @@ if __name__ == "__main__":
         
         if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
             continue
+
+        if 'WARNINGS' in readme and 'SKIP_EQTIMES' in readme['WARNINGS']:
+            continue
+
 
         parser.downloadTraj()
         # Prepare trajectory
