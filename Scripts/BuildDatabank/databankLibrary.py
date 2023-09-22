@@ -1838,7 +1838,7 @@ def system2MDanalysisUniverse(system):
 
     elif 'openMM' or 'NAMD' in software:
         pdb = system.get('PDB')
-        pdb_name = path + system.get('PDB')[0][0]
+        pdb_name = systemPath + system.get('PDB')[0][0]
         pdb_url = download_link(doi, pdb[0][0])
         if (not os.path.isfile(pdb_name)):
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
