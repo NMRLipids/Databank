@@ -1,0 +1,9 @@
+.. _listOfFiles:
+
+List and description of files in the NMRlipids databank
+=======================================================
+
+README.yaml
+-----------
+
+A python dictionary containing all the relevant information of each simulation entry. For more information see :ref:`readmecontent`

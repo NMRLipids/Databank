@@ -1,0 +1,1424 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>buildH_calcOP_test &#8212; NMRlipids databank 4.9.2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for buildH_calcOP_test</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script builds hydrogens from a united-atom trajectory and calculate the</span>
+<span class="sd">order parameter for each C-H bond.</span>
+
+<span class="sd">It works in two modes :</span>
+<span class="sd">  1) A slow mode when an output trajectory (e.g. in xtc format) is requested by</span>
+<span class="sd">     the user. In this case, the whole trajectory including newly built</span>
+<span class="sd">     hydrogens are written to this trajectory.</span>
+<span class="sd">  2) A fast mode without any output trajectory.</span>
+<span class="sd">For both modes, the order parameter is written to an output file in a format</span>
+<span class="sd">similar to the code of @jmelcr:</span>
+<span class="sd">https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py</span>
+
+<span class="sd">This code has been checked against the one from @jmelcr. You might find minor</span>
+<span class="sd">differences due to rounding errors (in xtc, only 3 digits are written).</span>
+
+<span class="sd">The way of building H is largely inspired from a code of Jon Kapla originally</span>
+<span class="sd">written in fortran :</span>
+<span class="sd">https://github.com/kaplajon/trajman/blob/master/module_trajop.f90#L242.</span>
+
+<span class="sd">Note: that all coordinates in this script are handled using numpy 1D-arrays</span>
+<span class="sd">of 3 elements, e.g. atom_coor = np.array((x, y, z)).</span>
+<span class="sd">Note2: sometimes numpy is slow on small arrays, thus we wrote a few &quot;in-house&quot;</span>
+<span class="sd">functions for vectorial operations (e.g. cross product).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__authors__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Patrick Fuchs&quot;</span><span class="p">,</span> <span class="s2">&quot;Amélie Bâcle&quot;</span><span class="p">,</span> <span class="s2">&quot;Hubert Santuz&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;Pierre Poulain&quot;</span><span class="p">)</span>
+<span class="n">__contact__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;patrickfuchs&quot;</span><span class="p">,</span> <span class="s2">&quot;abacle&quot;</span><span class="p">,</span> <span class="s2">&quot;hublot&quot;</span><span class="p">,</span> <span class="s2">&quot;pierrepo&quot;</span><span class="p">)</span> <span class="c1"># on github</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.3&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;BSD&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;2019/05&quot;</span>
+
+<span class="c1"># Modules.</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">MDAnalysis.coordinates.XTC</span> <span class="k">as</span> <span class="nn">XTC</span>
+
+<span class="kn">import</span> <span class="nn">dic_lipids</span>
+
+
+<span class="c1"># Constants.</span>
+<span class="c1"># From https://en.wikipedia.org/wiki/Carbon%E2%80%93hydrogen_bond</span>
+<span class="n">LENGTH_CH_BOND</span> <span class="o">=</span> <span class="mf">1.09</span> <span class="c1"># in Angst</span>
+<span class="c1"># From https://en.wikipedia.org/wiki/Tetrahedron, tetrahedral angle equals</span>
+<span class="c1"># arccos(-1/3) ~ 1.9106 rad ~ 109.47 deg.</span>
+<span class="n">TETRAHEDRAL_ANGLE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># For debugging.</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># For pickling results (useful for future analyses, e.g. drawing distributions).</span>
+<span class="n">PICKLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_OP">[docs]</a><span class="k">def</span> <span class="nf">calc_OP</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the Order Parameter of a CH bond (OP).</span>
+
+<span class="sd">    OP is calculated according to equation:</span>
+
+<span class="sd">    S = 1/2 * (3*cos(theta)^2 -1)</span>
+
+<span class="sd">    theta is the angle between CH bond and the z(vertical) axis:</span>
+<span class="sd">    z</span>
+<span class="sd">    ^  H</span>
+<span class="sd">    | /</span>
+<span class="sd">    |/</span>
+<span class="sd">    C</span>
+
+<span class="sd">    Inspired from a function written by @jmelcr.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    C : numpy 1D-array</span>
+<span class="sd">        Coordinates of C atom.</span>
+<span class="sd">    H : numpy 1D-array</span>
+<span class="sd">        Coordinates of H atom.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The normalized vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">H</span> <span class="o">-</span> <span class="n">C</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">cos2</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">d2</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="n">cos2</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">S</span></div>
+
+
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalizes a vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : numpy 1D-array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 1D-array</span>
+<span class="sd">        The normalized vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">vec</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="norm"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.norm">[docs]</a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the norm of a vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : numpy 1D-array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The magniture of the vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vec</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="calc_angle"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_angle">[docs]</a><span class="k">def</span> <span class="nf">calc_angle</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the valence angle between atom1, atom2 and atom3.</span>
+
+<span class="sd">    Note: atom2 is the central atom.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1 : numpy 1D-array.</span>
+<span class="sd">    atom2 : numpy 1D-array.</span>
+<span class="sd">    atom3 : numpy 1D-array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The calculated angle in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">-</span> <span class="n">atom2</span>
+    <span class="n">vec2</span> <span class="o">=</span> <span class="n">atom3</span> <span class="o">-</span> <span class="n">atom2</span>
+    <span class="n">costheta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span><span class="n">vec2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">vec1</span><span class="p">)</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">vec2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">costheta</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">costheta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cosine cannot be larger than 1.0 or less than -1.0&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">costheta</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="vec2quaternion"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.vec2quaternion">[docs]</a><span class="k">def</span> <span class="nf">vec2quaternion</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translates a vector of 3 elements and angle theta to a quaternion.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec : numpy 1D-array</span>
+<span class="sd">        Vector of the quaternion.</span>
+<span class="sd">    theta : float</span>
+<span class="sd">        Angle of the quaternion in radian.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 1D-array</span>
+<span class="sd">        The full quaternion (4 elements).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">normalize</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">q</span></div>
+
+
+<div class="viewcode-block" id="calc_rotation_matrix"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_rotation_matrix">[docs]</a><span class="k">def</span> <span class="nf">calc_rotation_matrix</span><span class="p">(</span><span class="n">quaternion</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translates a quaternion to a rotation matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    quaternion : numpy 1D-array of 4 elements.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 2D-array (dimension [3, 3])</span>
+<span class="sd">        The rotation matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize rotation matrix.</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="c1"># Get quaternion elements.</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">quaternion</span>
+    <span class="c1"># Compute rotation matrix.</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">w</span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">z</span> <span class="o">-</span> <span class="n">w</span><span class="o">*</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">-</span> <span class="n">w</span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">w</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">w</span><span class="o">*</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">-</span> <span class="n">w</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">matrix</span></div>
+
+
+<div class="viewcode-block" id="apply_rotation"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.apply_rotation">[docs]</a><span class="k">def</span> <span class="nf">apply_rotation</span><span class="p">(</span><span class="n">vec_to_rotate</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">rad_angle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotates a vector around an axis by a given angle.</span>
+
+<span class="sd">    Note: the rotation axis is a vector of 3 elements.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vec_to_rotate : numpy 1D-array</span>
+<span class="sd">    rotation_axis : numpy 1D-array</span>
+<span class="sd">    rad_angle : float</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 1D-array</span>
+<span class="sd">        The final rotated (normalized) vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate a quaternion of the given angle (in radian).</span>
+    <span class="n">quaternion</span> <span class="o">=</span> <span class="n">vec2quaternion</span><span class="p">(</span><span class="n">rotation_axis</span><span class="p">,</span> <span class="n">rad_angle</span><span class="p">)</span>
+    <span class="c1"># Generate the rotation matrix.</span>
+    <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">calc_rotation_matrix</span><span class="p">(</span><span class="n">quaternion</span><span class="p">)</span>
+    <span class="c1"># Apply the rotation matrix on the vector to rotate.</span>
+    <span class="n">vec_rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">vec_to_rotate</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">vec_rotated</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pandasdf2pdb"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.pandasdf2pdb">[docs]</a><span class="k">def</span> <span class="nf">pandasdf2pdb</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string in PDB format from a pandas dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas dataframe with columns &quot;atnum&quot;, &quot;atname&quot;, &quot;resname&quot;, &quot;resnum&quot;,</span>
+<span class="sd">         &quot;x&quot;, &quot;y&quot;, &quot;z&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        A string representing the PDB.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row_atom</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">atnum</span><span class="p">,</span> <span class="n">atname</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">resnum</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">row_atom</span>
+        <span class="n">atnum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">atnum</span><span class="p">)</span>
+        <span class="n">resnum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resnum</span><span class="p">)</span>
+        <span class="c1"># See for pdb format:</span>
+        <span class="c1"># https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html.</span>
+        <span class="c1"># &quot;alt&quot; means alternate location indicator</span>
+        <span class="c1"># &quot;code&quot; means code for insertions of residues</span>
+    	<span class="c1"># &quot;seg&quot; means segment identifier</span>
+        <span class="c1"># &quot;elt&quot; means element symbol</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atname</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{record_type:6s}{atnum:5d}</span><span class="s2"> </span><span class="si">{atname:&lt;4s}{alt:1s}{resname:&gt;4s}</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;</span><span class="si">{chain:1s}{resnum:&gt;4d}{code:1s}</span><span class="s2">   </span><span class="si">{x:&gt;8.3f}{y:&gt;8.3f}{z:&gt;8.3f}</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;</span><span class="si">{occupancy:&gt;6.2f}{temp_fact:&gt;6.2f}</span><span class="s2">          </span><span class="si">{seg:&lt;2s}{elt:&gt;2s}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record_type</span><span class="o">=</span><span class="s2">&quot;ATOM&quot;</span><span class="p">,</span> <span class="n">atnum</span><span class="o">=</span><span class="n">atnum</span><span class="p">,</span> <span class="n">atname</span><span class="o">=</span><span class="n">atname</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">resname</span><span class="o">=</span><span class="n">resname</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="n">chain</span><span class="p">,</span> <span class="n">resnum</span><span class="o">=</span><span class="n">resnum</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">occupancy</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">temp_fact</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">seg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">elt</span><span class="o">=</span><span class="n">atname</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{record_type:6s}{atnum:5d}</span><span class="s2">  </span><span class="si">{atname:&lt;3s}{alt:1s}{resname:&gt;4s}</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;</span><span class="si">{chain:1s}{resnum:&gt;4d}{code:1s}</span><span class="s2">   </span><span class="si">{x:&gt;8.3f}{y:&gt;8.3f}{z:&gt;8.3f}</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;</span><span class="si">{occupancy:&gt;6.2f}{temp_fact:&gt;6.2f}</span><span class="s2">          </span><span class="si">{seg:&lt;2s}{elt:&gt;2s}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record_type</span><span class="o">=</span><span class="s2">&quot;ATOM&quot;</span><span class="p">,</span> <span class="n">atnum</span><span class="o">=</span><span class="n">atnum</span><span class="p">,</span> <span class="n">atname</span><span class="o">=</span><span class="n">atname</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">resname</span><span class="o">=</span><span class="n">resname</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="n">chain</span><span class="p">,</span> <span class="n">resnum</span><span class="o">=</span><span class="n">resnum</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">occupancy</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">temp_fact</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">seg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                          <span class="n">elt</span><span class="o">=</span><span class="n">atname</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="cross_product"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.cross_product">[docs]</a><span class="k">def</span> <span class="nf">cross_product</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the cross product between vectors A &amp; B.</span>
+
+<span class="sd">    Source: http://hyperphysics.phy-astr.gsu.edu/hbase/vvec.html.</span>
+<span class="sd">    Note: on small vectors (i.e. of 3 elements), computing cross products</span>
+<span class="sd">          with this functions is faster than np.cross().</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A : numpy 1D-array</span>
+<span class="sd">        A vector of 3 elements.</span>
+<span class="sd">    B : numpy 1D-array</span>
+<span class="sd">        Another vector of 3 elements.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 1D-array</span>
+<span class="sd">        Cross product of A^B.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_CH2"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH2">[docs]</a><span class="k">def</span> <span class="nf">get_CH2</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the 2 hydrogens of a sp3 carbon (methylene group).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : numpy 1D-array</span>
+<span class="sd">        Central atom on which we want to reconstruct hydrogens.</span>
+<span class="sd">    helper1 : numpy 1D-array</span>
+<span class="sd">        Heavy atom before central atom.</span>
+<span class="sd">    helper2 : numpy 1D-array</span>
+<span class="sd">        Heavy atom after central atom.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of numpy 1D-arrays</span>
+<span class="sd">        Coordinates of the two hydrogens:</span>
+<span class="sd">        ([x_H1, y_H1, z_H1], [x_H2, y_H2, z_H2]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># atom-&gt;helper1 vector.</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">helper1</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="c1"># atom-&gt;helper2 vector.</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">helper2</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="c1"># Vector orthogonal to the helpers/atom plane.</span>
+    <span class="c1">#v4 = normalize(np.cross(v3, v2))</span>
+    <span class="n">v4</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">cross_product</span><span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+    <span class="c1"># Rotation axis is atom-&gt;helper1 vec minus atom-&gt;helper2 vec.</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">v2</span> <span class="o">-</span> <span class="n">v3</span><span class="p">)</span>
+    <span class="c1"># Vector to be rotated by theta/2, perpendicular to rotation axis and v4.</span>
+    <span class="c1">#vec_to_rotate = normalize(np.cross(v4, rotation_axis))</span>
+    <span class="n">vec_to_rotate</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">cross_product</span><span class="p">(</span><span class="n">v4</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">))</span>
+    <span class="c1"># Reconstruct the two hydrogens.</span>
+    <span class="n">unit_vect_H1</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">vec_to_rotate</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span>
+                                 <span class="o">-</span><span class="n">TETRAHEDRAL_ANGLE</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">hcoor_H1</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_H1</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="n">unit_vect_H2</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">vec_to_rotate</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span>
+                                 <span class="n">TETRAHEDRAL_ANGLE</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">hcoor_H2</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_H2</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">hcoor_H1</span><span class="p">,</span> <span class="n">hcoor_H2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_CH"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH">[docs]</a><span class="k">def</span> <span class="nf">get_CH</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">,</span> <span class="n">helper3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the unique hydrogen of a sp3 carbon.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : numpy 1D-array</span>
+<span class="sd">        Central atom on which we want to reconstruct the hydrogen.</span>
+<span class="sd">    helper1 : numpy 1D-array</span>
+<span class="sd">        First neighbor of central atom.</span>
+<span class="sd">    helper2 : numpy 1D-array</span>
+<span class="sd">        Second neighbor of central atom.</span>
+<span class="sd">    helper3 : numpy 1D-array</span>
+<span class="sd">        Third neighbor of central atom.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy 1D-array</span>
+<span class="sd">        Coordinates of the rebuilt hydrogen: ([x_H, y_H, z_H]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">helpers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">,</span> <span class="n">helper3</span><span class="p">))</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">helpers</span><span class="p">)):</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">+</span> <span class="n">normalize</span><span class="p">(</span><span class="n">helpers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">helpers</span><span class="p">))</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="n">unit_vect_H</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">atom</span> <span class="o">-</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="n">coor_H</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_H</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="k">return</span> <span class="n">coor_H</span></div>
+
+
+<div class="viewcode-block" id="get_CH_double_bond"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH_double_bond">[docs]</a><span class="k">def</span> <span class="nf">get_CH_double_bond</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the hydrogen of a sp2 carbon.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : numpy 1D-array</span>
+<span class="sd">        Central atom on which we want to reconstruct the hydrogen.</span>
+<span class="sd">    helper1 : numpy 1D-array</span>
+<span class="sd">        Heavy atom before central atom.</span>
+<span class="sd">    helper2 : numpy 1D-array</span>
+<span class="sd">        Heavy atom after central atom.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of numpy 1D-arrays</span>
+<span class="sd">        Coordinates of the rebuilt hydrogen: ([x_H, y_H, z_H]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># calc CCC_angle helper1-atom-helper2 (in rad).</span>
+    <span class="n">CCC_angle</span> <span class="o">=</span> <span class="n">calc_angle</span><span class="p">(</span><span class="n">helper1</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">helper2</span><span class="p">)</span>
+    <span class="c1"># We want to bissect the C-C-C angle ==&gt; we take half of (2pi-CCC_angle).</span>
+    <span class="c1"># Factorizing yields: pi - CCC_angle/2.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="p">(</span><span class="n">CCC_angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># atom-&gt;helper1 vector.</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">helper1</span> <span class="o">-</span> <span class="n">atom</span>
+    <span class="c1"># atom-&gt;helper2 vector.</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">helper2</span> <span class="o">-</span> <span class="n">atom</span>
+    <span class="c1"># The rotation axis is orthogonal to the atom/helpers plane.</span>
+    <span class="c1">#rotation_axis = normalize(np.cross(v2, v3))</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">cross_product</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">))</span>
+    <span class="c1"># Reconstruct H by rotating v3 by theta.</span>
+    <span class="n">unit_vect_H</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">coor_H</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_H</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="k">return</span> <span class="n">coor_H</span></div>
+
+
+<div class="viewcode-block" id="get_CH3"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH3">[docs]</a><span class="k">def</span> <span class="nf">get_CH3</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the 3 hydrogens of a sp3 carbon (methyl group).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : numpy 1D-array</span>
+<span class="sd">        Central atom on which we want to reconstruct hydrogens.</span>
+<span class="sd">    helper1 : numpy 1D-array</span>
+<span class="sd">        Heavy atom before central atom.</span>
+<span class="sd">    helper2 : numpy 1D-array</span>
+<span class="sd">        Heavy atom before helper1 (two atoms away from central atom).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of numpy 1D-arrays</span>
+<span class="sd">        Coordinates of the 3 hydrogens:</span>
+<span class="sd">        ([x_H1, y_H1, z_H1], [x_H2, y_H2, z_H2], [x_H3, y_H3, z_H3]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### Build CH3e.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">TETRAHEDRAL_ANGLE</span>
+    <span class="c1"># atom-&gt;helper1 vector.</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">helper1</span> <span class="o">-</span> <span class="n">atom</span>
+    <span class="c1"># atom-&gt;helper2 vector.</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">helper2</span> <span class="o">-</span> <span class="n">atom</span>
+    <span class="c1"># Rotation axis is perpendicular to the atom/helpers plane.</span>
+    <span class="c1">#rotation_axis = normalize(np.cross(v3, v2))</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">cross_product</span><span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+    <span class="c1"># Rotate v2 by tetrahedral angle. New He will be in the same plane</span>
+    <span class="c1"># as atom and helpers.</span>
+    <span class="n">unit_vect_He</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">coor_He</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_He</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="c1">### Build CH3r.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">helper1</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="n">v4</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">coor_He</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="c1"># Now we rotate atom-&gt;He bond around atom-&gt;helper1 bond by 2pi/3.</span>
+    <span class="n">unit_vect_Hr</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">v4</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">coor_Hr</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_Hr</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="c1">### Build CH3s.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">rotation_axis</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">helper1</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="n">v5</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">coor_He</span> <span class="o">-</span> <span class="n">atom</span><span class="p">)</span>
+    <span class="c1"># Last we rotate atom-&gt;He bond around atom-&gt;helper1 bond by -2pi/3.</span>
+    <span class="n">unit_vect_Hs</span> <span class="o">=</span> <span class="n">apply_rotation</span><span class="p">(</span><span class="n">v5</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">coor_Hs</span> <span class="o">=</span> <span class="n">LENGTH_CH_BOND</span> <span class="o">*</span> <span class="n">unit_vect_Hs</span> <span class="o">+</span> <span class="n">atom</span>
+    <span class="k">return</span> <span class="n">coor_He</span><span class="p">,</span> <span class="n">coor_Hr</span><span class="p">,</span> <span class="n">coor_Hs</span></div>
+
+
+<span class="c1">###</span>
+<span class="c1">### The next two functions (buildHs_on_1C() and build_all_Hs_calc_OP())</span>
+<span class="c1">### build new H, calculate the order parameter and write the new traj with Hs</span>
+<span class="c1">### to an output file (e.g. .xtc, etc).</span>
+<span class="c1">### Note: they are slow, they shouldn&#39;t be used if the user doesn&#39;t want to</span>
+<span class="c1">###       write the trajectory. Instead, fast_build_all_Hs() should be used.</span>
+<span class="c1">###</span>
+<div class="viewcode-block" id="buildHs_on_1C"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.buildHs_on_1C">[docs]</a><span class="k">def</span> <span class="nf">buildHs_on_1C</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds 1, 2 or 3 H on a given carbon.</span>
+
+<span class="sd">    This function is a wrapper which gathers the coordinates of the helpers</span>
+<span class="sd">    and call the function that builds 1, 2 or 3 H.</span>
+
+<span class="sd">    The name of the helpers as well as the type of H to build are described</span>
+<span class="sd">    in a dictionnary stored in dic_lipids.py.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : MDAnalysis Atom instance</span>
+<span class="sd">        This instance contains the carbon on which we want to build Hs.</span>
+<span class="sd">    dic_lipid : dictionnary</span>
+<span class="sd">        Comes from dic_lipids.py. Contains carbon names and helper names needed</span>
+<span class="sd">        for reconstructing hydrogens.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of numpy 1D-arrays</span>
+<span class="sd">        Each element of the tuple is a numpy 1D-array containing 1, 2 or 3</span>
+<span class="sd">        reconstructed hydrogen(s).</span>
+<span class="sd">        !!! IMPORTANT !!! This function *should* return a tuple even if</span>
+<span class="sd">        there&#39;s only one H that has been rebuilt.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get nb of H to build and helper names (we can have 2 or 3 helpers).</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span><span class="p">,</span> <span class="n">helper3_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="c1"># Get helper coordinates using atom, which an instance from Atom class.</span>
+    <span class="c1"># atom.residue.atoms is a list of atoms we can select with</span>
+    <span class="c1"># method .select_atoms().</span>
+    <span class="c1"># To avoid too long line, we shorten its name to `sel`.</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">residue</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">select_atoms</span>
+    <span class="n">helper1_coor</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper1_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+    <span class="n">helper2_coor</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper2_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+    <span class="k">if</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH2&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span> <span class="o">=</span> <span class="n">get_CH2</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH&quot;</span><span class="p">:</span>
+        <span class="c1"># If we reconstruct a single H, we have a 3rd helper.</span>
+        <span class="n">helper3_coor</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper3_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">H1_coor</span> <span class="o">=</span> <span class="n">get_CH</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">,</span>
+                         <span class="n">helper3_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CHdoublebond&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span> <span class="o">=</span> <span class="n">get_CH_double_bond</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span>
+                                     <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH3&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">,</span> <span class="n">H3_coor</span> <span class="o">=</span> <span class="n">get_CH3</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                            <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">,</span> <span class="n">H3_coor</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Wrong code for typeofH2build, expected &#39;CH2&#39;, &#39;CH&#39;&quot;</span>
+                          <span class="s2">&quot;, &#39;CHdoublebond&#39; or &#39;CH3&#39;, got </span><span class="si">{}</span><span class="s2">.&quot;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typeofH2build</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="build_all_Hs_calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.build_all_Hs_calc_OP">[docs]</a><span class="k">def</span> <span class="nf">build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">,</span>
+                         <span class="n">universe_wH</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_OP</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">dic_corresp_numres_index_dic_OP</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">return_coors</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function that builds all hydrogens and calculates order parameters.</span>
+
+<span class="sd">    This function shall be used in two modes :</span>
+
+<span class="sd">    1) The first time this function is called, we have to construct a new</span>
+<span class="sd">    universe with hydrogens. One shall call it like this :</span>
+
+<span class="sd">    new_data_frame = build_all_Hs_calc_OP(universe_woH, return_coors=True)</span>
+
+<span class="sd">    The boolean return_coors set to True indicates to the function to return</span>
+<span class="sd">    a pandas dataframe. This latter will be used later to build a new</span>
+<span class="sd">    universe with H.</span>
+
+<span class="sd">    2) For all the other frames, we just need to update the coordinates in</span>
+<span class="sd">    the universe *with* hydrogens. One shall call it like this :</span>
+
+<span class="sd">    build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,</span>
+<span class="sd">                         universe_wH=universe_wH, dic_OP=dic_OP,</span>
+<span class="sd">                         dic_corresp_numres_index_dic_OP=dic_corresp_numres_index_dic_OP)</span>
+
+<span class="sd">    In this case, the function also calculates the order parameter and returns</span>
+<span class="sd">    nothing. The coordinates of the universe *with* H are updated in place.</span>
+<span class="sd">    The order parameter is also added in place (within dic_OP dictionnary).</span>
+
+<span class="sd">    NOTE: This function in mode 2 is slow, thus it shall be used when one wants</span>
+<span class="sd">    to create a trajectory with H (such as .xtc or whatever format).</span>
+
+<span class="sd">    NOTE2: This function assumes all possible C-H pairs are present in the .def </span>
+<span class="sd">    file (with -d option). They are needed since we want to build an xtc with </span>
+<span class="sd">    the whole system. If one is interested in calculating only a subset of OPs,</span>
+<span class="sd">    please use the function fast_build_all_Hs_calc_OP() instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    universe_woH : MDAnalysis universe instance</span>
+<span class="sd">        This is the universe *without* hydrogen.</span>
+<span class="sd">    dic_lipid : dictionnary</span>
+<span class="sd">        Comes from dic_lipids.py. Contains carbon names and helper names needed</span>
+<span class="sd">        for reconstructing hydrogens.</span>
+<span class="sd">    dic_Cname2Hnames : dictionnary</span>
+<span class="sd">        This dict gives the correspondance Cname -&gt; Hname. It is a dict of</span>
+<span class="sd">        tuples. If there is more than 1 H for a given C, they need to be</span>
+<span class="sd">        *ordered* like in the PDB. e.g. for CHARMM POPC :</span>
+<span class="sd">        {&#39;C13&#39;: (&#39;H13A&#39;, &#39;H13B&#39;, &#39;H13C&#39;), ..., &#39;C33&#39;: (&#39;H3X&#39;, &#39;H3Y&#39;),</span>
+<span class="sd">          ..., &#39;C216&#39;: (&#39;H16R&#39;, &#39;H16S&#39;), ...}</span>
+<span class="sd">    universe_wH : MDAnalysis universe instance (optional)</span>
+<span class="sd">        This is the universe *with* hydrogens.</span>
+<span class="sd">    dic_OP : ordered dictionnary</span>
+<span class="sd">        Each key of this dict is a couple carbon/H, and at the beginning it</span>
+<span class="sd">        contains an empty list, e.g.</span>
+<span class="sd">        OrderedDict([ (&#39;C1&#39;, &#39;H11): [], (&#39;C1&#39;, &#39;H12&#39;): [], ... ])</span>
+<span class="sd">        See function init_dic_OP() below to see how it is organized.</span>
+<span class="sd">    dic_corresp_numres_index_dic_OP : dictionnary</span>
+<span class="sd">        This dict should contain the correspondance between the numres and</span>
+<span class="sd">        the corresponding index in dic_OP. For example {..., 15: 14, ...} means</span>
+<span class="sd">        the residue numbered 15 in the PDB has an index of 14 in dic_OP.</span>
+<span class="sd">    return_coors : boolean (optional)</span>
+<span class="sd">        If True, the function will return a pandas dataframe containing the</span>
+<span class="sd">        system *with* hydrogens.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas dataframe (optional)</span>
+<span class="sd">        If parameter return_coors is True, this dataframe contains the</span>
+<span class="sd">        system *with* hydrogens is returned.</span>
+<span class="sd">    None</span>
+<span class="sd">        If parameter return_coors is False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">universe_wH</span><span class="p">:</span>
+        <span class="c1"># We will need the index in the numpy array for updating coordinates</span>
+        <span class="c1"># in the universe with H.</span>
+        <span class="n">row_index_coor_array</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">return_coors</span><span class="p">:</span>
+        <span class="c1"># The list newrows will be used to store the new molecule *with* H.</span>
+        <span class="n">newrows</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Counter for numbering the new mlcs with H.</span>
+        <span class="n">new_atom_num</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Loop over all atoms in the universe without H.</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">universe_wH</span><span class="p">:</span>
+            <span class="c1"># Update the position of the current atom in the universe with H.</span>
+            <span class="n">universe_wH</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">row_index_coor_array</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">position</span>
+            <span class="n">row_index_coor_array</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">return_coors</span><span class="p">:</span>
+            <span class="n">resnum</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">resnum</span>
+            <span class="n">resname</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">resname</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">name</span>
+            <span class="c1"># Append atom to the new list.</span>
+            <span class="c1"># 0      1       2        3       4  5  6</span>
+            <span class="c1"># atnum, atname, resname, resnum, x, y, z</span>
+            <span class="n">newrows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">new_atom_num</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">resnum</span><span class="p">]</span>
+                           <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">))</span>
+            <span class="n">new_atom_num</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Build new H(s)?</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">dic_lipid</span> <span class="ow">and</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">residue</span><span class="o">.</span><span class="n">resname</span> <span class="o">==</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">]):</span>
+            <span class="c1"># Build Hs and store them in a list of numpy 1D-arrays Hs_coor.</span>
+            <span class="c1"># The &quot;s&quot; in Hs_coor means there can be more than 1 H:</span>
+            <span class="c1"># For CH2, Hs_coor will contain: [H1_coor, H2_coor].</span>
+            <span class="c1"># For CH3, Hs_coor will contain: [H1_coor, H2_coor, H3_coor].</span>
+            <span class="c1"># For CH, Hs_coor will contain: [H1_coor].</span>
+            <span class="c1"># For CHdoublebond, Hs_coor will contain: [H1_coor].</span>
+            <span class="n">Hs_coor</span> <span class="o">=</span> <span class="n">buildHs_on_1C</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">)</span>
+            <span class="c1"># To retrieve Hname, we need a counter.</span>
+            <span class="n">counter4Hname</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Loop over Hs_coor (H_coor is a 1D-array with the 3 coors of 1 H).</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">H_coor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Hs_coor</span><span class="p">):</span>
+                <span class="c1"># Retrieve name of newly built H.</span>
+                <span class="n">Hname</span> <span class="o">=</span> <span class="n">dic_Cname2Hnames</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">counter4Hname</span><span class="p">]</span>
+                <span class="c1">####</span>
+                <span class="c1">#### We calculate here the order param on the fly :-D !</span>
+                <span class="c1">####</span>
+                <span class="k">if</span> <span class="n">dic_OP</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="p">:</span>
+                        <span class="n">op</span> <span class="o">=</span> <span class="n">calc_OP</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">H_coor</span><span class="p">)</span>
+                        <span class="c1"># We should get here the index of the residue in dic_OP.</span>
+                        <span class="c1"># For that we can use dic_corresp_numres_index_dic_OP</span>
+                        <span class="c1"># (key: resnum in pdb, value: index residue in dic_OP).</span>
+                        <span class="n">lipid_ix</span> <span class="o">=</span> <span class="n">dic_corresp_numres_index_dic_OP</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">resid</span><span class="p">]</span>
+                        <span class="c1"># OLD way: dic_OP[(atom.name, Hname)].append(op)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="p">:</span>
+                            <span class="n">dic_OP</span><span class="p">[(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)][</span><span class="n">lipid_ix</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">H_coor</span><span class="p">,</span> <span class="s2">&quot;OP:&quot;</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">return_coors</span><span class="p">:</span>
+                    <span class="c1"># Add them to newrows.</span>
+                    <span class="n">newrows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">new_atom_num</span><span class="p">,</span> <span class="n">Hname</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">resnum</span><span class="p">]</span>
+                                   <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">H_coor</span><span class="p">))</span>
+                    <span class="n">new_atom_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">universe_wH</span><span class="p">:</span>
+                    <span class="c1"># Update the position of the current H in the universe with H.</span>
+                    <span class="n">universe_wH</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">row_index_coor_array</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">H_coor</span>
+                    <span class="n">row_index_coor_array</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># Increment counter4Hname for retrieving next H.</span>
+                <span class="n">counter4Hname</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">dic_OP</span> <span class="ow">and</span> <span class="n">DEBUG</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">()</span> <span class="p">;</span> <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">dic_OP</span> <span class="ow">and</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final dic_OP:&quot;</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">return_coors</span><span class="p">:</span>
+        <span class="c1"># Create a dataframe to store the mlc with added hydrogens.</span>
+        <span class="n">new_df_atoms</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newrows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;atnum&quot;</span><span class="p">,</span> <span class="s2">&quot;atname&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;resname&quot;</span><span class="p">,</span> <span class="s2">&quot;resnum&quot;</span><span class="p">,</span>
+                                                      <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">new_df_atoms</span></div>
+
+<span class="c1">###</span>
+<span class="c1">### The next 4 functions (fast_build_all_Hs_calc_OP(), fast_buildHs_on_1C(),</span>
+<span class="c1">### make_dic_lipids_with_indexes() and get_indexes()) should be used when the</span>
+<span class="c1">### user doesn&#39;t want an output trajectory.</span>
+<span class="c1">### By using fast indexing to individual Catoms and helpers, they</span>
+<span class="c1">### are much faster.</span>
+<span class="c1">###</span>
+<div class="viewcode-block" id="fast_buildHs_on_1C"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.fast_buildHs_on_1C">[docs]</a><span class="k">def</span> <span class="nf">fast_buildHs_on_1C</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">ix_first_atom_res</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds 1, 2 or 3 H on a given carbon using fast indexing.</span>
+
+<span class="sd">    This function is a fast wrapper which gathers the coordinates of the</span>
+<span class="sd">    helpers and call the function that builds 1, 2 or 3 H.</span>
+
+<span class="sd">    The name of the helpers as well as the type of H to build are described</span>
+<span class="sd">    in a dictionnary stored in dic_lipids.py.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dic_lipids_with_indexes : dictionnary</span>
+<span class="sd">        The dictionnary made in function make_dic_lipids_with_indexes().</span>
+<span class="sd">    ts : MDAnalysis Timestep instance</span>
+<span class="sd">        This object contains the actual frame under analysis.</span>
+<span class="sd">    Cname : str</span>
+<span class="sd">        The carbon name on which we want to build H(s).</span>
+<span class="sd">    ix_first_atom_res : int</span>
+<span class="sd">        The index of the first atom in the lipid under analysis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of numpy 1D-arrays</span>
+<span class="sd">        Each element of the tuple is a numpy 1D-array containing 1, 2 or 3</span>
+<span class="sd">        reconstructed hydrogen(s).</span>
+<span class="sd">        !!! IMPORTANT !!! This function *should* return a tuple even if</span>
+<span class="sd">        there&#39;s only one H that has been rebuilt.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get nb of H to build and helper names (we can have 2 or 3 helpers).</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">])</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">Cname_ix</span><span class="p">,</span> <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span> <span class="o">=</span> <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">Cname_ix</span><span class="p">,</span> <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">,</span> <span class="n">helper3_ix</span> <span class="o">=</span> <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+    <span class="c1"># Get Cname coordinates.</span>
+    <span class="n">Cname_position</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">Cname_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+    <span class="c1"># Get helper coordinates</span>
+    <span class="n">helper1_coor</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">helper1_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+    <span class="n">helper2_coor</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">helper2_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+    <span class="c1"># Build new H(s) and get coordinates.</span>
+    <span class="k">if</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH2&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span> <span class="o">=</span> <span class="n">get_CH2</span><span class="p">(</span><span class="n">Cname_position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH&quot;</span><span class="p">:</span>
+        <span class="c1"># If we reconstruct a single H, we have a 3rd helper.</span>
+        <span class="n">helper3_coor</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">helper3_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+        <span class="n">H1_coor</span> <span class="o">=</span> <span class="n">get_CH</span><span class="p">(</span><span class="n">Cname_position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">,</span>
+                         <span class="n">helper3_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CHdoublebond&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span> <span class="o">=</span> <span class="n">get_CH_double_bond</span><span class="p">(</span><span class="n">Cname_position</span><span class="p">,</span> <span class="n">helper1_coor</span><span class="p">,</span>
+                                     <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,)</span>
+    <span class="k">elif</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH3&quot;</span><span class="p">:</span>
+        <span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">,</span> <span class="n">H3_coor</span> <span class="o">=</span> <span class="n">get_CH3</span><span class="p">(</span><span class="n">Cname_position</span><span class="p">,</span>
+                                            <span class="n">helper1_coor</span><span class="p">,</span> <span class="n">helper2_coor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">H1_coor</span><span class="p">,</span> <span class="n">H2_coor</span><span class="p">,</span> <span class="n">H3_coor</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Wrong code for typeofH2build, expected &#39;CH2&#39;, &#39;CH&#39;&quot;</span>
+                          <span class="s2">&quot;, &#39;CHdoublebond&#39; or &#39;CH3&#39;, got </span><span class="si">{}</span><span class="s2">.&quot;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typeofH2build</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_indexes"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_indexes">[docs]</a><span class="k">def</span> <span class="nf">get_indexes</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the index of helpers for a given carbon.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom : MDAnalysis Atom instance</span>
+<span class="sd">        This is an Atom instance of a carbon on which we want to build Hs.</span>
+<span class="sd">    universe_woH : MDAnalysis universe instance</span>
+<span class="sd">        The universe without hydrogens.</span>
+<span class="sd">    dic_lipid : dictionnary</span>
+<span class="sd">        Comes from dic_lipids.py. Contains carbon names and helper names needed</span>
+<span class="sd">        for reconstructing hydrogens.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of 2 or 3 int</span>
+<span class="sd">        The tuple contains the index of the 2 (or 3) helpers for the atom that</span>
+<span class="sd">        was passed as argument. (e.g. for atom C37 with index 99, the function</span>
+<span class="sd">        returns a tuple containing 98 (index of C36 = helper 1) and 100 (index</span>
+<span class="sd">        of C38=helper2).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get nb of H to build and helper names (we can have 2 or 3 helpers).</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">typeofH2build</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span><span class="p">,</span> <span class="n">helper3_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="c1"># Get helper coordinates using atom, which an instance from Atom class.</span>
+    <span class="c1"># atom.residue.atoms is a list of atoms we can select with</span>
+    <span class="c1"># method .select_atoms().</span>
+    <span class="c1"># To avoid too long line, we shorten its name to `sel`.</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">residue</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">select_atoms</span>
+    <span class="n">helper1_ix</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper1_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span>
+    <span class="n">helper2_ix</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper2_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span>
+    <span class="k">if</span> <span class="n">typeofH2build</span> <span class="o">==</span> <span class="s2">&quot;CH&quot;</span><span class="p">:</span>
+        <span class="c1"># If we reconstruct a single H, we have a 3rd helper.</span>
+        <span class="n">helper3_ix</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper3_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">,</span> <span class="n">helper3_ix</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_dic_lipids_with_indexes"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_lipids_with_indexes">[docs]</a><span class="k">def</span> <span class="nf">make_dic_lipids_with_indexes</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands dic_lipid and adds the index of each atom and helper.</span>
+
+<span class="sd">    IMPORTANT: the index of each atom/helper is given with respect to the</span>
+<span class="sd">               first atom in that residue.</span>
+<span class="sd">    For example, if we have a POPC where C1 is the first atom, and C50 the</span>
+<span class="sd">    last one, we want in the end:</span>
+<span class="sd">    {&#39;C1&#39;: (&#39;CH3&#39;, &#39;N4&#39;, &#39;C5&#39;, 0, 3, 4), ...,</span>
+<span class="sd">     &#39;C50&#39;: (&#39;CH3&#39;, &#39;C49&#39;, &#39;C48&#39;, 49, 48, 47)}</span>
+<span class="sd">    Where the 3 last int are the index (ix) of the atom, helper1, helper2</span>
+<span class="sd">    (possibly helper3) with respect to the first atom.</span>
+<span class="sd">    Thus for C1 : 0 is index of C1, N4 is 3 atoms away from C1 and C5 is 4</span>
+<span class="sd">    atoms away from C1.</span>
+<span class="sd">    For C50: C50 is 49 atoms away from C1, C49 is 48 atoms away from C1,</span>
+<span class="sd">    C48 is 47 atoms away from C1.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    universe_woH : MDAnalysis Universe instance</span>
+<span class="sd">        The universe without hydrogens.</span>
+<span class="sd">    dic_lipid : dictionnary</span>
+<span class="sd">        Comes from dic_lipids.py. Contains carbon names and helper names needed</span>
+<span class="sd">        for reconstructing hydrogens.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dictionnary</span>
+<span class="sd">        The returned dictionnary as described above in this docstring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get lipid name.</span>
+    <span class="n">resname</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">]</span>
+    <span class="c1"># Get resnum of the 1st lipid encountered in the system whose name</span>
+    <span class="c1"># is `resname`.</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resname </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resname</span><span class="p">)</span>
+    <span class="n">first_lipid_residue</span> <span class="o">=</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">resnum_1st_lipid</span> <span class="o">=</span> <span class="n">first_lipid_residue</span><span class="o">.</span><span class="n">resnum</span>
+    <span class="c1"># Get name of 1st atom of that lipid.</span>
+    <span class="n">first_atom_name</span> <span class="o">=</span> <span class="n">first_lipid_residue</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+    <span class="c1"># Get index of this atom.</span>
+    <span class="n">first_atom_ix</span> <span class="o">=</span> <span class="n">first_lipid_residue</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resname: </span><span class="si">{}</span><span class="s2">, first encountered residue: </span><span class="si">{}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+              <span class="s2">&quot;resnum_1st_lipid: </span><span class="si">{}</span><span class="s2">, first_atom_name: </span><span class="si">{}</span><span class="s2">, first_atom_ix: </span><span class="si">{}</span><span class="s2">&quot;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resname</span><span class="p">,</span> <span class="n">first_lipid_residue</span><span class="p">,</span> <span class="n">resnum_1st_lipid</span><span class="p">,</span>
+                      <span class="n">first_atom_name</span><span class="p">,</span> <span class="n">first_atom_ix</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">()</span>
+    <span class="c1"># Keep only carbons on which we want to build Hs.</span>
+    <span class="n">carbons2keep</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Cname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">carbons2keep</span><span class="p">:</span>
+            <span class="n">carbons2keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Cname</span><span class="p">)</span>
+    <span class="n">dic_lipids_with_indexes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">Cname</span> <span class="ow">in</span> <span class="n">dic_lipid</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">Cname</span> <span class="ow">in</span> <span class="n">carbons2keep</span><span class="p">:</span>
+            <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+    <span class="c1"># Now add the helper indexes.</span>
+    <span class="c1"># The reasonning is over one residue (e.g. POPC). We want to add (to the</span>
+    <span class="c1"># dict) the index (ix) of each helper of a given carbon with respect to</span>
+    <span class="c1"># the index of the first atom in that lipid residue.</span>
+    <span class="c1"># Loop over each carbon on which we want to reconstruct Hs.</span>
+    <span class="k">for</span> <span class="n">Cname</span> <span class="ow">in</span> <span class="n">dic_lipids_with_indexes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># Loop over residues for a given Cname atom.</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resid </span><span class="si">{}</span><span class="s2"> and name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resnum_1st_lipid</span><span class="p">,</span> <span class="n">Cname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">Catom</span> <span class="ow">in</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">):</span>
+            <span class="c1"># Get the (absolute) index of helpers.</span>
+            <span class="k">if</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CH&quot;</span><span class="p">:</span>
+                <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">,</span> <span class="n">helper3_ix</span> <span class="o">=</span> <span class="n">get_indexes</span><span class="p">(</span><span class="n">Catom</span><span class="p">,</span>
+                                                                 <span class="n">universe_woH</span><span class="p">,</span>
+                                                                 <span class="n">dic_lipid</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span> <span class="o">=</span> <span class="n">get_indexes</span><span class="p">(</span><span class="n">Catom</span><span class="p">,</span> <span class="n">universe_woH</span><span class="p">,</span>
+                                                     <span class="n">dic_lipid</span><span class="p">)</span>
+            <span class="c1"># If the first lipid doesn&#39;t start at residue 1 we must</span>
+            <span class="c1"># substract the index of the first atom of that lipid.</span>
+            <span class="n">Catom_ix_inres</span> <span class="o">=</span> <span class="n">Catom</span><span class="o">.</span><span class="n">ix</span> <span class="o">-</span> <span class="n">first_atom_ix</span>
+            <span class="n">helper1_ix_inres</span> <span class="o">=</span> <span class="n">helper1_ix</span> <span class="o">-</span> <span class="n">first_atom_ix</span>
+            <span class="n">helper2_ix_inres</span> <span class="o">=</span> <span class="n">helper2_ix</span> <span class="o">-</span> <span class="n">first_atom_ix</span>
+            <span class="c1"># Then add these indexes to dic_lipids_with_indexes.</span>
+            <span class="k">if</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CH&quot;</span><span class="p">:</span>
+                <span class="n">helper3_ix_inres</span> <span class="o">=</span> <span class="n">helper3_ix</span> <span class="o">-</span> <span class="n">first_atom_ix</span>
+                <span class="n">tmp_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">Catom_ix_inres</span><span class="p">,</span> <span class="n">helper1_ix_inres</span><span class="p">,</span>
+                             <span class="n">helper2_ix_inres</span><span class="p">,</span> <span class="n">helper3_ix_inres</span><span class="p">)</span>
+                <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span> <span class="o">+=</span> <span class="n">tmp_tuple</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">Catom_ix_inres</span><span class="p">,</span> <span class="n">helper1_ix_inres</span><span class="p">,</span>
+                             <span class="n">helper2_ix_inres</span><span class="p">)</span>
+                <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span> <span class="o">+=</span> <span class="n">tmp_tuple</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Everything is based on the following dic_lipids_with_indexes</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">dic_lipids_with_indexes</span></div>
+
+
+<div class="viewcode-block" id="fast_build_all_Hs_calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.fast_build_all_Hs_calc_OP">[docs]</a><span class="k">def</span> <span class="nf">fast_build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build Hs and calc OP using fast indexing.</span>
+
+<span class="sd">    This function uses fast indexing to carbon atoms and helper atoms. It</span>
+<span class="sd">    should be used when the user doesn&#39;t want any output traj with hydrogens.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    universe_woH : MDAnalysis universe instance</span>
+<span class="sd">        This is the universe *without* hydrogen.</span>
+<span class="sd">    dic_OP : ordered dictionnary</span>
+<span class="sd">        Each key of this dict is a couple carbon/H, and at the beginning it</span>
+<span class="sd">        contains an empty list, e.g.</span>
+<span class="sd">        OrderedDict([ (&#39;C1&#39;, &#39;H11): [], (&#39;C1&#39;, &#39;H12&#39;): [], ... ])</span>
+<span class="sd">        See function init_dic_OP() below to see how it is organized.</span>
+<span class="sd">    dic_lipid : dictionnary</span>
+<span class="sd">        Comes from dic_lipids.py. Contains carbon names and helper names needed</span>
+<span class="sd">        for reconstructing hydrogens.</span>
+<span class="sd">    dic_Cname2Hnames : dictionnary</span>
+<span class="sd">        This dict gives the correspondance Cname -&gt; Hname. It is a dict of</span>
+<span class="sd">        tuples. If there is more than 1 H for a given C, they need to be</span>
+<span class="sd">        *ordered* like in the PDB. e.g. for CHARMM POPC :</span>
+<span class="sd">        {&#39;C13&#39;: (&#39;H13A&#39;, &#39;H13B&#39;, &#39;H13C&#39;), ..., &#39;C33&#39;: (&#39;H3X&#39;, &#39;H3Y&#39;),</span>
+<span class="sd">          ..., &#39;C216&#39;: (&#39;H16R&#39;, &#39;H16S&#39;), ...}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        This function returns nothing, dic_OP is changed *in place*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">###</span>
+    <span class="c1">### 1) Expand dic_lipids and store there helpers&#39; index.</span>
+    <span class="c1">###</span>
+    <span class="c1">### We want {&#39;C1&#39;: (&#39;CH3&#39;, &#39;N4&#39;, &#39;C5&#39;, 0, 3, 4), ...,</span>
+    <span class="c1">###          &#39;C50&#39;: (&#39;CH3&#39;, &#39;C49&#39;, &#39;C48&#39;, 49, 48, 47)}</span>
+    <span class="c1">### Where the 3 last int are the index (ix) of the atom, helper1, helper2</span>
+    <span class="c1">### (possibly helper3) with respect to the first atom</span>
+    <span class="c1">### (e.g. 0 is index of C1, N4 is 3 atoms away from C1, etc).</span>
+    <span class="c1">###</span>
+    <span class="n">dic_lipids_with_indexes</span> <span class="o">=</span>  <span class="n">make_dic_lipids_with_indexes</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">)</span>
+    <span class="c1"># Get lipid name.</span>
+    <span class="n">resname</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">]</span>
+    <span class="c1"># Select first residue of that lipid.</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resname </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resname</span><span class="p">)</span>
+    <span class="n">first_lipid_residue</span> <span class="o">=</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Get name of 1st atom of that lipid.</span>
+    <span class="n">first_atom_name</span> <span class="o">=</span> <span class="n">first_lipid_residue</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+    <span class="c1">###</span>
+    <span class="c1">### 2) Now loop over the traj, residues and Catoms.</span>
+    <span class="c1">### At each iteration build Hs and calc OP.</span>
+    <span class="c1">###</span>
+    <span class="c1"># Loop over frames (ts is a Timestep instance).</span>
+    <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dealing with frame </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> ps.&quot;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">time</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Looping now over residues...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+        <span class="c1"># Loop over the 1st atom of each lipid, which is equiv to loop *over</span>
+        <span class="c1"># residues* (first_lipid_atom is an Atom instance, lipid_ix is an int</span>
+        <span class="c1"># that will be used for storing OPs in dic_OP).</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resname </span><span class="si">{}</span><span class="s2"> and name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resname</span><span class="p">,</span> <span class="n">first_atom_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">lipid_ix</span><span class="p">,</span> <span class="n">first_lipid_atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dealing with Cname&quot;</span><span class="p">,</span> <span class="n">first_lipid_atom</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;which is part of residue&quot;</span><span class="p">,</span> <span class="n">first_lipid_atom</span><span class="o">.</span><span class="n">residue</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Now looping over atoms of this residue&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">()</span>
+            <span class="c1"># Get the index of this first atom.</span>
+            <span class="n">ix_first_atom_res</span> <span class="o">=</span> <span class="n">first_lipid_atom</span><span class="o">.</span><span class="n">ix</span>
+            <span class="c1"># Now loop over each carbon on which we want to build Hs</span>
+            <span class="c1"># (Cname is a string).</span>
+            <span class="k">for</span> <span class="n">Cname</span> <span class="ow">in</span> <span class="n">dic_lipids_with_indexes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># Get Cname coords.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">])</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">Cname_ix</span><span class="p">,</span> <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span> <span class="o">=</span> <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">Cname_ix</span><span class="p">,</span> <span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">,</span> <span class="n">helper3_ix</span> <span class="o">=</span> <span class="n">dic_lipids_with_indexes</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+                <span class="n">Cname_position</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">Cname_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dealing with Cname&quot;</span><span class="p">,</span> <span class="n">Cname</span><span class="p">)</span>
+                    <span class="n">sel</span> <span class="o">=</span> <span class="n">first_lipid_atom</span><span class="o">.</span><span class="n">residue</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">select_atoms</span>
+                    <span class="n">Cname_atom</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Cname</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">Cname_atom</span><span class="p">,</span> <span class="n">Cname_atom</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">_</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_</span><span class="p">,</span> <span class="n">helper1_name</span><span class="p">,</span> <span class="n">helper2_name</span><span class="p">,</span> <span class="n">helper3_name</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span>
+                    <span class="n">helper1_atom</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper1_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper1&quot;</span><span class="p">,</span> <span class="n">helper1_atom</span><span class="p">,</span> <span class="n">helper1_atom</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                    <span class="n">helper2_atom</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper2_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper2&quot;</span><span class="p">,</span> <span class="n">helper2_atom</span><span class="p">,</span> <span class="n">helper2_atom</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                        <span class="n">helper3_atom</span> <span class="o">=</span> <span class="n">sel</span><span class="p">(</span><span class="s2">&quot;name </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">helper3_name</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper3&quot;</span><span class="p">,</span> <span class="n">helper3_atom</span><span class="p">,</span> <span class="n">helper3_atom</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                <span class="c1"># Get newly built H(s) on that atom.</span>
+                <span class="n">Hs_coor</span> <span class="o">=</span> <span class="n">fast_buildHs_on_1C</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span>
+                                             <span class="n">Cname</span><span class="p">,</span> <span class="n">ix_first_atom_res</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cname_position with fast indexing:&quot;</span><span class="p">,</span> <span class="n">Cname_position</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper1_position with fast indexing:&quot;</span><span class="p">,</span>
+                          <span class="n">ts</span><span class="p">[</span><span class="n">helper1_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">])</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper2_position with fast indexing:&quot;</span><span class="p">,</span>
+                          <span class="n">ts</span><span class="p">[</span><span class="n">helper2_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">Cname</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper3_position with fast indexing:&quot;</span><span class="p">,</span>
+                              <span class="n">ts</span><span class="p">[</span><span class="n">helper3_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">])</span>
+                <span class="c1"># To retrieve Hname, we need a counter.</span>
+                <span class="n">counter4Hname</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1"># Loop over all Hs.</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">H_coor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Hs_coor</span><span class="p">):</span>
+                    <span class="c1"># Retrieve name of newly built H.</span>
+                    <span class="n">Hname</span> <span class="o">=</span> <span class="n">dic_Cname2Hnames</span><span class="p">[</span><span class="n">Cname</span><span class="p">][</span><span class="n">counter4Hname</span><span class="p">]</span>
+                    <span class="c1"># Calc and store OP for that couple C-H.</span>
+                    <span class="n">Cname_position</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[</span><span class="n">Cname_ix</span><span class="o">+</span><span class="n">ix_first_atom_res</span><span class="p">]</span>
+                    <span class="n">op</span> <span class="o">=</span> <span class="n">calc_OP</span><span class="p">(</span><span class="n">Cname_position</span><span class="p">,</span> <span class="n">H_coor</span><span class="p">)</span>
+                    <span class="c1"># Old way: dic_OP[(Cname, Hname)].append(op)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="p">:</span>
+                        <span class="n">dic_OP</span><span class="p">[(</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)][</span><span class="n">lipid_ix</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">Hname</span><span class="p">,</span> <span class="n">H_coor</span><span class="p">,</span> <span class="s2">&quot;OP:&quot;</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+                    <span class="c1"># Increment counter4Hname for retrieving next H.</span>
+                    <span class="n">counter4Hname</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">()</span> <span class="p">;</span> <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final dic_OP:&quot;</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="make_dic_atname2genericname"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_atname2genericname">[docs]</a><span class="k">def</span> <span class="nf">make_dic_atname2genericname</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a dict of correspondance between generic H names and PDB names.</span>
+
+<span class="sd">    This dict will look like the following: {(&#39;C1&#39;, &#39;H11&#39;): &#39;gamma1_1&#39;, ...}.</span>
+<span class="sd">    Useful for outputing OP with generic names (such as beta1, beta 2, etc.).</span>
+<span class="sd">    Such files can be found on the NMRlipids MATCH repository:</span>
+<span class="sd">    https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        Filename containing OP definition</span>
+<span class="sd">        (e.g. `order_parameter_definitions_MODEL_Berger_POPC.def`).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Ordered dictionnary</span>
+<span class="sd">        Keys are tuples of (C, H) name, values generic name (as described</span>
+<span class="sd">        above in this docstring). The use of an ordered dictionnary ensures</span>
+<span class="sd">        we get always the same order in the output OP.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dic</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="c1"># TODO: This line might have to be changed if the file contains more than</span>
+                <span class="c1"># 4 columns.</span>
+                <span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name1</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">name2</span>
+                <span class="n">dic</span><span class="p">[(</span><span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">)]</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t read order parameter definition in &quot;</span>
+                          <span class="s2">&quot;file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dic</span></div>
+
+<div class="viewcode-block" id="init_dic_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.init_dic_OP">[docs]</a><span class="k">def</span> <span class="nf">init_dic_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span><span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_atname2genericname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO Complete docstring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### To calculate the error, we need to first average over the</span>
+    <span class="c1">### trajectory, then over residues.</span>
+    <span class="c1">### Thus in dic_OP, we want for each key a list of lists, for example:</span>
+    <span class="c1">### OrderedDict([</span>
+    <span class="c1">###              ((&#39;C1&#39;, &#39;H11&#39;), [[], [], ..., [], []]),</span>
+    <span class="c1">###              ((&#39;C1&#39;, &#39;H12&#39;), [[], ..., []]),</span>
+    <span class="c1">###              ...</span>
+    <span class="c1">###              ])</span>
+    <span class="c1">### Thus each sublist will contain OPs for one residue.</span>
+    <span class="c1">### e.g. (&#39;C1&#39;, &#39;H11&#39;), [[OP res 1 frame1, OP res1 frame2, ...],</span>
+    <span class="c1">###                      [OP res 2 frame1, OP res2 frame2, ...], ...]</span>
+    <span class="n">dic_OP</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="c1"># We also need the correspondance between residue number (resnum) and</span>
+    <span class="c1"># its index in dic_OP.</span>
+    <span class="n">dic_corresp_numres_index_dic_OP</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Create these sublists by looping over each lipid.</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dic_atname2genericname</span><span class="p">:</span>
+        <span class="n">dic_OP</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Get lipid name.</span>
+        <span class="n">resname</span> <span class="o">=</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">]</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resname </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resname</span><span class="p">)</span>
+        <span class="c1"># Loop over each residue on which we want to calculate the OP on.</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">residue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="p">):</span>
+            <span class="n">dic_OP</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="n">dic_corresp_numres_index_dic_OP</span><span class="p">[</span><span class="n">residue</span><span class="o">.</span><span class="n">resid</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial dic_OP:&quot;</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dic_corresp_numres_index_dic_OP:&quot;</span><span class="p">,</span> <span class="n">dic_corresp_numres_index_dic_OP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_corresp_numres_index_dic_OP</span></div>
+
+
+<div class="viewcode-block" id="make_dic_Cname2Hnames"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_Cname2Hnames">[docs]</a><span class="k">def</span> <span class="nf">make_dic_Cname2Hnames</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO Complete Docstring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">Cname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">:</span>
+            <span class="n">dic</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Hname</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dic</span><span class="p">[</span><span class="n">Cname</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">Hname</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dic_Cname2Hnames contains:&quot;</span><span class="p">,</span> <span class="n">dic</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dic</span></div>
+
+<span class="c1">#Anne: Modification to use buildH_calcOP.py also as a module within another python script</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">topfile</span><span class="p">,</span> <span class="n">lipid</span><span class="p">,</span> <span class="n">def_file</span><span class="p">,</span> <span class="n">trajfile</span><span class="p">,</span> <span class="n">outOP</span><span class="p">,</span> <span class="n">opdbxtc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+
+    <span class="c1"># Get the dictionary with helper info using residue name (args.lipid</span>
+    <span class="c1"># argument). Beware, this dict is then called `dic_lipid` *without s*,</span>
+    <span class="c1"># while `dic_lipids.py` (with an s) is a module with many different dicts</span>
+    <span class="c1"># (of different lipids) the user can choose.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dic_lipid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">dic_lipids</span><span class="p">,</span> <span class="n">lipid</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Lipid dictionnary </span><span class="si">{}</span><span class="s2"> doesn&#39;t exist in dic_lipids.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lipid</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Constructing the system...&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">universe_woH</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">topfile</span><span class="p">,</span> <span class="n">trajfile</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Can&#39;t create MDAnalysis universe with files </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                              <span class="s2">&quot;and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">topfile</span><span class="p">,</span> <span class="n">trajfile</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;System has </span><span class="si">{}</span><span class="s2"> atoms&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">universe_woH</span><span class="o">.</span><span class="n">coord</span><span class="p">)))</span>
+    <span class="c1"># 2) Initialize dic for storing OP.</span>
+    <span class="c1"># Init dic of correspondance : {(&#39;C1&#39;, &#39;H11&#39;): &#39;gamma1_1&#39;,</span>
+    <span class="c1"># {(&#39;C1&#39;, &#39;H11&#39;): &#39;gamma1_1&#39;, ...}.</span>
+    <span class="n">dic_atname2genericname</span> <span class="o">=</span> <span class="n">make_dic_atname2genericname</span><span class="p">(</span><span class="n">def_file</span><span class="p">)</span>
+    <span class="c1"># Initialize dic_OP (see function init_dic_OP() for the format).</span>
+    <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_corresp_numres_index_dic_OP</span> <span class="o">=</span> <span class="n">init_dic_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_atname2genericname</span><span class="p">)</span>
+    <span class="c1"># Initialize dic_Cname2Hnames.</span>
+    <span class="n">dic_Cname2Hnames</span> <span class="o">=</span> <span class="n">make_dic_Cname2Hnames</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">)</span>
+
+    <span class="c1"># If traj output files are requested.</span>
+    <span class="c1"># NOTE Here, we need to reconstruct all Hs. Thus the op definition file (passed</span>
+    <span class="c1">#  with arg -d) needs to contain all possible C-H pairs !!!</span>
+    <span class="k">if</span> <span class="n">opdbxtc</span><span class="p">:</span>
+        <span class="c1">#3) Prepare the system.</span>
+        <span class="c1"># First check that dic_OP contains all possible C-H pairs.</span>
+        <span class="c1"># NOTE The user has to take care that .def file has the right atom names !!!</span>
+        <span class="k">for</span> <span class="n">atname</span> <span class="ow">in</span> <span class="n">dic_lipid</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">atname</span> <span class="o">!=</span> <span class="s2">&quot;resname&quot;</span><span class="p">:</span>
+                <span class="c1"># Check if carbon is present in the definition file.</span>
+                <span class="k">if</span> <span class="n">atname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dic_Cname2Hnames</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: When -opx option is used, the order param &quot;</span>
+                          <span class="s2">&quot;definition file (passed with -d arg) must contain &quot;</span>
+                          <span class="s2">&quot;all possible carbons on which we want to rebuild &quot;</span>
+                          <span class="s2">&quot;hydrogens.&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dic_Cname2Hnames</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Needs:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dic_lipid</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                    <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Order param definition file incomplete.&quot;</span><span class="p">)</span>
+                <span class="c1"># Check that the 3 Hs are in there for that C.</span>
+                <span class="n">nbHs_in_def_file</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic_Cname2Hnames</span><span class="p">[</span><span class="n">atname</span><span class="p">])</span>
+                <span class="n">tmp_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CH&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;CHdoublebond&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;CH2&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;CH3&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+                <span class="n">correct_nb_of_Hs</span> <span class="o">=</span> <span class="n">tmp_dic</span><span class="p">[</span><span class="n">dic_lipid</span><span class="p">[</span><span class="n">atname</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">if</span>  <span class="n">correct_nb_of_Hs</span> <span class="o">!=</span> <span class="n">nbHs_in_def_file</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: When -opx option is used, the order param &quot;</span>
+                          <span class="s2">&quot;definition file (passed with -d arg) must contain &quot;</span>
+                          <span class="s2">&quot;all possible C-H pairs to rebuild.&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected </span><span class="si">{}</span><span class="s2"> hydrogen(s) to rebuild for carbon </span><span class="si">{}</span><span class="s2">, &quot;</span>
+                          <span class="s2">&quot;got </span><span class="si">{}</span><span class="s2"> in definition file </span><span class="si">{}</span><span class="s2">.&quot;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">correct_nb_of_Hs</span><span class="p">,</span> <span class="n">atname</span><span class="p">,</span>
+                                  <span class="n">dic_Cname2Hnames</span><span class="p">[</span><span class="n">atname</span><span class="p">],</span> <span class="n">def_file</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s2">&quot;Wrong number of Hs to rebuild.&quot;</span><span class="p">)</span>
+        <span class="c1"># Create filenames.</span>
+        <span class="n">pdbout_filename</span> <span class="o">=</span> <span class="n">opdbxtc</span> <span class="o">+</span> <span class="s2">&quot;.pdb&quot;</span> <span class="c1">#</span>
+        <span class="n">xtcout_filename</span> <span class="o">=</span> <span class="n">opdbxtc</span> <span class="o">+</span> <span class="s2">&quot;.xtc&quot;</span> <span class="c1">#</span>
+        <span class="c1"># Build a new universe with H.</span>
+        <span class="c1"># Build a pandas df with H.</span>
+        <span class="n">new_df_atoms</span> <span class="o">=</span> <span class="n">build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">,</span> <span class="n">return_coors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Create a new universe with H using that df.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Writing new pdb with hydrogens.&quot;</span><span class="p">)</span>
+        <span class="c1"># Write pdb with H to disk.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pdbout_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pandasdf2pdb</span><span class="p">(</span><span class="n">new_df_atoms</span><span class="p">))</span>
+        <span class="c1"># Then create the universe with H from that pdb.</span>
+        <span class="n">universe_wH</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">pdbout_filename</span><span class="p">)</span>
+        <span class="c1"># Create an xtc writer.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Writing trajectory with hydrogens in xtc file.&quot;</span><span class="p">)</span>
+        <span class="n">newxtc</span> <span class="o">=</span> <span class="n">XTC</span><span class="o">.</span><span class="n">XTCWriter</span><span class="p">(</span><span class="n">xtcout_filename</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">universe_wH</span><span class="o">.</span><span class="n">atoms</span><span class="p">))</span>
+        <span class="c1"># Write 1st frame.</span>
+        <span class="n">newxtc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">universe_wH</span><span class="p">)</span>
+
+        <span class="c1"># 4) Loop over all frames of the traj *without* H, build Hs and</span>
+        <span class="c1"># calc OP (ts is a Timestep instance).</span>
+        <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dealing with frame </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> ps.&quot;</span>
+                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">time</span><span class="p">))</span>
+            <span class="c1"># Build H and update their positions in the universe *with* H (in place).</span>
+            <span class="c1"># Calculate OPs on the fly while building Hs  (dic_OP changed in place).</span>
+            <span class="n">build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">,</span>
+                                <span class="n">universe_wH</span><span class="o">=</span><span class="n">universe_wH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="o">=</span><span class="n">dic_OP</span><span class="p">,</span>
+                                <span class="n">dic_corresp_numres_index_dic_OP</span><span class="o">=</span><span class="n">dic_corresp_numres_index_dic_OP</span><span class="p">)</span>
+            <span class="c1"># Write new frame to xtc.</span>
+            <span class="n">newxtc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">universe_wH</span><span class="p">)</span>
+        <span class="c1"># Close xtc.</span>
+        <span class="n">newxtc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># 6) If no traj output file requested, use fast indexing to speed up OP</span>
+    <span class="c1"># calculation. The function fast_build_all_Hs() returns nothing, dic_OP</span>
+    <span class="c1"># is modified in place.</span>
+    <span class="k">else</span><span class="p">:</span>   
+        <span class="n">fast_build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">)</span>
+
+    <span class="c1"># 7) Output results.</span>
+    <span class="c1"># Pickle results? (migth be useful in the future)</span>
+    <span class="c1"># TODO Implement that option.</span>
+    <span class="k">if</span> <span class="n">PICKLE</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;OP.pickle&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># Pickle the dic using the highest protocol available.</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+        <span class="c1">#  To unpickle</span>
+        <span class="c1">#with open(&quot;OP.pickle&quot;, &quot;rb&quot;) as f:</span>
+        <span class="c1">#    dic_OP = pickle.load(f)</span>
+    <span class="c1"># Output to a file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.jmelcr_style.out&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outOP</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">,</span> \
+        <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.apineiro_style.out&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outOP</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f2</span><span class="p">:</span>
+        <span class="c1"># J. Melcr output style.</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# </span><span class="si">{:30s}</span><span class="s2"> </span><span class="si">{:7s}</span><span class="s2"> </span><span class="si">{:5s}</span><span class="s2"> </span><span class="si">{:5s}</span><span class="s2">  </span><span class="si">{:7s}</span><span class="s2"> </span><span class="si">{:7s}</span><span class="s2"> </span><span class="si">{:7s}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;OP_name&quot;</span><span class="p">,</span> <span class="s2">&quot;resname&quot;</span><span class="p">,</span> <span class="s2">&quot;atom1&quot;</span><span class="p">,</span> <span class="s2">&quot;atom2&quot;</span><span class="p">,</span> <span class="s2">&quot;OP_mean&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;OP_stddev&quot;</span><span class="p">,</span> <span class="s2">&quot;OP_stem&quot;</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#-------------------------------&quot;</span>
+                <span class="s2">&quot;-------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Loop over each pair (C, H).</span>
+        <span class="k">for</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span> <span class="ow">in</span> <span class="n">dic_atname2genericname</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">dic_atname2genericname</span><span class="p">[(</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pair (</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">):&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">))</span>
+            <span class="c1"># Cast list of lists to a 2D-array. It should have dimensions</span>
+            <span class="c1"># (nb_lipids, nb_frames).</span>
+            <span class="c1">### Thus each sublist will contain OPs for one residue.</span>
+            <span class="c1">### e.g. (&#39;C1&#39;, &#39;H11&#39;), [[OP res 1 frame1, OP res1 frame2, ...],</span>
+            <span class="c1">###                      [OP res 2 frame1, OP res2 frame2, ...],</span>
+            <span class="c1">####                     ...]</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">[(</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final OP array has shape (nb_lipids, nb_frames):&quot;</span><span class="p">,</span>
+                      <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">()</span>
+            <span class="c1"># General mean over lipids and over frames (for that (C, H) pair).</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="c1"># Average over frames for each (C, H) pair.  Because of how the</span>
+            <span class="c1"># array is organized (see above), we need to average horizontally</span>
+            <span class="c1"># (i.e. using axis=1).</span>
+            <span class="c1"># means is a 1D-array with nb_lipids elements.</span>
+            <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># Calc standard deviation and STEM (std error of the mean).</span>
+            <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">means</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:30s}</span><span class="s2"> </span><span class="si">{:7s}</span><span class="s2"> </span><span class="si">{:5s}</span><span class="s2"> </span><span class="si">{:5s}</span><span class="s2"> </span><span class="si">{: 2.5f}</span><span class="s2"> </span><span class="si">{: 2.5f}</span><span class="s2"> </span><span class="si">{: 2.5f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">],</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span>
+                            <span class="n">std_dev</span><span class="p">,</span> <span class="n">stem</span><span class="p">))</span>
+<span class="c1">#########################################################################################                            </span>
+        <span class="c1"># A. Pineiro output style.</span>
+        <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Atom_name  Hydrogen</span><span class="se">\t</span><span class="s2">OP</span><span class="se">\t</span><span class="s2">      STD</span><span class="se">\t</span><span class="s2">   STDmean</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">list_unique_Cnames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">Cname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">list_unique_Cnames</span><span class="p">:</span>
+                <span class="n">list_unique_Cnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Cname</span><span class="p">)</span>
+        <span class="c1"># Order of carbons is similar to that in the PDB.</span>
+        <span class="n">list_unique_Cnames_ordered</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="s2">&quot;resname </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dic_lipid</span><span class="p">[</span><span class="s2">&quot;resname&quot;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">universe_woH</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span><span class="o">.</span><span class="n">residues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">list_unique_Cnames</span><span class="p">:</span>
+                <span class="n">list_unique_Cnames_ordered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># Now write output.</span>
+        <span class="k">for</span> <span class="n">Cname</span> <span class="ow">in</span> <span class="n">list_unique_Cnames_ordered</span><span class="p">:</span>
+            <span class="n">cumulative_list_for_that_carbon</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Hname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">H</span> <span class="k">for</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span> <span class="ow">in</span> <span class="n">dic_OP</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">C</span> <span class="o">==</span> <span class="n">Cname</span><span class="p">]):</span>
+                <span class="n">cumulative_list_for_that_carbon</span> <span class="o">+=</span> <span class="n">dic_OP</span><span class="p">[</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">]</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">[</span><span class="n">Cname</span><span class="p">,</span> <span class="n">Hname</span><span class="p">])</span>
+                <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+                <span class="n">stem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">means</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;7s}</span><span class="se">\t</span><span class="si">{:&gt;8s}</span><span class="s2">  </span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Cname</span><span class="p">,</span> <span class="s2">&quot;HR&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="n">stem</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;7s}</span><span class="se">\t</span><span class="si">{:&gt;8s}</span><span class="s2">  </span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;HS&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="n">stem</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;7s}</span><span class="se">\t</span><span class="si">{:&gt;8s}</span><span class="s2">  </span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;HT&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="n">stem</span><span class="p">))</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cumulative_list_for_that_carbon</span><span class="p">)</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">std_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">means</span><span class="p">))</span>
+            <span class="n">f2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;7s}</span><span class="se">\t</span><span class="si">{:&gt;8s}</span><span class="s2">  </span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\t</span><span class="si">{:10.5f}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;AVG&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="n">stem</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results written to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outOP</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="parseCommandLineArgs"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.parseCommandLineArgs">[docs]</a><span class="k">def</span> <span class="nf">parseCommandLineArgs</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+    <span class="c1"># Avoid tpr for topology cause there&#39;s no .coord there!</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;topfile&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Topology file (pdb or gro).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-x&quot;</span><span class="p">,</span> <span class="s2">&quot;--xtc&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input trajectory file in xtc &quot;</span>
+                        <span class="s2">&quot;format.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--lipid&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Residue name of lipid to &quot;</span>
+                        <span class="s2">&quot;calculate the OP on (e.g. POPC).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--defop&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Order parameter definition &quot;</span>
+                        <span class="s2">&quot;file. Can be found on NMRlipids MATCH repository:&quot;</span>
+                        <span class="s2">&quot;https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-opx&quot;</span><span class="p">,</span> <span class="s2">&quot;--opdbxtc&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Base name for trajectory &quot;</span>
+                        <span class="s2">&quot;output with hydrogens. File extension will be &quot;</span>
+                        <span class="s2">&quot;automatically added. For example -opx trajH will &quot;</span>
+                        <span class="s2">&quot;generate trajH.pdb and trajH.xtc. &quot;</span>
+                        <span class="s2">&quot;So far only xtc is supported.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--out&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output base name for storing &quot;</span>
+                        <span class="s2">&quot;order parameters. Extention </span><span class="se">\&quot;</span><span class="s2">.out</span><span class="se">\&quot;</span><span class="s2"> will be &quot;</span>
+                        <span class="s2">&quot;automatically added. Default name is OP_buildH.out.&quot;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OP_buildH.out&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">args</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;This program builds hydrogens and calculate the order</span>
+<span class="s2">    parameters</span>
+<span class="s2">    (OP) from a united-atom trajectory. If -opx is requested, pdb and xtc</span>
+<span class="s2">    output files with hydrogens are created but OP calculation will be slow.</span>
+<span class="s2">    If no trajectory output is requested (no use of flag -opx), it uses a</span>
+<span class="s2">    fast procedure to build hydrogens and calculate the OP.</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1) Parse arguments.</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parseCommandLineArgs</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="c1"># Top file is &quot;args.topfile&quot;, xtc file is &quot;args.xtc&quot;, pdb output file is</span>
+    <span class="c1"># &quot;args.pdbout&quot;, xtc output file is &quot;args.xtcout&quot;.</span>
+    <span class="c1"># Check topology file extension.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">topfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;pdb&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">topfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;gro&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;Topology must be given in pdb&quot;</span>
+                                         <span class="s2">&quot; or gro format&quot;</span><span class="p">)</span>
+    <span class="c1"># Check residue name validity.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">lipid</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;Lipid resname is a mandatory &quot;</span>
+                                         <span class="s2">&quot;argument (option -l).&quot;</span><span class="p">)</span>
+    <span class="c1"># Check if order param def file has been passed.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">defop</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;Order parameter definition file is &quot;</span>
+                                         <span class="s2">&quot;a mandatory argument (option -d).&quot;</span><span class="p">)</span>
+    <span class="c1">#Pass arguments to main function</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">topfile</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">lipid</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">defop</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">xtc</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">opdbxtc</span><span class="p">)</span>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">NMRlipids databank</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Samuli Ollila.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

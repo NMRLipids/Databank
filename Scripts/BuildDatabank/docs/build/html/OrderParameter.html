@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrderParameter module &mdash; NMRlipids databank 4.9.2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=10ee5b61"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NMRlipids databank
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="READMEcontent.html">User input and content of README.yaml files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data in the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NMRlipids databank</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OrderParameter module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/OrderParameter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-OrderParameter">
+<span id="orderparameter-module"></span><h1>OrderParameter module<a class="headerlink" href="#module-OrderParameter" title="Link to this heading"></a></h1>
+<blockquote>
+<div><p>calculation of order parameters of lipid bilayers
+from a MD trajectory</p>
+<p>Made by Joe,  Last edit 2017/02/02</p>
+</div></blockquote>
+<blockquote>
+<div><p>output: order parameters (2 textfiles)</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="OrderParameter.OrderParameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">OrderParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_B_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_A_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_atom_B_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#OrderParameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.OrderParameter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing&amp;manipulating
+order parameter (OP) related metadata (definition, name, …)
+and OP trajectories
+and methods to evaluate OPs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="OrderParameter.OrderParameter.calc_OP">
+<span class="sig-name descname"><span class="pre">calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#OrderParameter.calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.OrderParameter.calc_OP" title="Link to this definition"></a></dt>
+<dd><p>calculates Order Parameter according to equation
+S = 1/2 * (3*cos(theta)^2 -1)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="OrderParameter.OrderParameter.get_avg_std_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_OP</span></span><a class="headerlink" href="#OrderParameter.OrderParameter.get_avg_std_OP" title="Link to this definition"></a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="OrderParameter.OrderParameter.get_avg_std_stem_OP">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_avg_std_stem_OP</span></span><a class="headerlink" href="#OrderParameter.OrderParameter.get_avg_std_stem_OP" title="Link to this definition"></a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="OrderParameter.OrderParameter.get_op_res">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_op_res</span></span><a class="headerlink" href="#OrderParameter.OrderParameter.get_op_res" title="Link to this definition"></a></dt>
+<dd><p>Provides average and stddev of all OPs in self.traj</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.calc_angle">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">calc_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#calc_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.calc_angle" title="Link to this definition"></a></dt>
+<dd><p>calculates the angle between the vector and z-axis in degrees
+no PBC check!
+Calculates the center of mass of the selected atoms to invert bottom leaflet vector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.calc_z_dim">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">calc_z_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gro</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#calc_z_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.calc_z_dim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.read_trajs_calc_OPs">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">read_trajs_calc_OPs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#read_trajs_calc_OPs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.read_trajs_calc_OPs" title="Link to this definition"></a></dt>
+<dd><p>procedure that
+creates MDAnalysis Universe with top,
+reads in trajectories trajs and then
+goes through every frame and
+evaluates each Order Parameter “S” from the list of OPs ordPars.
+ordPars : list of OrderParameter class</p>
+<blockquote>
+<div><p>each item in this list describes an Order parameter to be calculated in the trajectory</p>
+</div></blockquote>
+<dl class="simple">
+<dt>top<span class="classifier">str</span></dt><dd><p>filename of a top file (e.g. conf.gro)</p>
+</dd>
+<dt>trajs<span class="classifier">list of strings</span></dt><dd><p>filenames of trajectories</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.parse_op_input">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">parse_op_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#parse_op_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.parse_op_input" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.find_OP">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">find_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#find_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.find_OP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.read_trj_PN_angles">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">read_trj_PN_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gro_fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#read_trj_PN_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.read_trj_PN_angles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="OrderParameter.Dihedrals">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_1_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_2_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_3_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_4_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.Dihedrals" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OrderParameter.parseDihedralInput">
+<span class="sig-prename descclassname"><span class="pre">OrderParameter.</span></span><span class="sig-name descname"><span class="pre">parseDihedralInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OrderParameter.html#parseDihedralInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OrderParameter.parseDihedralInput" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

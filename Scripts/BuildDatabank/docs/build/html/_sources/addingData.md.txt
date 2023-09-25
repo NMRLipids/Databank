@@ -1,0 +1,7 @@
+These files are build based on information given in files locating in subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/). 
+Each entry is in subfolder with integer name.
+
+The already existing info files in 
+subfolders of [Scripts/BuildDatabank/info_files/](https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/info_files/)
+serve as useful examples when preparing the new entry files.
+

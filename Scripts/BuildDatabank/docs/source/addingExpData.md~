@@ -1,0 +1,77 @@
+(addingExpData)=
+
+Adding experimental data in the NMRlipids databank
+==================
+
+Experimental data is stored in [Data/experiments](https://github.com/NMRLipids/Databank/tree/main/Data/experiments) folder. C-H bond order parameters from NMR are in [OrderParameters subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters) and X-ray scattering form factors in [FormFactors subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors). The data is collected in these folder under subfolders named according to the DOI of the original source publication of the data. Each experimental dataset from each publication is then included in subfolders named according to integer. For example, [Data/experiments/OrderParameters/10.1039/c2cp42738a/2](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters/10.1039/c2cp42738a/2). The folders contain the experimental data and `README.yaml` files describing the experimental conditions. The keys of these dictionaries are listed in table and described more detailed below.
+
+|key | description |
+| ----| -----|
+|DOI | DOI of the of the original publication of the experimental data.|
+TEMPERATURE | Temperature of the experiment.
+MOLAR_FRACTIONS | Dictionary of molar fractions of bilayer components.
+ION_CONCENTRATIONS | Dictionary of ion concentrations of the system ([ion]= N<sub>ion</sub>*[water]/N<sub>water</sub>, [water] = 55.5 M)
+TOTAL_LIPID_CONCENTRATION | Total concentration of lipid components. If exact concentration is not known, but experiments are performed in excess water, ’full hydration’ can be given.
+COUNTER_IONS | Type of counter ions if present.
+
+DOI:
+----------
+DOI of the of the original publication of the experimental data.
+
+TEMPERATURE
+------------
+Temperature of the experiment.
+
+MOLAR_FRACTIONS
+-----------------
+Dictionary of molar fractions of bilayer components. For example:
+```
+MOLAR_FRACTIONS:
+  POPC: 0.93
+  CHOL: 0.07
+  ````
+
+
+ION_CONCENTRATIONS
+--------------
+
+Dictionary of ion concentrations of the system ([ion]= N<sub>ion</sub>*[water]/N<sub>water</sub>, [water] = 55.5 M). For example:
+```
+ION_CONCENTRATIONS:
+  POT: 0
+  SOD: 0.1
+  CLA: 0.1
+  CAL: 0
+```
+
+
+TOTAL_LIPID_CONCENTRATION
+---------------------
+
+Total concentration of lipid components. If exact concentration is not known, but experiments are performed in excess water, ’full hydration’ can be given.
+
+COUNTER_IONS
+-------------
+
+Type of counter ions if present.
+
+Steps to add experimental data
+-----------------------------
+
+1. Create the above described `README.yaml` file of your data.
+
+2. Copy this README file data into a appropriate directory named as described above.
+
+3. If you have order parameter data, create a `dat` file where the first two columns define the atom pair with universal atom names, third column has the experimental order parameter value, and fourth column has the experimental error. If the experimental error is known, set it to 0.02. Store the created `dat` file into the appropriate folder with the `README.yaml` file. Create `json` version from `dat` file by running
+   ```
+   python data_to_json.py {dat file path}
+   ```
+   in folder [Data/experiments/OrderParameters](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters). For example, see subfolders of [Data/experiments/OrderParameters](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters)
+
+4. If you have X-ray scattering form factor data, store the form factor into approppriate folders in ASCII format where first column in x-axis values (Å<sub>-1</sub>), second column is y-axis value, and third is the error. Then create `json` file by runnig
+   ```
+   python data_to_json.py {ASCII file path}
+   ```
+   in folder [Data/experiments/FormFactors](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors). For example, see subfolders of [Data/experiments/FormFactors](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors)
+
+5. To update the connections with simulations after adding new experimental data, perform the step 6 in [Adding simulations into the NMRlipids databank](addData).
