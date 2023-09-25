@@ -1,0 +1,569 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OrderParameter &#8212; NMRlipids databank 4.9.2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for OrderParameter</h1><div class="highlight"><pre>
+<span></span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> calculation of order parameters of lipid bilayers</span>
+<span class="sd"> from a MD trajectory</span>
+<span class="sd"> </span>
+<span class="sd"> meant for use with NMRlipids projects</span>
+<span class="sd"> ------------------------------------------------------------</span>
+<span class="sd"> Made by Joe,  Last edit 2017/02/02</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd"> input: Order parameter definitions</span>
+<span class="sd">        gro and xtc file (or equivalents)</span>
+<span class="sd"> output: order parameters (2 textfiles)</span>
+<span class="sd">--------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+<span class="kn">from</span> <span class="nn">linecache</span> <span class="kn">import</span> <span class="n">getline</span>
+
+
+<span class="c1">#k_b = 0.0083144621  #kJ/Mol*K</span>
+<span class="c1">#f_conc=55430  # factor for calculating concentrations of salts from numbers of ions/waters; in mM/L</span>
+
+<span class="n">bond_len_max</span><span class="o">=</span><span class="mf">1.5</span>  <span class="c1"># in A, max distance between atoms for reasonable OP calculation</span>
+<span class="n">bond_len_max_sq</span><span class="o">=</span><span class="n">bond_len_max</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1">#%%</span>
+<div class="viewcode-block" id="OrderParameter"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.OrderParameter">[docs]</a><span class="k">class</span> <span class="nc">OrderParameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for storing&amp;manipulating</span>
+<span class="sd">    order parameter (OP) related metadata (definition, name, ...)</span>
+<span class="sd">    and OP trajectories</span>
+<span class="sd">    and methods to evaluate OPs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">atom_A_name</span><span class="p">,</span> <span class="n">atom_B_name</span><span class="p">,</span> <span class="n">M_atom_A_name</span><span class="p">,</span> <span class="n">M_atom_B_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1">#removed name, resname from arguments</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        it doesn&#39;t matter which comes first,</span>
+<span class="sd">        atom A or B, for OP calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="c1">#        self.name = name             # name of the order parameter, a label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resname</span> <span class="o">=</span> <span class="n">resname</span>       <span class="c1"># name of residue atoms are in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atAname</span> <span class="o">=</span> <span class="n">atom_A_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atBname</span> <span class="o">=</span> <span class="n">atom_B_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M_atAname</span> <span class="o">=</span> <span class="n">M_atom_A_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M_atBname</span> <span class="o">=</span> <span class="n">M_atom_B_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">M_atom_A_name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">M_atom_B_name</span> <span class="c1"># generic name of atom A and atom B</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;provided name &gt;&gt; </span><span class="si">{}</span><span class="s2"> &lt;&lt; is not a string! </span><span class="se">\n</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">                Unexpected behaviour might occur.&quot;</span><span class="p">)</span><span class="c1">#.format(field)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">field</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;provided name &gt;&gt; </span><span class="si">{}</span><span class="s2"> &lt;&lt; is empty! </span><span class="se">\n</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">                    Cannot use empty names for atoms and OP definitions.&quot;</span><span class="p">)</span><span class="c1">#.format(field)</span>
+        <span class="c1"># extra optional arguments allow setting avg,std values -- suitable for reading-in results of this script</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">avg</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stem</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">avg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stem</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Number of optional positional arguments is </span><span class="si">{len}</span><span class="s2">, not 2 or 0. Args: </span><span class="si">{args}</span><span class="se">\n</span><span class="s2">Wrong file format?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traj</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># for storing OPs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="p">[]</span>
+        
+
+<div class="viewcode-block" id="OrderParameter.calc_OP"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.OrderParameter.calc_OP">[docs]</a>    <span class="k">def</span> <span class="nf">calc_OP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculates Order Parameter according to equation</span>
+<span class="sd">        S = 1/2 * (3*cos(theta)^2 -1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+       <span class="c1"># print(atoms)</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+	
+        <span class="k">if</span> <span class="n">d2</span><span class="o">&gt;</span><span class="n">bond_len_max_sq</span><span class="p">:</span>
+            <span class="n">at1</span><span class="o">=</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">at2</span><span class="o">=</span><span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">resnr</span><span class="o">=</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">resid</span>
+            <span class="n">d</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Atomic distance for atoms </span><span class="se">\</span>
+<span class="s2">            </span><span class="si">{at1}</span><span class="s2"> and </span><span class="si">{at2}</span><span class="s2"> in residue no. </span><span class="si">{resnr}</span><span class="s2"> is suspiciously </span><span class="se">\</span>
+<span class="s2">            long: </span><span class="si">{d}</span><span class="s2">!</span><span class="se">\n</span><span class="s2">PBC removed???&quot;</span><span class="p">)</span>
+        <span class="n">cos2</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">d2</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">3.0</span><span class="o">*</span><span class="n">cos2</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">S</span></div>
+        
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">get_avg_std_OP</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides average and stddev of all OPs in self.traj</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># convert to numpy array</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traj</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traj</span><span class="p">))</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">get_avg_std_stem_OP</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides average and stddev of all OPs in self.traj</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traj</span><span class="p">)</span>
+        <span class="c1"># convert to numpy array</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traj</span><span class="p">),</span><span class="n">std</span><span class="p">,</span><span class="n">std</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traj</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">get_op_res</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Provides average and stddev of all OPs in self.traj</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+	<span class="c1"># convert to numpy array</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj</span></div>
+
+
+<span class="c1">#Anne: Added calc_angle from https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py</span>
+<span class="c1">#Anne: removed self from function arguments</span>
+<div class="viewcode-block" id="calc_angle"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.calc_angle">[docs]</a><span class="k">def</span> <span class="nf">calc_angle</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">com</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculates the angle between the vector and z-axis in degrees</span>
+<span class="sd">        no PBC check!</span>
+<span class="sd">        Calculates the center of mass of the selected atoms to invert bottom leaflet vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">d</span>
+        <span class="c1"># values for the bottom leaflet are inverted so that </span>
+        <span class="c1"># they have the same nomenclature as the top leaflet</span>
+        <span class="n">cos</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">com</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">cos</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cos</span><span class="p">)</span><span class="o">&gt;=</span><span class="mf">1.0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cosine is too large = </span><span class="si">{}</span><span class="s2"> --&gt; truncating it to +/-1.0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cos</span><span class="p">))</span>
+                <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cos</span><span class="p">)</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">cos</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">angle</span></div>
+
+
+<div class="viewcode-block" id="calc_z_dim"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.calc_z_dim">[docs]</a><span class="k">def</span> <span class="nf">calc_z_dim</span><span class="p">(</span><span class="n">gro</span><span class="p">):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">gro</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+
+
+<div class="viewcode-block" id="read_trajs_calc_OPs"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.read_trajs_calc_OPs">[docs]</a><span class="k">def</span> <span class="nf">read_trajs_calc_OPs</span><span class="p">(</span><span class="n">ordPars</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">trajs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    procedure that</span>
+<span class="sd">    creates MDAnalysis Universe with top,</span>
+<span class="sd">    reads in trajectories trajs and then</span>
+<span class="sd">    goes through every frame and</span>
+<span class="sd">    evaluates each Order Parameter &quot;S&quot; from the list of OPs ordPars.</span>
+<span class="sd">    ordPars : list of OrderParameter class</span>
+<span class="sd">       each item in this list describes an Order parameter to be calculated in the trajectory</span>
+<span class="sd">    top : str</span>
+<span class="sd">        filename of a top file (e.g. conf.gro)</span>
+<span class="sd">    trajs : list of strings</span>
+<span class="sd">        filenames of trajectories</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># read-in topology and trajectory</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">trajs</span><span class="p">)</span>
+
+    <span class="c1"># make atom selections for each OP and store it as its attribute for later use in trajectory</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ordPars</span><span class="p">:</span>
+        <span class="c1"># selection = pairs of atoms, split-by residues</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;resname </span><span class="si">{rnm}</span><span class="s2"> and name </span><span class="si">{atA}</span><span class="s2"> </span><span class="si">{atB}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">rnm</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">resname</span><span class="p">,</span> <span class="n">atA</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">atAname</span><span class="p">,</span> <span class="n">atB</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">atBname</span><span class="p">)</span>
+                                    <span class="p">)</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;residue&quot;</span><span class="p">)</span>
+    <span class="c1">#    print(op.resname + &quot; &quot; + op.atAname + &quot; &quot; + op.atBname)</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+            <span class="c1"># check if we have only 2 atoms (A &amp; B) selected</span>
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">n_atoms</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1">#print(res.resnames, res.resids)</span>
+                <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+                  <span class="c1"># print(atom.name, atom.id)</span>
+                   <span class="n">atA</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">atAname</span>
+                   <span class="n">atB</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">atBname</span>
+                   <span class="n">nat</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">n_atoms</span>
+                   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Selection &gt;&gt; name </span><span class="si">{atA}</span><span class="s2"> </span><span class="si">{atB}</span><span class="s2"> &lt;&lt; </span><span class="se">\</span>
+<span class="s2">                   contains </span><span class="si">{nat}</span><span class="s2"> atoms, but should contain exactly 2!&quot;</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="n">selection</span>
+
+    <span class="c1"># go through trajectory frame-by-frame</span>
+        <span class="n">Nres</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">selection</span><span class="p">)</span>
+
+    <span class="n">Nframes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ordPars</span><span class="p">:</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">traj</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">Nres</span>
+<span class="c1">#        op.traj=[0]*Nres</span>
+<span class="c1">#        if len(op.traj) == 0:</span>
+<span class="c1">#            print(op.atAname + &quot; &quot; + op.atBname)</span>
+<span class="c1">#        print(&quot;op.traj length &quot; + str(len(op.traj)))</span>
+
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ordPars</span><span class="p">:</span>            <span class="c1">#.values():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Nres</span><span class="p">):</span>
+<span class="c1">#             for i, op in enumerate(ordPars,1):</span>
+                <span class="n">residue</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">selection</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="c1">#                print(residue)</span>
+                <span class="n">S</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">calc_OP</span><span class="p">(</span><span class="n">residue</span><span class="p">)</span>
+<span class="c1">#                print(S)</span>
+<span class="c1">#                    print(op.atAname + &quot; &quot; + op.atBname)</span>
+<span class="c1">#                    print(i)</span>
+<span class="c1">#                op.traj.append(S/Nframes)</span>
+                <span class="n">op</span><span class="o">.</span><span class="n">traj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="n">traj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">S</span><span class="o">/</span><span class="n">Nframes</span></div>
+            <span class="c1">#op.traj.append(np.mean(tmp))</span>
+
+        <span class="c1">#print &quot;--&quot;, mol.atoms[0].position</span>
+<span class="c1">#    for op in ordPars:</span>
+<span class="c1">#        op.traj=op.traj/Nframes</span>
+
+<div class="viewcode-block" id="parse_op_input"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.parse_op_input">[docs]</a><span class="k">def</span> <span class="nf">parse_op_input</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">lipid_name</span><span class="p">):</span>
+    <span class="n">ordPars</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">atomC</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">atomH</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">resname</span> <span class="o">=</span> <span class="n">lipid_name</span>
+
+<span class="c1">#    try:</span>
+<span class="c1">#    with open(fname,&quot;r&quot;) as f:</span>
+<span class="c1">#        for ind, line in enumerate(f,1):</span>
+<span class="c1">#            if line.startswith(&quot;#Whole molecules&quot;):</span>
+<span class="c1">#                print(getline(f.name, ind + 1).split())</span>
+<span class="c1">#                resname = getline(f.name, ind + 1).split()[1]</span>
+<span class="c1">#                break</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                <span class="n">regexp1_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_[A-Z0-9]*C[0-9]*H[0-9]*_M&#39;</span><span class="p">)</span>
+                <span class="n">regexp2_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_G[0-9]*H[0-9]*_M&#39;</span><span class="p">)</span>
+                <span class="n">regexp3_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_C[0-9]*H[0-9]*_M&#39;</span><span class="p">)</span>
+                <span class="n">regexp1_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_[A-Z0-9]*C[0-9]*_M&#39;</span><span class="p">)</span>
+                <span class="n">regexp2_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_G[0-9]_M&#39;</span><span class="p">)</span>
+                <span class="n">regexp3_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_C[0-9]_M&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">regexp1_C</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="n">regexp2_C</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="n">regexp3_C</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="n">atomC</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">atomH</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">elif</span> <span class="n">regexp1_H</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="n">regexp2_H</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="n">regexp3_H</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="n">atomH</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">resname</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">atomC</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">atomH</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">if</span> <span class="n">atomH</span><span class="p">:</span>
+                    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomC</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atomH</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atomC</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atomH</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="c1">#                    print(resname + &quot; &quot; + atomH[1])</span>
+                    <span class="n">op</span> <span class="o">=</span> <span class="n">OrderParameter</span><span class="p">(</span><span class="n">resname</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="n">ordPars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="c1">#    except:</span>
+<span class="c1">#        inpf=opts.inp_fname</span>
+<span class="c1">#        raise RuntimeError(&quot;Couldn&#39;t read input file &gt;&gt; {inpf} &lt;&lt;&quot;)</span>
+    <span class="k">return</span> <span class="n">ordPars</span></div>
+
+
+<span class="c1">#def parse_op_input(fname):</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    parses input file with Order Parameter definitions</span>
+<span class="c1">#    file format is as follows:</span>
+<span class="c1">#    OP_name    resname    atom1    atom2</span>
+<span class="c1">#    (flexible cols)</span>
+<span class="c1">#    fname : string</span>
+<span class="c1">#        input file name</span>
+<span class="c1">#    returns : dictionary</span>
+<span class="c1">#        with OrderParameters class instances</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    ordPars = OrderedDict()</span>
+<span class="c1">#    try:</span>
+<span class="c1">#        with open(fname,&quot;r&quot;) as f:</span>
+<span class="c1">#            for line in f.readlines():</span>
+<span class="c1">#                if not line.startswith(&quot;#&quot;):</span>
+<span class="c1">#                    items = line.split()</span>
+<span class="c1">#</span>
+<span class="c1">#                    ordPars[items[0]] = OrderParameter(*items)</span>
+<span class="c1">#</span>
+<span class="c1">#    except:</span>
+<span class="c1">#        inpf=opts.inp_fname</span>
+<span class="c1">#        raise RuntimeError(&quot;Couldn&#39;t read input file &gt;&gt; {inpf} &lt;&lt;&quot;)</span>
+<span class="c1">#    return ordPars</span>
+
+
+
+<span class="c1">#%%</span>
+
+<div class="viewcode-block" id="find_OP"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.find_OP">[docs]</a><span class="k">def</span> <span class="nf">find_OP</span><span class="p">(</span><span class="n">inp_fname</span><span class="p">,</span> <span class="n">top_fname</span><span class="p">,</span> <span class="n">traj_fname</span><span class="p">,</span><span class="n">lipid_name</span><span class="p">):</span>
+    <span class="n">ordPars</span> <span class="o">=</span> <span class="n">parse_op_input</span><span class="p">(</span><span class="n">inp_fname</span><span class="p">,</span><span class="n">lipid_name</span><span class="p">)</span>
+
+ <span class="c1">#   for file_name in os.listdir(os.getcwd()):</span>
+ <span class="c1">#       if file_name.startswith(traj_fname):</span>
+ <span class="c1">#           trajs.append(file_name)</span>
+
+    <span class="n">read_trajs_calc_OPs</span><span class="p">(</span><span class="n">ordPars</span><span class="p">,</span> <span class="n">top_fname</span><span class="p">,</span> <span class="n">traj_fname</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ordPars</span></div>
+
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="read_trj_PN_angles"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.read_trj_PN_angles">[docs]</a><span class="k">def</span> <span class="nf">read_trj_PN_angles</span><span class="p">(</span><span class="n">molname</span><span class="p">,</span><span class="n">atoms</span><span class="p">,</span> <span class="n">top_fname</span><span class="p">,</span> <span class="n">traj_fname</span><span class="p">,</span> <span class="n">gro_fname</span><span class="p">):</span>
+
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">top_fname</span><span class="p">,</span> <span class="n">traj_fname</span><span class="p">)</span>
+<span class="c1">#    z_dim = calc_z_dim(gro_fname)</span>
+
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;resname &quot;</span> <span class="o">+</span> <span class="n">molname</span> <span class="o">+</span> <span class="s2">&quot; and (name &quot;</span> <span class="o">+</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;resname &quot;</span> <span class="o">+</span> <span class="n">molname</span> <span class="o">+</span> <span class="s2">&quot; and (name &quot;</span> <span class="o">+</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;residue&quot;</span><span class="p">)</span>
+    <span class="n">com</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">select_atoms</span><span class="p">(</span><span class="s2">&quot;resname &quot;</span> <span class="o">+</span> <span class="n">molname</span> <span class="o">+</span> <span class="s2">&quot; and (name &quot;</span> <span class="o">+</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; or name &quot;</span> <span class="o">+</span> <span class="n">atoms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">center_of_mass</span><span class="p">()</span>
+    
+    <span class="n">Nres</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+    <span class="n">Nframes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nres</span><span class="p">,</span><span class="n">Nframes</span><span class="p">))</span>
+
+<span class="c1">#    sumsResAngles = [0]*Nres</span>
+    <span class="n">resAverageAngles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">Nres</span>
+    <span class="n">resSTDerror</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">Nres</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Nres</span><span class="p">):</span>
+            <span class="n">residue</span> <span class="o">=</span> <span class="n">selection</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1">#print(residue)</span>
+            <span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_angle</span><span class="p">(</span><span class="n">residue</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span>
+<span class="c1">#        sumsResAngles = map(add,sumsResAngles, frameAngles) </span>
+
+<span class="c1">#    resAverageAngles = [x / Nframes for x in sumsResAngles]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Nres</span><span class="p">):</span>
+        <span class="n">resAverageAngles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span> <span class="o">/</span> <span class="n">Nframes</span>
+        <span class="n">resSTDerror</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span>
+
+    <span class="n">totalAverage</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">resAverageAngles</span><span class="p">)</span> <span class="o">/</span> <span class="n">Nres</span>
+    <span class="n">totalSTDerror</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">resAverageAngles</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nres</span><span class="p">)</span>
+
+<span class="c1"># standard errors</span>
+    
+
+
+
+<span class="c1">#    for i in range(0,Nres):</span>
+<span class="c1">#        residue = selection[i]</span>
+<span class="c1">#        PNangles = []</span>
+<span class="c1">#        for frame in mol.trajectory:</span>
+<span class="c1">#            PNangle = calc_angle(residue)</span>
+<span class="c1">#            PNangles.append(PNangle)</span>
+<span class="c1">#</span>
+<span class="c1">#        averageAngle = sum(PNangles) / Nframes</span>
+<span class="c1">#        resAveragePNangles.append(averageAngle)</span>
+
+    <span class="k">return</span> <span class="n">angles</span><span class="p">,</span> <span class="n">resAverageAngles</span><span class="p">,</span> <span class="n">totalAverage</span><span class="p">,</span> <span class="n">totalSTDerror</span></div>
+
+<span class="c1">#####Dihedrals#####</span>
+<span class="c1">#Anne: Functions needed for dihedral analysis</span>
+
+<div class="viewcode-block" id="Dihedrals"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.Dihedrals">[docs]</a><span class="k">class</span> <span class="nc">Dihedrals</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resname</span><span class="p">,</span> <span class="n">atom_1_name</span><span class="p">,</span> <span class="n">atom_2_name</span><span class="p">,</span> <span class="n">atom_3_name</span><span class="p">,</span> <span class="n">atom_4_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resname</span> <span class="o">=</span> <span class="n">resname</span>       <span class="c1"># name of residue atoms are in</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">at1name</span> <span class="o">=</span> <span class="n">atom_1_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">at2name</span> <span class="o">=</span> <span class="n">atom_2_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">at3name</span> <span class="o">=</span> <span class="n">atom_3_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">at4name</span> <span class="o">=</span> <span class="n">atom_4_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">atom_1_name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">atom_2_name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">atom_3_name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">atom_4_name</span>  <span class="c1"># generic name of atom A and atom B</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">traj</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<span class="c1">#def calcDihedrals(atom1, atom2, atom3, atom4):</span>
+    
+<span class="c1">#    return</span>
+
+<div class="viewcode-block" id="parseDihedralInput"><a class="viewcode-back" href="../OrderParameter.html#OrderParameter.parseDihedralInput">[docs]</a><span class="k">def</span> <span class="nf">parseDihedralInput</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">):</span>
+<span class="c1">#reads all heavy atoms from mapping file and forms groups of four consecutive atoms for dihedral calculation</span>
+<span class="c1">#not ready yet!!!!</span>
+    <span class="n">G1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">G2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">G3</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">resname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">regexp_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_[A-Z0-9]*H[0-9]*_M&#39;</span><span class="p">)</span>
+    <span class="n">regexp_1</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;M_G[0-9]*[A-Z]*[0-9]*_M&#39;</span><span class="p">)</span>
+<span class="c1">#    try:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#Whole molecules&quot;</span><span class="p">):</span>
+<span class="c1">#                print(getline(f.name, ind + 1).split())</span>
+                <span class="n">resname</span> <span class="o">=</span> <span class="n">getline</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">break</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">regexp_H</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;M_G1&quot;</span><span class="p">):</span>
+                        <span class="n">atom</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">G1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;M_G2&quot;</span><span class="p">):</span>
+                        <span class="n">atom</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">G2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;M_G3&quot;</span><span class="p">):</span>
+                        <span class="n">atom</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">G3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">G1</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">G2</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+    <span class="n">G1G3</span> <span class="o">=</span> <span class="n">G1</span> <span class="o">+</span> <span class="n">G3</span>
+    <span class="n">G2G3</span> <span class="o">=</span> <span class="n">G2</span> <span class="o">+</span> <span class="n">G3</span>
+
+    <span class="n">dihAtoms</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1">#make groups of 4 atoms from G1 tail</span>
+    <span class="n">dihGroups1</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">G1G3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">regexp_1</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+            <span class="n">dihAtoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;M_G3&quot;</span> <span class="ow">in</span> <span class="n">dihAtoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#do not read groups of atoms containing only head group atoms yet</span>
+                    <span class="k">break</span>
+                <span class="n">dihGroups1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span>
+                <span class="c1">#print(dihAtoms)</span>
+<span class="c1">#                print(dihGroups)</span>
+                <span class="n">dihAtoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#remove first atom from dihAtoms</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dihAtoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1">#print(dihAtoms)</span>
+                <span class="n">dihGroups1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span>
+<span class="c1">#                print(dihGroups)</span>
+                <span class="n">dihAtoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1">#remove last atom from dihAtoms</span>
+<span class="c1">#empty dihAtoms list</span>
+    <span class="n">dihAtoms</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1">#make group of 4 atoms from G2 tail and G3 head group</span>
+    <span class="n">dihGroups2</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">G2G3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">regexp_1</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+            <span class="n">dihAtoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">dihGroups2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span>
+                <span class="c1">#print(dihAtoms)</span>
+<span class="c1">#                print(dihGroups)</span>
+                <span class="n">dihAtoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#remove first atom from dihAtoms</span>
+                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dihAtoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">dihGroups2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dihAtoms</span><span class="p">)</span>
+               <span class="c1"># print(dihAtoms)</span>
+<span class="c1">#                print(dihGroups)</span>
+                <span class="n">dihAtoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1">#remove last atom from dihAtoms</span>
+
+
+    <span class="k">return</span> <span class="n">dihGroups1</span> <span class="o">+</span> <span class="n">dihGroups2</span></div>
+
+
+<span class="c1">#def readTrjCalcDih(trj, tpr, mapping_file):</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">NMRlipids databank</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Samuli Ollila.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

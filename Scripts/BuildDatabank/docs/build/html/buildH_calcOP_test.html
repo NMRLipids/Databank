@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>buildH_calcOP_test module &mdash; NMRlipids databank 4.9.2023 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=10ee5b61"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NMRlipids databank
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="READMEcontent.html">User input and content of README.yaml files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data in the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NMRlipids databank</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">buildH_calcOP_test module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/buildH_calcOP_test.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-buildH_calcOP_test">
+<span id="buildh-calcop-test-module"></span><h1>buildH_calcOP_test module<a class="headerlink" href="#module-buildH_calcOP_test" title="Link to this heading"></a></h1>
+<p>This script builds hydrogens from a united-atom trajectory and calculate the
+order parameter for each C-H bond.</p>
+<dl class="simple">
+<dt>It works in two modes :</dt><dd><ol class="arabic simple">
+<li><p>A slow mode when an output trajectory (e.g. in xtc format) is requested by
+the user. In this case, the whole trajectory including newly built
+hydrogens are written to this trajectory.</p></li>
+<li><p>A fast mode without any output trajectory.</p></li>
+</ol>
+</dd>
+</dl>
+<p>For both modes, the order parameter is written to an output file in a format
+similar to the code of &#64;jmelcr:
+<a class="reference external" href="https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py">https://github.com/NMRLipids/MATCH/blob/master/scripts/calcOrderParameters.py</a></p>
+<p>This code has been checked against the one from &#64;jmelcr. You might find minor
+differences due to rounding errors (in xtc, only 3 digits are written).</p>
+<p>The way of building H is largely inspired from a code of Jon Kapla originally
+written in fortran :
+<a class="reference external" href="https://github.com/kaplajon/trajman/blob/master/module_trajop.f90#L242">https://github.com/kaplajon/trajman/blob/master/module_trajop.f90#L242</a>.</p>
+<p>Note: that all coordinates in this script are handled using numpy 1D-arrays
+of 3 elements, e.g. atom_coor = np.array((x, y, z)).
+Note2: sometimes numpy is slow on small arrays, thus we wrote a few “in-house”
+functions for vectorial operations (e.g. cross product).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.calc_OP">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.calc_OP" title="Link to this definition"></a></dt>
+<dd><p>Returns the Order Parameter of a CH bond (OP).</p>
+<p>OP is calculated according to equation:</p>
+<p>S = 1/2 * (3*cos(theta)^2 -1)</p>
+<p>theta is the angle between CH bond and the z(vertical) axis:
+z
+^  H
+| /
+<a href="#id1"><span class="problematic" id="id2">|</span></a>/
+C</p>
+<p>Inspired from a function written by &#64;jmelcr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>numpy 1D-array</em>) – Coordinates of C atom.</p></li>
+<li><p><strong>H</strong> (<em>numpy 1D-array</em>) – Coordinates of H atom.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The normalized vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.normalize">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.normalize" title="Link to this definition"></a></dt>
+<dd><p>Normalizes a vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vec</strong> (<em>numpy 1D-array</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The normalized vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 1D-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.norm">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.norm" title="Link to this definition"></a></dt>
+<dd><p>Returns the norm of a vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vec</strong> (<em>numpy 1D-array</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The magniture of the vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.calc_angle">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">calc_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#calc_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.calc_angle" title="Link to this definition"></a></dt>
+<dd><p>Calculates the valence angle between atom1, atom2 and atom3.</p>
+<p>Note: atom2 is the central atom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom1</strong> (<em>numpy 1D-array.</em>) – </p></li>
+<li><p><strong>atom2</strong> (<em>numpy 1D-array.</em>) – </p></li>
+<li><p><strong>atom3</strong> (<em>numpy 1D-array.</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated angle in radians.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.vec2quaternion">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">vec2quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#vec2quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.vec2quaternion" title="Link to this definition"></a></dt>
+<dd><p>Translates a vector of 3 elements and angle theta to a quaternion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vec</strong> (<em>numpy 1D-array</em>) – Vector of the quaternion.</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – Angle of the quaternion in radian.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The full quaternion (4 elements).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 1D-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.calc_rotation_matrix">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">calc_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#calc_rotation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.calc_rotation_matrix" title="Link to this definition"></a></dt>
+<dd><p>Translates a quaternion to a rotation matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>quaternion</strong> (<em>numpy 1D-array</em><em> of </em><em>4 elements.</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rotation matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 2D-array (dimension [3, 3])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.apply_rotation">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">apply_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_to_rotate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rad_angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#apply_rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.apply_rotation" title="Link to this definition"></a></dt>
+<dd><p>Rotates a vector around an axis by a given angle.</p>
+<p>Note: the rotation axis is a vector of 3 elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vec_to_rotate</strong> (<em>numpy 1D-array</em>) – </p></li>
+<li><p><strong>rotation_axis</strong> (<em>numpy 1D-array</em>) – </p></li>
+<li><p><strong>rad_angle</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The final rotated (normalized) vector.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 1D-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.pandasdf2pdb">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">pandasdf2pdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#pandasdf2pdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.pandasdf2pdb" title="Link to this definition"></a></dt>
+<dd><p>Returns a string in PDB format from a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas dataframe with columns &quot;atnum&quot;</em><em>, </em><em>&quot;atname&quot;</em><em>, </em><em>&quot;resname&quot;</em><em>, </em><em>&quot;resnum&quot;</em><em>,</em>) – “x”, “y”, “z”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string representing the PDB.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.cross_product">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">cross_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#cross_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.cross_product" title="Link to this definition"></a></dt>
+<dd><p>Returns the cross product between vectors A &amp; B.</p>
+<p>Source: <a class="reference external" href="http://hyperphysics.phy-astr.gsu.edu/hbase/vvec.html">http://hyperphysics.phy-astr.gsu.edu/hbase/vvec.html</a>.
+Note: on small vectors (i.e. of 3 elements), computing cross products</p>
+<blockquote>
+<div><p>with this functions is faster than np.cross().</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>numpy 1D-array</em>) – A vector of 3 elements.</p></li>
+<li><p><strong>B</strong> (<em>numpy 1D-array</em>) – Another vector of 3 elements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cross product of A^B.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 1D-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.get_CH2">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">get_CH2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#get_CH2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.get_CH2" title="Link to this definition"></a></dt>
+<dd><p>Reconstructs the 2 hydrogens of a sp3 carbon (methylene group).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>numpy 1D-array</em>) – Central atom on which we want to reconstruct hydrogens.</p></li>
+<li><p><strong>helper1</strong> (<em>numpy 1D-array</em>) – Heavy atom before central atom.</p></li>
+<li><p><strong>helper2</strong> (<em>numpy 1D-array</em>) – Heavy atom after central atom.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates of the two hydrogens:
+([x_H1, y_H1, z_H1], [x_H2, y_H2, z_H2]).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of numpy 1D-arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.get_CH">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">get_CH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#get_CH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.get_CH" title="Link to this definition"></a></dt>
+<dd><p>Reconstructs the unique hydrogen of a sp3 carbon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>numpy 1D-array</em>) – Central atom on which we want to reconstruct the hydrogen.</p></li>
+<li><p><strong>helper1</strong> (<em>numpy 1D-array</em>) – First neighbor of central atom.</p></li>
+<li><p><strong>helper2</strong> (<em>numpy 1D-array</em>) – Second neighbor of central atom.</p></li>
+<li><p><strong>helper3</strong> (<em>numpy 1D-array</em>) – Third neighbor of central atom.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates of the rebuilt hydrogen: ([x_H, y_H, z_H]).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy 1D-array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.get_CH_double_bond">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">get_CH_double_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#get_CH_double_bond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.get_CH_double_bond" title="Link to this definition"></a></dt>
+<dd><p>Reconstructs the hydrogen of a sp2 carbon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>numpy 1D-array</em>) – Central atom on which we want to reconstruct the hydrogen.</p></li>
+<li><p><strong>helper1</strong> (<em>numpy 1D-array</em>) – Heavy atom before central atom.</p></li>
+<li><p><strong>helper2</strong> (<em>numpy 1D-array</em>) – Heavy atom after central atom.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates of the rebuilt hydrogen: ([x_H, y_H, z_H]).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of numpy 1D-arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.get_CH3">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">get_CH3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helper2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#get_CH3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.get_CH3" title="Link to this definition"></a></dt>
+<dd><p>Reconstructs the 3 hydrogens of a sp3 carbon (methyl group).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>numpy 1D-array</em>) – Central atom on which we want to reconstruct hydrogens.</p></li>
+<li><p><strong>helper1</strong> (<em>numpy 1D-array</em>) – Heavy atom before central atom.</p></li>
+<li><p><strong>helper2</strong> (<em>numpy 1D-array</em>) – Heavy atom before helper1 (two atoms away from central atom).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates of the 3 hydrogens:
+([x_H1, y_H1, z_H1], [x_H2, y_H2, z_H2], [x_H3, y_H3, z_H3]).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of numpy 1D-arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.buildHs_on_1C">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">buildHs_on_1C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#buildHs_on_1C"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.buildHs_on_1C" title="Link to this definition"></a></dt>
+<dd><p>Builds 1, 2 or 3 H on a given carbon.</p>
+<p>This function is a wrapper which gathers the coordinates of the helpers
+and call the function that builds 1, 2 or 3 H.</p>
+<p>The name of the helpers as well as the type of H to build are described
+in a dictionnary stored in dic_lipids.py.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>MDAnalysis Atom instance</em>) – This instance contains the carbon on which we want to build Hs.</p></li>
+<li><p><strong>dic_lipid</strong> (<em>dictionnary</em>) – Comes from dic_lipids.py. Contains carbon names and helper names needed
+for reconstructing hydrogens.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Each element of the tuple is a numpy 1D-array containing 1, 2 or 3
+reconstructed hydrogen(s).
+!!! IMPORTANT !!! This function <em>should</em> return a tuple even if
+there’s only one H that has been rebuilt.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of numpy 1D-arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.build_all_Hs_calc_OP">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">build_all_Hs_calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe_woH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_Cname2Hnames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">universe_wH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_OP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_corresp_numres_index_dic_OP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_coors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#build_all_Hs_calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.build_all_Hs_calc_OP" title="Link to this definition"></a></dt>
+<dd><p>Main function that builds all hydrogens and calculates order parameters.</p>
+<p>This function shall be used in two modes :</p>
+<p>1) The first time this function is called, we have to construct a new
+universe with hydrogens. One shall call it like this :</p>
+<p>new_data_frame = build_all_Hs_calc_OP(universe_woH, return_coors=True)</p>
+<p>The boolean return_coors set to True indicates to the function to return
+a pandas dataframe. This latter will be used later to build a new
+universe with H.</p>
+<p>2) For all the other frames, we just need to update the coordinates in
+the universe <em>with</em> hydrogens. One shall call it like this :</p>
+<dl class="simple">
+<dt>build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,</dt><dd><p>universe_wH=universe_wH, dic_OP=dic_OP,
+dic_corresp_numres_index_dic_OP=dic_corresp_numres_index_dic_OP)</p>
+</dd>
+</dl>
+<p>In this case, the function also calculates the order parameter and returns
+nothing. The coordinates of the universe <em>with</em> H are updated in place.
+The order parameter is also added in place (within dic_OP dictionnary).</p>
+<p>NOTE: This function in mode 2 is slow, thus it shall be used when one wants
+to create a trajectory with H (such as .xtc or whatever format).</p>
+<p>NOTE2: This function assumes all possible C-H pairs are present in the .def
+file (with -d option). They are needed since we want to build an xtc with
+the whole system. If one is interested in calculating only a subset of OPs,
+please use the function fast_build_all_Hs_calc_OP() instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>universe_woH</strong> (<em>MDAnalysis universe instance</em>) – This is the universe <em>without</em> hydrogen.</p></li>
+<li><p><strong>dic_lipid</strong> (<em>dictionnary</em>) – Comes from dic_lipids.py. Contains carbon names and helper names needed
+for reconstructing hydrogens.</p></li>
+<li><p><strong>dic_Cname2Hnames</strong> (<em>dictionnary</em>) – <p>This dict gives the correspondance Cname -&gt; Hname. It is a dict of
+tuples. If there is more than 1 H for a given C, they need to be
+<em>ordered</em> like in the PDB. e.g. for CHARMM POPC :
+{‘C13’: (‘H13A’, ‘H13B’, ‘H13C’), …, ‘C33’: (‘H3X’, ‘H3Y’),</p>
+<blockquote>
+<div><p>…, ‘C216’: (‘H16R’, ‘H16S’), …}</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>universe_wH</strong> (<em>MDAnalysis universe instance</em><em> (</em><em>optional</em><em>)</em>) – This is the universe <em>with</em> hydrogens.</p></li>
+<li><p><strong>dic_OP</strong> (<em>ordered dictionnary</em>) – Each key of this dict is a couple carbon/H, and at the beginning it
+contains an empty list, e.g.
+OrderedDict([ (‘C1’, ‘H11): [], (‘C1’, ‘H12’): [], … ])
+See function init_dic_OP() below to see how it is organized.</p></li>
+<li><p><strong>dic_corresp_numres_index_dic_OP</strong> (<em>dictionnary</em>) – This dict should contain the correspondance between the numres and
+the corresponding index in dic_OP. For example {…, 15: 14, …} means
+the residue numbered 15 in the PDB has an index of 14 in dic_OP.</p></li>
+<li><p><strong>return_coors</strong> (<em>boolean</em><em> (</em><em>optional</em><em>)</em>) – If True, the function will return a pandas dataframe containing the
+system <em>with</em> hydrogens.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>pandas dataframe (optional)</em> – If parameter return_coors is True, this dataframe contains the
+system <em>with</em> hydrogens is returned.</p></li>
+<li><p><em>None</em> – If parameter return_coors is False.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.fast_buildHs_on_1C">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">fast_buildHs_on_1C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_lipids_with_indexes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix_first_atom_res</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#fast_buildHs_on_1C"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.fast_buildHs_on_1C" title="Link to this definition"></a></dt>
+<dd><p>Builds 1, 2 or 3 H on a given carbon using fast indexing.</p>
+<p>This function is a fast wrapper which gathers the coordinates of the
+helpers and call the function that builds 1, 2 or 3 H.</p>
+<p>The name of the helpers as well as the type of H to build are described
+in a dictionnary stored in dic_lipids.py.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dic_lipids_with_indexes</strong> (<em>dictionnary</em>) – The dictionnary made in function make_dic_lipids_with_indexes().</p></li>
+<li><p><strong>ts</strong> (<em>MDAnalysis Timestep instance</em>) – This object contains the actual frame under analysis.</p></li>
+<li><p><strong>Cname</strong> (<em>str</em>) – The carbon name on which we want to build H(s).</p></li>
+<li><p><strong>ix_first_atom_res</strong> (<em>int</em>) – The index of the first atom in the lipid under analysis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Each element of the tuple is a numpy 1D-array containing 1, 2 or 3
+reconstructed hydrogen(s).
+!!! IMPORTANT !!! This function <em>should</em> return a tuple even if
+there’s only one H that has been rebuilt.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of numpy 1D-arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.get_indexes">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">get_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">universe_woH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#get_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.get_indexes" title="Link to this definition"></a></dt>
+<dd><p>Returns the index of helpers for a given carbon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>MDAnalysis Atom instance</em>) – This is an Atom instance of a carbon on which we want to build Hs.</p></li>
+<li><p><strong>universe_woH</strong> (<em>MDAnalysis universe instance</em>) – The universe without hydrogens.</p></li>
+<li><p><strong>dic_lipid</strong> (<em>dictionnary</em>) – Comes from dic_lipids.py. Contains carbon names and helper names needed
+for reconstructing hydrogens.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The tuple contains the index of the 2 (or 3) helpers for the atom that
+was passed as argument. (e.g. for atom C37 with index 99, the function
+returns a tuple containing 98 (index of C36 = helper 1) and 100 (index
+of C38=helper2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of 2 or 3 int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.make_dic_lipids_with_indexes">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">make_dic_lipids_with_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe_woH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_OP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#make_dic_lipids_with_indexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.make_dic_lipids_with_indexes" title="Link to this definition"></a></dt>
+<dd><p>Expands dic_lipid and adds the index of each atom and helper.</p>
+<dl class="simple">
+<dt>IMPORTANT: the index of each atom/helper is given with respect to the</dt><dd><p>first atom in that residue.</p>
+</dd>
+</dl>
+<p>For example, if we have a POPC where C1 is the first atom, and C50 the
+last one, we want in the end:
+{‘C1’: (‘CH3’, ‘N4’, ‘C5’, 0, 3, 4), …,</p>
+<blockquote>
+<div><p>‘C50’: (‘CH3’, ‘C49’, ‘C48’, 49, 48, 47)}</p>
+</div></blockquote>
+<p>Where the 3 last int are the index (ix) of the atom, helper1, helper2
+(possibly helper3) with respect to the first atom.
+Thus for C1 : 0 is index of C1, N4 is 3 atoms away from C1 and C5 is 4
+atoms away from C1.
+For C50: C50 is 49 atoms away from C1, C49 is 48 atoms away from C1,
+C48 is 47 atoms away from C1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>universe_woH</strong> (<em>MDAnalysis Universe instance</em>) – The universe without hydrogens.</p></li>
+<li><p><strong>dic_lipid</strong> (<em>dictionnary</em>) – Comes from dic_lipids.py. Contains carbon names and helper names needed
+for reconstructing hydrogens.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The returned dictionnary as described above in this docstring.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionnary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.fast_build_all_Hs_calc_OP">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">fast_build_all_Hs_calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe_woH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_OP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_Cname2Hnames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#fast_build_all_Hs_calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.fast_build_all_Hs_calc_OP" title="Link to this definition"></a></dt>
+<dd><p>Build Hs and calc OP using fast indexing.</p>
+<p>This function uses fast indexing to carbon atoms and helper atoms. It
+should be used when the user doesn’t want any output traj with hydrogens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>universe_woH</strong> (<em>MDAnalysis universe instance</em>) – This is the universe <em>without</em> hydrogen.</p></li>
+<li><p><strong>dic_OP</strong> (<em>ordered dictionnary</em>) – Each key of this dict is a couple carbon/H, and at the beginning it
+contains an empty list, e.g.
+OrderedDict([ (‘C1’, ‘H11): [], (‘C1’, ‘H12’): [], … ])
+See function init_dic_OP() below to see how it is organized.</p></li>
+<li><p><strong>dic_lipid</strong> (<em>dictionnary</em>) – Comes from dic_lipids.py. Contains carbon names and helper names needed
+for reconstructing hydrogens.</p></li>
+<li><p><strong>dic_Cname2Hnames</strong> (<em>dictionnary</em>) – <p>This dict gives the correspondance Cname -&gt; Hname. It is a dict of
+tuples. If there is more than 1 H for a given C, they need to be
+<em>ordered</em> like in the PDB. e.g. for CHARMM POPC :
+{‘C13’: (‘H13A’, ‘H13B’, ‘H13C’), …, ‘C33’: (‘H3X’, ‘H3Y’),</p>
+<blockquote>
+<div><p>…, ‘C216’: (‘H16R’, ‘H16S’), …}</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>This function returns nothing, dic_OP is changed <em>in place</em>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.make_dic_atname2genericname">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">make_dic_atname2genericname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#make_dic_atname2genericname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.make_dic_atname2genericname" title="Link to this definition"></a></dt>
+<dd><p>Make a dict of correspondance between generic H names and PDB names.</p>
+<p>This dict will look like the following: {(‘C1’, ‘H11’): ‘gamma1_1’, …}.
+Useful for outputing OP with generic names (such as beta1, beta 2, etc.).
+Such files can be found on the NMRlipids MATCH repository:
+<a class="reference external" href="https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs">https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename containing OP definition
+(e.g. <cite>order_parameter_definitions_MODEL_Berger_POPC.def</cite>).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Keys are tuples of (C, H) name, values generic name (as described
+above in this docstring). The use of an ordered dictionnary ensures
+we get always the same order in the output OP.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Ordered dictionnary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.init_dic_OP">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">init_dic_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe_woH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_lipid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_atname2genericname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#init_dic_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.init_dic_OP" title="Link to this definition"></a></dt>
+<dd><p>TODO Complete docstring.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.make_dic_Cname2Hnames">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">make_dic_Cname2Hnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_OP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#make_dic_Cname2Hnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.make_dic_Cname2Hnames" title="Link to this definition"></a></dt>
+<dd><p>TODO Complete Docstring.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.main">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outOP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opdbxtc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="buildH_calcOP_test.parseCommandLineArgs">
+<span class="sig-prename descclassname"><span class="pre">buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">parseCommandLineArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/buildH_calcOP_test.html#parseCommandLineArgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#buildH_calcOP_test.parseCommandLineArgs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
