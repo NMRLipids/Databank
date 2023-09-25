@@ -1418,6 +1418,32 @@ def getAtoms(system, lipid):
   
     return atoms
 
+def getUniversalAtomName(system,atomName,lipid):
+    """
+    Returns the universal atom name corresponding the simulation specific ``atomName`` of a ``lipid`` in a simulation defined by the ``system``.
+
+    :param system: system dictionary
+    :param atomName: simulation specific atomname
+    :param lipid: universal lipid name
+
+    :return: universal atomname (string)
+    """
+    try:
+        mappingFile = system['COMPOSITION'][lipid]['MAPPING']
+    except:
+        print('Mapping file was not found')
+        return None
+
+    mappingDict = loadMappingFile(mappingFile)
+
+    for universalName in mappingDict:
+        simName = mappingDict[universalName]['ATOMNAME']
+        if simName == atomName:
+            return universalName
+
+    print('Atom was not found')
+    return None
+
 
 def ShowTable(SortedQualities, quality):
     """
@@ -2264,3 +2290,115 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
 
     return sim, files_tbd
 
+def calcArea(system):
+    """
+    Returns area of the calculated based on the area per lipid stored in the databank.
+
+    :param system: a system dictionary
+
+    :return: area of the system (Å^2)
+    """
+    APL = CalcAreaPerMolecule(system)
+    Nlipid = 0
+    for molecule in system['COMPOSITION']:
+        if molecule in lipids_dict:
+            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    print(Nlipid, APL)
+    return Nlipid*APL/2
+
+def GetFormFactorMin(system):
+    """
+    Return list of minima of form factor of ``system``.
+
+    :param system: a system dictionary
+
+    :return: list of form factor minima
+    """
+    FormFactorPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'FormFactor.json'
+    #try:
+    f = open(FormFactorPath)
+    FormFactor = json.load(f)
+    min = 1000
+    iprev = FormFactor[0][1]
+    iprevD = 0
+    minX = []
+    for i in FormFactor:
+        iD = i[1]-iprev
+        if iD > 0 and iprevD < 0 and i[0] > 0.1:
+            minX.append(i[0])
+        iprevD = i[1]-iprev
+        iprev = i[1]
+        
+    return(minX)
+
+
+def averageOrderParameters(system):
+    """
+    Returns average order paramaters of sn-1 and sn-2 acyl chains based on universal atom names. The names starting with M_G1C will be assigned to sn-1 and names starting M_G2C to sn-2. 
+
+    :parameters system: a system dictionary
+
+    :return: average of sn-1 and sn-2 order parameters
+    """
+    
+    #DataBankPath = '../../Databank/Data/'
+    path = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path']
+    #DataBankPath + 'Simulations/' +system['path']
+    
+    sn1sum = 0
+    sn1count = 0
+    sn2sum = 0
+    sn2count = 0
+    
+    for lipid in system['COMPOSITION']:
+        if lipid in lipids_dict and not 'CHOL' in lipid:
+            OPpathSIM = path + lipid + 'OrderParameters.json'
+            with open(OPpathSIM) as json_file:
+                OPsim = json.load(json_file)
+    
+            for key in OPsim:
+                if 'M_G1C' in key:
+                    sn1sum += float(OPsim[key][0][0])
+                    sn1count += 1
+                elif 'M_G2C' in key:
+                    sn2sum += float(OPsim[key][0][0])
+                    sn2count += 1
+                    
+    return sn1sum/sn1count, sn2sum/sn2count
+
+def calcLipidFraction(system, lipid):
+    """
+    Returns the number fraction of ``lipid`` with respect to total number of lipids.
+
+    :param system: a system dictionary
+    :param lipid: universal molecule name of lipid
+
+    :return: number fraction of ``lipid`` with respect total number of lipids
+    """
+    NlipidTOT = 0
+    for molecule in system['COMPOSITION']:
+        if molecule in lipids_dict:
+            NlipidTOT += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    
+    Nlipid = 0
+    for molecule in system['COMPOSITION']:
+        if lipid in molecule:
+            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            
+    return Nlipid/NlipidTOT
+
+
+def getHydrationLevel(system):
+    """
+    Returns hydration level of the system, i.e., number of water molecules divided by number of lipid molecules.
+
+    :param system: a system dictionary
+
+    :return: number of water molecules divided by number of lipid molecules
+    """
+    Nlipid = 0
+    for molecule in system['COMPOSITION']:
+        if molecule in lipids_dict:
+            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    Nwater = system['COMPOSITION']['SOL']['COUNT']
+    return Nwater/Nlipid
