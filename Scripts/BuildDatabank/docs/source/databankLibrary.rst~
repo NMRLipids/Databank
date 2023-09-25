@@ -1,0 +1,41 @@
+.. _APIfunctions:
+
+NMRlipids databank API functions
+======================
+
+The functions that help analyzing the data in NMRlipids databank are described here. These functions locate in `databanklibrary.py <https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py>`_. To get started using these functions to analyse the NMRlipids databank, first create the folder where you want to work
+
+.. code-block::
+
+   mkdir NMRlipids/
+   cd NMRlipids
+   
+then clone the NMRlipids databank git to this folder
+
+.. code-block::
+
+   git clone https://github.com/NMRLipids/Databank.git
+
+The minimun code to intialize NMRlipids databank is
+
+.. code-block::
+
+   import sys
+   databankPath =  './Databank/'   # this is the local path for the cloned Databank git
+   sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
+   from databankLibrary import * 
+   systems = initialize_databank(databankPath)
+
+After running this, the ``systems`` contains the list of dictionaries. Each dictionary is a simulation in the NMRlipids databank. These dictionaries can be then used to analyse properties from simulations. To loop over all simulations, run
+
+.. code-block::
+
+   for system in systems:
+       print(system)
+   
+Examples on analyses over NMRlipids databank can be found from the `template <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_ and `codes used to analyze the results for the NMRlipids databank manuscript <https://github.com/NMRLipids/DataBankManuscript/tree/main/scripts>`_.
+       
+.. automodule:: databankLibrary
+   :members:
+   :undoc-members:
+   :show-inheritance:
