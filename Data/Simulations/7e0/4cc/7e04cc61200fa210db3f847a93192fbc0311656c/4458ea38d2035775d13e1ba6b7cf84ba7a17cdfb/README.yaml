@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.8360337
+SOFTWARE: gromacs
+TRJ:
+- - PE_CL_530Run.xtc
+TPR:
+- - PE_CL_Run.gro
+PREEQTIME: 0
+TIMELEFTOUT: 30
+TEMPERATURE: 310
+COMPOSITION:
+  TOCL:
+    NAME: TOCL2
+    MAPPING: mappingTOCLcharmm.yaml
+    COUNT:
+    - 30
+    - 30
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 30
+    - 30
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 12000
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 120
+DIR_WRK: /media/osollila/Data2/tmp/DATABANK/
+PUBLICATION: Castillo et al, 2022, Mol. Pharmaceutics. 19:1839-1852 (https://doi.org/10.1021/acs.molpharmaceut.1c00926)
+AUTHORS_CONTACT: Milka Doktorova
+SYSTEM: POPC/TOCL mixture
+SOFTWARE_VERSION: null
+FF: Charmm36
+FF_SOURCE: null
+FF_DATE: null
+TOP: null
+TRAJECTORY_SIZE: 5766486676
+TRJLENGTH: 530020.0
+NUMBER_OF_ATOMS: 58500
+DATEOFRUNNING: 25/09/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 772
