@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.8369348
+SOFTWARE: NAMD
+TRJ: PM-like.dcd
+PDB: PM-like.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 0
+TEMPERATURE: 310
+DIR_WRK: null
+PUBLICATION: null
+AUTHORS_CONTACT: Reza Talandashti and Nathalie Reuter
+SYSTEM: (innerleaflet,76CHOL,30POPC,52POPE,26POPS,6SAPI24)(outerleaflet,76CHOL,52POPC,6POPE,2POPS,57PSM),13495SOL,52SOD
+SOFTWARE_VERSION: 2.14
+FF: CHARMM36m
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 26/01/2021
+CPT: null
+LOG: null
+TOP: null
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.yaml
+  POPS:
+    NAME: POPS
+    MAPPING: mappingPOPScharmm.yaml
+  SAPI24:
+    NAME: SAPI24
+    MAPPING: mappingSPAI24charmm.yaml
+  SPHINGOMYELIN:
+    NAME: PSM
+    MAPPING: mappingSM16charmm.yaml
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
