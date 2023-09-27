@@ -3,7 +3,7 @@
 Adding simulations into the NMRlipids databank
 ------------------------------------
 
-Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and quality evaluation. The first three steps are a minimum requirements to add a simulation. The first three steps can be performed using graphical GutHub interface. To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork.
+Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. The first three steps can be performed using graphical GitHub interface. To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids databank git <https://github.com/NMRLipids/Databank/>`_.
 
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository. If you want to use other repository than Zenodo, please do not hesitate to open an `GitHub issue <https://github.com/NMRLipids/Databank/issues>`_ on this.
 
@@ -11,7 +11,7 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 
 #. Save the created ``info.yaml`` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch. **You can stop here or continue to create `README.yaml` file in step 4.** 
 
-#. Before continuing, clone a repo on your computer and perform the following steps locally before making a pull request to the main branch. To create the ``README.yaml`` file for the databank yourself return to the `Databank/Scripts/BuildDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank>`_ folder in the NMRlipids databank git and run
+#. Before continuing, clone a repo on your computer and perform the following steps locally before making a pull request to the main branch. To create the ``README.yaml`` file for the databank, return to the `Databank/Scripts/BuildDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank>`_ folder in the NMRlipids databank git and run
 
    .. code-block:: bash
 		   
@@ -65,13 +65,13 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 	git add ../../Data/Simulations/*/*/*/*/*FragmentQuality.json
 	git add ../../Data/Simulations/*/*/*/*/SYSTEM_quality.json
 
-   Running
+
+   To create rankings of simulations based on their quality against experiments and to store the results in folder `Data/Ranking <https://github.com/NMRLipids/Databank/tree/main/Data/Ranking>`_, run
 
    .. code-block:: bash
 		   
         python makeRanking.py
 
-   creates the ranking of simulations based on their quality against experiments in folder `Data/Ranking <https://github.com/NMRLipids/Databank/tree/main/Data/Ranking>`_.
 	
 #. Finally, commit the added data into your fork and make a pull request into the main branch.
 
