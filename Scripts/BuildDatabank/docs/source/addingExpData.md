@@ -1,9 +1,9 @@
 (addingExpData)=
 
-Adding experimental data in the NMRlipids databank
+Adding experimental data into the NMRlipids databank
 ==================
 
-Experimental data is stored in [Data/experiments](https://github.com/NMRLipids/Databank/tree/main/Data/experiments) folder. C-H bond order parameters from NMR are in [OrderParameters subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters) and X-ray scattering form factors in [FormFactors subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors), where the data is located in subfolders named after the DOI of the original source publication of the data. Because a publication can contain more than one experimental data set, each data set is stored in a subfolder with integer name. For example, [Data/experiments/OrderParameters/10.1039/c2cp42738a/2](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters/10.1039/c2cp42738a/2). The folders contain the experimental data and `README.yaml` files describing the experimental conditions. The keys of these dictionaries are listed in table and described more detailed below.
+Experimental data is stored in [Data/experiments](https://github.com/NMRLipids/Databank/tree/main/Data/experiments) folder. C-H bond order parameters from NMR are in [OrderParameters subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters) and X-ray scattering form factors in [FormFactors subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors). The data is located in subfolders named after the DOI of the original source publication of the data. Because a publication can contain more than one experimental data set, each data set is stored in a subfolder with integer name, for example, [Data/experiments/OrderParameters/10.1039/c2cp42738a/2](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters/10.1039/c2cp42738a/2). Each of such folders then contain the experimental data and `README.yaml` files describing the experimental conditions. The keys of these dictionaries are summarized in the table and described more detailed below.
 
 |key | description |
 | ----| -----|
@@ -16,7 +16,7 @@ COUNTER_IONS | Type of counter ions if present
 
 DOI:
 ----------
-DOI of the of the original publication of the experimental data.
+DOI of the original publication where the experimental data originates.
 
 TEMPERATURE
 ------------
@@ -62,7 +62,7 @@ Steps to add experimental data
 
 2. Copy this README file data into a appropriate directory named as described above.
 
-3. If you have order parameter data, create a `dat` file where the first two columns define the atom pair with universal atom names, third column has the experimental order parameter value, and fourth column has the experimental error. If the experimental error is not known, set it to 0.02. Store the created `dat` file into the appropriate folder with the `README.yaml` file. Create `json` version from `dat` file by running
+3. If you have order parameter data, create a file named `{lipidname}_Order_Parameters.dat` where `{lipidname}` is the universal name of the lipid from which the data is measured from. The first two columns of this file should define the atom pair with universal atom names, third column has the experimental order parameter value, and fourth column has the experimental error. If the experimental error is not known, set it to 0.02. Store the created `{lipidname}_Order_Parameters.dat` file into the appropriate folder with the `README.yaml` file. Create `json` version from `dat` file by running
    ```
    python data_to_json.py {dat file path}
    ```

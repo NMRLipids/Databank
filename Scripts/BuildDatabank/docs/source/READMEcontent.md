@@ -86,7 +86,7 @@ For example, the COMPOSITION dictionary input for [a system](https://doi.org/10.
       NAME: CLA
       MAPPING: mappingCLA.txt
 
-
+When running ``AddData.py``, the numbers of molecules are added in additional ``COUNT`` keys into dictionaries of each molecule, see COMPOSITION (ouput) below. 
 
 #### DIR\_WRK (compulsory)
 Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here. 
@@ -156,7 +156,8 @@ Date when added into the databank.
 Potentially connected experimental data.
 
 #### COMPOSITION (output)
-When adding a simulation into NMRlipids databank by the AddData.py script, numbers of lipid molecules per membrane leaflet are automatically calculated and stored into the key called COUNT in the COMPOSITION dictionary. For example, the result for the simulation with COMPOSITION input exemplified above is:
+When adding a simulation into NMRlipids databank with the ``AddData.py``, numbers of molecules are automatically calculated and stored into ``COUNT`` keys for each molecule in the COMPOSITION dictionary. Number of lipids are calculated separately for both membrane leaflets. For example, the result for the simulation with COMPOSITION input exemplified above is:
+
 
         COMPOSITION:
          CHOL:
