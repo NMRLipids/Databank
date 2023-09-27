@@ -297,6 +297,7 @@ For example, the COMPOSITION dictionary input for <a class="reference external" 
   MAPPING: mappingCLA.txt
 </pre></div>
 </div>
+<p>When running <code class="docutils literal notranslate"><span class="pre">AddData.py</span></code>, the numbers of molecules are added in additional <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys into dictionaries of each molecule, see COMPOSITION (ouput) below.</p>
 </section>
 <section id="dir-wrk-compulsory">
 <h2>DIR_WRK (compulsory)<a class="headerlink" href="#dir-wrk-compulsory" title="Link to this heading"></a></h2>
@@ -388,7 +389,7 @@ CPT stands for the name of the cpt file.</p>
 </section>
 <section id="composition-output">
 <h2>COMPOSITION (output)<a class="headerlink" href="#composition-output" title="Link to this heading"></a></h2>
-<p>When adding a simulation into NMRlipids databank by the AddData.py script, numbers of lipid molecules per membrane leaflet are automatically calculated and stored into the key called COUNT in the COMPOSITION dictionary. For example, the result for the simulation with COMPOSITION input exemplified above is:</p>
+<p>When adding a simulation into NMRlipids databank with the <code class="docutils literal notranslate"><span class="pre">AddData.py</span></code>, numbers of molecules are automatically calculated and stored into <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys for each molecule in the COMPOSITION dictionary. Number of lipids are calculated separately for both membrane leaflets. For example, the result for the simulation with COMPOSITION input exemplified above is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    COMPOSITION:
      CHOL:
       NAME: CHL1

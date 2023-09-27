@@ -3,7 +3,7 @@
 NMRlipids databank API functions
 ======================
 
-The functions that help analyzing the data in NMRlipids databank are described here. These functions locate in `databanklibrary.py <https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py>`_. To get started using these functions, first create the folder where you want to work
+The functions that help analyzing data in the NMRlipids databank are described here. These functions locate in `databanklibrary.py <https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py>`_. To get started using these functions, first create the folder where you want to work
 
 .. code-block::
 

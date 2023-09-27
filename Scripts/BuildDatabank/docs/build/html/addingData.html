@@ -79,12 +79,12 @@
              
   <section id="adding-simulations-into-the-nmrlipids-databank">
 <span id="adddata"></span><h1>Adding simulations into the NMRlipids databank<a class="headerlink" href="#adding-simulations-into-the-nmrlipids-databank" title="Link to this heading"></a></h1>
-<p>Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and quality evaluation. The first three steps are a minimum requirements to add a simulation. The first three steps can be performed using graphical GutHub interface. To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork.</p>
+<p>Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. The first three steps can be performed using graphical GitHub interface. To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the <a class="reference external" href="https://github.com/NMRLipids/Databank/">NMRlipids databank git</a>.</p>
 <ol class="arabic">
 <li><p>Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a <a class="reference external" href="https://zenodo.org/">Zenodo</a> repository. If you want to use other repository than Zenodo, please do not hesitate to open an <a class="reference external" href="https://github.com/NMRLipids/Databank/issues">GitHub issue</a> on this.</p></li>
 <li><p>Create an <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> file containing the essential information on your simulation by filling the <a class="reference external" href="https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml">template</a>. For instructions, see <a class="reference internal" href="READMEcontent.html#readmecontent"><span class="std std-ref">User input and content of README.yaml files</span></a> and <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files">examples</a>. Mapping files are described in  <a class="reference internal" href="moleculesAndMapping.html#molecule-names"><span class="std std-ref">Universal molecule and atom names</span></a> and are available from <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files">here</a> .</p></li>
 <li><p>Save the created <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> file into a new directory with the next free integer into <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files">Scripts/BuildDatabank/info_files/</a> folder in the NMRlipids databank git and make a pull request to the main branch. <strong>You can stop here or continue to create `README.yaml` file in step 4.</strong></p></li>
-<li><p>Before continuing, clone a repo on your computer and perform the following steps locally before making a pull request to the main branch. To create the <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> file for the databank yourself return to the <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank">Databank/Scripts/BuildDatabank/</a> folder in the NMRlipids databank git and run</p>
+<li><p>Before continuing, clone a repo on your computer and perform the following steps locally before making a pull request to the main branch. To create the <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> file for the databank, return to the <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank">Databank/Scripts/BuildDatabank/</a> folder in the NMRlipids databank git and run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>AddData.py<span class="w"> </span>-f<span class="w"> </span><span class="o">{</span>path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>info.yaml<span class="w"> </span>file<span class="w"> </span>that<span class="w"> </span>you<span class="w"> </span>created<span class="o">}</span>
 </pre></div>
 </div>
@@ -125,11 +125,10 @@ git<span class="w"> </span>add<span class="w"> </span>../../Data/Simulations/*/*
 git<span class="w"> </span>add<span class="w"> </span>../../Data/Simulations/*/*/*/*/SYSTEM_quality.json
 </pre></div>
 </div>
-<p>Running</p>
+<p>To create rankings of simulations based on their quality against experiments and to store the results in folder <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Data/Ranking">Data/Ranking</a>, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>makeRanking.py
 </pre></div>
 </div>
-<p>creates the ranking of simulations based on their quality against experiments in folder <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Data/Ranking">Data/Ranking</a>.</p>
 </li>
 <li><p>Finally, commit the added data into your fork and make a pull request into the main branch.</p></li>
 </ol>

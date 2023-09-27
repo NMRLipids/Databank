@@ -44,7 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../READMEcontent.html">User input and content of README.yaml files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../addingData.html">Adding simulations into the NMRlipids databank</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../addingExpData.html">Adding experimental data in the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../addingExpData.html">Adding experimental data into the NMRlipids databank</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../moleculesAndMapping.html">Universal molecule and atom names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../databankLibrary.html">NMRlipids databank API functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../exampleAndTutorials.html">Examples and tutorials</a></li>
@@ -1444,6 +1444,7 @@
         <span class="n">plotFormFactor</span><span class="p">(</span><span class="n">FFexp</span><span class="p">,</span><span class="n">FFq</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;Experiment&#39;</span><span class="p">,</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">except</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Form factor plotting failed&#39;</span><span class="p">)</span>
     
     <span class="n">plotOrderParameters</span><span class="p">(</span><span class="n">OPsim</span><span class="p">,</span> <span class="n">OPexp</span><span class="p">)</span></div>
@@ -1464,13 +1465,13 @@
 <span class="sd">    :return: force field specific atom name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">mapping_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/mapping_files/&#39;</span> <span class="o">+</span> <span class="n">system</span><span class="p">[</span><span class="s1">&#39;COMPOSITION&#39;</span><span class="p">][</span><span class="n">molecule</span><span class="p">][</span><span class="s1">&#39;MAPPING&#39;</span><span class="p">]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mapping_file</span><span class="p">:</span>
+    <span class="n">mapping_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/mapping_files/&#39;</span> <span class="o">+</span> <span class="n">system</span><span class="p">[</span><span class="s1">&#39;COMPOSITION&#39;</span><span class="p">][</span><span class="n">molecule</span><span class="p">][</span><span class="s1">&#39;MAPPING&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mapping_file_path</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mapping_file</span><span class="p">:</span>
         <span class="n">mapping</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">m_atom1</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">atom</span><span class="p">][</span><span class="s2">&quot;ATOMNAME&quot;</span><span class="p">]</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="s1">&#39; was not found from &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mapping_file</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="s1">&#39; was not found from &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mapping_file_path</span><span class="p">))</span>
             <span class="k">return</span>   
     <span class="k">return</span> <span class="n">m_atom1</span></div>
 
@@ -2005,7 +2006,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe. </span>
 
-<span class="sd">    :param molename: residue name of the molecule for which the P-N vector angle will be calculated</span>
+<span class="sd">    :param molname: residue name of the molecule for which the P-N vector angle will be calculated</span>
 <span class="sd">    :param atom1: name of the P atom in the simulation</span>
 <span class="sd">    :param atom2: name of the N atom in the simulation</span>
 <span class="sd">    :param MDAuniverse: MDAnalysis universe of the simulation to be analyzed</span>

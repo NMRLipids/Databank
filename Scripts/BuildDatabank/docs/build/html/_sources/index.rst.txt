@@ -23,7 +23,7 @@ experiments compared.
 
 NMRlipids Databank-API
 ----------------------
-`The NMRlipids Databank-API <https://github.com/NMRLipids/Databank/tree/main/Scripts>`_ provides programmatic access to all simulation data in the NMRlipids Databank.
+The NMRlipids Databank-API provides programmatic access to all simulation data in the NMRlipids Databank.
 This enables wide range of novel data-driven applications from construction of machine learning models that predict membrane properties, to automatic analysis of virtually
 any property across all simulations in the Databank. For examples of novel analyses enabled by the NMRlipids databank API see the `NMRlipids databank manuscript <https://doi.org/10.26434/chemrxiv-2023-jrpwm>`_.
 

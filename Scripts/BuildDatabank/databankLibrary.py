@@ -1344,6 +1344,7 @@ def plotSimulation(ID, lipid):
         plotFormFactor(FFexp,FFq[1], 'Experiment','black')
         plt.show()
     except:
+        plt.show()
         print('Form factor plotting failed')
     
     plotOrderParameters(OPsim, OPexp)
@@ -1361,13 +1362,13 @@ def simulation2universal_atomnames(system,molecule,atom):
     :return: force field specific atom name
     """
 
-    mapping_file = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + system['COMPOSITION'][molecule]['MAPPING']
-    with open(mapping_file, "rt") as mapping_file:
+    mapping_file_path = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + system['COMPOSITION'][molecule]['MAPPING']
+    with open(mapping_file_path, "rt") as mapping_file:
         mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
         try:
             m_atom1 = mapping[atom]["ATOMNAME"]
         except:
-            print(atom, ' was not found from ', str(mapping_file))
+            print(atom, ' was not found from ', str(mapping_file_path))
             return   
     return m_atom1
 
@@ -1881,7 +1882,7 @@ def read_trj_PN_angles(molname, atom1, atom2, MDAuniverse):
     """
     Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe. 
 
-    :param molename: residue name of the molecule for which the P-N vector angle will be calculated
+    :param molname: residue name of the molecule for which the P-N vector angle will be calculated
     :param atom1: name of the P atom in the simulation
     :param atom2: name of the N atom in the simulation
     :param MDAuniverse: MDAnalysis universe of the simulation to be analyzed

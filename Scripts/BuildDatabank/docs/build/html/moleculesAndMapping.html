@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="NMRlipids databank API functions" href="databankLibrary.html" />
-    <link rel="prev" title="Adding experimental data in the NMRlipids databank" href="addingExpData.html" /> 
+    <link rel="prev" title="Adding experimental data into the NMRlipids databank" href="addingExpData.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="READMEcontent.html">User input and content of README.yaml files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
-<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data in the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data into the NMRlipids databank</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Universal molecule and atom names</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Molecule names</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#universal-atom-names-in-mapping-files">Universal atom names in mapping files</a></li>
@@ -168,23 +168,35 @@
 <tr class="row-even"><td><p>DMTAP</p></td>
 <td><p>1,2-dimyristoyl-3-trimethylammonium-propane</p></td>
 </tr>
-<tr class="row-odd"><td><p>SOPC</p></td>
+<tr class="row-odd"><td><p>GM1</p></td>
+<td><p>GM1 Ganglioside</p></td>
+</tr>
+<tr class="row-even"><td><p>SOPC</p></td>
 <td><p>1-stearoyl-2-oleoyl-sn-glycero-3-phosphocholine</p></td>
 </tr>
-<tr class="row-even"><td><p>POPI</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p>POPI</p></td>
+<td><p>1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoinositol</p></td>
 </tr>
-<tr class="row-odd"><td><p>SAPI</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p>SAPI</p></td>
+<td><p>1-stearoyl-2-arachidonoyl-sn-glycero-3-phosphoinositol</p></td>
 </tr>
-<tr class="row-even"><td><p>SLPI</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p>SLPI</p></td>
+<td><p>1-stearoyl-2-lauroyl-sn-glycero-3-phosphoinositol</p></td>
 </tr>
-<tr class="row-odd"><td><p>SDG</p></td>
+<tr class="row-even"><td><p>SDG</p></td>
 <td><p>1-stearoyl-2-docosahexaenoyl-sn-glycerol</p></td>
 </tr>
-<tr class="row-even"><td><p>SDPE</p></td>
+<tr class="row-odd"><td><p>SDPE</p></td>
 <td><p>1-stearoyl-2-docosahexaenoyl-sn-glycero-3-phosphoethanolamine</p></td>
+</tr>
+<tr class="row-even"><td><p>SM16</p></td>
+<td><p>N-palmitoyl-D-erythro-sphingosylphosphorylcholine</p></td>
+</tr>
+<tr class="row-odd"><td><p>SM18</p></td>
+<td><p>N-stearoyl-D-erythro-sphingosylphosphorylcholine</p></td>
+</tr>
+<tr class="row-even"><td><p>TOCL</p></td>
+<td><p>1’,3’-Bis[1,2-dioleoyl-sn-glycero-3-phospho]-glycerol</p></td>
 </tr>
 <tr class="row-odd"><td><p>CER</p></td>
 <td><p>N-palmitoyl-D-erythro-sphingosine</p></td>
@@ -224,7 +236,7 @@
 </section>
 <section id="universal-atom-names-in-mapping-files">
 <h2>Universal atom names in mapping files<a class="headerlink" href="#universal-atom-names-in-mapping-files" title="Link to this heading"></a></h2>
-<p>To enable automatic analyses over all simulations, universal atom names for each molecule are defined in the NMRlipids databank using the <strong>mapping files</strong>. In these files, universal atom names are connected to simulation specific atom names using python dictionaries stored in yaml file format. The first key in the mapping file dictionary is the univeral atom name, second keys define the simulation specific atom name (ATOMNAME) and molecule fragment (FRAGMENT: head group, glycerol backbone, sn-1 or sn-2). For example, the beginning of the mapping file for CHARMM36 POPC looks like this:</p>
+<p>To enable automatic analyses over all simulations, universal atom names for each molecule are defined in the NMRlipids databank using the <strong>mapping files</strong>. In these files, universal atom names are connected to simulation specific atom names using python dictionaries stored in yaml file format. The first key in the mapping file dictionary is the universal atom name, second keys define the simulation specific atom name (<code class="docutils literal notranslate"><span class="pre">ATOMNAME</span></code>) and molecule fragment (<code class="docutils literal notranslate"><span class="pre">FRAGMENT:</span></code> head group, glycerol backbone, sn-1 or sn-2). For example, the beginning of the mapping file for CHARMM36 POPC looks like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span> M_G1_M:
   ATOMNAME: C3
   FRAGMENT: glycerol backbone
@@ -248,8 +260,8 @@ M_G1C2O1_M:
 .
 </pre></div>
 </div>
-<p>Universal atomnames start with “M_” flag and ends with “_M” flag. In the actual naming convention between the flags, the first two characters define in which glycerol backbone chain the atoms attached (G1, G2 or G3), third character tells the atom type and fourth character tells the counting number from the glycerol backbone carbon. If there are hydrogens or other atoms attached to the main chain, those will be added to the end of the naming. More details can be found from <a class="reference external" href="https://nmrlipids.blogspot.com/2015/03/mapping-scheme-for-lipid-atom-names-for.html">the original NMRlipids project post defining the mapping files</a>. Examples already existing mapping files can be found from <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files">the NMRlipids databank git</a>.</p>
-<p>If you are adding data into the databank and a mapping file for your molecule(s) do not exist, you need to create a new one and add it to <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files">the NMRlipids databank git</a>. Easiest is to take similar already existing mapping file and modify that. If atoms in a lipid belong to different residues (typical situation in Amber force fields, for example see <a class="reference external" href="https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/mapping_files/mappingPOPClipid17.yaml">here</a>), add the residue name to RESIDUE key of each atom in the mapping file. In this case, give the name of the head group residue in the COMPOSITION dictionary in the README.yaml file. If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules to the lipids_dict or molecules_dict in the <a class="reference external" href="https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py">databankLibrary.py</a>, as well as to the table above. Please do not hesitate to ask assistance via <a class="reference external" href="https://github.com/NMRLipids/Databank/issues">GitHub issues</a>. The mapping file should contain all the atoms of the molecules and no extra lines. The number of lines is used to calculate the number of atoms according to the databank which is compared to the number of atoms in trajectory for consistency check.</p>
+<p>Universal atom names start with “M_” flag and ends with “_M” flag. In the actual naming convention between the flags, the first two characters define in which glycerol backbone chain the atoms attached (G1, G2 or G3), third character tells the atom type and fourth character tells the counting number from the glycerol backbone carbon. If there are hydrogens or other atoms attached to the main chain, those will be added to the end of the naming. More details can be found from <a class="reference external" href="https://nmrlipids.blogspot.com/2015/03/mapping-scheme-for-lipid-atom-names-for.html">the original NMRlipids project post defining the mapping files</a>. Examples already existing mapping files can be found from <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files">the NMRlipids databank git</a>.</p>
+<p>If you are adding data into the databank and a mapping file for your molecule(s) do not exist, you need to create a new one and add it to <a class="reference external" href="https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files">the NMRlipids databank git</a>. Easiest is to take similar already existing mapping file and modify that. If atoms in a lipid belong to different residues (typical situation in Amber force fields, for example see <a class="reference external" href="https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/mapping_files/mappingPOPClipid17.yaml">here</a>), add the residue name to <code class="docutils literal notranslate"><span class="pre">RESIDUE</span></code> key of each atom in the mapping file. In this case, give the name of the head group residue in the <code class="docutils literal notranslate"><span class="pre">COMPOSITION</span></code> dictionary in the <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> file. If your simulation contains molecules that are not yet in the databank, you need to define the abbreviation and add molecules to the <code class="docutils literal notranslate"><span class="pre">lipids_dict</span></code> or <code class="docutils literal notranslate"><span class="pre">molecules_dict</span></code> in the <a class="reference external" href="https://github.com/NMRLipids/Databank/blob/main/Scripts/BuildDatabank/databankLibrary.py">databankLibrary.py</a>, as well as to the table above. Please do not hesitate to ask assistance via <a class="reference external" href="https://github.com/NMRLipids/Databank/issues">GitHub issues</a>. The mapping file should contain all the atoms of the molecules.</p>
 </section>
 </section>
 
@@ -257,7 +269,7 @@ M_G1C2O1_M:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="addingExpData.html" class="btn btn-neutral float-left" title="Adding experimental data in the NMRlipids databank" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="addingExpData.html" class="btn btn-neutral float-left" title="Adding experimental data into the NMRlipids databank" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="databankLibrary.html" class="btn btn-neutral float-right" title="NMRlipids databank API functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
