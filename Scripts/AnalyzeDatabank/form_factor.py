@@ -261,7 +261,7 @@ class FormFactor:
             for atom in explicit_atoms:
                 #find generic mapping name matching to forcefield atom name
                 index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
-                print(atom, index_list)
+                #print(atom, index_list)
                 #print(atom_i1)
                 atom_i1 = index_list.index(True)
                 #print("atom_i1")
