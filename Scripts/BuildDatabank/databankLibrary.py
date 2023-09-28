@@ -145,11 +145,19 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "SAPI24": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "SLPI": {
         "REQUIRED": False,
         "TYPE": "string",
     },
     "CER": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "CER180": {
         "REQUIRED": False,
         "TYPE": "string",
     },
@@ -347,11 +355,19 @@ molecule_ff_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "FFSAPI24": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "FFSLPI": {
         "REQUIRED": False,
         "TYPE": "string",
     },
     "FFCER": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFCER180": {
         "REQUIRED": False,
         "TYPE": "string",
     },

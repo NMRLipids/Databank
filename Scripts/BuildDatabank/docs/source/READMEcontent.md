@@ -2,9 +2,9 @@
 
 # User input and content of README.yaml files
 
-Each simulation in the NMRlipids databank is assigned with a README.yaml file which contains all the essential information of the simulation. These files are stored in the [NMRlipids GitHub repository](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations). 
+Each simulation in the NMRlipids databank is assigned with a README.yaml file which contains all the essential information of the simulation. These files are created from the manually contributed info.yaml files as described in [Adding simulations into the NMRlipids databank](addData). The README.yaml files are stored in the [NMRlipids GitHub repository](https://github.com/NMRLipids/Databank/tree/main/Data/Simulations). 
 
-README.yaml files contain manually entered and automatically exctracted information. Table below lists the manually entered compulsory and optional parameters, as well as automatically extracted information from simulation files.  
+README.yaml files contain information that is manually entered into info.yaml files and automatically exctracted information by the ``AddData.py`` program. Table below lists the manually entered compulsory and optional parameters, as well as automatically extracted information from simulation files.  
 
 key | description | type  
 ----|--------|------

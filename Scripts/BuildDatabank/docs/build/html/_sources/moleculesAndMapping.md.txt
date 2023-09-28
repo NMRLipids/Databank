@@ -36,6 +36,7 @@ GM1  | GM1 Ganglioside
 SOPC | 1-stearoyl-2-oleoyl-sn-glycero-3-phosphocholine
 POPI | 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoinositol 
 SAPI | 1-stearoyl-2-arachidonoyl-sn-glycero-3-phosphoinositol
+SAPI24 | 1-stearoyl-2-arachidonoyl-sn-glycero-3-phospho-(1'-myo-inositol-4',5'-bisphosphate)
 SLPI | 1-stearoyl-2-lauroyl-sn-glycero-3-phosphoinositol
 SDG | 1-stearoyl-2-docosahexaenoyl-sn-glycerol
 SDPE | 1-stearoyl-2-docosahexaenoyl-sn-glycero-3-phosphoethanolamine
@@ -43,6 +44,7 @@ SM16 | N-palmitoyl-D-erythro-sphingosylphosphorylcholine
 SM18 | N-stearoyl-D-erythro-sphingosylphosphorylcholine
 TOCL | 1',3'-Bis[1,2-dioleoyl-sn-glycero-3-phospho]-glycerol
 CER  | N-palmitoyl-D-erythro-sphingosine
+CER180 | 
 CHOL | cholesterol 
 DCHOL | 18,19-di-nor-cholesterol
 DHMDMAB | dihexadecyldimethylammonium 

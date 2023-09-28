@@ -1,7 +1,9 @@
 DOI: 10.5281/zenodo.8369427
 SOFTWARE: NAMD
-TRJ: ER-like.dcd
-PDB: ER-like.pdb
+TRJ:
+- - ER-like.dcd
+PDB:
+- - ER-like.pdb
 PREEQTIME: 0
 TIMELEFTOUT: 0
 TEMPERATURE: 310
@@ -17,24 +19,50 @@ COMPOSITION:
   POPC:
     NAME: POPC
     MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 67
+    - 67
   POPE:
     NAME: POPE
     MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 30
+    - 30
   POPS:
     NAME: POPS
     MAPPING: mappingPOPScharmm.yaml
+    COUNT:
+    - 7
+    - 7
   POPI:
     NAME: POPI
     MAPPING: mappingPOPIcharmm.yaml
+    COUNT:
+    - 13
+    - 13
   CER180:
     NAME: CER1
     MAPPING: mappingCER180charmm.yaml
+    COUNT:
+    - 5
+    - 5
   CHOL:
     NAME: CHL1
     MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 6
+    - 6
   SOL:
     NAME: TIP3
     MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 10551
   SOD:
     NAME: SOD
     MAPPING: mappingSOD.yaml
+    COUNT: 40
+TRAJECTORY_SIZE: 1547848276
+TRJLENGTH: 200000.00059628114
+NUMBER_OF_ATOMS: 64487
+DATEOFRUNNING: 27/09/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 776
