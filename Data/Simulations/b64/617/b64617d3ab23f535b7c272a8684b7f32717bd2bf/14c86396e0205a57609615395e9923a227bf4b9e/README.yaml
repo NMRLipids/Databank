@@ -67,3 +67,11 @@ TYPEOFSYSTEM: lipid bilayer
 WARNINGS:
   SKIP_EQTIMES: null
 ID: 769
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE: {}
+    POPC: {}
+    POPS: {}
+    CHOL: {}
+    GM1: {}
+  FORMFACTOR: {}
