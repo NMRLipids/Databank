@@ -292,6 +292,7 @@ gro = os.path.join(dir_tmp, "frame0.gro")
 NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
 
 try:
+    logger.info(f"MDAnalysis tries to use {top} and {traj}")
     u = Universe(top, traj)
     u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
 except Exception as e:
