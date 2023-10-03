@@ -207,7 +207,10 @@ for system in systems:
     # Center around one lipid tail CH3 to guarantee all lipids in the same box
     if 'gromacs' in system['SOFTWARE']:
 
-        if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+        if ('WARNINGS' in system and
+            system['WARNINGS'] is not None and
+            'GROMACS_VERSION' in system['WARNINGS'] and
+            system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'):
             trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
             makendxCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/make_ndx'
         else:

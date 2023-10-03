@@ -300,7 +300,9 @@ except Exception as e:
     logger.info(
         "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ..."
     )
-    if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
+    if ( "WARNINGS" in sim and 
+         sim["WARNINGS"] is not None and
+         sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
         logger.debug(
             f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
         )
@@ -469,11 +471,10 @@ if sim["SOFTWARE"] == "gromacs":
     file1 = os.path.join(dir_tmp, "tpr.txt")
 
     logger.info("Exporting information with gmx dump")
-    if (
-        "WARNINGS" in sim
-        and "GROMACS_VERSION" in sim["WARNINGS"]
-        and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-    ):
+    if ( "WARNINGS" in sim
+         and sim["WARNINGS"] is not None
+         and "GROMACS_VERSION" in sim["WARNINGS"]
+         and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
         os.system("echo System | gmxdump -s " + top + " > " + file1)
         TemperatureKey = "ref_t"
     else:
