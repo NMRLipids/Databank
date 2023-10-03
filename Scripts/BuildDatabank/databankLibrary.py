@@ -1753,7 +1753,11 @@ def parse_op_input(mapping_file, lipid_name):
         #print(atomC)
         #print(atomH)
 
-        if atomH:
+        if atomH and not len(atomC):
+            print("Cannot define carbon for the hydrogen %s (%s)" % (atomH[0], atomH[1]), 
+                file=sys.stderr )
+            continue
+        if atomH and len(atomC):
             #print(resname, atomC[1], atomH[1], atomC[0], atomH[0])
             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])
