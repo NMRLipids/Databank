@@ -278,7 +278,11 @@ if sim["SOFTWARE"] == "gromacs":
 elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
     top = os.path.join(dir_tmp, sim["PDB"][0][0])
-
+else:
+    logger.error(
+     "SOFTWARE '%s' is not a proper option.\n"
+     "Use either 'gromacs', 'openMM', or 'NAMD'.")
+    quit()
 
 leaflet1 = 0  # total number of lipids in upper leaflet
 leaflet2 = 0  # total number of lipids in lower leaflet
