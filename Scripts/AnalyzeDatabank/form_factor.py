@@ -223,16 +223,24 @@ class FormFactor:
             mapping_dictionary[key2]= mapping_dict #try if this works
         
         return mapping_dictionary
-        
+
     def getElectrons(self,mapping_name):
-        name1 = re.sub(r'M_[0-9]*','',mapping_name[::-1]) # removes numbers and '_M' from the end of string and reverses the string
-        name2 = re.sub(r'M_([A-Z]{1,2}[0-9]{1,4})*','',name1[::-1]) # name2 is the atom and electrons are assigned to this atom
-            
-        if name2 == 'G': # G is carbon so change G to C
+        name1 = re.sub(r'[0-9]*_M$', '', mapping_name) # removes numbers and '_M' from the end of string
+        name2 = re.sub(r'^M_([A-Z]{1,2}[0-9]{1,4})*','',name1) # removes M_X12Y23... sequence from the beginning
+        # name2 is the atom and electrons are assigned to this atom
+
+        if name2 == 'G': # G is a glycerol carbon so change G to C
             name2 = 'C'
-               
-        return electron_dictionary[name2]
-            
+
+        try:
+            el = electron_dictionary[name2]
+        except KeyError:
+            print (f'ERROR: This mapping name cannot be read by our rules: {mapping_name}', file=sys.stderr)
+            print ('Consider changing naming in your mapping file.')
+            sys.exit(1)
+
+        return el
+
     def residueElectronsAll(self,molecule):
         print(molecule)
         "return list of electrons"
