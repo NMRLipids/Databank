@@ -34,7 +34,12 @@ for system in systems:
     for key in system['COMPOSITION']:
         outfilename = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
         #print(outfilename)
-        if os.path.isfile(outfilename)  or ('WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']):
+        if ( os.path.isfile(outfilename)  or 
+             ('WARNINGS' in system.keys() and 
+              system['WARNINGS'] is not None and
+              'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and 
+              key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES'])
+           ):
             FileFound = True
         elif key in lipids_dict:
             FileFound = False
@@ -65,7 +70,10 @@ for system in systems:
         unitedAtom = False
 
     ## Check relevant warnings
-    if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+    if ( 'WARNINGS' in system and 
+         system['WARNINGS'] is not None and
+         'GROMACS_VERSION' in system['WARNINGS'] and 
+         system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
         trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
     else:
         trjconvCOMMAND = 'gmx trjconv'
@@ -95,7 +103,10 @@ for system in systems:
     ## Calculate order parameters
     if unitedAtom and 'gromacs' in software:
         topfile = databankPath + '/Data/Simulations/' + path + '/frame0.gro'
-        if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+        if ( 'WARNINGS' in system and 
+             system['WARNINGS'] is not None and
+             'GROMACS_VERSION' in system['WARNINGS'] and 
+             system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
             os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + topfile )
         else:
             os.system('echo System | ' + trjconvCOMMAND + ' -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
@@ -191,14 +202,20 @@ for system in systems:
             
             #make gro file
             print("\n Makin gro file")
-            if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
+            if ( 'WARNINGS' in system and 
+                 system['WARNINGS'] is not None and
+                 'GROMACS_VERSION' in system['WARNINGS'] and 
+                 system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
                 os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + gro) 
             else:
                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
                     
         for key in system['COMPOSITION']:
 
-            if 'WARNINGS' in system.keys() and 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']:
+            if ( 'WARNINGS' in system.keys() and 
+                 system['WARNINGS'] is not None and
+                 'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and 
+                 key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES'] ):
                 print(path, key)
                 print('Order parameters cannot be calculated if atom names are ambiguous.')
                 continue
