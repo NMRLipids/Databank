@@ -1699,7 +1699,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         Nres = len(op.selection)
         op.traj = [0] * Nres
 
-    for frame in mol.trajectory:
+    for frame in tqdm(mol.trajectory):
         for op in ordPars:  # .values():
             Nres = len(op.selection)
             for i in range(0, Nres):
