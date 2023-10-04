@@ -1,0 +1,53 @@
+DOI: 10.5281/zenodo.8383558
+TRJ:
+- - COMBINED-50ps.trr
+TPR:
+- - step7_6.tpr
+SOFTWARE: gromacs
+PREEQTIME: 20
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 44
+    - 44
+  TLCL_0H:
+    NAME: TLCL2
+    MAPPING: mappingTLCL2charmm.yaml
+    COUNT:
+    - 6
+    - 6
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 14034
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 14
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 38
+UNITEDATOM_DICT: null
+DIR_WRK: /big/comcon1/work/Databank-work
+PUBLICATION: 10.1016/j.bioelechem.2021.107828
+AUTHORS_CONTACT: Alexey Nesterenko and Daria Khomich
+SYSTEM: TLCL:POPC(20%)50mM-CHARMM
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/11/2016
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 10183205904
+TRJLENGTH: 373300.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 56826
+DATEOFRUNNING: 04/10/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 778
