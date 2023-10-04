@@ -193,6 +193,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "TLCL_0H": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "GM1": {
         "REQUIRED": False,
         "TYPE": "string",
