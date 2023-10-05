@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.8383234
+TRJ: COMBINED-25ps.trr
+TPR: step7_3.tpr
+SOFTWARE: gromacs
+PREEQTIME: 20
+TIMELEFTOUT: 100
+COMPOSITION:
+ POPC:    # universal name
+  NAME: POPC        # simulation specific name
+  MAPPING: mappingPOPCcharmm.yaml     # name of mapping file
+ TLCL_0H:
+  NAME: TLCL2
+  MAPPING: mappingTLCL2charmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+ POT:
+  NAME: POT
+  MAPPING: mappingPOT.yaml
+UNITEDATOM_DICT:
+DIR_WRK: /big/comcon1/work/Databank-work
+PUBLICATION: 10.1016/j.bioelechem.2021.107828
+AUTHORS_CONTACT: Alexey Nesterenko and Daria Khomich
+SYSTEM: TLCL:POPC(10%)50mM-CHARMM
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/11/2016
+CPT: COMBINED.cpt
+LOG: 
+TOP: topol.top
