@@ -278,7 +278,11 @@ if sim["SOFTWARE"] == "gromacs":
 elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
     top = os.path.join(dir_tmp, sim["PDB"][0][0])
-
+else:
+    logger.error(
+     "SOFTWARE '%s' is not a proper option.\n"
+     "Use either 'gromacs', 'openMM', or 'NAMD'.")
+    quit()
 
 leaflet1 = 0  # total number of lipids in upper leaflet
 leaflet2 = 0  # total number of lipids in lower leaflet
@@ -288,6 +292,7 @@ gro = os.path.join(dir_tmp, "frame0.gro")
 NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
 
 try:
+    logger.info(f"MDAnalysis tries to use {top} and {traj}")
     u = Universe(top, traj)
     u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
 except Exception as e:
@@ -295,7 +300,9 @@ except Exception as e:
     logger.info(
         "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ..."
     )
-    if "WARNINGS" in sim and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
+    if ( "WARNINGS" in sim and 
+         sim["WARNINGS"] is not None and
+         sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
         logger.debug(
             f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
         )
@@ -464,11 +471,10 @@ if sim["SOFTWARE"] == "gromacs":
     file1 = os.path.join(dir_tmp, "tpr.txt")
 
     logger.info("Exporting information with gmx dump")
-    if (
-        "WARNINGS" in sim
-        and "GROMACS_VERSION" in sim["WARNINGS"]
-        and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-    ):
+    if ( "WARNINGS" in sim
+         and sim["WARNINGS"] is not None
+         and "GROMACS_VERSION" in sim["WARNINGS"]
+         and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
         os.system("echo System | gmxdump -s " + top + " > " + file1)
         TemperatureKey = "ref_t"
     else:
