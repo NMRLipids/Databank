@@ -1699,7 +1699,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
         Nres = len(op.selection)
         op.traj = [0] * Nres
 
-    for frame in mol.trajectory:
+    for frame in tqdm(mol.trajectory):
         for op in ordPars:  # .values():
             Nres = len(op.selection)
             for i in range(0, Nres):
@@ -1724,8 +1724,8 @@ def parse_op_input(mapping_file, lipid_name):
     regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")
     regexp3_H = re.compile(r"M_C[0-9]*H[0-9]*_M")
     regexp1_C = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")
-    regexp2_C = re.compile(r"M_G[0-9]_M")
-    regexp3_C = re.compile(r"M_C[0-9]_M")
+    regexp2_C = re.compile(r"M_G[0-9]{1,2}_M")
+    regexp3_C = re.compile(r"M_C[0-9]{1,2}_M")
 
     for mapping_key in mapping_dict.keys():
         #print(mapping_key)
@@ -1753,7 +1753,11 @@ def parse_op_input(mapping_file, lipid_name):
         #print(atomC)
         #print(atomH)
 
-        if atomH:
+        if atomH and not len(atomC):
+            print("Cannot define carbon for the hydrogen %s (%s)" % (atomH[0], atomH[1]), 
+                file=sys.stderr )
+            continue
+        if atomH and len(atomC):
             #print(resname, atomC[1], atomH[1], atomC[0], atomH[0])
             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])

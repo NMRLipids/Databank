@@ -10,3 +10,5 @@ test.py
 
 # os dependent
 **/.DS_Store
+
+**/*.swp
