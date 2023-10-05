@@ -925,12 +925,15 @@ if __name__ == "__main__":
         #if readme['TRAJECTORY_SIZE'] > 5000000000:
             #continue
         
-        if 'WARNINGS' in readme and 'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']:
+        if ('WARNINGS' in readme and 
+            readme['WARNINGS'] is not None and 
+            'AMBIGUOUS_ATOMNAMES' in readme['WARNINGS']):
             continue
 
-        if 'WARNINGS' in readme and 'SKIP_EQTIMES' in readme['WARNINGS']:
+        if ('WARNINGS' in readme and 
+            readme['WARNINGS'] is not None and
+            'SKIP_EQTIMES' in readme['WARNINGS']):
             continue
-
 
         parser.downloadTraj()
         # Prepare trajectory
