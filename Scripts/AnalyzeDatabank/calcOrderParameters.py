@@ -36,7 +36,7 @@ for system in systems:
         #print(outfilename)
         if ( os.path.isfile(outfilename)  or 
              ('WARNINGS' in system.keys() and 
-              system['WARNINGS'] is not None and
+              type(system['WARNINGS']) is dict and
               'AMBIGUOUS_ATOMNAMES' in system['WARNINGS'].keys() and 
               key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES'])
            ):
@@ -71,7 +71,7 @@ for system in systems:
 
     ## Check relevant warnings
     if ( 'WARNINGS' in system and 
-         system['WARNINGS'] is not None and
+         type(system['WARNINGS']) is dict and
          'GROMACS_VERSION' in system['WARNINGS'] and 
          system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
         trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
