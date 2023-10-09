@@ -43,11 +43,13 @@ SDPE | 1-stearoyl-2-docosahexaenoyl-sn-glycero-3-phosphoethanolamine
 SM16 | N-palmitoyl-D-erythro-sphingosylphosphorylcholine
 SM18 | N-stearoyl-D-erythro-sphingosylphosphorylcholine
 TOCL | 1',3'-Bis[1,2-dioleoyl-sn-glycero-3-phospho]-glycerol
+TLCL | tetralinoleoyl cardiolipin
 CER  | N-palmitoyl-D-erythro-sphingosine
-CER180 | 
+CER180 | N-stearoyl-D-erythro-sphingosine
 CHOL | cholesterol 
 DCHOL | 18,19-di-nor-cholesterol
-DHMDMAB | dihexadecyldimethylammonium 
+DHMDMAB | dihexadecyldimethylammonium
+DPPGK | 1,2-dioleoyl-sn-glycero-3-[phospho-rac-(3-lysyl(1-glycerol))] (lysyl-PG)
 POT | potassium ion 
 SOD | sodium ion 
 CLA | chloride ion
