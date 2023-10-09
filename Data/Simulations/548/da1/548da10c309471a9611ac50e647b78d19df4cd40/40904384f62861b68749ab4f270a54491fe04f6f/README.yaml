@@ -1,0 +1,62 @@
+DOI: 10.5281/zenodo.8370434
+TRJ:
+- - PC5-CHOL10.xtc
+TPR:
+- - PC5-CHOL10.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 200
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 127
+    - 127
+  CHOL:
+    NAME: CHL1
+    MAPPING: mappingCHOLESTEROLcharmm.yaml
+    COUNT:
+    - 15
+    - 15
+  SAPI25:
+    NAME: SAPI25
+    MAPPING: mappingSAPI25charmm.yaml
+    COUNT:
+    - 8
+    - 8
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 12704
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 97
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 33
+UNITEDATOM_DICT: null
+DIR_WRK: /Users/fabiolol/Dropbox/Fabs/Projects/NMRlipid/tmp
+PUBLICATION: doi.org/10.1083/jcb.202106123
+AUTHORS_CONTACT: Fabio Lolicato
+SYSTEM: POPC_254_SAPI25_16_CHOL_30_KCl_150mM_298.15K
+SOFTWARE_VERSION: 2020.1
+FF: CHARMM36m
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 2020
+CPT:
+- - PC5-CHOL10.cpt
+LOG:
+- - PC5-CHOL10.log
+TOP:
+- - PC5-CHOL10.top
+WARNINGS: null
+TRAJECTORY_SIZE: 3413741844
+TRJLENGTH: 1204400.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 76898
+DATEOFRUNNING: 05/10/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 785

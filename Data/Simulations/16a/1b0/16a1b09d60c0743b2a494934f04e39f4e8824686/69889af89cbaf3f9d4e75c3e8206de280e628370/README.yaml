@@ -1,0 +1,56 @@
+DOI: 10.5281/zenodo.8370426
+TRJ:
+- - PC10.xtc
+TPR:
+- - PC10.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 200
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 135
+    - 135
+  SAPI25:
+    NAME: SAPI25
+    MAPPING: mappingSAPI25charmm.yaml
+    COUNT:
+    - 15
+    - 15
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 12944
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 153
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 33
+UNITEDATOM_DICT: null
+DIR_WRK: /Users/fabiolol/Dropbox/Fabs/Projects/NMRlipid/tmp
+PUBLICATION: doi.org/10.1083/jcb.202106123
+AUTHORS_CONTACT: Fabio Lolicato
+SYSTEM: POPC_270_SAPI25_30_KCl_150mM_298.15K
+SOFTWARE_VERSION: 2020.1
+FF: CHARMM36m
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 2020
+CPT:
+- - PC10.cpt
+LOG:
+- - PC10.log
+TOP:
+- - PC10.top
+WARNINGS: null
+TRAJECTORY_SIZE: 3527486504
+TRJLENGTH: 1200300.0
+TEMPERATURE: 298.15
+NUMBER_OF_ATOMS: 79698
+DATEOFRUNNING: 05/10/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 784

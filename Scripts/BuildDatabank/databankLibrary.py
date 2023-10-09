@@ -149,6 +149,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "SAPI25": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "SLPI": {
         "REQUIRED": False,
         "TYPE": "string",
@@ -198,6 +202,10 @@ lipids_dict = {
         "TYPE": "string",
     },
     "GM1": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "DPPGK": {
         "REQUIRED": False,
         "TYPE": "string",
     },
@@ -363,6 +371,10 @@ molecule_ff_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "FFSAPI24": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "FFSLPI": {
         "REQUIRED": False,
         "TYPE": "string",
@@ -404,6 +416,10 @@ molecule_ff_dict = {
         "TYPE": "string",
     },
     "FFGM1": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "DPPGK": {
         "REQUIRED": False,
         "TYPE": "string",
     },

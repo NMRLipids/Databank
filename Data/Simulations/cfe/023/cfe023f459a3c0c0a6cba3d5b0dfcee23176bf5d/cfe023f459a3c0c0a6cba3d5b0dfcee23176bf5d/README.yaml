@@ -1,0 +1,54 @@
+DOI: 10.5281/zenodo.8415046
+SOFTWARE: openMM
+TRJ:
+- - step7_1.dcd
+PDB:
+- - step5_input.pdb
+PREEQTIME: 0
+TIMELEFTOUT: 100
+TEMPERATURE: 303
+COMPOSITION:
+  POPG:
+    NAME: POPG
+    MAPPING: mappingPOPGcharmm.yaml
+    COUNT:
+    - 48
+    - 48
+  DPPGK:
+    NAME: DPPG
+    MAPPING: mappingDPPGKcharmm.yaml
+    COUNT:
+    - 28
+    - 28
+  TOCL:
+    NAME: TOCL
+    MAPPING: mappingTOCLcharmm.yaml
+    COUNT:
+    - 4
+    - 4
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 6712
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 64
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 16
+DIR_WRK: /home/sosamuli/temp/DataBank/
+PUBLICATION: null
+AUTHORS_CONTACT: Jesper Madsen
+SYSTEM: Gram-positive bilayer membrane (60% PG, 35% lysyl-PG, 5% CL)
+SOFTWARE_VERSION: 7.5.1
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: null
+TRAJECTORY_SIZE: 2554960276
+TRJLENGTH: 500000.0014907029
+NUMBER_OF_ATOMS: 42576
+DATEOFRUNNING: 09/10/2023
+TYPEOFSYSTEM: lipid bilayer
+ID: 782
