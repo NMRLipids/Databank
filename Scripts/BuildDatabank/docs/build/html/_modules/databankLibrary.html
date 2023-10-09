@@ -226,6 +226,10 @@
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
+    <span class="s2">&quot;SAPI25&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="s2">&quot;SLPI&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
@@ -270,7 +274,15 @@
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
+    <span class="s2">&quot;TLCL_0H&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="s2">&quot;GM1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;DPPGK&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
@@ -436,6 +448,10 @@
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
+    <span class="s2">&quot;FFSAPI24&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="s2">&quot;FFSLPI&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
@@ -477,6 +493,10 @@
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s2">&quot;FFGM1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;DPPGK&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;TYPE&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
     <span class="p">},</span>
@@ -1818,7 +1838,7 @@
         <span class="n">Nres</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">selection</span><span class="p">)</span>
         <span class="n">op</span><span class="o">.</span><span class="n">traj</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Nres</span>
 
-    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">trajectory</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ordPars</span><span class="p">:</span>  <span class="c1"># .values():</span>
             <span class="n">Nres</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">selection</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nres</span><span class="p">):</span>
@@ -1843,8 +1863,8 @@
     <span class="n">regexp2_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_G[0-9]*H[0-9]*_M&quot;</span><span class="p">)</span>
     <span class="n">regexp3_H</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_C[0-9]*H[0-9]*_M&quot;</span><span class="p">)</span>
     <span class="n">regexp1_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_[A-Z0-9]*C[0-9]*_M&quot;</span><span class="p">)</span>
-    <span class="n">regexp2_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_G[0-9]_M&quot;</span><span class="p">)</span>
-    <span class="n">regexp3_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_C[0-9]_M&quot;</span><span class="p">)</span>
+    <span class="n">regexp2_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_G[0-9]{1,2}_M&quot;</span><span class="p">)</span>
+    <span class="n">regexp3_C</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;M_C[0-9]{1,2}_M&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">mapping_key</span> <span class="ow">in</span> <span class="n">mapping_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="c1">#print(mapping_key)</span>
@@ -1872,7 +1892,11 @@
         <span class="c1">#print(atomC)</span>
         <span class="c1">#print(atomH)</span>
 
-        <span class="k">if</span> <span class="n">atomH</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">atomH</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">atomC</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cannot define carbon for the hydrogen </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">atomH</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atomH</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> 
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">atomH</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">atomC</span><span class="p">):</span>
             <span class="c1">#print(resname, atomC[1], atomH[1], atomC[0], atomH[0])</span>
             <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomC</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atomH</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atomC</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atomH</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="n">op</span> <span class="o">=</span> <span class="n">OrderParameter</span><span class="p">(</span><span class="n">resname</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
