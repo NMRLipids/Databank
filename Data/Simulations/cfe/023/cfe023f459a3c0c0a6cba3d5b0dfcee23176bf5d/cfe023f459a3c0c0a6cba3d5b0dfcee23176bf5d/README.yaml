@@ -22,7 +22,7 @@ COMPOSITION:
     - 28
   TOCL:
     NAME: TOCL
-    MAPPING: mappingTOCLcharmm.yaml
+    MAPPING: mappingTOCL2charmm.yaml
     COUNT:
     - 4
     - 4
