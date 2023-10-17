@@ -1,0 +1,29 @@
+DOI: 10.5281/zenodo.8411733
+
+SOFTWARE: gromacs
+TRJ: md.xtc
+TPR: md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 300
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEsage.yaml
+ SOL:
+  NAME: TIP3P
+  MAPPING: mappingTIP3PwaterSage.yaml
+
+DIR_WRK: /Users/patrickfrankel/Desktop/lipid_database/Databank/
+
+PUBLICATION:
+AUTHORS_CONTACT: Patrick Frankel
+
+SYSTEM: POPE_128_OPENFF_300K
+
+FF: OpenFF
+FF_SOURCE: https://docs.openforcefield.org/en/latest/
+FF_DATE: 
+
+TOP: topol.top
