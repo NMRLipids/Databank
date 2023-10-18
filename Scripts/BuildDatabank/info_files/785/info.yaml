@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.8431710
+TRJ: DMPC-md313-rfz.trr
+TPR: dmpc-md313-rfz.tpr
+
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 100
+TEMPERATURE: 313
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Alexey Nesterenko
+
+SYSTEM: DMPC(313K,rfz)
+SOFTWARE_VERSION: 2022.5
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/07/2022
+CPT: DMPC-md313-rfz.cpt
+LOG: DMPC-md313-rfz.log
+TOP: DMPC_small.top
