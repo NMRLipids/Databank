@@ -1,0 +1,45 @@
+DOI: 10.5281/zenodo.8435138
+TRJ:
+- - SMALLG_pope-md313rfz-20ps.trr
+TPR:
+- - pope-md313rfz.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 100
+TEMPERATURE: 310
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEcharmm.yaml
+    COUNT:
+    - 72
+    - 72
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 5760
+DIR_WRK: /big/comcon1/work/Databank-work
+AUTHORS_CONTACT: Alexey Nesterenko
+SYSTEM: POPE(313K,rfz)
+SOFTWARE_VERSION: 2022.5
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/07/2022
+CPT:
+- - SMALLG_pope-md313rfz.cpt
+LOG:
+- - SMALLG_pope-md313rfz.log
+TOP:
+- - POPE.top
+TRAJECTORY_SIZE: 21689266080
+TRJLENGTH: 512240.0
+NUMBER_OF_ATOMS: 35280
+DATEOFRUNNING: 17/10/2023
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPE:
+      10.1021/jacs.1c05549: 10.1021/jacs.1c05549/2
+      unpublished/ferreiraPOPE: unpublished/ferreiraPOPE/1
+  FORMFACTOR: 10.1021/jp511159q/1
+ID: 790
