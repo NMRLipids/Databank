@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.8435138
+TRJ: SMALLG_pope-md313rfz-20ps.trr
+TPR: pope-md313rfz.tpr
+
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 100
+TEMPERATURE: 313
+
+COMPOSITION:
+ POPE:
+  NAME: POPE
+  MAPPING: mappingPOPEcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Alexey Nesterenko
+
+SYSTEM: POPE(313K,rfz)
+SOFTWARE_VERSION: 2022.5
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/07/2022
+CPT: SMALLG_pope-md313rfz.cpt
+LOG: SMALLG_pope-md313rfz.log
+TOP: POPE.top
