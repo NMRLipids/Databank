@@ -1,0 +1,34 @@
+DOI: 10.5281/zenodo.8411733
+SOFTWARE: gromacs
+TRJ:
+- - md.xtc
+TPR:
+- - md.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+TEMPERATURE: 300.0
+COMPOSITION:
+  POPE:
+    NAME: POPE
+    MAPPING: mappingPOPEsage.yaml
+    COUNT:
+    - 64
+    - 64
+  SOL:
+    NAME: TIP3P
+    MAPPING: mappingTIP3PwaterSage.yaml
+    COUNT: 5000
+DIR_WRK: /Users/patrickfrankel/Desktop/lipid_database/Databank/
+PUBLICATION: null
+AUTHORS_CONTACT: Patrick Frankel
+SYSTEM: POPE_128_OPENFF_300K
+FF: OpenFF
+FF_SOURCE: https://docs.openforcefield.org/en/latest/
+FF_DATE: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 4536931124
+TRJLENGTH: 200005.0
+NUMBER_OF_ATOMS: 31000
+DATEOFRUNNING: 16/10/2023
+TYPEOFSYSTEM: lipid bilayer
