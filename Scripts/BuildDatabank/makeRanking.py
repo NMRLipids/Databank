@@ -8,8 +8,8 @@ import sys
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import *
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
+databankpath = '../../Data/Simulations/'
+db_data = databank(databankpath)
 systems = db_data.get_systems()
 
 
@@ -17,7 +17,7 @@ systems = db_data.get_systems()
 qualities = []
 for system in systems:
     quality_dict = {}
-    path = system['path']
+    path = databankpath + system['path']
     READMEfilepath = path + '/README.yaml'
     
     with open(READMEfilepath) as yaml_file:
