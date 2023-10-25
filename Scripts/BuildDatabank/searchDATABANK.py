@@ -225,7 +225,7 @@ def loadExperiments(experimentType):
                 experiments.append(Experiment(readmeExp, expData, subdir, experimentType))
           
     return experiments
-    
+ 
 def findPairs(experiments, simulations):
     pairs = []
     for simulation in tqdm(simulations, desc='Simulation'):
@@ -319,6 +319,37 @@ def findPairs(experiments, simulations):
         
     return pairs
 
+def logPairs(pairs, fd):
+    """
+    Write found correspondences into log file.
+
+    pairs: [(Simulation, Experiment), ...]
+    fd: file descriptor for writting into
+    """
+
+    for p in pairs:
+        sim : Simulation = p[0]
+        exp : Experiment = p[1]
+
+        sysn = sim.readme['SYSTEM']
+        simp = sim.indexingPath
+
+        expp = exp.dataPath
+        expd = exp.readme['DOI']
+
+        fd.write(f"""
+--------------------------------------------------------------------------------
+Simulation:
+ - {sysn}
+ - {simp}
+Experiment:
+ - {expd}
+ - {expp}""")
+        # end for
+    fd.write("""
+--------------------------------------------------------------------------------
+    \n""")
+
 def main():
     """
     Main program function. Not for exporting.
@@ -342,10 +373,15 @@ def main():
     experimentsFormFactors = loadExperiments('FormFactors')
 
     # Pair each simulation with an experiment with the closest matching temperature and composition
-    print("Scanning simulation-experiment pairs among order parameter experiments.")
-    pairsOP = findPairs(experimentsOrderParameters, simulations)
-    print("Scanning simulation-experiment pairs among form factor experiments.")
-    pairsFF = findPairs(experimentsFormFactors, simulations)
+    with open('search-databank-pairs.log', 'w') as logf:
+        print("Scanning simulation-experiment pairs among order parameter experiments.")
+        pairsOP = findPairs(experimentsOrderParameters, simulations)
+        logf.write("=== OP PAIRS ===\n")
+        logPairs(pairsOP, logf)
+        print("Scanning simulation-experiment pairs among form factor experiments.")
+        pairsFF = findPairs(experimentsFormFactors, simulations)
+        logf.write("=== FF PAIRS ===\n")
+        logPairs(pairsFF, logf)
 
     '''
     for pair in pairsFF:
