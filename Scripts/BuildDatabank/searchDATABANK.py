@@ -6,7 +6,7 @@ from databankLibrary import lipids_dict
 from tqdm import tqdm
 
 databank_path = '../../Data/Simulations'
-
+expbank_path = '../../Data/experiments'
 
 lipid_numbers_list =  lipids_dict.keys() # should contain all lipid names
 ions_list = ['POT', 'SOD', 'CLA', 'CAL'] # should contain names of all ions
@@ -20,7 +20,6 @@ class Data:
     def __load_data__(self,data_path):
         with open(data_path) as json_file:
             self.data = json.load(json_file)
-        json_file.close()
 
         
 class Simulation:
@@ -139,78 +138,92 @@ class Experiment:
         return expIons
         
 def loadSimulations():
+    """
+    Generates the list of Simulation objects. Go through all README.yaml files.
+    """
+
+    print("Build simulation tree index...", end='')
+    rmIdx = []
+    for subdir, dirs, files in os.walk(databank_path): 
+        for fn in files:
+            if fn == 'README.yaml':
+                rmIdx.append(subdir)
+    print('%d READMEs loaded.' % len(rmIdx) )
+
+    print("Loading information about every simulation in the bank.")
     simulations = []
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): 
-        for filename1 in files:
-            filepath = subdir + os.sep + filename1
+    for subdir in tqdm(rmIdx, "Simulations"):
+        READMEfilepathSimulation = os.path.join(subdir, 'README.yaml')
+        # it exists because we collected only dirs with README.yaml
+        with open(READMEfilepathSimulation) as yaml_file_sim:
+            readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
+        try:
+            if readmeSim['WARNINGS']['NOWATER']:
+                continue
+        except:
+            pass
+        indexingPath = os.path.relpath(subdir, start=databank_path)
+        simOPdata = [] # order parameter files for each type of lipid
+        simData = {}
+
+        for filename in os.listdir(subdir): 
+            filepath = os.path.join(subdir, filename)
         
-            if filepath.endswith("README.yaml"):
-                READMEfilepathSimulation = subdir + '/README.yaml'
-                with open(READMEfilepathSimulation) as yaml_file_sim:
-                    readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
-                    #print(simulation.readme)
-                    try:
-                        if readmeSim['WARNINGS']['NOWATER']:
-                            continue
-                    except:
-                        pass
-                    indexingPath = "/".join(filepath.split("/")[4:8])
-                   # print(indexingPath)
-                    simOPdata = [] #order parameter files for each type of lipid
-                    simData = {}
-                    for filename2 in files: 
-                        if filename2.endswith('fourierFromFinalDensity.json'):
-                            dataPath = subdir + '/' + filename2
-                            simData['FormFactors'] = Data("system",dataPath)
-                        elif filename2.endswith('OrderParameters.json'):
-                            lipid_name = filename2.replace('OrderParameters.json', '')
-                            dataPath = subdir + '/' + filename2
-                          #  print(dataPath)
-                            op_data = Data(lipid_name, dataPath)
-                            simOPdata.append(op_data)  
-                             
-                    simData['OrderParameters'] = simOPdata
-                    simulations.append(Simulation(readmeSim, simData, indexingPath))
-                    yaml_file_sim.close()    
+            if filename == 'fourierFromFinalDensity.json': ## TODO: WHAT IS THAT???
+                simData['FormFactors'] = Data("system", filepath)
+            elif filename.endswith('OrderParameters.json'):
+                lipid_name = filename.replace('OrderParameters.json', '')
+            #  print(dataPath)
+                op_data = Data(lipid_name, filepath)
+                simOPdata.append(op_data)
+                            
+        simData['OrderParameters'] = simOPdata
+        simulations.append(Simulation(readmeSim, simData, indexingPath))
+
     return simulations
  
 def loadExperiments(experimentType):
-#loop over the experiment entries in the experiment databank and read experiment readme and order parameter files into objects 
-    experiments = []
-    dataFile = ""
+    """
+    Loops over the experiment entries in the experiment databank and read experiment 
+    readme and order parameter files into objects.
+    """
+
     if experimentType == 'OrderParameters':
         dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
         dataFile = '_FormFactor.json'
-        #dataFile = '.json'
-    
-    path = r'../../Data/experiments/'+experimentType+'/'
-    for exp_subdir, exp_dirs, exp_files in os.walk(path):
-        for filename1 in exp_files:
-            filepath_exp = exp_subdir + os.sep + filename1
-            if filepath_exp.endswith("README.yaml"):
-                READMEfilepathExperiment = exp_subdir + '/README.yaml'
-                #print(READMEfilepathExperiment)
-                with open(READMEfilepathExperiment) as yaml_file_exp:
-                    readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-                    opData = {}
-                    
-                    for filename2 in exp_files:
-                        if filename2.endswith(dataFile):
-                            molecule_name = ""
-                            dataPath = exp_subdir + '/' + filename2 #json!
-                            #print(dataPath)
-                            if experimentType == "OrderParameters":
-                                molecule_name = filename2.replace(dataFile,'')
-                                #print(molecule_name)
-                                
-                            elif experimentType == "FormFactors": 
-                                molecule_name = 'system'   
-                            #print(lipid_name)    
-                            expData = Data(molecule_name, dataPath)
-                            experiments.append(Experiment(readmeExp, expData, exp_subdir,experimentType))
-                yaml_file_exp.close()
-           
+    else:
+        raise NotImplementedError("Only OrderParameters and FormFactors types are implemented.")
+
+    print("Build experiments [%s] index..." % experimentType, end='')
+    rmIdx = []
+
+    path = os.path.join(expbank_path, experimentType)
+    for subdir, dirs, files in os.walk(path): 
+        for fn in files:
+            if fn == 'README.yaml':
+                rmIdx.append(subdir)
+    print('%d READMEs loaded.' % len(rmIdx) )
+
+    print("Loading data for each experiment.")
+    experiments = []
+    for subdir in tqdm(rmIdx, desc='Experiment'):
+        READMEfilepathExperiment = os.path.join(subdir, 'README.yaml')
+        with open(READMEfilepathExperiment) as yaml_file_exp:
+            readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+        opData = {}
+
+        for fname in os.listdir(subdir):
+            dataPath = os.path.join(subdir, fname)
+            if fname.endswith(dataFile):
+                molecule_name = ""
+                if experimentType == "OrderParameters":
+                    molecule_name = fname.replace(dataFile,'')
+                elif experimentType == "FormFactors": 
+                    molecule_name = 'system'   
+                expData = Data(molecule_name, dataPath)
+                experiments.append(Experiment(readmeExp, expData, subdir, experimentType))
+          
     return experiments
     
 def findPairs(experiments):
@@ -297,7 +310,7 @@ def findPairs(experiments):
                             lipid = experiment.data.molecule
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
                         elif experiment.exptype == "FormFactors":
-                            simulation.readme['EXPERIMENT']['FORMFACTOR']=exp_path
+                            simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
                     else:
                         continue
         
@@ -309,10 +322,9 @@ def findPairs(experiments):
             sortDict = dict(sorted(unsortDict.items()))
             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid] = sortDict.copy()
 
-        outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
+        outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
             yaml.dump(simulation.readme,f, sort_keys=False)
-        f.close()
         
     return pairs
                         
@@ -328,7 +340,7 @@ for simulation in simulations:
     
    # print(simulation.indexingPath)
         
-    outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
+    outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
     with open(outfileDICT, 'w') as f:
         yaml.dump(simulation.readme,f, sort_keys=False)
 
@@ -353,5 +365,3 @@ for pair in pairsFF:
 
 print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
 print("Found form factor data for " + str(len(pairsFF)) + " pairs")
-
-
