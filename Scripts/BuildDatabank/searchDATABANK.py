@@ -226,7 +226,7 @@ def loadExperiments(experimentType):
           
     return experiments
     
-def findPairs(experiments):
+def findPairs(experiments, simulations):
     pairs = []
     for simulation in simulations:
         sim_lipids = simulation.getLipids()
@@ -327,41 +327,42 @@ def findPairs(experiments):
             yaml.dump(simulation.readme,f, sort_keys=False)
         
     return pairs
-                        
-##############################################
-#loop over the simulations in the simulation databank and read simulation readme and order parameter files into objects
-simulations = loadSimulations()
-for simulation in simulations:
-    simulation.readme['EXPERIMENT'] = {}
-    simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
-    simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
-    for lipid in simulation.getLipids():
-        simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
-    
-   # print(simulation.indexingPath)
+
+def main():
+    """
+    Main program function. Not for exporting.
+    """
+
+    simulations = loadSimulations()
+
+    # clear all EXPERIMENT sections in all simulations
+    for simulation in simulations:
+        simulation.readme['EXPERIMENT'] = {}
+        simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
+        simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
+        for lipid in simulation.getLipids():
+            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
         
-    outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
-    with open(outfileDICT, 'w') as f:
-        yaml.dump(simulation.readme,f, sort_keys=False)
+        outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
+        with open(outfileDICT, 'w') as f:
+            yaml.dump(simulation.readme, f, sort_keys=False)
 
-#load experiments
-experimentsOrderParameters = loadExperiments('OrderParameters')
-experimentsFormFactors = loadExperiments('FormFactors')
+    experimentsOrderParameters = loadExperiments('OrderParameters')
+    experimentsFormFactors = loadExperiments('FormFactors')
 
+    # Pair each simulation with an experiment with the closest matching temperature and composition
+    pairsOP = findPairs(experimentsOrderParameters, simulations)
+    pairsFF = findPairs(experimentsFormFactors, simulations)
 
-#Pair each simulation with an experiment with the closest matching temperature and composition
-pairsOP = findPairs(experimentsOrderParameters)
-pairsFF = findPairs(experimentsFormFactors)
+    for pair in pairsFF:
+        print('#################')
+        print(pair[0].readme)
+        print(pair[0].indexingPath)
+        print("#")
+        print(pair[1].readme)         
 
-#print(experimentsOrderParameters)
-#print(len(simulations))
+    print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
+    print("Found form factor data for " + str(len(pairsFF)) + " pairs")
 
-for pair in pairsFF:
-    print('#################')
-    print(pair[0].readme)
-    print(pair[0].indexingPath)
-    print("#")
-    print(pair[1].readme)         
-
-print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
-print("Found form factor data for " + str(len(pairsFF)) + " pairs")
+if __name__ == "__main__":
+    main()
