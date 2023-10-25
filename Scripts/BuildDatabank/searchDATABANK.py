@@ -1,14 +1,9 @@
 import os
 import yaml
 import json
-import matplotlib.pyplot as plt
-import numpy as np
-import math
-
-from matplotlib import cm
-from scipy.stats import norm
 
 from databankLibrary import lipids_dict
+from tqdm import tqdm
 
 databank_path = '../../Data/Simulations'
 
@@ -305,8 +300,16 @@ def findPairs(experiments):
                             simulation.readme['EXPERIMENT']['FORMFACTOR']=exp_path
                     else:
                         continue
+        
+        # sorting experiment lists to keep experimental order strict
+        for _lipid in simulation.readme['EXPERIMENT']['ORDERPARAMETER'].keys():
+            unsortDict = simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid].copy()
+            if not len(unsortDict):
+                continue
+            sortDict = dict(sorted(unsortDict.items()))
+            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid] = sortDict.copy()
+
         outfileDICT = '../../Data/Simulations/'+ simulation.indexingPath + '/README.yaml'
-    
         with open(outfileDICT, 'w') as f:
             yaml.dump(simulation.readme,f, sort_keys=False)
         f.close()
