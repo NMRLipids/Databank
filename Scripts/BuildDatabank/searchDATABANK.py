@@ -228,23 +228,17 @@ def loadExperiments(experimentType):
     
 def findPairs(experiments, simulations):
     pairs = []
-    for simulation in simulations:
+    for simulation in tqdm(simulations, desc='Simulation'):
         sim_lipids = simulation.getLipids()
         sim_total_lipid_concentration = simulation.totalLipidConcentration() 
         sim_ions = simulation.getIons(ions_list)
         t_sim = simulation.readme['TEMPERATURE']
-
         
         #calculate molar fractions from simulation
         sim_molar_fractions = {}
         for lipid in sim_lipids:
             sim_molar_fractions[lipid] = simulation.molarFraction(lipid)
 
-
-        #print(print(simulation.readme))
-        #print(sim_lipids, sim_molar_fractions, sim_total_lipid_concentration, sim_ions, t_sim)
-
-            
         for experiment in experiments: 
 
             # check lipid composition matches the simulation
@@ -258,54 +252,51 @@ def findPairs(experiments, simulations):
             sim_concentrations = {}
             for molecule in ions_list:
                 sim_concentrations[molecule] = simulation.ionConcentration(molecule, exp_counter_ions)
-
                 
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
                 # compare molar fractions
                 mf_ok = 0
                 for key in sim_lipids:
-                    if (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - 0.03) and (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key]+ 0.03):
+                    if ( (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - 0.03) and 
+                         (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key]+ 0.03) ):
                         mf_ok +=1 
 
-                c_ok = 0
-
                 # compare ion concentrations 
+                c_ok = 0
                 if set(sim_ions) == set(exp_ions):
                     for key in sim_ions:
-                        if (experiment.readme['ION_CONCENTRATIONS'][key] >= sim_concentrations[key] - 0.05) and (experiment.readme['ION_CONCENTRATIONS'][key] <= sim_concentrations[key] + 0.05): 
+                        if ( (experiment.readme['ION_CONCENTRATIONS'][key] >= sim_concentrations[key] - 0.05) and 
+                             (experiment.readme['ION_CONCENTRATIONS'][key] <= sim_concentrations[key] + 0.05) ): 
                             c_ok += 1 
-
 
                 switch = 0
             
-                if (type(exp_total_lipid_concentration) == float) and (type(sim_total_lipid_concentration) == float): 
-                    if ((exp_total_lipid_concentration >= sim_total_lipid_concentration - 0.1) and (exp_total_lipid_concentration <= sim_total_lipid_concentration + 0.1)):
+                if ( (type(exp_total_lipid_concentration) == float) and 
+                     (type(sim_total_lipid_concentration) == float) ):
+                    if ( (exp_total_lipid_concentration >= sim_total_lipid_concentration - 0.1) and 
+                         (exp_total_lipid_concentration <= sim_total_lipid_concentration + 0.1) ):
                         switch = 1
-
-                elif type(exp_total_lipid_concentration) == str and type(sim_total_lipid_concentration) == str:
+                elif ( (type(exp_total_lipid_concentration) == str) and 
+                       (type(sim_total_lipid_concentration) == str) ):
                     if exp_total_lipid_concentration == sim_total_lipid_concentration:
                         switch = 1
                         
-               # print(switch)
-                        
-                if switch == 1:
+                if switch:
                     #check temperature +/- 2 degrees
                     t_exp = experiment.readme['TEMPERATURE']
                     
-                    if (mf_ok == len(sim_lipids)) and (c_ok == len(sim_ions)) and (t_exp >= float(t_sim) - 2.0) and (t_exp <= float(t_sim) + 2.0):
+                    if ( (mf_ok == len(sim_lipids)) and 
+                         (c_ok == len(sim_ions)) and 
+                         (t_exp >= float(t_sim) - 2.0) and 
+                         (t_exp <= float(t_sim) + 2.0) ):
+                        # !we found the match!
                         pairs.append([simulation, experiment])
 
-                        #Add path to experiment into simulation README.yaml
-                        #many experiment entries can match to same simulation
+                        # Add path to experiment into simulation README.yaml
+                        # many experiment entries can match to same simulation
                         exp_doi = experiment.readme['DOI'] 
-                        exp_path = "/".join(experiment.dataPath.split("/")[5:8])
-                        #try:
-                        #    lipid = experiment.data.molecule
-                        #except AttributeError:
-                        #    print("ei toimi")
-                        #    print(experiment.readme)
-                        #print(lipid)
+                        exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(expbank_path, experiment.exptype))
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.data.molecule
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
@@ -324,7 +315,7 @@ def findPairs(experiments, simulations):
 
         outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
-            yaml.dump(simulation.readme,f, sort_keys=False)
+            yaml.dump(simulation.readme, f, sort_keys=False)
         
     return pairs
 
@@ -351,15 +342,19 @@ def main():
     experimentsFormFactors = loadExperiments('FormFactors')
 
     # Pair each simulation with an experiment with the closest matching temperature and composition
+    print("Scanning simulation-experiment pairs among order parameter experiments.")
     pairsOP = findPairs(experimentsOrderParameters, simulations)
+    print("Scanning simulation-experiment pairs among form factor experiments.")
     pairsFF = findPairs(experimentsFormFactors, simulations)
 
+    '''
     for pair in pairsFF:
         print('#################')
         print(pair[0].readme)
         print(pair[0].indexingPath)
         print("#")
         print(pair[1].readme)         
+    '''
 
     print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
     print("Found form factor data for " + str(len(pairsFF)) + " pairs")
