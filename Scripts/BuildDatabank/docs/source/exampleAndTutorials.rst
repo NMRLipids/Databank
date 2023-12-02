@@ -14,3 +14,7 @@ Shows different kinds of rankings of simulations against experimental data.
 `Template for more advance API usage <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_
 ------------------
 Demonstrates the usage of API by three examples. 1) Selects a random simulation and prints the related databank content in human readable format. 2) Shows the readily analyzed properties for the selected random simulation (area per lipid, membrane thickness, relative equilibration times, X-ray scattering form factors, and C-H bond order parameters). 3) Selects a random simulation with the trajectory size below 100Mb and calculates P-N vector angle with respect to membrane normal for all lipids for which P and N atoms are available in headgroup.
+
+`Showing statistics from the NMRlipids databank <https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/stats.ipynb>`_
+------------------
+Plots distributions of simulation lengths, number of atoms and trajectory sizes, distribution of number of lipid components, available single component bilayers and binary lipid mixtures, and pie diagram of temperatures.
