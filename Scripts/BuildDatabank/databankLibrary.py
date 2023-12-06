@@ -2448,7 +2448,7 @@ def getHydrationLevel(system):
 
 
 
-######################## GUI ###########################
+######################## StreamlitApp ###########################
 
 
 def ShowTableGui(SortedQualities, quality):
