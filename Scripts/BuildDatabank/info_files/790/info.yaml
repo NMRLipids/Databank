@@ -1,0 +1,16 @@
+DOI: 10.5281/zenodo.10564948
+TRJ: md.xtc
+TPR: md.trp
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT:50
+COMPOSITION:
+ MOLECULE1: POPC     # universal name
+  NAME: POPC        # simulation specific name
+  MAPPING:  mappingPOPCslipids.yaml    # name of mapping file
+SOL: TIP3P
+  NAME: TIP3P
+  MAPPING: mappingTIP3Pwater.yaml
+TOP: topol.top
+UNITEDATOM_DICT:
+DIR_WRK: /home/julianne/Documents/LipidsReproduceGMX/Results
