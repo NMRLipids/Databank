@@ -51,7 +51,7 @@ from scipy import signal
 
 sys.path.insert(1, "../BuildDatabank/")
 
-from databankLibrary import databank, download_link, lipids_dict
+from databankLibrary import databank, download_link, lipids_dict, download_resource_from_uri
 
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
@@ -191,12 +191,13 @@ class Parser:
         if not os.path.isfile(self.tpr_name):
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading tpr ", self.doi)
-            urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
-
+            #urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
+            download_resource_from_uri(self.tpr_url, self.tpr_name)
         if not os.path.isfile(self.trj_name):
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading trj ", self.doi)
-            urllib.request.urlretrieve(self.trj_url, self.trj_name)
+            #urllib.request.urlretrieve(self.trj_url, self.trj_name)
+            download_resource_from_uri(self.trj_url, self.trj_name)
 
     """
     Preparing trajectory. If centered trajectory is found, use it. If whole
@@ -805,7 +806,6 @@ class TimeEstimator:
     def timerelax(self):
         time = self.autocorrelation[:, 0]
         autocorrelation = self.autocorrelation[:, 1]
-        print(f'autocorrelation size line 808 is {self.autocorrelation.shape}')
 
         points = []
         j = 1
