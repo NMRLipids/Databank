@@ -444,13 +444,13 @@ class Topology:
         resnames = self.getLipidResnames()
         resnameDict = self.assignResnames(resnames)
         head_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[HEADGRP]}"
             ).residues
         ]
         sn_1_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN1]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
@@ -458,7 +458,7 @@ class Topology:
             ).residues
         ]
         sn_2_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN2]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
@@ -805,6 +805,7 @@ class TimeEstimator:
     def timerelax(self):
         time = self.autocorrelation[:, 0]
         autocorrelation = self.autocorrelation[:, 1]
+        print(f'autocorrelation size line 808 is {self.autocorrelation.shape}')
 
         points = []
         j = 1
