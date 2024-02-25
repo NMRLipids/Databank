@@ -209,6 +209,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "GB3": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
 }
 
 
@@ -419,7 +423,11 @@ molecule_ff_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
-    "DPPGK": {
+    "FFDPPGK": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
+    "FFGB3": {
         "REQUIRED": False,
         "TYPE": "string",
     },
