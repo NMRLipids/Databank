@@ -110,7 +110,7 @@ COMPOSITION:
   MAPPING: mappingCLA.yaml
  GB3: 
   NAME: BGLC
-  MAPPING: mappingGB3charmm.yaml
+  MAPPING: mappingGb3charmm.yaml
 
 # Give information for constructing hydrogens for united atom (UA) simulations (compulsory for UA simulations, empty for all atom simulations)
 # Order parameters from UA simulations are calculated using the [buildH code](https://github.com/patrickfuchs/buildH). 
@@ -194,4 +194,6 @@ TOP:
 # If you have something atypical in your simulation (e.g. old Gromacs version, non-standard bilayer orientation, phase separation, etc.),
 # you can mention this in the WARNINGS dictionary
 
-WARNINGS: Gb3 is constructed of different parts which all have their own identifier CER24, BGLC, BGAL, AGAL
+WARNINGS:
+  SKIP_EQTIMES: null
+
