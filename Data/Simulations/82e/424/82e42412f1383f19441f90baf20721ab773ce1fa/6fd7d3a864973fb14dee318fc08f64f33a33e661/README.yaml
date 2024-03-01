@@ -1,0 +1,54 @@
+DOI: 10.5281/zenodo.10635871
+TRJ:
+- - reduced_1ns_center.xtc
+TPR:
+- - run1.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 1000
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 95
+    - 95
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 15649
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 27
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 27
+  GB3:
+    NAME: BGLC
+    MAPPING: mappingGb3charmm.yaml
+    COUNT:
+    - 5
+    - 5
+UNITEDATOM_DICT: null
+DIR_WRK: /media/osollila/Data2/tmp/DATABANK/
+PUBLICATION: null
+AUTHORS_CONTACT: Alexander Vogel and Daniel Werz
+SYSTEM: Gb3inPOPC_run1
+SOFTWARE_VERSION: null
+FF: CHARMM36m
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 2023
+FFSOL: TIP3
+CPT: null
+LOG: null
+TOP: null
+TRAJECTORY_SIZE: 1990411656
+TRJLENGTH: 7255000.0
+TEMPERATURE: 310.0
+NUMBER_OF_ATOMS: 74381
+DATEOFRUNNING: 26/02/2024
+TYPEOFSYSTEM: lipid bilayer
+WARNINGS:
+  SKIP_EQTIMES: null
