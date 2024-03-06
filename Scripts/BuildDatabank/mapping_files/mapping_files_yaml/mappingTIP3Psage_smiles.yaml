@@ -1,8 +1,0 @@
-# mapping file for water from smiles string "O" 
-
-M_O_M:
-  ATOMNAME: OW
-M_H1_M:
-  ATOMNAME: HW1
-M_H2_M:
-  ATOMNAME: HW2
