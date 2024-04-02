@@ -51,7 +51,7 @@ from scipy import signal
 
 sys.path.insert(1, "../BuildDatabank/")
 
-from databankLibrary import databank, download_link, lipids_dict
+from databankLibrary import databank, download_link, lipids_dict, download_resource_from_uri
 
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
@@ -191,12 +191,13 @@ class Parser:
         if not os.path.isfile(self.tpr_name):
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading tpr ", self.doi)
-            urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
-
+            #urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
+            download_resource_from_uri(self.tpr_url, self.tpr_name)
         if not os.path.isfile(self.trj_name):
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading trj ", self.doi)
-            urllib.request.urlretrieve(self.trj_url, self.trj_name)
+            #urllib.request.urlretrieve(self.trj_url, self.trj_name)
+            download_resource_from_uri(self.trj_url, self.trj_name)
 
     """
     Preparing trajectory. If centered trajectory is found, use it. If whole
@@ -444,13 +445,13 @@ class Topology:
         resnames = self.getLipidResnames()
         resnameDict = self.assignResnames(resnames)
         head_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[HEADGRP]}"
             ).residues
         ]
         sn_1_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN1]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
@@ -458,7 +459,7 @@ class Topology:
             ).residues
         ]
         sn_2_residues = [
-            r.atoms.select_atoms("not name H*")
+            r.atoms.select_atoms("not name H* and mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN2]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
