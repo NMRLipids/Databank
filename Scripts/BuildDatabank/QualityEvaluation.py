@@ -19,6 +19,7 @@ import scipy.signal
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
+from jsonEncoders import CompactJSONEncoder
 
 sys.path.insert(1, '../BuildDatabank/')
 from databankLibrary import download_link, lipids_dict, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
@@ -879,7 +880,7 @@ for simulation in simulations:
         #if data_dict and len(data_dict) > 0:
         try:
             with open(outfile1, 'w') as f:
-                json.dump(data_dict,f)
+                json.dump(data_dict,f, cls=CompactJSONEncoder)
             f.close()
         except:
             pass
