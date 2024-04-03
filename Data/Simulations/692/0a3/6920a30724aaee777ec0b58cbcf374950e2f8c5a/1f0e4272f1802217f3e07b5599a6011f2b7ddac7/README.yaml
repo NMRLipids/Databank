@@ -19,12 +19,12 @@ COMPOSITION:
     COUNT: 8859
 DIR_WRK: /media/osollila/Data/tmp/DATABANK/
 PUBLICATION: null
-AUTHORS_CONTACT: "Milla Lindstr\xF6m"
+AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
 SYSTEM: 200POPC_8859SOL_300K_run_with_demond_convert_gromacs
-SOFTWARE_VERSION: null
+SOFTWARE_VERSION: Desmond 2019-4
 FF: OPLS3e
-FF_SOURCE: null
-FF_DATE: null
+FF_SOURCE: Schrodinger, Inc.
+FF_DATE: 01/12/2020
 CPT:
 - - desmond_md_popc200lip500ns.cpt
 LOG: null
