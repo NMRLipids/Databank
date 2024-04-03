@@ -1,6 +1,6 @@
 #TIP3P from smiles string "O"
 M_O_M:
-  ATOMNAME: Ox1
+  ATOMNAME: O1x
 M_H1_M:
   ATOMNAME: H1x
 M_H2_M:
