@@ -1,0 +1,28 @@
+DOI: 10.5281/zenodo.6333548
+TRJ: centered_350-1000.xtc
+TPR: production.tpr
+
+SOFTWARE: gromacs
+PREEQTIME: 350
+TIMELEFTOUT: 0
+TEMPERATURE: 300
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Milla Kurki (Lindström)
+
+SYSTEM: POPС(300K, 5w/l, CHARMM36)
+SOFTWARE_VERSION: 2019.5
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/10/2020
+TOP: topol.top
