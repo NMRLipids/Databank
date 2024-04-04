@@ -512,6 +512,11 @@ gromacs_dict = {
         "TYPE": "file",
         "EXTENSION": ("gro",),
     },
+    "EDR": {
+        "REQUIRED": False,
+        "TYPE": "file",
+        "EXTENSION": ("edr",),
+    },
     "FF": {
         "REQUIRED": False,
         "TYPE": "string",
@@ -588,6 +593,14 @@ gromacs_dict = {
         "REQUIRED": False,
         "TYPE": "dictionary",
     },
+    "TYPEOFSYSTEM": {
+        "REQUIRED": False,
+        "TYPE": "string"
+    },
+    "BATCHID": {
+        "REQUIRED": False,
+        "TYPE": "string"
+    }
 }
 
 # Amber
