@@ -553,7 +553,8 @@ logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
 
 # Type of system is currently hard coded because only lipid bilayers are currently added.
 # When we go for other systems, this will be given by user.
-sim["TYPEOFSYSTEM"] = "lipid bilayer"
+if not "TYPEOFSYSTEM" in list(sim.keys()):
+    sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
 # # Save to databank
 
