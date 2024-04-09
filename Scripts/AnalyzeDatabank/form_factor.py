@@ -18,17 +18,19 @@ import os
 import yaml
 
 from databankLibrary import lipids_dict
+sys.path.append('../BuildDatabank')
+from jsonEncoders import CompactJSONEncoder
 
 
-# In[2]:
-
-# to write data in numpy arrays into json file
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
-        
+# To write data in numpy arrays into json file, we inherit compact JSON 
+# encoder to make him store 2xN numpy arrays as just a nested list
+class NumpyArrayEncoder(CompactJSONEncoder):
+    def encode(self, o):
+        if isinstance(o, np.ndarray):
+            return CompactJSONEncoder.encode(self, o.tolist())
+        else:
+            return CompactJSONEncoder.encode(self, o)
+ 
 def loadMappingFile(path_to_mapping_file):
     # load mapping file into a dictionary
     mapping_dict = {}
