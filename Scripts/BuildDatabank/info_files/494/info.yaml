@@ -22,10 +22,10 @@ COMPOSITION:
   MAPPING: mappingSPCwater.yaml
  SOD: 
   NAME: Na
-  MAPPING: mappingNa.yaml
+  MAPPING: mappingNA.yaml
  CLA: 
   NAME: Cl
-  MAPPING: mappingCl.yaml
+  MAPPING: mappingCL.yaml
 
 DIR_WRK: /home/lara/Databank
 

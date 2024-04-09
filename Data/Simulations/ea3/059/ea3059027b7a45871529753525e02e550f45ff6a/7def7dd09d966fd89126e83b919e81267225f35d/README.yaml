@@ -15,11 +15,11 @@ COMPOSITION:
     - 250
   SOD:
     NAME: Na+
-    MAPPING: mappingNa+.yaml
+    MAPPING: mappingNA+.yaml
     COUNT: 50
   CLA:
     NAME: Cl-
-    MAPPING: mappingCl-.yaml
+    MAPPING: mappingCL-.yaml
     COUNT: 50
   SOL:
     NAME: WAT

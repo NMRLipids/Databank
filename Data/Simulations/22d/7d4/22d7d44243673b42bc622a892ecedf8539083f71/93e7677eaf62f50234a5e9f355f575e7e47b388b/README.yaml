@@ -15,7 +15,7 @@ COMPOSITION:
     - 250
   SOD:
     NAME: Na+
-    MAPPING: mappingNa+.yaml
+    MAPPING: mappingNA+.yaml
     COUNT: 500
   SOL:
     NAME: WAT
