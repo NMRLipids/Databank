@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
-
 import re
 import MDAnalysis as mda
 import numpy as np
@@ -16,6 +14,7 @@ import gc
 gc.collect()
 import os
 import yaml
+from pprint import pprint
 
 from databankLibrary import lipids_dict
 sys.path.append('../BuildDatabank')
@@ -100,25 +99,6 @@ def filterHbonds(mapping_names):
     filtered = list(filter(re_H.match, mapping_names))
     
     return filtered
-
-#def listNamePairs(mapping_dict):
-#    pairs = []
-#    residues = []
-        
-#    for mapping_name in mapping_dict.keys():
-#        pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']])
-        
-#        try:
-#            residues.append(mapping_dict[mapping_name]['RESIDUE'])
-#        except KeyError:
-#            continue
-    
-#    if residues:
-#        residues = list(dict.fromkeys(residues))
-    
-    
-    
-#    return pairs, residues #returning a dictionary with residues as keys and lists as values maybe better?
 
 
 def listNamePairs(mapping_dict,molecule):
@@ -244,15 +224,15 @@ class FormFactor:
         return el
 
     def residueElectronsAll(self,molecule):
-        print(molecule)
-        "return list of electrons"
+        """
+        Return list of electrons
+        """
+        print("Gathering electron list for {molecule}")
         electrons = []
         #get the name of molecule used in simulation files
         molname = self.readme['COMPOSITION'][molecule]['NAME']
       
         pairs_residue = listNamePairs(self.system_mapping[molname], molname)
-        
-        #print(pairs_residue)
         
         # if lipid is split to multiple residues
         selection_txt = ""
@@ -261,24 +241,32 @@ class FormFactor:
             selection_txt = "moltype " + self.readme['COMPOSITION'][molecule]['MOLTYPE'] + " and "
         except KeyError:
             pass
-            
         
-        for res in pairs_residue.keys(): #KORJAA TOI res tossa explicit_atoms
-          #  print(res)                           #   when lipids are split into more than one residue in topology with same residue names e.g. PGR,PA,OL and PE, PA,OL
-                                                  #    u.select_atoms("resname " + res) does not distinguish which PA or PL belongs to POPG or POPE
+        for res in pairs_residue.keys(): # fix second res in explicit_atoms
+            # TODO: REPLACE THIS ENTIRE CODE WITH MDANALYSIS
+            # when lipids are split into more than one residue in topology with 
+            # same residue names e.g. PGR,PA,OL and PE, PA,OL then
+            # `u.select_atoms("resname " + res)` does not distinguish
+            # which PA or PL belongs to POPG or POPE
             selection_txt = selection_txt + "resname " + res
-            explicit_atoms = list(self.u.select_atoms(selection_txt).atoms.names) #explicit atoms of the residue
+            # explicit atoms of the residue
+            explicit_atoms = list(self.u.select_atoms(selection_txt).atoms.names) 
             for atom in explicit_atoms:
-                #find generic mapping name matching to forcefield atom name
-                index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
-                #print(atom, index_list)
-                #print(atom_i1)
-                atom_i1 = index_list.index(True)
-                #print(atom_i1)
+                # find generic mapping name matching to forcefield atom name
+                atom_i1 = None
+                for i in range(len(pairs_residue[res])):
+                    _cm = pairs_residue[res][i] # [UNIQUE_NAME, NAME] pair
+                    if re.match(_cm[1].replace('+', '\\+'), atom):
+                        atom_i1 = i
+                        break
+                assert(atom_i1 is not None)
+                # index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
+                # print (atom, pairs_residue[res])
+                # atom_i1 = index_list.index(True)
   
                 mapping_name = pairs_residue[res][atom_i1][0] 
-                e_atom_i = self.getElectrons(mapping_name) #get number of electrons in an atom i of residue
-                #print(mapping_name + " " + str(e_atom_i))
+                # get number of electrons in an atom i of residue
+                e_atom_i = self.getElectrons(mapping_name) 
                 electrons.append(e_atom_i)
 
     #    print(electrons)
@@ -383,20 +371,17 @@ class FormFactor:
         """
         start_time=time.time()
         if self.density_type=="electron":
-            #weights to calculate the electron density
-            self.wght, self.lipid_wght, self.water_wght = self.assignElectrons() # function that maps the electrons to atoms
+            # calc weights to calculate the electron density
+            # with the function that maps the electrons to atoms
+            self.wght, self.lipid_wght, self.water_wght = self.assignElectrons() 
             print("lenght of wght: " + str(len(self.wght)))
             print("lenght of lipid_wght: " + str(len(self.lipid_wght)))
-            #print(self.wght)
             print("atoms in system: " + str(len(self.u.atoms.names)))
             
             if len(self.wght) != len(self.u.atoms.names):
                 print("ERROR: Number of atoms mismatch")
-                print("ERROR: If lipids are split to many residues add moltype of lipids from tpr as 'MOLTYPE' to README.yaml under 'COMPOSITION'.")
-            
-           # print(self.lipid_wght)
-            #print(self.water_wght)
-            
+                print("ERROR: If lipids are split to many residues add moltype "                     
+                      "of lipids from tpr as 'MOLTYPE' to README.yaml under 'COMPOSITION'.")
            
         if self.density_type=="number":
             self.wght=np.ones(self.u.atoms.names.shape[0])
@@ -412,9 +397,6 @@ class FormFactor:
             cwaters = self.u.select_atoms(self.waters)
             self.lipid_wght=np.ones(cwaters.atoms.names.shape[0])           
         
-        #print(self.lipids)
-        #print(self.u.atoms.resnames)
-            
         print("Creating the electron mapping dictonary takes {:10.6f} s".format(time.time()-start_time))
         
         
@@ -511,8 +493,8 @@ class FormFactor:
                     #print(universalAN, self.getElectrons(universalAN))
 
 
-                    
-        print(ElectronNumbers)
+        print("ElectronNumbers dictionary: ")                    
+        pprint(ElectronNumbers)
                 
         for ts in self.u.trajectory:
             #count the index of the frame, numbered from 0, used to be used for the density profile averaging
@@ -571,35 +553,23 @@ class FormFactor:
             cwaters_center = (cwaters.atoms.positions[:,2] - box_z/2)/10
 
             if frame == 1:
-                weightsALL = []
-                for i in self.u.atoms:
-                    #print(i.resname)
-                    weightsALL.append(ElectronNumbers[i.resname][i.name])
+                print("Generating final electron arrays from frame #1..")
+                weightsALL = np.zeros(self.u.atoms.n_atoms)
 
-                weightsLIPIDS = []
-                for i in clipids.atoms:
-                    weightsLIPIDS.append(ElectronNumbers[i.resname][i.name])
+                for rname,AName2Enum in ElectronNumbers.items():
+                    for aname,enum in AName2Enum.items():
+                        # all
+                        cSel = self.u.select_atoms(f"resname {rname} and name {aname}")
+                        weightsALL[ [_a.index for _a in cSel ] ] = enum
 
-                weightsWATERS = []
-                for i in cwaters.atoms:
-                    weightsWATERS.append(ElectronNumbers[i.resname][i.name])
+                weightsLIPIDS = weightsALL[ [_a.index for _a in clipids] ]
+                weightsWATERS = weightsALL[ [_a.index for _a in cwaters] ]
+                print("done.")
 
-                
-                #print(self.u.atoms)
-            #print(weights)
-            
-         #   water_wght=np.ones(cwaters.atoms.names.shape[0])
             
             """calculates the volume of the bin; d- the "height" of a bin; assumes in [nm] """
             # ts.dimension[0], ts.dimension[1] - the x and y dimension; in [A] --> devides by 100
             vbin = d*np.prod(ts.dimensions[:2])/100 #needed for density, correct!
-            
-            #start_time2=time.time()
-
-            
-                
-            
-            
             
             """Do running ff - seems to produce consistent results""" #we will not use now           
             #box_z /= 10 #gets the box-z size in nm
@@ -810,13 +780,3 @@ class FormFactor:
 
         return fa, fb
  
-               
-
-
-# In[84]:
-
-
-#new format
-#FormFactor('pops_k.gro',"pops_k.xtc",200,5,'pops_k_test_density',"resname POPS","name P","number")
-#FormFactor('prod.tpr',"centered.xtc",200,5,'new_test_frame40')
-
