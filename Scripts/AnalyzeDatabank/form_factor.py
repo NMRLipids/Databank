@@ -19,6 +19,7 @@ from pprint import pprint
 from databankLibrary import lipids_dict
 sys.path.append('../BuildDatabank')
 from jsonEncoders import CompactJSONEncoder
+from tqdm import tqdm
 
 
 # To write data in numpy arrays into json file, we inherit compact JSON 
@@ -227,7 +228,7 @@ class FormFactor:
         """
         Return list of electrons
         """
-        print("Gathering electron list for {molecule}")
+        print(f"Gathering electron list for {molecule}")
         electrons = []
         #get the name of molecule used in simulation files
         molname = self.readme['COMPOSITION'][molecule]['NAME']
@@ -495,15 +496,29 @@ class FormFactor:
 
         print("ElectronNumbers dictionary: ")                    
         pprint(ElectronNumbers)
-                
-        for ts in self.u.trajectory:
+        
+        # define selections and dictionaries for profile calculations
+        clipids = self.u.select_atoms(self.lipids)
+        cwaters = self.u.select_atoms(self.waters)
+
+        print("Generating final electron arrays from frame #1..", end='')
+        weightsALL = np.zeros(self.u.atoms.n_atoms)
+
+        for rname,AName2Enum in ElectronNumbers.items():
+            for aname,enum in AName2Enum.items():
+                # all
+                cSel = self.u.select_atoms(f"resname {rname} and name {aname}")
+                weightsALL[ [_a.index for _a in cSel ] ] = enum
+
+        weightsLIPIDS = weightsALL[ [_a.index for _a in clipids] ]
+        weightsWATERS = weightsALL[ [_a.index for _a in cwaters] ]
+        print("done.")
+        
+        print("Starting interating over the trajectory..")
+        for ts in tqdm(self.u.trajectory):
             #count the index of the frame, numbered from 0, used to be used for the density profile averaging
             #posible not needed now
             frame += 1 #ts.frame
-            #print(frame)
-      
-            
-
             
             #reads the dimension in z-direction
             box_z = ts.dimensions[2]
@@ -541,8 +556,6 @@ class FormFactor:
             #therefore it may brake some of the water molecules; try it, come to the issue later"""
             self.u.atoms.pack_into_box()
 
-            clipids = self.u.select_atoms(self.lipids)
-            cwaters = self.u.select_atoms(self.waters)
 
             #print(self.lipids)
             
@@ -552,21 +565,6 @@ class FormFactor:
             clipids_center = (clipids.atoms.positions[:,2] - box_z/2)/10
             cwaters_center = (cwaters.atoms.positions[:,2] - box_z/2)/10
 
-            if frame == 1:
-                print("Generating final electron arrays from frame #1..")
-                weightsALL = np.zeros(self.u.atoms.n_atoms)
-
-                for rname,AName2Enum in ElectronNumbers.items():
-                    for aname,enum in AName2Enum.items():
-                        # all
-                        cSel = self.u.select_atoms(f"resname {rname} and name {aname}")
-                        weightsALL[ [_a.index for _a in cSel ] ] = enum
-
-                weightsLIPIDS = weightsALL[ [_a.index for _a in clipids] ]
-                weightsWATERS = weightsALL[ [_a.index for _a in cwaters] ]
-                print("done.")
-
-            
             """calculates the volume of the bin; d- the "height" of a bin; assumes in [nm] """
             # ts.dimension[0], ts.dimension[1] - the x and y dimension; in [A] --> devides by 100
             vbin = d*np.prod(ts.dimensions[:2])/100 #needed for density, correct!
