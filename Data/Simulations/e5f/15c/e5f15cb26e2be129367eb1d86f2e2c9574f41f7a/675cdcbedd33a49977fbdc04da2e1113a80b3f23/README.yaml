@@ -24,7 +24,7 @@ COMPOSITION:
     - 13
   SOD:
     NAME: Na
-    MAPPING: mappingNa.yaml
+    MAPPING: mappingNA.yaml
     COUNT: 26
   SOL:
     NAME: SOL
