@@ -40,13 +40,13 @@ COMPOSITION:
 
   NAME: Na
 
-  MAPPING: mappingNa.yaml
+  MAPPING: mappingNA.yaml
 
  CLA:
 
   NAME: Cl
 
-  MAPPING: mappingCl.yaml
+  MAPPING: mappingCL.yaml
 
  SOL:
 
