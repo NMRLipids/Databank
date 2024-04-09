@@ -11,6 +11,9 @@ expbank_path = '../../Data/experiments'
 lipid_numbers_list =  lipids_dict.keys() # should contain all lipid names
 ions_list = ['POT', 'SOD', 'CLA', 'CAL'] # should contain names of all ions
 
+LIP_CONC_REL_THRESHOLD = 0.15 # relative acceptable error for determination of 
+                              # the hydration in ssNMR
+
 class Data:
     def __init__(self, molecule, data_path):
         self.molecule = molecule
@@ -274,8 +277,8 @@ def findPairs(experiments, simulations):
             
                 if ( (type(exp_total_lipid_concentration) == float) and 
                      (type(sim_total_lipid_concentration) == float) ):
-                    if ( (exp_total_lipid_concentration >= sim_total_lipid_concentration - 0.1) and 
-                         (exp_total_lipid_concentration <= sim_total_lipid_concentration + 0.1) ):
+                    if ( (exp_total_lipid_concentration / sim_total_lipid_concentration > 1 - LIP_CONC_REL_THRESHOLD) and 
+                         (exp_total_lipid_concentration / sim_total_lipid_concentration < 1 + LIP_CONC_REL_THRESHOLD) ):
                         switch = 1
                 elif ( (type(exp_total_lipid_concentration) == str) and 
                        (type(sim_total_lipid_concentration) == str) ):
