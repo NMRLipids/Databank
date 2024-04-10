@@ -1,11 +1,11 @@
-DOI: 10.5281/zenodo.6582985
+DOI: 10.5281/zenodo.10183982
 SOFTWARE: gromacs
 TRJ:
-- - popchydr44_0-500ns.xtc
+- - popchysr44_0-500ns_step10ps.xtc
 TPR:
 - - analyze.tpr
 PREEQTIME: 0
-TIMELEFTOUT: 0
+TIMELEFTOUT: 100
 COMPOSITION:
   POPC:
     NAME: POPC
@@ -17,7 +17,7 @@ COMPOSITION:
     NAME: SPC
     MAPPING: mappingwaterlipid14.yaml
     COUNT: 8859
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: set-via-console
 PUBLICATION: null
 AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
 SYSTEM: 200POPC_8859SOL_300K_run_with_demond_convert_gromacs
@@ -33,10 +33,10 @@ TOP:
 GRO:
 - - desmond_md_popc200lip500ns-in_converted.gro
 TRAJECTORY_SIZE: 9968773016
-TRJLENGTH: 4998.7000744864345
+TRJLENGTH: 499870.0
 TEMPERATURE: 300.0
 NUMBER_OF_ATOMS: 53377
-DATEOFRUNNING: 29/05/2022
+DATEOFRUNNING: 08/04/2024
 TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
@@ -46,4 +46,3 @@ EXPERIMENT:
   FORMFACTOR: unpublished/NMRlipidsIII/1
 WARNINGS:
   TIMESTEP: incorrect
-ID: 1
