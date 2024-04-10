@@ -1,0 +1,40 @@
+DOI: 10.5281/zenodo.10908508
+SOFTWARE: gromacs
+TRJ:
+- - centered_pbcmol-210-500.xtc
+TPR:
+- - production.tpr
+PREEQTIME: 200
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 1500
+DIR_WRK: set-from-console
+PUBLICATION: null
+AUTHORS_CONTACT: Milla Kurki
+SYSTEM: 200POPC_1500SOL_300K
+SOFTWARE_VERSION: 2022.4
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 03/2024
+CPT:
+- - production.cpt
+LOG: null
+TOP:
+- - topol.top
+GRO:
+- - production.gro
+TRAJECTORY_SIZE: 3359147172
+TRJLENGTH: 290010.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 31300
+DATEOFRUNNING: 07/04/2024
+TYPEOFSYSTEM: lipid bilayer
