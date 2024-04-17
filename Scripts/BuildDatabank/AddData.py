@@ -553,7 +553,8 @@ logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
 
 # Type of system is currently hard coded because only lipid bilayers are currently added.
 # When we go for other systems, this will be given by user.
-sim["TYPEOFSYSTEM"] = "lipid bilayer"
+if not "TYPEOFSYSTEM" in list(sim.keys()):
+    sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
 # # Save to databank
 
@@ -577,7 +578,7 @@ shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
 outfileDICT = os.path.join(dir_tmp, "README.yaml")
 
 with open(outfileDICT, "w") as f:
-    yaml.dump(sim, f, sort_keys=False)
+    yaml.dump(sim, f, sort_keys=False, allow_unicode=True)
     shutil.copyfile(
         os.path.join(dir_tmp, "README.yaml"),
         os.path.join(directory_path, "README.yaml"),
