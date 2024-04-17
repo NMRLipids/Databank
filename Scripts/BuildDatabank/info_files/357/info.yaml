@@ -18,7 +18,7 @@ COMPOSITION:
   MAPPING: mappingNA+.yaml
  CLA:
   NAME: Cl-
-  MAPPING: mappingCl-.yaml
+  MAPPING: mappingCL-.yaml
  SOL:
   NAME: WAT
   MAPPING: mappingTIP3Plipid17.yaml
