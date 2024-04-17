@@ -35,7 +35,7 @@ for system in systems:
         #print(READMEpath)
         system.pop('path',None)
         with open(READMEpath, 'w') as f:
-            yaml.dump(system,f, sort_keys=False)
+            yaml.dump(system,f, sort_keys=False, allow_unicode=True)
         IDs.append(system['ID'])
         print(READMEpath, NewID)
         

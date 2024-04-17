@@ -512,6 +512,11 @@ gromacs_dict = {
         "TYPE": "file",
         "EXTENSION": ("gro",),
     },
+    "EDR": {
+        "REQUIRED": False,
+        "TYPE": "file",
+        "EXTENSION": ("edr",),
+    },
     "FF": {
         "REQUIRED": False,
         "TYPE": "string",
@@ -588,6 +593,14 @@ gromacs_dict = {
         "REQUIRED": False,
         "TYPE": "dictionary",
     },
+    "TYPEOFSYSTEM": {
+        "REQUIRED": False,
+        "TYPE": "string"
+    },
+    "BATCHID": {
+        "REQUIRED": False,
+        "TYPE": "string"
+    }
 }
 
 # Amber
@@ -2227,7 +2240,7 @@ def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
     if not all(
         (k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys
     ):
-        missing_keys = [k for k in list(sim.keys()) if k not in software_required_keys]
+        missing_keys = [k for k in software_required_keys if k not in list(sim.keys()) ]
         raise YamlBadConfigException(
             f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or not defined in conf file: {', '.join(missing_keys)}"
         )
