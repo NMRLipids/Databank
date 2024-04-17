@@ -24,7 +24,7 @@ COMPOSITION:
     - 4
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.yaml
+    MAPPING: mappingCL.yaml
     COUNT: 8
   SOL:
     NAME: SOL

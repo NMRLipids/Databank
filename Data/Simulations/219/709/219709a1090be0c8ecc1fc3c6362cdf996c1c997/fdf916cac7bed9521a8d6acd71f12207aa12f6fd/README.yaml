@@ -24,11 +24,11 @@ COMPOSITION:
     - 48
   SOD:
     NAME: Na
-    MAPPING: mappingNa.yaml
+    MAPPING: mappingNA.yaml
     COUNT: 49
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.yaml
+    MAPPING: mappingCL.yaml
     COUNT: 145
   SOL:
     NAME: SOL

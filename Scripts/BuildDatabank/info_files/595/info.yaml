@@ -19,7 +19,7 @@ COMPOSITION:
   MAPPING: mappingDMTAPberger.yaml
  CLA:
   NAME: Cl
-  MAPPING: mappingCl.yaml
+  MAPPING: mappingCL.yaml
  SOL:
   NAME: SOL 
   MAPPING: mappingSPCwater.yaml

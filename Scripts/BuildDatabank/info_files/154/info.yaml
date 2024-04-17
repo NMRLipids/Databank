@@ -27,7 +27,7 @@ COMPOSITION:
     MAPPING: mappingTIP3Pwater.yaml
   CAL:
     NAME: Cal
-    MAPPING: mappingCal.yaml
+    MAPPING: mappingCAL.yaml
   CLA:
     NAME: CL
     MAPPING: mappingCL.yaml

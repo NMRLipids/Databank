@@ -19,7 +19,7 @@ COMPOSITION:
   MAPPING: mappingPOPSberger.yaml
  SOD: 
   NAME: Na
-  MAPPING: mappingNa.yaml
+  MAPPING: mappingNA.yaml
  SOL:
   NAME: SOL 
   MAPPING: mappingSPCwater.yaml 

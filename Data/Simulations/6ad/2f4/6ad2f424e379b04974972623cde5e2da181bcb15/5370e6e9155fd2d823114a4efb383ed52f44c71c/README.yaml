@@ -21,11 +21,11 @@ COMPOSITION:
     COUNT: 2864
   SOD:
     NAME: Na
-    MAPPING: mappingNa.yaml
+    MAPPING: mappingNA.yaml
     COUNT: 8
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.yaml
+    MAPPING: mappingCL.yaml
     COUNT: 8
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
