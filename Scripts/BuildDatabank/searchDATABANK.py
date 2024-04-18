@@ -2,7 +2,7 @@ import os
 import yaml
 import json
 
-from databankLibrary import lipids_dict
+from databankLibrary import ( lipids_dict )
 from tqdm import tqdm
 
 databank_path = '../../Data/Simulations'
@@ -195,8 +195,10 @@ def loadExperiments(experimentType):
         dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
         dataFile = '_FormFactor.json'
+    elif experimentType == 'Isoterms':
+        dataFile = '_Isoterm.json'
     else:
-        raise NotImplementedError("Only OrderParameters and FormFactors types are implemented.")
+        raise NotImplementedError("Only OrderParameters, FormFactors and Isoterms types are implemented.")
 
     print("Build experiments [%s] index..." % experimentType, end='')
     rmIdx = []
@@ -214,7 +216,6 @@ def loadExperiments(experimentType):
         READMEfilepathExperiment = os.path.join(subdir, 'README.yaml')
         with open(READMEfilepathExperiment) as yaml_file_exp:
             readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-        opData = {}
 
         for fname in os.listdir(subdir):
             dataPath = os.path.join(subdir, fname)
@@ -223,13 +224,16 @@ def loadExperiments(experimentType):
                 if experimentType == "OrderParameters":
                     molecule_name = fname.replace(dataFile,'')
                 elif experimentType == "FormFactors": 
-                    molecule_name = 'system'   
+                    molecule_name = 'system' 
+                elif experimentType == "Isoterms":
+                    molecule_name = 'monolayer' 
                 expData = Data(molecule_name, dataPath)
                 experiments.append(Experiment(readmeExp, expData, subdir, experimentType))
           
     return experiments
  
 def findPairs(experiments, simulations):
+    
     pairs = []
     for simulation in tqdm(simulations, desc='Simulation'):
         sim_lipids = simulation.getLipids()
@@ -258,6 +262,7 @@ def findPairs(experiments, simulations):
                 
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
+                
                 # compare molar fractions
                 mf_ok = 0
                 for key in sim_lipids:
@@ -280,6 +285,7 @@ def findPairs(experiments, simulations):
                     if ( (exp_total_lipid_concentration / sim_total_lipid_concentration > 1 - LIP_CONC_REL_THRESHOLD) and 
                          (exp_total_lipid_concentration / sim_total_lipid_concentration < 1 + LIP_CONC_REL_THRESHOLD) ):
                         switch = 1
+                        
                 elif ( (type(exp_total_lipid_concentration) == str) and 
                        (type(sim_total_lipid_concentration) == str) ):
                     if exp_total_lipid_concentration == sim_total_lipid_concentration:
@@ -289,22 +295,42 @@ def findPairs(experiments, simulations):
                     #check temperature +/- 2 degrees
                     t_exp = experiment.readme['TEMPERATURE']
                     
+                    # If no temperature is available, include it anyways
+                    try:
+                        float(t_exp)
+                    except:
+                        t_exp = t_sim
+                    
                     if ( (mf_ok == len(sim_lipids)) and 
                          (c_ok == len(sim_ions)) and 
                          (t_exp >= float(t_sim) - 2.0) and 
                          (t_exp <= float(t_sim) + 2.0) ):
-                        # !we found the match!
-                        pairs.append([simulation, experiment])
-
-                        # Add path to experiment into simulation README.yaml
-                        # many experiment entries can match to same simulation
-                        exp_doi = experiment.readme['DOI'] 
-                        exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(expbank_path, experiment.exptype))
-                        if experiment.exptype == "OrderParameters":
-                            lipid = experiment.data.molecule
-                            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
-                        elif experiment.exptype == "FormFactors":
-                            simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
+                        
+                        if not ( "TYPEOFSYSTEM" in simulation.readme.keys() ):
+                            simulation.readme["TYPEOFSYSTEM"] = "lipid bilayer"
+                        if not ( "TYPEOFSYSTEM" in experiment.readme.keys() ):
+                            experiment.readme["TYPEOFSYSTEM"] = "lipid bilayer"
+                            
+                            
+                        if simulation.readme["TYPEOFSYSTEM"] == experiment.readme["TYPEOFSYSTEM"]:  
+                            # !we found the match!
+                            pairs.append([simulation, experiment])
+    
+                            # Add path to experiment into simulation README.yaml
+                            # many experiment entries can match to same simulation
+                            exp_doi = experiment.readme['DOI'] 
+                            exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(expbank_path, experiment.exptype))
+                            if experiment.exptype == "OrderParameters":
+                                lipid = experiment.data.molecule
+                                simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
+                            elif experiment.exptype == "FormFactors":
+                                simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
+                            elif experiment.exptype == "Isoterms":
+                                simulation.readme['EXPERIMENT']['ISOTERMS'] = exp_path
+                                
+                        else:
+                            continue
+                        
                     else:
                         continue
         
@@ -365,6 +391,7 @@ def main():
         simulation.readme['EXPERIMENT'] = {}
         simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
         simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
+        simulation.readme['EXPERIMENT']['ISOTERMS']= {}
         for lipid in simulation.getLipids():
             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
         
@@ -374,6 +401,7 @@ def main():
 
     experimentsOrderParameters = loadExperiments('OrderParameters')
     experimentsFormFactors = loadExperiments('FormFactors')
+    experimentsIsoterms = loadExperiments('Isoterms')
 
     # Pair each simulation with an experiment with the closest matching temperature and composition
     with open('search-databank-pairs.log', 'w') as logf:
@@ -385,6 +413,11 @@ def main():
         pairsFF = findPairs(experimentsFormFactors, simulations)
         logf.write("=== FF PAIRS ===\n")
         logPairs(pairsFF, logf)
+        print("Scanning simulation-experiment pairs among p-A isoterms experiments.")
+        pairsPA = findPairs(experimentsIsoterms, simulations)
+        logf.write("=== pA PAIRS ===\n")
+        logPairs(pairsPA, logf)
+
 
     '''
     for pair in pairsFF:
@@ -397,6 +430,7 @@ def main():
 
     print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
     print("Found form factor data for " + str(len(pairsFF)) + " pairs")
+    print("Found p-A isoterm data for " + str(len(pairsPA)) + " pairs")
 
 if __name__ == "__main__":
     main()
