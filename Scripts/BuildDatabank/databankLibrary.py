@@ -1619,3 +1619,49 @@ def getpA_isoterm(batch):
         isoterm.sort( key= lambda x: x[0] )
         
     return isoterm
+
+
+def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
+    """
+    Compute the X-ray reflectometry for a system given its electron density
+    
+    :param Dens: a list with the electon density
+    
+    :param z: the coordinates of the electron density
+    
+    :param qz_range: the range of values of the wavevector transfer
+    
+    :param Densw: value of the electron density for the water, in  Å^-1. Default is 0.333
+    
+    :param wl: wavelenght of the X-ray source, in Å. Default is 1.5
+    
+    :param Norm: divide by the Fresnel reflectivity. Default is False
+
+    :return: list of X-ray reflectometry values at qz_range
+    """
+    
+    Dens = np.array(Dens)
+    Z = np.array(Z)
+    
+    # Critical value
+    qc = 4*np.pi/wl*np.sin(wl*(Densw*2.814e-5/np.pi)**0.5)
+    
+    # Gradient of the density
+    DDens = ( Dens[1:] - Dens[:-1] ) / (Z[1]-Z[0])
+    
+    Re = np.zeros(len(qz_range))
+    Im = np.zeros(len(qz_range))
+    cq = np.zeros(len(qz_range))
+    for i, qz in enumerate(qz_range):    
+        qzp = (qz**2-qc**2)**0.5
+        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z[:-1] ) ) * (Z[1]-Z[0])
+        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z[:-1] ) ) * (Z[1]-Z[0])
+        cq[i] = abs( (qz-qzp) / (qz+qzp) )
+        
+    Re /= Densw
+    Im /= Densw
+    
+    if Norm:
+        return  Re**2 + Im**2
+    else:
+        return  cq**2 * ( Re**2 + Im**2 )
