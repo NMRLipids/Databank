@@ -1565,3 +1565,57 @@ def getHydrationLevel(system):
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     Nwater = system['COMPOSITION']['SOL']['COUNT']
     return Nwater/Nlipid
+
+
+def getBatch(batchID,systems=None):
+    """
+    Returns a dictionary with the systems with the same batch ID
+    
+    :param system: a system dictionary
+    
+    :return: list of systems with the same batch ID
+    """
+    
+    if systems is None:
+        DataBankPath =  os.path.dirname(os.path.realpath(__file__)) + '/../../'
+        systems = initialize_databank(DataBankPath)
+
+    batch = []
+
+    for system in systems:
+        if "BATCHID" in system:
+            if system["BATCHID"] == batchID:
+                batch.append( system )
+                
+    return batch
+
+
+def getpA_isoterm(batch):
+    """
+    Returns the surface tension v. area per lipid values for a batch of simulations
+    
+    :param batch: a list of systems
+    
+    :return: area per lipid and surface tension for the simulations in the batch
+    """
+    
+    isoterm = []
+    for system in batch:
+        afile = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + "apl.json"
+        sfile = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + "surft.json"
+        #afile = './../../Data/Simulations/' + system['path'] + "apl.json"
+        #sfile = './../../Data/Simulations/' + system['path'] + "surft.json"
+        if os.path.isfile( afile ) and os.path.isfile( sfile ):
+            with open( sfile ) as json_file:
+                sdata = json.load(json_file)
+            
+            with open( afile ) as json_file:
+                adata = json.load(json_file)
+            
+            isoterm.append( ( np.mean( list(adata.values()) ),
+                              np.mean( list(sdata.values()) ) ) )
+        
+    if len(isoterm):
+        isoterm.sort( key= lambda x: x[0] )
+        
+    return isoterm
