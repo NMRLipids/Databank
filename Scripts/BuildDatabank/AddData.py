@@ -132,6 +132,29 @@ else:
         pp.pprint(sim)
 
 
+# Check if the same BATCHID already exists
+if "BATCHID" in sim.keys():
+    
+    systems = initialize_databank(databankPath)
+    
+    batchid_list = set( [ system["BATCHID"] for system in systems if "BATCHID" in system.keys() ] )
+    
+    # If there is a previous simulation with the same BATCHID give the user 
+    # the option to add or not the data
+    if sim["BATCHID"] in batchid_list:
+        print("The databank contains simulations with the same BATCHID.")
+        while True:
+            option = input("Do you want to continue? [y]es/[n]o/[p]rint systems\n")
+            if option == "y":
+                break
+            elif option == "n":
+                sys.exit(1)
+            else:
+                batch = getBatch( sim["BATCHID"], systems=systems )
+                for system in batch:
+                    print( system, "\n" )
+
+
 # Create temporary directory where to download files and analyze them
 
 if args.work_dir:
