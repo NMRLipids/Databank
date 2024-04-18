@@ -4,6 +4,7 @@
 
 # Working with files and directories
 import os
+import sys
 import argparse
 import yaml
 import logging
@@ -40,8 +41,12 @@ from databankLibrary import (
     download_resource_from_uri,
     parse_valid_config_settings,
     resolve_download_file_url,
+    initialize_databank,
+    getBatch
 )
 
+databankPath = '../../'
+sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
 
 # for building hydrogens to united atom simulations
 
@@ -125,6 +130,7 @@ else:
     pp = pprint.PrettyPrinter(width=41, compact=True)
     if logger.isEnabledFor(logging.DEBUG):
         pp.pprint(sim)
+
 
 # Create temporary directory where to download files and analyze them
 
@@ -271,10 +277,13 @@ logger.info(
 
 top = ""
 traj = ""
+edr = ""
 
 if sim["SOFTWARE"] == "gromacs":
     top = os.path.join(dir_tmp, sim["TPR"][0][0])
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
+    if "EDR" in sim.keys():
+        edr = os.path.join(dir_tmp, sim["EDR"][0][0])
 elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
     traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
     top = os.path.join(dir_tmp, sim["PDB"][0][0])
@@ -573,6 +582,8 @@ logger.info(f"saving results to '{directory_path}'")
 logger.info("copying previously downloaded files ...")
 shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
 shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
+if edr:
+    shutil.copyfile(edr, os.path.join(directory_path, os.path.basename(edr)))
 
 # dictionary saved in yaml format
 outfileDICT = os.path.join(dir_tmp, "README.yaml")
