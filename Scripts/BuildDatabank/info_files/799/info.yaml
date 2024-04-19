@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.10931212
+
+SOFTWARE: gromacs
+TRJ: popc_12wl_opls4_50-500ns.xtc
+TPR: analyze.tpr
+PREEQTIME: 50
+TIMELEFTOUT: 50
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPC-OPLS4.yaml
+ SOL:
+  NAME: SPC
+  MAPPING: mappingwaterlipid14.yaml
+ 
+DIR_WRK: /set-in-console
+
+PUBLICATION:
+AUTHORS_CONTACT: Milla Kurki (Lindström)
+
+SYSTEM: 200POPC_2400SOL_300K
+SOFTWARE_VERSION: Desmond 2022-2
+
+FF: OPLS4
+FF_SOURCE: Schrodinger, Inc.
+FF_DATE: 01/01/2024
+
+CPT: desmond_md_popc_12wl.cpt
+LOG:
+TOP: structure.top
+GRO: popc_12wl_opls4.gro
