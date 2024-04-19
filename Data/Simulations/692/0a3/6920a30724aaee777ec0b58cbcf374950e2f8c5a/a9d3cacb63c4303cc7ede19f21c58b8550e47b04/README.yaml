@@ -19,7 +19,7 @@ COMPOSITION:
     COUNT: 8859
 DIR_WRK: set-via-console
 PUBLICATION: null
-AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
+AUTHORS_CONTACT: Milla Kurki (Lindström)
 SYSTEM: 200POPC_8859SOL_300K_run_with_demond_convert_gromacs
 SOFTWARE_VERSION: Desmond 2019-4
 FF: OPLS3e
@@ -46,3 +46,4 @@ EXPERIMENT:
   FORMFACTOR: unpublished/NMRlipidsIII/1
 WARNINGS:
   TIMESTEP: incorrect
+ID: 805
