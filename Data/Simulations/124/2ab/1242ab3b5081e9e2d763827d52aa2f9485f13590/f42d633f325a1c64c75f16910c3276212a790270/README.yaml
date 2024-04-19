@@ -19,7 +19,7 @@ COMPOSITION:
     COUNT: 2400
 DIR_WRK: /set-in-console
 PUBLICATION: null
-AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
+AUTHORS_CONTACT: Milla Kurki (Lindström)
 SYSTEM: 200POPC_2400SOL_300K
 SOFTWARE_VERSION: Desmond 2022-2
 FF: OPLS4
@@ -43,3 +43,4 @@ EXPERIMENT:
     POPC:
       unpublished/nesterenkoPOPC: unpublished/nesterenkoPOPC/3
   FORMFACTOR: {}
+ID: 804
