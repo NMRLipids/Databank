@@ -4,4 +4,5 @@ python calc_FormFactors.py
 python calc_thickness.py
 python calcSurfaceTension.py
 python calcEDens.py
+python calcNSDens.py
 python NMRPCA_timerelax.py
