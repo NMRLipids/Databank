@@ -23,6 +23,9 @@ if len(sys.argv)-1:
         print( "Analysis will be parallelized" )
         Parallel = True
 
+
+
+
 if __name__ == "__main__":
     
     # It is not the same as in FormFactor.py !
@@ -38,8 +41,6 @@ if __name__ == "__main__":
     from databankLibrary import ( initialize_databank, lipids_dict )
 
     systems = initialize_databank(databankPath)
-    #systems = [ system for system in systems if system["path"]=="0c7/33d/0c733dce5d09ee8b1f66ba847183f7f2329ba4a2/1a60d0f1be4b69b95bcf23fbe207c20e96e2d341/" ]
-
     
     def getElectrons(mapping_name):
         # From FormFactor.py
@@ -155,11 +156,17 @@ if __name__ == "__main__":
                         Coords_lip = np.hstack( [  ref_UL - UL.positions[:,2],
                                                    LL.positions[:,2] - ref_LL  ] )   
                         
+                        # The lipids will be associated to negative values of the position
+                        coef = -1 if np.sign( np.mean(Coords_lip) )>0 else 1
+                        Coords_lip *= coef
+                        
                         Waters = u.select_atoms( f"resname {system['COMPOSITION']['SOL']['NAME']}" )
                         
                         # Water coodinates (duplicated and relative to both leaflets)
                         Coords_wat = np.hstack( [  ref_UL - Waters.positions[:,2],
                                                    Waters.positions[:,2] - ref_LL ] )  
+                        Coords_wat *= coef
+                        Coords_wat += u.dimensions[2]*(Coords_wat<-(max(Coords_lip)-min(Coords_lip)))
                         
                         # Ion coordinates
                         if ions:
@@ -167,6 +174,9 @@ if __name__ == "__main__":
                             
                             Coords_ion = np.hstack( [  ref_UL - Ions.positions[:,2],
                                                        Ions.positions[:,2] - ref_LL ] )  
+                            
+                            Coords_ion *= coef
+                            Coords_ion += u.dimensions[2]*(Coords_ion<-(max(Coords_lip)-min(Coords_lip)))
                         
                         # Generate a slicing of the space
                         if first:
@@ -211,15 +221,11 @@ if __name__ == "__main__":
                     Dens_l += dens[0]
                     Dens_w += dens[1]
                     Dens_i += dens[2]
-                    
                 
                     # Divide by the number of frames, the volume of the slice and 2, because of counting twice
                     Dens_l /= 2 * len( u.trajectory[frames_to_skip:] ) * ( u.trajectory[-1].dimensions[0] * u.trajectory[-1].dimensions[1] * (bins[1]-bins[0]) )
                     Dens_w /= 2 * len( u.trajectory[frames_to_skip:] ) * ( u.trajectory[-1].dimensions[0] * u.trajectory[-1].dimensions[1] * (bins[1]-bins[0]) )
                     Dens_i /= 2 * len( u.trajectory[frames_to_skip:] ) * ( u.trajectory[-1].dimensions[0] * u.trajectory[-1].dimensions[1] * (bins[1]-bins[0]) )
-                
-                    # Total electron density
-                    Dens = Dens_l + Dens_w + Dens_i
                     
                     EDensData = { z: [ dens_l, dens_w, dens_i ] for z, dens_l, dens_w, dens_i in zip( bins, Dens_l, Dens_w, Dens_i ) }
                     
