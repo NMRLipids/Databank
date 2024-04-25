@@ -150,13 +150,19 @@ if __name__ == "__main__":
                         ref_LL = np.mean( LL.select_atoms( " or ".join( [ f"( resname {resname} and name {name} )" for resname, name in ref.items() ] ) ).positions[:,2] ) # max( LL.positions[:,2] )
                         
                         Coords_lip = np.hstack( [  ref_UL - UL.positions[:,2],
-                                                   LL.positions[:,2] - ref_LL  ] )   
+                                                   LL.positions[:,2] - ref_LL  ] )  
+                        
+                        # The lipids will be associated to negative values of the position
+                        coef = -1 if np.sign( np.mean(Coords_lip) )>0 else 1
+                        Coords_lip *= coef
                         
                         Waters = u.select_atoms( f"resname {system['COMPOSITION']['SOL']['NAME']}" )
                         
                         # Water coodinates (duplicated and relative to both leaflets)
                         Coords_wat = np.hstack( [  ref_UL - Waters.positions[:,2],
                                                    Waters.positions[:,2] - ref_LL ] )  
+                        Coords_wat *= coef
+                        Coords_wat += u.dimensions[2]*(Coords_wat<-(max(Coords_lip)-min(Coords_lip)))
                         
                         # Ion coordinates
                         if ions:
@@ -164,6 +170,8 @@ if __name__ == "__main__":
                             
                             Coords_ion = np.hstack( [  ref_UL - Ions.positions[:,2],
                                                        Ions.positions[:,2] - ref_LL ] )  
+                            Coords_ion *= coef
+                            Coords_ion += u.dimensions[2]*(Coords_ion<-(max(Coords_lip)-min(Coords_lip)))
                         
                         # Generate a slicing of the space
                         if first:
