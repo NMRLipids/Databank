@@ -1,0 +1,30 @@
+DOI: 10.5281/zenodo.10949663
+SOFTWARE: gromacs
+
+TRJ: production.xtc
+TPR: production.tpr 
+PREEQTIME: 0
+TIMELEFTOUT: 100
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: set-from-console
+PUBLICATION:
+AUTHORS_CONTACT: Milla Kurki
+SYSTEM: 200DMPC_10kSOL_300K
+SOFTWARE_VERSION: 2022.2 
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 10/2023
+
+CPT: production.cpt
+LOG: 
+TOP: topol.top
+GRO: production.gro

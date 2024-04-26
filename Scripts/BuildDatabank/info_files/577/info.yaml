@@ -1,10 +1,10 @@
-DOI: 10.5281/zenodo.6582985
+DOI: 10.5281/zenodo.10183982
 
 SOFTWARE: gromacs
-TRJ: popchydr44_0-500ns.xtc
+TRJ: popchysr44_0-500ns_step10ps.xtc
 TPR: analyze.tpr
 PREEQTIME: 0
-TIMELEFTOUT: 0
+TIMELEFTOUT: 100
 
 COMPOSITION:
  POPC:
@@ -14,17 +14,17 @@ COMPOSITION:
   NAME: SPC
   MAPPING: mappingwaterlipid14.yaml
  
-DIR_WRK: /media/osollila/Data/tmp/DATABANK/
+DIR_WRK: set-via-console
 
 PUBLICATION:
-AUTHORS_CONTACT: Milla Lindström
+AUTHORS_CONTACT: Milla Kurki (Lindström)
 
 SYSTEM: 200POPC_8859SOL_300K
-SOFTWARE_VERSION:
+SOFTWARE_VERSION: Desmond 2019-4
 
 FF: OPLS3e
-FF_SOURCE:
-FF_DATE:
+FF_SOURCE: Schrodinger, Inc.
+FF_DATE: 01/12/2020
 
 CPT: desmond_md_popc200lip500ns.cpt
 LOG:
