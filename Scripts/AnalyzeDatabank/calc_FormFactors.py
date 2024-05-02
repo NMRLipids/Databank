@@ -29,6 +29,12 @@ with open("system_already_run_17_11_21.out","w") as f:
     
      
 for system in systems:
+    
+    # Skip non lipid bliayer systems
+    if "TYPEOFSYSTEM" in system.keys():
+        if system["TYPEOFSYSTEM"] != "lipid bilayer":
+            continue
+    
     software=system['SOFTWARE']
     #download trajectory and gro files
     system_path = '../../Data/Simulations/' +  system['path']
