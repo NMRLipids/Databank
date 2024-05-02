@@ -1,18 +1,39 @@
 import os
 import yaml
 import json
+import numpy as np
 
-from databankLibrary import ( lipids_dict )
+from databankLibrary import ( lipids_dict, getpA_isoterm )
 from tqdm import tqdm
+
+import argparse
+
+parser = argparse.ArgumentParser( )
+
+parser.add_argument("-mf", "--molar_fraction", type=float, default=0.03,
+                    help="""Threshold in the molar fraction.\n
+    Default: %(default)s """)
+parser.add_argument("-ic", "--ion_conc", type=float, default=0.05,
+                    help="""Threshold in the ion concentration.\n
+    Default: %(default)s """)
+parser.add_argument("-lc", "--lip_conc", type=float, default=0.1,
+                    help="""Threshold in the lipid concentration.\n
+    Default: %(default)s """)
+parser.add_argument("-t", "--temp", type=float, default=2,
+                    help="""Threshold in the temperature.\n
+    Default: %(default)s """)
+parser.add_argument("-apl", "--apl", type=float, default=10,
+                    help="""Threshold in the area per lipid\n
+    Default: %(default)s """)
+
+args = parser.parse_args()
+
 
 databank_path = '../../Data/Simulations'
 expbank_path = '../../Data/experiments'
 
 lipid_numbers_list =  lipids_dict.keys() # should contain all lipid names
 ions_list = ['POT', 'SOD', 'CLA', 'CAL'] # should contain names of all ions
-
-LIP_CONC_REL_THRESHOLD = 0.15 # relative acceptable error for determination of 
-                              # the hydration in ssNMR
 
 class Data:
     def __init__(self, molecule, data_path):
@@ -266,24 +287,24 @@ def findPairs(experiments, simulations):
                 # compare molar fractions
                 mf_ok = 0
                 for key in sim_lipids:
-                    if ( (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - 0.03) and 
-                         (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key]+ 0.03) ):
+                    if ( (experiment.readme['MOLAR_FRACTIONS'][key] >= sim_molar_fractions[key] - args.mf) and 
+                         (experiment.readme['MOLAR_FRACTIONS'][key] <= sim_molar_fractions[key] + args.mf) ):
                         mf_ok +=1 
 
                 # compare ion concentrations 
                 c_ok = 0
                 if set(sim_ions) == set(exp_ions):
                     for key in sim_ions:
-                        if ( (experiment.readme['ION_CONCENTRATIONS'][key] >= sim_concentrations[key] - 0.05) and 
-                             (experiment.readme['ION_CONCENTRATIONS'][key] <= sim_concentrations[key] + 0.05) ): 
+                        if ( (experiment.readme['ION_CONCENTRATIONS'][key] >= sim_concentrations[key] - args.ic) and 
+                             (experiment.readme['ION_CONCENTRATIONS'][key] <= sim_concentrations[key] + args.ic) ): 
                             c_ok += 1 
 
                 switch = 0
             
                 if ( (type(exp_total_lipid_concentration) == float) and 
                      (type(sim_total_lipid_concentration) == float) ):
-                    if ( (exp_total_lipid_concentration / sim_total_lipid_concentration > 1 - LIP_CONC_REL_THRESHOLD) and 
-                         (exp_total_lipid_concentration / sim_total_lipid_concentration < 1 + LIP_CONC_REL_THRESHOLD) ):
+                    if ( (exp_total_lipid_concentration >= sim_total_lipid_concentration - args.lc) and 
+                         (exp_total_lipid_concentration <= sim_total_lipid_concentration + args.lc) ):
                         switch = 1
                         
                 elif ( (type(exp_total_lipid_concentration) == str) and 
@@ -303,8 +324,8 @@ def findPairs(experiments, simulations):
                     
                     if ( (mf_ok == len(sim_lipids)) and 
                          (c_ok == len(sim_ions)) and 
-                         (t_exp >= float(t_sim) - 2.0) and 
-                         (t_exp <= float(t_sim) + 2.0) ):
+                         (t_exp >= float(t_sim) - args.temp) and 
+                         (t_exp <= float(t_sim) + args.temp) ):
                         
                         if not ( "TYPEOFSYSTEM" in simulation.readme.keys() ):
                             simulation.readme["TYPEOFSYSTEM"] = "lipid bilayer"
