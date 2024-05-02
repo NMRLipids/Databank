@@ -1666,3 +1666,49 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
         return  Re**2 + Im**2
     else:
         return  cq**2 * ( Re**2 + Im**2 )
+    
+
+def calcNR( Dens, Z, qz_range, Densw, wl = 2, Norm=False ):
+    """
+    Compute the neutron reflectometry for a system given its neutron scattering density
+    
+    :param Dens: a list with the neutron scattering density
+    
+    :param z: the coordinates of the neutron scattering density
+    
+    :param qz_range: the range of values of the wavevector transfer
+    
+    :param Densw: value of the neutron scattering density for the water, in  Å^-2. Default is XXX
+    
+    :param wl: wavelenght of the neutron source, in Å. Default is 2
+    
+    :param Norm: divide by the Fresnel reflectivity. Default is False
+
+    :return: list of neutron reflectometry values at qz_range
+    """
+    
+    Dens = np.array(Dens, dtype = float)
+    Z = np.array(Z, dtype = float)
+    
+    # Critical value ## WRONG!
+    qc = 4*np.pi/wl*np.sin(wl*(Densw/np.pi)**0.5)
+    
+    # Gradient of the density
+    DDens = ( Dens[1:] - Dens[:-1] ) / (Z[1]-Z[0])
+    
+    Re = np.zeros(len(qz_range))
+    Im = np.zeros(len(qz_range))
+    cq = np.zeros(len(qz_range))
+    for i, qz in enumerate(qz_range):  
+        qzp = (qz**2-qc**2)**0.5
+        Re[i] = sum( DDens * np.cos( qz * Z[:-1] ) ) * (Z[1]-Z[0])
+        Im[i] = sum( DDens * np.sin( qz * Z[:-1] ) ) * (Z[1]-Z[0])
+        cq[i] = abs( (qz-qzp) / (qz+qzp) )
+    
+    Re /= Densw
+    Im /= Densw
+    
+    if Norm:
+        return  Re**2 + Im**2
+    else:
+        return  cq**2 * ( Re**2 + Im**2 )
