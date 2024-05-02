@@ -1613,7 +1613,8 @@ def getpA_isoterm(batch):
                 adata = json.load(json_file)
             
             isoterm.append( ( np.mean( list(adata.values()) ),
-                              np.mean( list(sdata.values()) ) ) )
+                              np.mean( list(sdata.values()) ),
+                              np.std( list(sdata.values()) ) / np.sqrt( len( sdata.values() )-1 ) ) )
         
     if len(isoterm):
         isoterm.sort( key= lambda x: x[0] )
@@ -1640,8 +1641,8 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
     :return: list of X-ray reflectometry values at qz_range
     """
     
-    Dens = np.array(Dens)
-    Z = np.array(Z)
+    Dens = np.array(Dens, dtype = float)
+    Z = np.array(Z, dtype = float)
     
     # Critical value
     qc = 4*np.pi/wl*np.sin(wl*(Densw*2.814e-5/np.pi)**0.5)
