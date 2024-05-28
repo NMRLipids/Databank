@@ -1590,7 +1590,7 @@ def getBatch(batchID,systems=None):
     return batch
 
 
-def getpA_isoterm(batch):
+def getpA_isotherm(batch):
     """
     Returns the surface tension v. area per lipid values for a batch of simulations
     
@@ -1599,27 +1599,25 @@ def getpA_isoterm(batch):
     :return: area per lipid and surface tension for the simulations in the batch
     """
     
-    isoterm = []
+    isotherm = []
     for system in batch:
         afile = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + "apl.json"
         sfile = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + "surft.json"
-        #afile = './../../Data/Simulations/' + system['path'] + "apl.json"
-        #sfile = './../../Data/Simulations/' + system['path'] + "surft.json"
         if os.path.isfile( afile ) and os.path.isfile( sfile ):
             with open( sfile ) as json_file:
-                sdata = json.load(json_file)
+                sdata = list( json.load(json_file).values() )
             
             with open( afile ) as json_file:
-                adata = json.load(json_file)
+                adata = list( json.load(json_file).values() )
             
-            isoterm.append( ( np.mean( list(adata.values()) ),
-                              np.mean( list(sdata.values()) ),
-                              np.std( list(sdata.values()) ) / np.sqrt( len( sdata.values() )-1 ) ) )
+            isotherm.append( ( np.mean( adata ),
+                              np.mean( sdata ),
+                              np.std( sdata ) / ( len(sdata)-1 )**0.5 ) )
         
-    if len(isoterm):
-        isoterm.sort( key= lambda x: x[0] )
+    if len(isotherm):
+        isotherm.sort( key= lambda x: x[0] )
         
-    return isoterm
+    return isotherm
 
 
 def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
@@ -1647,16 +1645,20 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
     # Critical value
     qc = 4*np.pi/wl*np.sin(wl*(Densw*2.814e-5/np.pi)**0.5)
     
+    # Density in the air region is zero, so we add these points to compensate
+    # the loss of points in the numerical derivative
+    Dens = np.hstack( [ [0,0], Dens, [Densw,Densw] ] )
+    
     # Gradient of the density
-    DDens = ( Dens[1:] - Dens[:-1] ) / (Z[1]-Z[0])
+    DDens = ( -Dens[4:]+8*Dens[3:-1]-8*Dens[1:-3]+Dens[:-4] ) / (12*(Z[1]-Z[0]))
     
     Re = np.zeros(len(qz_range))
     Im = np.zeros(len(qz_range))
     cq = np.zeros(len(qz_range))
     for i, qz in enumerate(qz_range):    
         qzp = (qz**2-qc**2)**0.5
-        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z[:-1] ) ) * (Z[1]-Z[0])
-        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z[:-1] ) ) * (Z[1]-Z[0])
+        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
+        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
         cq[i] = abs( (qz-qzp) / (qz+qzp) )
         
     Re /= Densw
@@ -1690,19 +1692,24 @@ def calcNR( Dens, Z, qz_range, Densw, wl = 2, Norm=False ):
     Dens = np.array(Dens, dtype = float)
     Z = np.array(Z, dtype = float)
     
-    # Critical value ## WRONG!
+    # Critical value ## WRONG?
     qc = 4*np.pi/wl*np.sin(wl*(Densw/np.pi)**0.5)
     
+    # Density in the air region is zero, so we add these points to compensate
+    # the loss of points in the numerical derivative
+    Dens = np.hstack( [ [0,0], Dens, [Densw,Densw] ] )
+    
     # Gradient of the density
-    DDens = ( Dens[1:] - Dens[:-1] ) / (Z[1]-Z[0])
+    DDens = ( -Dens[4:]+8*Dens[3:-1]-8*Dens[1:-3]+Dens[:-4] ) / (12*(Z[1]-Z[0]))
+    
     
     Re = np.zeros(len(qz_range))
     Im = np.zeros(len(qz_range))
     cq = np.zeros(len(qz_range))
     for i, qz in enumerate(qz_range):  
         qzp = (qz**2-qc**2)**0.5
-        Re[i] = sum( DDens * np.cos( qz * Z[:-1] ) ) * (Z[1]-Z[0])
-        Im[i] = sum( DDens * np.sin( qz * Z[:-1] ) ) * (Z[1]-Z[0])
+        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
+        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
         cq[i] = abs( (qz-qzp) / (qz+qzp) )
     
     Re /= Densw
