@@ -126,8 +126,8 @@ class Parser:
                 self.error = 1
         self.trj_name = f"{self.root}{self.indexingPath}/{self.trj}"
         self.tpr_name = f"{self.root}{self.indexingPath}/{self.tpr}"
-        self.trj_url = download_link(self.doi, self.trj)
-        self.tpr_url = download_link(self.doi, self.tpr)
+        self.trj_url = resolve_download_file_url(self.doi, self.trj)
+        self.tpr_url = resolve_download_file_url(self.doi, self.tpr)
         self.trjLen = readme["TRJLENGTH"] / 1000  # ns
         self.FF = readme.get("FF")
 

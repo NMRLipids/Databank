@@ -75,7 +75,7 @@ for system in systems:
     output_name = ""
     
     trj_name = system_path + system['TRJ'][0][0]
-    trj_url = download_link(system['DOI'], system['TRJ'][0][0])
+    trj_url = resolve_download_file_url(system['DOI'], system['TRJ'][0][0])
 
     socket.setdefaulttimeout(15)
 
@@ -85,7 +85,7 @@ for system in systems:
     # make a function like this
     if 'gromacs' in software:
         tpr_name = system_path + system['TPR'][0][0]
-        tpr_url = download_link(system['DOI'], system['TPR'][0][0])
+        tpr_url = resolve_download_file_url(system['DOI'], system['TPR'][0][0])
 
         if (not os.path.isfile(tpr_name)):
             try:
@@ -120,7 +120,7 @@ for system in systems:
         #print(software)
         pdb = system.get('PDB')
         pdb_name = system_path + system.get('PDB')[0][0]
-        pdb_url = download_link(doi, pdb[0][0])
+        pdb_url = resolve_download_file_url(doi, pdb[0][0])
         if (not os.path.isfile(pdb_name)):
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
 

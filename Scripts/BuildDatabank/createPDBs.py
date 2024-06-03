@@ -47,17 +47,6 @@ class databank:
         return self.systems
 
 
-def download_link(doi, file):  # deprecated?
-    """    :meta private:"""
-    if "zenodo" in doi.lower():
-        zenodo_entry_number = doi.split(".")[2]
-        return "https://zenodo.org/record/" + zenodo_entry_number + "/files/" + file
-    else:
-        print("DOI provided: {0}".format(doi))
-        print(
-            "Repository not validated. Please upload the data for example to zenodo.org"        )
-        return ""
-
 path = '../../Data/Simulations/'
 db_data = databank(path)
 systems = db_data.get_systems()
@@ -76,7 +65,7 @@ for system in systems:
         tpr = system.get('TPR')
         trj_name = path + system.get('TRJ')[0][0]
         tpr_name = path + system.get('TPR')[0][0]
-        tpr_url = download_link(doi, tpr[0][0])
+        tpr_url = resolve_download_file_url(doi, tpr[0][0])
         
         if (not os.path.isfile(tpr_name)):
             response = urllib.request.urlretrieve(tpr_url, tpr_name)
