@@ -2,8 +2,8 @@ import sys, os
 from urllib.error import HTTPError
 import pytest
 
-sys.path.append('../BuildDatabank/')
-import databankio as dio 
+sys.path.append('..')
+import DatabankLib.databankio as dio 
 
 
 # @pytest.mark.parametrize("input, expected_output", [

@@ -7,6 +7,7 @@ import re
 import buildh
 
 
+
 ### Initializing the databank
 
 ### This is the NMRlipids databank repository path
@@ -14,6 +15,7 @@ databankPath = '../../'
 
 sys.path.append('..')
 from DatabankLib.databankLibrary import *
+from DatabankLib.databankio import resolve_download_file_url
 
 systems = initialize_databank(databankPath)
 
@@ -90,6 +92,7 @@ for system in systems:
     elif 'openMM' in software or 'NAMD' in software:
         pdb_name = databankPath + '/Data/Simulations/' + path + system.get('PDB')[0][0]
         if (not os.path.isfile(pdb_name)):
+            pdb_url = resolve_download_file_url(system.get('DOI'), pdb_name)
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
     else:
         print('Order parameter calculation for other than gromacs, openMM and NAMD are yet to be implemented.')
