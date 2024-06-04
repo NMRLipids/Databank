@@ -19,10 +19,11 @@ import scipy.signal
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
-from jsonEncoders import CompactJSONEncoder
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, read_trajs_calc_OPs, parse_op_input, find_OP, OrderParameter
+sys.path.append('..')
+from DatabankLib.jsonEncoders import CompactJSONEncoder
+from DatabankLib.databankLibrary import ( download_link, lipids_dict, read_trajs_calc_OPs, 
+                                         parse_op_input, find_OP, OrderParameter )
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################

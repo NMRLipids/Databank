@@ -1,29 +1,17 @@
-import os
 import sys
 import numpy as np
 import json
-import matplotlib.pyplot as plt
-import MDAnalysis as mda
-import urllib.request
-import yaml
-
-import urllib.request
-from urllib.error import URLError,HTTPError,ContentTooShortError
-
-# From time monitoring
 from tqdm import tqdm
 
-import socket
-
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+sys.path.append('..')
+from DatabankLib.databankLibrary import databank
 
 path = '../../'
 
 db_data = databank(path)
 systems = db_data.get_systems()
 
-for system in systems:
+for system in tqdm(systems):
     WaterDensity_name = '../../' + system['path'] + 'WaterDensity.json'
     LipidDensity_name = '../../' + system['path'] + 'LipidDensity.json'
     print(LipidDensity_name)

@@ -1,23 +1,16 @@
 import os
 import sys
-import numpy as np
-import json
-import matplotlib.pyplot as plt
-import MDAnalysis
 import urllib.request
 import yaml
 
 import urllib.request
 from urllib.error import URLError,HTTPError,ContentTooShortError
 
-# From time monitoring
-from tqdm import tqdm
-
 import socket
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank, read_mapping_file
-import form_factor
+sys.path.append('..')
+from DatabankLib.databankLibrary import download_link, lipids_dict, databank
+import DatabankLib.form_factor as form_factor
 
 path = '../../Data/Simulations/'
 
