@@ -28,7 +28,7 @@ __pdoc__ = {}
 
 logger = logging.getLogger("__name__")
 
-from databank_defs import *
+from .databank_defs import *
 
 ##############CLASS FOR LOOPING OVER SYSTEMS#######################################
 
