@@ -3,7 +3,7 @@
 # IMPORTING LIBRARIES
 
 # Working with files and directories
-import os
+import os, sys
 import argparse
 import yaml
 import logging
@@ -23,20 +23,19 @@ pd.set_option("display.width", 1000)
 pd.set_option("display.max_colwidth", 1000)
 
 from MDAnalysis import Universe
-from OrderParameter import *
 
+sys.path.append('..')
+from DatabankLib.OrderParameter import *
 # import databank dictionaries
-from databankLibrary import (
+from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,
     create_databank_directories,
     lipids_dict,
     molecules_dict,
     software_dict,
 )
-
-
 # helpers
-from databankLibrary import (
+from DatabankLib.databankLibrary import (
     download_resource_from_uri,
     parse_valid_config_settings,
     resolve_download_file_url,

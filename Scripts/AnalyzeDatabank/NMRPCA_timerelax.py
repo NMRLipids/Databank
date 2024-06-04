@@ -49,9 +49,8 @@ from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
-sys.path.insert(1, "../BuildDatabank/")
-
-from databankLibrary import databank, download_link, lipids_dict, download_resource_from_uri
+sys.path.append("..")
+from DatabankLib.databankLibrary import databank, download_link, lipids_dict, download_resource_from_uri
 
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]

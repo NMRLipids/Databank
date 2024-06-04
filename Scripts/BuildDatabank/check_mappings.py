@@ -9,29 +9,19 @@
 import os
 import sys
 import numpy as np
-import json
-import matplotlib.pyplot as plt
 import MDAnalysis as mda
-import urllib.request
 import yaml
-
-import urllib.request
-from urllib.error import URLError,HTTPError,ContentTooShortError
-
-# From time monitoring
 from tqdm import tqdm
 
-import socket
-
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+sys.path.append('..')
+from DatabankLib.databankLibrary import lipids_dict, databank
 
 path = '../../Data/Simulations/'
 
 db_data = databank(path)
 systems = db_data.get_systems()
 
-for system in systems:
+for system in tqdm(systems):
 #    trj_name = system['path'] + system['TRJ'][0][0]
     if 'TPR' not in system.keys():
         sys.stderr.write("Skipping "+system["SYSTEM"]+" because there is no TPR\n")
