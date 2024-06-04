@@ -5,8 +5,8 @@
 
 import sys
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import *
+sys.path.append('..')
+from DatabankLib.databankLibrary import *
 
 databankpath = '../../Data/Simulations/'
 db_data = databank(databankpath)

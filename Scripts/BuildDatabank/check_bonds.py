@@ -1,3 +1,7 @@
+"""
+FILE IS NOT DESCRIBED. MARKED FOR REMOVING.
+"""
+
 import numpy as np
 import MDAnalysis as mda
 import MDAnalysis.transformations as trans

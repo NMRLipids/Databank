@@ -39,14 +39,15 @@ import argparse
 import copy
 import pickle
 import collections
+import sys
 
 import numpy as np
 import pandas as pd
 import MDAnalysis as mda
 import MDAnalysis.coordinates.XTC as XTC
 
-import dic_lipids
-
+sys.path.append('..')
+import DatabankLib.dic_lipids as dic_lipids
 
 # Constants.
 # From https://en.wikipedia.org/wiki/Carbon%E2%80%93hydrogen_bond

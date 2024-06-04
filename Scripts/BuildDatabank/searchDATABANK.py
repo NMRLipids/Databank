@@ -1,9 +1,10 @@
-import os
+import os, sys
 import yaml
 import json
 
-from databankLibrary import lipids_dict
 from tqdm import tqdm
+sys.path.append('..')
+from DatabankLib.databankLibrary import lipids_dict
 
 databank_path = '../../Data/Simulations'
 expbank_path = '../../Data/experiments'

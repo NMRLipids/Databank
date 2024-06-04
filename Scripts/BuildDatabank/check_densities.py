@@ -15,8 +15,8 @@ from tqdm import tqdm
 
 import socket
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+sys.path.append('..')
+from DatabankLib.databankLibrary import download_link, lipids_dict, databank
 
 path = '../../Data/Simulations/'
 

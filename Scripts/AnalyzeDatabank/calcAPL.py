@@ -1,19 +1,14 @@
 import os
 import sys
-import numpy as np
 import json
-import matplotlib.pyplot as plt
-import MDAnalysis
-import urllib.request
-import yaml
 
 ### Initializing the databank
 
 ### This is the NMRlipids databank repository path
 databankPath = '../../'
 
-sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
-from databankLibrary import *
+sys.path.append('..')
+from DatabankLib.databankLibrary import *
 
 
 systems = initialize_databank(databankPath)

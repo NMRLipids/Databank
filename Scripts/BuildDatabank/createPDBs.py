@@ -1,10 +1,12 @@
 import os
-import sys
 import urllib.request
 import yaml
 
-sys.path.insert(1, '../BuildDatabank/')
-#from databankLibrary import download_link, databank
+"""
+This script is made library-independent by intention. 
+We want to be able to run it without additional dependecies.
+TODO: remove additional dependencies and import only directroy names
+"""
 
 class databank:
     """ :meta private: 
