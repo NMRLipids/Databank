@@ -8,8 +8,10 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 
 import socket
 
+
 sys.path.append('..')
-from DatabankLib.databankLibrary import download_link, lipids_dict, databank
+from DatabankLib.databankLibrary import lipids_dict, databank
+from DatabankLib.databankio import resolve_download_file_url
 import DatabankLib.form_factor as form_factor
 
 path = '../../Data/Simulations/'
