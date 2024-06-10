@@ -12,7 +12,7 @@ paths=()
 
 # Iterate over all systems
 for file in `find . -name "README.yaml"`; do
- if ! [ $( grep "EXPERIMENTS" ${file} ) ]; then
+ if ! [ $( grep "EXPERIMENT" ${file} ) ]; then
   # The path to the file
   path=$( echo ${file} | rev | cut -d"/" -f2- | rev )
   paths+=(${path})
