@@ -9,20 +9,15 @@
 
 import copy
 import hashlib
-from io import BufferedReader
-import socket, urllib, logging
-import shutil
-from urllib.error import HTTPError
+import urllib, logging
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from pathlib import Path
 from typing import List
 
 import json
 import sys
 
-import pandas as pd
 
 __pdoc__ = {}
 
@@ -604,49 +599,6 @@ def getUniversalAtomName(system,atomName,lipid):
     return None
 
 
-def ShowTable(SortedQualities, quality):
-    """
-    Shows a table of simulation qualities against experimental data.
-
-    :param SortedQualities: list of dictionaries to be shown, available in folder ``Data/Ranking/``
-    :param quality: should be either ``TotalQuality`` or universal lipid name. First one shows the system total quality. Latter shows the individual lipid quality.
-
-    """
-    rounding = ['headgroup', 'sn-1', 'sn-2', 'total', 'tails', 'FFQuality']
-    QualityTable = []
-    pd.set_option('display.max_rows', None)
-    for i in SortedQualities:
-        StoredToTable = []
-        #
-        #
-        #print(i)
-        for k, v in i[quality].items():
-            #print(k,v)
-            if k in rounding:
-                #print(len(v))
-                if v and v != float("inf") and not math.isnan(v):
-                    i[quality][k] = round(float(v), 2)
-        #
-        #
-        StoredToTable = i[quality]
-        StoredToTable['Forcefield'] = i['system']['FF']
-        molecules = ''
-        MolNumbers = ''
-        for lipid in i['system']['COMPOSITION']:
-            #print(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))
-            molecules = molecules + lipid + ':'
-            MolNumbers = MolNumbers + str(np.sum(i['system']['COMPOSITION'][lipid]['COUNT']))  + ':'
-        StoredToTable['Molecules'] = molecules[:-1]
-        StoredToTable['Number of molecules'] = ' (' + MolNumbers[:-1] + ')'
-        StoredToTable['Temperature'] = i['system']['TEMPERATURE']
-        StoredToTable['ID'] = i['system']['ID']
-        QualityTable.append(StoredToTable)    
-    display(pd.json_normalize(QualityTable))
-
-
-
-
-
 #######################ORDER PARAMETERS######################################
 """
     :meta private:
@@ -987,7 +939,8 @@ def calc_z_dim(gro):
 
 def system2MDanalysisUniverse(system):
     """
-    Takes the ``system`` dictionary as an input, downloads the required files to the NMRlipids databank directory and retuns MDAnalysis universe corressponding the ``system``.
+    Takes the ``system`` dictionary as an input, downloads the required files to the NMRlipids databank 
+    directory and retuns MDAnalysis universe corressponding the ``system``.
 
     :param system: NMRlipids databank dictionary describing the simulation.
 
