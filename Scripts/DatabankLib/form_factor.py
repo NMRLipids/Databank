@@ -16,7 +16,7 @@ import os
 import yaml
 from pprint import pprint
 
-from databankLibrary import lipids_dict
+from databankLibrary import lipids_dict, loadMappingFile
 sys.path.append('../BuildDatabank')
 from jsonEncoders import CompactJSONEncoder
 from tqdm import tqdm
@@ -31,15 +31,6 @@ class NumpyArrayEncoder(CompactJSONEncoder):
         else:
             return CompactJSONEncoder.encode(self, o)
  
-def loadMappingFile(path_to_mapping_file):
-    # load mapping file into a dictionary
-    mapping_dict = {}
-    with open('../BuildDatabank/mapping_files/'+path_to_mapping_file, "r") as yaml_file:
-        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    yaml_file.close()
-    
-    return mapping_dict
-        
 def getLipids(readme, molecules=lipids_dict.keys()):
     lipids = 'resname '
 

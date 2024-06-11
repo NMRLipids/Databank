@@ -206,20 +206,14 @@ def getLipids(system, molecules=lipids_dict.keys()):
     for key in system['COMPOSITION'].keys():
         if key in molecules:
             m_file = system['COMPOSITION'][key]['MAPPING']
-            with open('../../Databank/Scripts/BuildDatabank/mapping_files/'+m_file,"r") as yaml_file:
-                mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-                #for line in f:
-                #    if len(line.split()) > 2 and "Individual atoms" not in line:
+            mapping_dict = loadMappingFile(m_file)
             for atom in mapping_dict:
                 print(mapping_dict[atom])
                 try:
-                    #        if line.split()[2] not in lipids:
                     lipids = lipids + mapping_dict[atom]['RESIDUE'] + ' or resname '
                 except:
                     lipids = lipids + system['COMPOSITION'][key]['NAME'] + ' or resname '
                     break
-                    #continue
-                    #else:
 
                  
     lipids = lipids[:-12]
@@ -526,20 +520,6 @@ def simulation2universal_atomnames(system,molecule,atom):
             return   
     return m_atom1
 
-def read_mapping_file(mapping_file, atom1):
-    """
-    Get force field specific atom name corresponding to universal atom name from the mapping file.
-
-    :param mapping_file: path for the mapping file
-    :param atom1: universal atom name
-
-    :return: force field specific atom name
-    """
-    with open(mapping_file, "rt") as mapping_file:
-        mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
-        m_atom1 = mapping[atom1]["ATOMNAME"]
-    return m_atom1
-
 def loadMappingFile(mapping_file):
     """ 
     Load mapping file into a dictionary
@@ -548,8 +528,9 @@ def loadMappingFile(mapping_file):
     
     :return: mapping dictionary
     """
+    mapping_file_path = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + mapping_file
     mapping_dict = {}
-    with open(os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + mapping_file, "r") as yaml_file:
+    with open(mapping_file_path, "r") as yaml_file:
         mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
     yaml_file.close()
     
@@ -809,11 +790,7 @@ def parse_op_input(mapping_file, lipid_name):
     atomC = []
     atomH = []
     resname = lipid_name
-
-    mapping_dict = {}
-    with open("../BuildDatabank/mapping_files/" + mapping_file, "r") as yaml_file:
-        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    yaml_file.close()
+    mapping_dict = loadMappingFile(mapping_file)
 
     regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")
     regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")
