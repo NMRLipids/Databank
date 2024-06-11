@@ -7,6 +7,7 @@ import buildh
 sys.path.append('..')
 from DatabankLib.databankLibrary import *
 from DatabankLib.databankio import resolve_download_file_url
+from DatabankLib.databankop import find_OP
 
 ### Initializing the databank
 databankPath = '../../'
@@ -214,7 +215,7 @@ for system in systems:
 
                 if 'openMM' in software or 'NAMD' in software:
                     OrdParam = find_OP(mapping_file,pdb_name,trj_name,resname)
-                        
+                
                 outfile.write("Atom     Average OP     OP stem\n")
     
                 data = {}
