@@ -16,6 +16,7 @@ from random import randint
 from urllib.error import URLError, HTTPError
 from copy import deepcopy
 import pandas as pd
+import numpy as np
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -25,7 +26,6 @@ pd.set_option("display.max_colwidth", 1000)
 from MDAnalysis import Universe
 
 sys.path.append('..')
-from DatabankLib.OrderParameter import *
 # import databank dictionaries
 from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,
