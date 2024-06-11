@@ -73,7 +73,7 @@ for system in systems:
          type(system['WARNINGS']) is dict and
          'GROMACS_VERSION' in system['WARNINGS'] and 
          system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-        trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
+        trjconvCOMMAND = 'trjconv'
     else:
         trjconvCOMMAND = 'gmx trjconv'
 
@@ -98,8 +98,6 @@ for system in systems:
         print('Order parameter calculation for other than gromacs, openMM and NAMD are yet to be implemented.')
         continue
 
-
-
     ## Calculate order parameters
     if unitedAtom and 'gromacs' in software:
         topfile = databankPath + '/Data/Simulations/' + path + '/frame0.gro'
@@ -107,7 +105,7 @@ for system in systems:
              system['WARNINGS'] is not None and
              'GROMACS_VERSION' in system['WARNINGS'] and 
              system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-            os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + topfile )
+            os.system('echo System | editconf -f ' + tpr_name + ' -o ' + topfile )
         else:
             os.system('echo System | ' + trjconvCOMMAND + ' -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
         
@@ -206,7 +204,7 @@ for system in systems:
                  system['WARNINGS'] is not None and
                  'GROMACS_VERSION' in system['WARNINGS'] and 
                  system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-                os.system('echo System | /home/osollila/Programs/gromacs/gromacs402/bin/editconf -f ' + tpr_name + ' -o ' + gro) 
+                os.system('echo System | editconf -f ' + tpr_name + ' -o ' + gro) 
             else:
                 os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
                     
