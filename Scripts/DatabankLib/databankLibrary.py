@@ -24,6 +24,7 @@ __pdoc__ = {}
 logger = logging.getLogger("__name__")
 
 from .databank_defs import *
+from .databankio import resolve_download_file_url
 
 ##############CLASS FOR LOOPING OVER SYSTEMS#######################################
 
@@ -949,23 +950,33 @@ def system2MDanalysisUniverse(system):
     print(os.path.dirname(os.path.realpath(__file__)))
     systemPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] 
     doi = system.get('DOI')
+    skipDownloading: bool = (doi == 'localhost')
+    if skipDownloading:
+        print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
+
     trj = system.get('TRJ')
     trj_name = systemPath + system.get('TRJ')[0][0]
-    trj_url = resolve_download_file_url(doi, trj[0][0])
-    software=system['SOFTWARE']
-    #print(trj_name,tpr_name)
-                            
-    if (not os.path.isfile(trj_name)):
-        print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'], ' to ', system['path'])
-        response = urllib.request.urlretrieve(trj_url, trj_name)
+    software = system['SOFTWARE']
+
+    if (skipDownloading):
+        if (not os.path.isfile(trj_name)):
+            raise FileNotFoundError(f"Trajectory should be downloaded [{trj_name}] by user")
+    else:
+        trj_url = resolve_download_file_url(doi, trj[0][0])                            
+        if (not os.path.isfile(trj_name)):
+            print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'], ' to ', system['path'])
+            response = urllib.request.urlretrieve(trj_url, trj_name)
 
     if 'gromacs' in software: 
         tpr = system.get('TPR')
-        tpr_name = systemPath + system.get('TPR')[0][0]
-        tpr_url = resolve_download_file_url(doi, tpr[0][0])
-        if (not os.path.isfile(tpr_name)):
-            response = urllib.request.urlretrieve(tpr_url, tpr_name)
-            
+        tpr_name = systemPath + tpr[0][0]
+        if skipDownloading:
+            if (not os.path.isfile(tpr_name)):
+                raise FileNotFoundError(f"TPR should be downloaded [{tpr_name}]")
+        else:
+            tpr_url = resolve_download_file_url(doi, tpr[0][0])
+            if (not os.path.isfile(tpr_name)):
+                response = urllib.request.urlretrieve(tpr_url, tpr_name)
         try:
             u = mda.Universe(tpr_name, trj_name)
         except:
@@ -980,15 +991,18 @@ def system2MDanalysisUniverse(system):
 
     elif 'openMM' or 'NAMD' in software:
         pdb = system.get('PDB')
-        pdb_name = systemPath + system.get('PDB')[0][0]
-        pdb_url = resolve_download_file_url(doi, pdb[0][0])
-        if (not os.path.isfile(pdb_name)):
-            response = urllib.request.urlretrieve(pdb_url, pdb_name)
+        pdb_name = systemPath + pdb[0][0]
+        if skipDownloading:
+            if (not os.path.isfile(pdb_name)):
+                raise FileNotFoundError(f"PDB should be downloaded [{pdb_name}]")
+        else:            
+            pdb_url = resolve_download_file_url(doi, pdb[0][0])
+            if (not os.path.isfile(pdb_name)):
+                response = urllib.request.urlretrieve(pdb_url, pdb_name)
         u = mda.Universe(pdb_name, trj_name)
 
     else:
-        print('Other than gromacs, openMM or NAMD are yet to be implemented.')
-        u = None
+        raise NotImplementedError('Other than gromacs, openMM or NAMD are yet to be implemented.')
         
     return u
 
