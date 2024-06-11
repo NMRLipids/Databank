@@ -2,28 +2,23 @@ import os
 import sys
 import yaml
 import json
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 import math
-import argparse
 import decimal as dc
 import re
 
 from random import randint
 
-from matplotlib import cm
-#from scipy.stats import norm
 import scipy.stats
 import scipy.signal
 
-import urllib.request
-from urllib.error import URLError,HTTPError,ContentTooShortError
 
 sys.path.append('..')
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib.databankLibrary import ( download_link, lipids_dict, read_trajs_calc_OPs, 
-                                         parse_op_input, find_OP, OrderParameter )
+from DatabankLib.databankLibrary import ( lipids_dict, read_trajs_calc_OPs, 
+                                         parse_op_input, find_OP, OrderParameter,
+                                        loadMappingFile )
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
@@ -56,17 +51,6 @@ class Experiment:
     pass
 
 ################################
-
-def loadMappingFile(path_to_mapping_file):
-    # load mapping file into a dictionary
-    mapping_dict = {}
-    with open('./mapping_files/'+path_to_mapping_file, "r") as yaml_file:
-        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    yaml_file.close()
-    
-    return mapping_dict
-
-
 
 #Quality evaluation of simulated data
 #Order parameters

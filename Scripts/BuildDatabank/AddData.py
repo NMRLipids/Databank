@@ -33,6 +33,7 @@ from DatabankLib.databankLibrary import (
     lipids_dict,
     molecules_dict,
     software_dict,
+    loadMappingFile
 )
 # helpers
 from DatabankLib.databankLibrary import (
@@ -350,10 +351,7 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim["COMPOSITION"].keys():
         m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
-        mapping_dict = {}
-        with open(os.path.join(os.getcwd(), "mapping_files", m_file), "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        yaml_file.close()
+        mapping_dict = loadMappingFile(m_file)
         for key in mapping_dict.keys():
             if "RESIDUE" in mapping_dict[key].keys():
                 selection = (
@@ -391,9 +389,7 @@ for key_mol in lipids_dict:
     selection = ""
     if key_mol in sim["COMPOSITION"].keys():
         m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
-        with open(os.path.join(os.getcwd(), "mapping_files", m_file), "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        yaml_file.close()
+        mapping_dict = loadMappingFile(m_file)
         for key in mapping_dict.keys():
             if "RESIDUE" in sim["COMPOSITION"].keys():
                 selection = (
@@ -496,17 +492,7 @@ number_of_atomsTRJ = len(u.atoms)
 
 number_of_atoms = 0
 for key_mol in all_molecules:
-    mapping_dict = {}
-    try:
-        mapping_file = os.path.join(
-            os.getcwd(), "mapping_files", sim["COMPOSITION"][key_mol]["MAPPING"]
-        )
-    except:
-        continue
-    else:
-        with open(mapping_file, "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        yaml_file.close()
+    mapping_dict = loadMappingFile(sim["COMPOSITION"][key_mol]["MAPPING"])
 
     if sim.get("UNITEDATOM_DICT") and not "SOL" in key_mol:
         mapping_file_length = 0

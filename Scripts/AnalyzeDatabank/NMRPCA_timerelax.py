@@ -36,21 +36,18 @@ Alexander Kuzmin
 
 import gc
 import json
-import os
-import sys
-import urllib.request
+import os, sys
 import warnings
 
 import MDAnalysis as mda
-import MDAnalysis.transformations
 import numpy as np
-import yaml
 from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
 sys.path.append("..")
-from DatabankLib.databankLibrary import databank, download_link, lipids_dict, download_resource_from_uri
+from DatabankLib.databankLibrary import databank, lipids_dict, loadMappingFile
+from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
@@ -332,18 +329,7 @@ class Topology:
         self.ff = ff
         self.lipid_resname = lipid_resname
         self.traj = traj
-        self.mapping = self.loadMappingFile(mapping_file)
-
-    """
-    Basic loader of the mapping file.
-    """
-
-    def loadMappingFile(self, mapping_file):
-        mapping_dict = {}
-        with open(f"../BuildDatabank/mapping_files/{mapping_file}", "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        yaml_file.close()
-        return mapping_dict
+        self.mapping = loadMappingFile(mapping_file)
 
     """
     Extract all names of heavy atoms from the mapping
