@@ -206,8 +206,8 @@ for system in systems:
             system['WARNINGS'] is not None and
             'GROMACS_VERSION' in system['WARNINGS'] and
             system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'):
-            trjconvCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/trjconv'
-            makendxCOMMAND = '/home/osollila/Programs/gromacs/gromacs402/bin/make_ndx'
+            trjconvCOMMAND = 'trjconv'
+            makendxCOMMAND = 'make_ndx'
         else:
             trjconvCOMMAND = 'gmx trjconv'
             makendxCOMMAND = 'gmx make_ndx'
