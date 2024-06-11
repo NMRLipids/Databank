@@ -10,7 +10,7 @@ import socket
 
 
 sys.path.append('..')
-from DatabankLib.databankLibrary import lipids_dict, databank
+from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url
 import DatabankLib.form_factor as form_factor
 
@@ -163,14 +163,13 @@ for system in systems:
             f.write(system_path+" Download failed !!!\n")    
 
 
-    EQtime=float(system['TIMELEFTOUT'])*1000
+    EQtime = float(system['TIMELEFTOUT'])*1000
 
     # FIND LAST CARBON OF SN-1 TAIL AND G3 CARBON
     for molecule in system['COMPOSITION']:
         if molecule in lipids_dict:
-            mapping_file = '../BuildDatabank/mapping_files/' + system['COMPOSITION'][molecule]['MAPPING']
-            with open(mapping_file, "r") as yaml_file:
-                mapping = yaml.load(yaml_file,  Loader=yaml.FullLoader)
+            mapping_file = system['COMPOSITION'][molecule]['MAPPING']
+            mapping = loadMappingFile(mapping_file)
             try:
                 G3atom = mapping['M_G3_M']['ATOMNAME']
             except:

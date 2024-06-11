@@ -14,7 +14,7 @@ import yaml
 from tqdm import tqdm
 
 sys.path.append('..')
-from DatabankLib.databankLibrary import lipids_dict, databank
+from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
 
 path = '../../Data/Simulations/'
 
@@ -39,10 +39,7 @@ for system in tqdm(systems):
     for molecule in system['COMPOSITION']:
         errnum = 0
         m_file = system['COMPOSITION'][molecule]['MAPPING']
-        # opening mapping-yaml
-        mapping_dict = {}
-        with open('./mapping_files/'+m_file, "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        mapping_dict = loadMappingFile(m_file)
         # go over all records
         for mk in mapping_dict.keys():
                 selection = 'resname ' + system['COMPOSITION'][molecule]['NAME'] + ' and name ' +  mapping_dict[mk]['ATOMNAME']

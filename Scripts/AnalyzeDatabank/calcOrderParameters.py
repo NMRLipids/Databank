@@ -1,29 +1,20 @@
-import os
-import sys
-import json
+import os, sys
+import json, yaml
 import urllib.request
-import yaml
 import re
 import buildh
-
-
-
-### Initializing the databank
-
-### This is the NMRlipids databank repository path
-databankPath = '../../'
 
 sys.path.append('..')
 from DatabankLib.databankLibrary import *
 from DatabankLib.databankio import resolve_download_file_url
 
+### Initializing the databank
+databankPath = '../../'
 systems = initialize_databank(databankPath)
-
 
 ## intialize counters for analyzed systems
 ready = 0
 skipped = 0
-
 
 ## loop over simulations
 for system in systems:
@@ -69,26 +60,26 @@ for system in systems:
         unitedAtom = False
 
     ## Check relevant warnings
-    if ( 'WARNINGS' in system and 
-         type(system['WARNINGS']) is dict and
-         'GROMACS_VERSION' in system['WARNINGS'] and 
-         system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-        trjconvCOMMAND = 'trjconv'
-    else:
-        trjconvCOMMAND = 'gmx trjconv'
+    g3switch = ( 'WARNINGS' in system and 
+                 type(system['WARNINGS']) is dict and
+                 'GROMACS_VERSION' in system['WARNINGS'] and 
+                 system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' )
+    trjconvCOMMAND = 'trjconv' if g3switch else 'gmx trjconv'
 
     ## Set topology file names and make Gromacs trajectories whole
     if 'gromacs' in software:
         tpr_name = databankPath + '/Data/Simulations/' + path + system.get('TPR')[0][0]
 
-        xtcwhole= databankPath + '/Data/Simulations/' + path + '/whole.xtc'
+        xtcwhole = databankPath + '/Data/Simulations/' + path + '/whole.xtc'
         if (not os.path.isfile(xtcwhole)):
+            execStr = f'echo System | {trjconvCOMMAND} -f {trj_name} -s {tpr_name} -o {xtcwhole} -pbc mol -b {str(EQtime)}'
             print("Make molecules whole in the trajectory")
-            if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
+            if unitedAtom and system['TRAJECTORY_SIZE'] > 15e9:
                 print("United atom trajectry larger than 15 Gb. Using only every third frame to reduce memory usage.")
-                os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) + ' -skip 3')
-            else:
-                os.system('echo System | ' + trjconvCOMMAND + ' -f ' + trj_name + ' -s ' + tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime))
+                execStr += " -skip 3"
+            rCode = os.system(execStr)
+            if (rCode != 0):
+                raise RuntimeError("trjconv exited with error (see above)")
     elif 'openMM' in software or 'NAMD' in software:
         pdb_name = databankPath + '/Data/Simulations/' + path + system.get('PDB')[0][0]
         if (not os.path.isfile(pdb_name)):
@@ -101,29 +92,24 @@ for system in systems:
     ## Calculate order parameters
     if unitedAtom and 'gromacs' in software:
         topfile = databankPath + '/Data/Simulations/' + path + '/frame0.gro'
-        if ( 'WARNINGS' in system and 
-             system['WARNINGS'] is not None and
-             'GROMACS_VERSION' in system['WARNINGS'] and 
-             system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-            os.system('echo System | editconf -f ' + tpr_name + ' -o ' + topfile )
+        if g3switch:
+            rCode = os.system(f'echo System | editconf -f {tpr_name} -o {topfile}')
+            if (rCode != 0):
+                raise RuntimeError("editconf exited with error (see above)")
         else:
-            os.system('echo System | ' + trjconvCOMMAND + ' -f ' + xtcwhole + ' -s ' + tpr_name + ' -dump 0 -o ' + topfile )
-        
+            rCode = os.system('echo System | {trjconvCOMMAND} -f {xtcwhole} -s {tpr_name} -dump 0 -o {topfile}' )
+            if (rCode != 0):
+                raise RuntimeError(f"trjconv ({trjconvCOMMAND}) exited with error (see above)") 
+
         for key in system['UNITEDATOM_DICT']:
         #construct order parameter definition file for CH bonds from mapping file
             mapping_file = system['COMPOSITION'][key]['MAPPING']
-            # load mapping file into a dictionary
-            mapping_dict = {}
-            with open('../BuildDatabank/mapping_files/'+mapping_file, "r") as yaml_file:
-                mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-            yaml_file.close()
+            mapping_dict = loadMappingFile(mapping_file)
             
             def_fileNAME = databankPath + '/Data/Simulations/' + path + key + '.def' 
             def_file = open(def_fileNAME, 'w')
-
             
-            previous_line = ""
-            
+            previous_line = ""            
 
             regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
             regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
@@ -143,10 +129,8 @@ for system in systems:
                 if atomH:
                     items = [atomC[1], atomH[1], atomC[0], atomH[0]]
                     def_line = items[2] + "&" + items[3] + " " + key + " " + items[0] + " " + items[1] + "\n"
-                    #def_line = items[2] + "&" + items[3] + " " + system['COMPOSITION'][key]['NAME'] + " " + items[0] + " " + items[1] + "\n"
                     if def_line != previous_line:
                         def_file.write(def_line)
-                        #print(def_line)
                         previous_line = def_line
             def_file.close()            
              
@@ -158,22 +142,17 @@ for system in systems:
             if (not os.path.isfile(lipid_json_file[0])):
                 lipid_json_file = None
             
-            #lipidname = system['UNITEDATOM_DICT'][key]
-            #    print(lipidname)
-            #buildH_calcOP_test.main(topfile,lipidname,deffile,xtcwhole,ordPfile)
             print(system['UNITEDATOM_DICT'][key])
             buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], lipid_jsons=lipid_json_file, traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
-            #os.system('buildH -t ' + xtcwhole + ' -c ' + topfile + ' -d ' + def_fileNAME + ' -l ' + system['UNITEDATOM_DICT'][key]  + ' -o ' + ordPfile + '.buildH' )
 
-            outfile=open(ordPfile,'w')
-            line1="Atom     Average OP     OP stem"+'\n'
-            outfile.write(line1)
+            outfile = open(ordPfile,'w')
+            outfile.write("Atom     Average OP     OP stem\n")
         
             data = {}
-            outfile2= databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
+            outfile2 = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
         
             with open(ordPfile + '.buildH') as OPfile:
-                lines=OPfile.readlines()
+                lines = OPfile.readlines()
                 for line in lines:
                     if "#" in line:
                         continue
@@ -189,24 +168,21 @@ for system in systems:
                 json.dump(data,f)
 
             outfile.close()
-            #outfile2.close()
 
-        # os.system('cp ' + str(dir_tmp) + '/' + key + 'OrderParameters.dat ' + DATAdir) #Or should these be put into Data/Simulations/
-        # os.system('cp ' +str(dir_tmp) + '/' + key + 'OrderParameters.json ' + DATAdir)
     else:
         if 'gromacs' in software:
-            #trj = str(DATAdir) + '/' + str(trj)
             gro = databankPath + '/Data/Simulations/' + path + '/conf.gro'
             
             #make gro file
             print("\n Makin gro file")
-            if ( 'WARNINGS' in system and 
-                 system['WARNINGS'] is not None and
-                 'GROMACS_VERSION' in system['WARNINGS'] and 
-                 system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3' ):
-                os.system('echo System | editconf -f ' + tpr_name + ' -o ' + gro) 
+            if g3switch:
+                rCode = os.system(f'echo System | editconf -f {tpr_name} -o {gro}') 
+                if (rCode != 0):
+                    raise RuntimeError("editconf exited with error (see above)")
             else:
-                os.system('echo System | gmx trjconv -f ' + trj_name + ' -s ' + tpr_name + ' -dump 0 -o ' + gro)
+                rCode = os.system(f'echo System | gmx trjconv -f {trj_name} -s {tpr_name} -dump 0 -o {gro}')
+                if (rCode != 0):
+                    raise RuntimeError("trjconv exited with error (see above)")
                     
         for key in system['COMPOSITION']:
 
@@ -227,30 +203,27 @@ for system in systems:
                 if (os.path.isfile(outfilename2)):
                     print('Order parameter file already found')
                     continue
-                outfile=open(outfilename,'w')
+                outfile = open(outfilename,'w')
 
                 if 'gromacs' in software:
                     try:
-                        OrdParam=find_OP(mapping_file,tpr_name,xtcwhole,resname)
+                        OrdParam = find_OP(mapping_file,tpr_name,xtcwhole,resname)
                     except:
                         print('Using tpr did not work, trying with gro')
-                        OrdParam=find_OP(mapping_file,gro,xtcwhole,resname)
+                        OrdParam = find_OP(mapping_file,gro,xtcwhole,resname)
 
                 if 'openMM' in software or 'NAMD' in software:
-                    OrdParam=find_OP(mapping_file,pdb_name,trj_name,resname)
+                    OrdParam = find_OP(mapping_file,pdb_name,trj_name,resname)
                         
-                line1="Atom     Average OP     OP stem"+'\n'
-                outfile.write(line1)
+                outfile.write("Atom     Average OP     OP stem\n")
     
                 data = {}
                 outfile2 = outfilename2 
 
                 for i,op in enumerate(OrdParam):
-                    resops =op.get_op_res
-                    #print(i,op.get_op_res)
-                    (op.avg, op.std, op.stem) =op.get_avg_std_stem_OP
-                    line2=str(op.name)+" "+str(op.avg)+" "+str(op.stem)+'\n'
-                    outfile.write(line2)
+                    resops = op.get_op_res
+                    (op.avg, op.std, op.stem) = op.get_avg_std_stem_OP
+                    outfile.write(f'{op.name} {str(op.avg)} {str(op.stem)}\n')
     
                     data[str(op.name)]=[]
                     data[str(op.name)].append(op.get_avg_std_stem_OP)
@@ -259,8 +232,6 @@ for system in systems:
                     json.dump(data,f)
                 outfile.close()
                 f.close()
-                # os.system('cp ' + str(dir_path) + '/' + key + 'OrderParameters.dat ' + DATAdir) #MUUTA
-                #os.system('cp ' +str(dir_path) + '/' + key + 'OrderParameters.json ' + DATAdir) #MUUTA
     
         print("Order parameters calculated and saved to ",path)
 
@@ -268,4 +239,3 @@ for system in systems:
         
 print('Order parameters calculated for ', ready , 'systems.')
 print('Already calculated order parameters found for', skipped , 'systems.')
-
