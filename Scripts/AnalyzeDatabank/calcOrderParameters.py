@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 import os, sys
-import json, yaml
+import json
 import urllib.request
 import re
 import buildh

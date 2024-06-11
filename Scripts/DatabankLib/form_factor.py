@@ -1,26 +1,24 @@
-#!/usr/bin/env python
-# coding: utf-8
+"""
+Module form_factor serves for bilayer form factor calculations.
+"""
 
 import re
 import MDAnalysis as mda
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-nav = 6.02214129e+23
 import json
-from json import JSONEncoder
 import time
 import gc
-gc.collect()
 import os
-import yaml
 from pprint import pprint
-
-from databankLibrary import lipids_dict, loadMappingFile
-sys.path.append('../BuildDatabank')
-from jsonEncoders import CompactJSONEncoder
 from tqdm import tqdm
 
+from .databankLibrary import lipids_dict, loadMappingFile
+from .jsonEncoders import CompactJSONEncoder
+
+nav = 6.02214129e+23
+gc.collect()
 
 # To write data in numpy arrays into json file, we inherit compact JSON 
 # encoder to make him store 2xN numpy arrays as just a nested list
