@@ -16,9 +16,7 @@ import scipy.signal
 
 sys.path.append('..')
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib.databankLibrary import ( lipids_dict, read_trajs_calc_OPs, 
-                                         parse_op_input, find_OP, OrderParameter,
-                                        loadMappingFile )
+from DatabankLib.databankLibrary import ( lipids_dict, loadMappingFile )
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
