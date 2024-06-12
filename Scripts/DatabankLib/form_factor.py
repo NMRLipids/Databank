@@ -249,7 +249,8 @@ class FormFactor:
                     if re.match(_cm[1].replace('+', '\\+'), atom):
                         atom_i1 = i
                         break
-                assert(atom_i1 is not None)
+                if atom_i1 is None:
+                    raise ValueError(f"Atom was not found: {res}:{atom}")
                 # index_list = [atom in pairs for pairs in pairs_residue[res]] #find mapping name
                 # print (atom, pairs_residue[res])
                 # atom_i1 = index_list.index(True)
