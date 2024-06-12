@@ -1569,7 +1569,7 @@ def getHydrationLevel(system):
 
 def getBatch(batchID,systems=None):
     """
-    Returns a dictionary with the systems with the same batch ID
+    Returns a list with the systems with the same batch ID
     
     :param system: a system dictionary
     
@@ -1643,7 +1643,7 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
     Z = np.array(Z, dtype = float)
     
     # Critical value
-    qc = 4*np.pi/wl*np.sin(wl*(Densw*2.814e-5/np.pi)**0.5)
+    qc = 4*np.pi/wl*np.sin(wl*(Densw*2.818e-5/np.pi)**0.5)
     
     # Density in the air region is zero, so we add these points to compensate
     # the loss of points in the numerical derivative
@@ -1692,7 +1692,7 @@ def calcNR( Dens, Z, qz_range, Densw, wl = 2, Norm=False ):
     Dens = np.array(Dens, dtype = float)
     Z = np.array(Z, dtype = float)
     
-    # Critical value ## WRONG?
+    # Critical value
     qc = 4*np.pi/wl*np.sin(wl*(Densw/np.pi)**0.5)
     
     # Density in the air region is zero, so we add these points to compensate
