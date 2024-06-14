@@ -3,7 +3,7 @@ import yaml
 import json
 import numpy as np
 
-from databankLibrary import ( lipids_dict, getpA_isoterm )
+from databankLibrary import ( lipids_dict )
 from tqdm import tqdm
 
 import argparse
@@ -216,10 +216,14 @@ def loadExperiments(experimentType):
         dataFile = '_Order_Parameters.json'
     elif experimentType == 'FormFactors':
         dataFile = '_FormFactor.json'
-    elif experimentType == 'Isoterms':
-        dataFile = '_Isoterm.json'
+    elif experimentType == 'Isotherms':
+        dataFile = '_Isotherm.json'
+    elif experimentType == 'XRR':
+        dataFile = '_XRR.json'
+    elif experimentType == 'NR':
+        dataFile = '_NR.json'
     else:
-        raise NotImplementedError("Only OrderParameters, FormFactors and Isoterms types are implemented.")
+        raise NotImplementedError("Only OrderParameters, FormFactors, Isotherms, XRR and NR types are implemented.")
 
     print("Build experiments [%s] index..." % experimentType, end='')
     rmIdx = []
@@ -246,7 +250,11 @@ def loadExperiments(experimentType):
                     molecule_name = fname.replace(dataFile,'')
                 elif experimentType == "FormFactors": 
                     molecule_name = 'system' 
-                elif experimentType == "Isoterms":
+                elif experimentType == "Isotherms":
+                    molecule_name = 'monolayer' 
+                elif experimentType == "XRR":
+                    molecule_name = 'monolayer' 
+                elif experimentType == "NR":
                     molecule_name = 'monolayer' 
                 expData = Data(molecule_name, dataPath)
                 experiments.append(Experiment(readmeExp, expData, subdir, experimentType))
@@ -346,8 +354,12 @@ def findPairs(experiments, simulations):
                                 simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
                             elif experiment.exptype == "FormFactors":
                                 simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
-                            elif experiment.exptype == "Isoterms":
-                                simulation.readme['EXPERIMENT']['ISOTERMS'] = exp_path
+                            elif experiment.exptype == "Isotherms":
+                                simulation.readme['EXPERIMENT']['ISOTHERMS'] = exp_path
+                            elif experiment.exptype == "XRR":
+                                simulation.readme['EXPERIMENT']['XRR'] = exp_path
+                            elif experiment.exptype == "NR":
+                                simulation.readme['EXPERIMENT']['NR'] = exp_path
                                 
                         else:
                             continue
@@ -412,7 +424,9 @@ def main():
         simulation.readme['EXPERIMENT'] = {}
         simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
         simulation.readme['EXPERIMENT']['FORMFACTOR']= {}
-        simulation.readme['EXPERIMENT']['ISOTERMS']= {}
+        simulation.readme['EXPERIMENT']['ISOTHERMS']= {}
+        simulation.readme['EXPERIMENT']['XRR']= {}
+        simulation.readme['EXPERIMENT']['NR']= {}
         for lipid in simulation.getLipids():
             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
         
@@ -422,7 +436,10 @@ def main():
 
     experimentsOrderParameters = loadExperiments('OrderParameters')
     experimentsFormFactors = loadExperiments('FormFactors')
-    experimentsIsoterms = loadExperiments('Isoterms')
+    experimentsIsotherms = loadExperiments('Isotherms')
+    experimentsXRR = loadExperiments('XRR')
+    experimentsNR = loadExperiments('NR')
+
 
     # Pair each simulation with an experiment with the closest matching temperature and composition
     with open('search-databank-pairs.log', 'w') as logf:
@@ -434,24 +451,26 @@ def main():
         pairsFF = findPairs(experimentsFormFactors, simulations)
         logf.write("=== FF PAIRS ===\n")
         logPairs(pairsFF, logf)
-        print("Scanning simulation-experiment pairs among p-A isoterms experiments.")
-        pairsPA = findPairs(experimentsIsoterms, simulations)
+        print("Scanning simulation-experiment pairs among p-A isotherms experiments.")
+        pairsPA = findPairs(experimentsIsotherms, simulations)
         logf.write("=== pA PAIRS ===\n")
         logPairs(pairsPA, logf)
-
-
-    '''
-    for pair in pairsFF:
-        print('#################')
-        print(pair[0].readme)
-        print(pair[0].indexingPath)
-        print("#")
-        print(pair[1].readme)         
-    '''
+        print("Scanning simulation-experiment pairs among XRR experiments.")
+        pairsXR = findPairs(experimentsXRR, simulations)
+        logf.write("=== XR PAIRS ===\n")
+        logPairs(pairsXR, logf)
+        print("Scanning simulation-experiment pairs among NR experiments.")
+        pairsNR = findPairs(experimentsNR, simulations)
+        logf.write("=== NR PAIRS ===\n")
+        logPairs(pairsNR, logf)
+    
 
     print("Found order parameter data for " + str(len(pairsOP)) + " pairs")  
     print("Found form factor data for " + str(len(pairsFF)) + " pairs")
-    print("Found p-A isoterm data for " + str(len(pairsPA)) + " pairs")
+    print("Found p-A isotherm data for " + str(len(pairsPA)) + " pairs")
+    print("Found XRRdata for " + str(len(pairsXR)) + " pairs")
+    print("Found NR data for " + str(len(pairsNR)) + " pairs")
+
 
 if __name__ == "__main__":
     main()
