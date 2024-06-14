@@ -24,6 +24,12 @@ db_data = databank(path)
 systems = db_data.get_systems()
 
 for system in systems:
+    
+    # Skip non lipid bliayer systems
+    if "TYPEOFSYSTEM" in system.keys():
+        if system["TYPEOFSYSTEM"] != "lipid bilayer":
+            continue
+    
     WaterDensity_name = '../../' + system['path'] + 'WaterDensity.json'
     LipidDensity_name = '../../' + system['path'] + 'LipidDensity.json'
     print(LipidDensity_name)
