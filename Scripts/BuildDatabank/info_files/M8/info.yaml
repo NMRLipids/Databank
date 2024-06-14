@@ -1,0 +1,20 @@
+DOI: 10.5281/zenodo.345321
+TRJ: DPPC-298K-66.xtc
+TPR: DPPC-298K-66.tpr
+EDR: DPPC-298K-66.edr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 50
+COMPOSITION:
+ DPPC: 
+  NAME: DPPC
+  MAPPING: mappingDPPCcharmm.yaml 
+ SOL:
+  NAME: SOL
+  MAPPING: mappingOPCwater.yaml
+TOP: topol.top
+TYPEOFSYSTEM: lipid monolayer
+SYSTEM: DPPC monolayers at 66 Å^2
+DIR_WRK: /Users/fabs/temp_nmr
+AUTHORS_CONTACT: Matti Javanainen
+BATCHID: MJ_DPPC_10.1021/acs.langmuir.7b02855
