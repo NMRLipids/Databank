@@ -1,0 +1,33 @@
+DOI: 10.5281/zenodo.345321
+TRJ:
+- - DPPC-298K-75.xtc
+TPR:
+- - DPPC-298K-75.tpr
+EDR:
+- - DPPC-298K-75.edr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 50
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCcharmm.yaml
+    COUNT:
+    - 256
+    - 256
+  SOL:
+    NAME: SOL
+    MAPPING: mappingOPCwater.yaml
+    COUNT: 41482
+TOP:
+- - topol.top
+TYPEOFSYSTEM: lipid monolayer
+SYSTEM: DPPC monolayers at 75 Å^2
+DIR_WRK: /Users/fabs/temp_nmr
+AUTHORS_CONTACT: Matti Javanainen
+BATCHID: MJ_DPPC_10.1021/acs.langmuir.7b02855
+TRAJECTORY_SIZE: 1241322612
+TRJLENGTH: 150100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 232488
+DATEOFRUNNING: 13/06/2024
