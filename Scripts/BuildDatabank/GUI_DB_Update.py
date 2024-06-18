@@ -28,7 +28,7 @@ import numpy as np
 
 # Program description
 parser = argparse.ArgumentParser(description =
-    '''NMRLipids Update v0.1''')
+    '''NMRLipids Update v1.0''')
 
 # Ubication of data
 parser.add_argument( "-f", "--folder", type= str, default = 'Databank-main',
@@ -141,12 +141,12 @@ def SQL_Select( Table: str, Values: list, Condition: dict = {} ) -> str:
         SELECT Values[0], (...), Values[-1] FROM Table 
           WHEN Condition.keys()[0]=Condition.value()[0] AND ... Condition.keys()[-1]=Condition.value()[-1]
     '''
-    String = ' SELECT `' + '`, `'.join( Values ) + '` FROM `' + Table + '`'
-    
+    Query = ' SELECT ' + ", ".join( map( lambda x: f'`{x}`', Values ))  + f' FROM `{Table}` '
     # Add a condition to the search
-    if Condition:  String += ' WHERE `' + '" AND `'.join( [ str( Par ) + '` = "' + str( Condition[Par] ) for Par in Condition ] ) + '"'
-
-    return String
+    if Condition: 
+        Query += 'WHERE ' + " AND ".join( map( lambda x: f'`{x[0]}`="{x[1]}"', Condition.items()) )
+    #return String
+    return Query
 
 
 def SQL_Create( Table: str, Values: dict, Condition: dict = {} ) -> str:
@@ -169,12 +169,13 @@ def SQL_Create( Table: str, Values: dict, Condition: dict = {} ) -> str:
         INSERT INTO Table ( Values.keys()[0], ..., Values.keys()[-1] ) VALUES ( Values.values()[0], ..., Values.values()[-1] ) 
           WHEN Condition.keys()[0]=Condition.value()[0] AND ... Condition.keys()[-1]=Condition.value()[-1]
     '''
-    String = ' INSERT INTO `' + Table + '` (`' +'`, `'.join( [ Par for Par in Values ] ) + '`) VALUES ("' + '", "'.join( [ str( Values[Par] ) for Par in Values ] ) + '")'
+    Query = f' INSERT INTO `{Table}` (' + ", ".join( map( lambda x: f'`{x}`', Values.keys() ) ) + ") VALUES (" + ", ".join( map( lambda x: f'"{x}"', Values.values() ) ) + ') ' 
     
     # Add a condition to the search
-    if Condition:  String += ' WHERE `' + '" AND `'.join( [ str( Par ) + '` = "' + str( Condition[Par] ) for Par in Condition ] ) + '"'
+    if Condition: 
+        Query += 'WHERE ' + " AND ".join( map( lambda x: f'`{x[0]}`="{x[1]}"', Condition.items()) )
 
-    return String
+    return Query
 
 
 def SQL_Update( Table: str, Values: dict, Condition: dict = {} ) -> str:
@@ -197,12 +198,13 @@ def SQL_Update( Table: str, Values: dict, Condition: dict = {} ) -> str:
         UPDATE Table SET Values.keys()[0] = Values.values()[0], ..., Values.keys()[-1] = Values.values()[-1]
           WHEN Condition.keys()[0]=Condition.value()[0] AND ... Condition.keys()[-1]=Condition.value()[-1]
     '''
-    String = ' UPDATE `' + Table + '` SET `' + '", `'.join( [ str( Par ) + '` = "' + str( Values[Par] ) for Par in Values ] ) + '"'
+    Query = f' UPDATE `{Table}` SET ' + ', '.join( map( lambda x: f'`{x[0]}`="{x[1]}"', Values.items()) ) + ' '
     
     # Add a condition to the search
-    if Condition:  String += ' WHERE `' + '" AND `'.join( [ str( Par ) + '` = "' + str( Condition[Par] ) for Par in Condition ] ) + '"'
+    if Condition: 
+        Query += 'WHERE ' + " AND ".join( map( lambda x: f'`{x[0]}`="{x[1]}"', Condition.items()) )
 
-    return String
+    return Query
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -341,7 +343,8 @@ def DBEntry( Table: str, Information: dict, Minimal: dict = {} ) -> tuple:
     # The presence of NaN in the DB leads to problems dealing with the data
     # A solution must be found for this problem in the future.
     for entry in Information:
-        if Information[ entry ] == "nan" : Information[ entry ] = 0
+        if Information[ entry ] == "nan" : 
+            Information[ entry ] = 0
 ####################
     
     # Check the existence of the entry
@@ -373,12 +376,62 @@ def DBEntry( Table: str, Information: dict, Minimal: dict = {} ) -> tuple:
         return EntryID
     
 
+def ResetTable( Table: str ):
+    '''
+    Remove the content of a table and reset the index
+
+    Parameters
+    ----------
+    Table : str
+        Name of the table.
+
+    Returns
+    -------
+    None.
+
+    '''
+    
+    # Create a cursor
+    cursor = database.cursor()
+    
+    cursor.execute( f' DELETE FROM `{Table}`' )
+    cursor.execute( f'ALTER TABLE `{Table}` AUTO_INCREMENT=1' )
+
+    return
+
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # MAIN PROGRAM
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
+# The list of molecules in the membrane whose structure is not a phospholipid
 HETEROMOLECULES_LIST = [ "CHOL", "DCHOL", "C20", "C30" ]
 FAILS = []
+
+TABLE_LIST = [ "experiments_OP", 
+               "experiments_FF",
+               "forcefields",
+               "lipids",
+               "ions",
+               "water_models",
+               "heteromolecules",
+               "membranes",
+               "trajectories",
+               "trajectories_lipids",
+               "trajectories_water",
+               "trajectories_ions",
+               "trajectories_heteromolecules",
+               "trajectories_membranes",
+               "trajectories_analysis",
+               "trajectories_analysis_lipids",
+               "trajectories_analysis_heteromolecules",
+               "trajectories_analysis_ions",
+               "trajectories_analysis_water",
+               "ranking_global",
+               "ranking_lipids",
+               "ranking_heteromolecules",
+               "trajectories_experiments_OP",
+               "trajectories_experiments_FF" 
+               ]
 
 if __name__ == '__main__':
     # Load the configuration of the connection
@@ -415,14 +468,92 @@ if __name__ == '__main__':
                 
             systems.append( README )
         
-    # Otherwise load the whole databank
-    except:
-        systems = initialize_databank( args.folder )    
 
+    except:
+        # Initialize the whole databank
+        systems = initialize_databank( args.folder )
+        
+        # Remove the content of the tables and reset the autoincrements
+        for table in TABLE_LIST[::-1]:
+            ResetTable( table )
+            
+        # Create dummy FF and membrane
+        Info = { "name":   'None',
+                 "date":   'None', 
+                 "source": 'None' }
+        _ = DBEntry( 'forcefields', Info, Info ) 
+        
+        # Create dummy FF and membrane
+        Info = { "forcefield_id":   1, 
+                 "lipid_names_l1":  "None",
+                 "lipid_names_l2":  "None", 
+                 "lipid_number_l1": "None", 
+                 "lipid_number_l2": "None",
+                 "geometry":        "None" }
+        _ = DBEntry( 'membranes', Info, Info ) 
+        
+        
+### TABLE `experiments_OP`
+     
+    # Find files with order parameters experiments
+    EXP_OP = []
+    
+    # Get the path to every README.yaml file with experimental data
+    for path, _, files in os.walk( args.folder + args.experiment_folder + "OrderParameters/" ):
+        for file in files:
+            if file.endswith("README.yaml"):
+                EXP_OP.append( path.split("OrderParameters/")[1] )
+             
+    # Iterate over each experiment
+    for expOP in EXP_OP:
+        
+        # Get the DOI of the experiment and the path to the README.yaml file
+        with open( args.folder + args.experiment_folder + "OrderParameters/" + expOP + '/README.yaml' ) as File:
+            README = yaml.load( File, Loader = yaml.FullLoader )
+        
+        for file in os.listdir( args.folder + args.experiment_folder + "OrderParameters/" + expOP ):
+            if file.endswith(".json"):
+            
+                Info = { "doi": README["DOI"],
+                         "path": args.experiment_folder + "OrderParameters/" + expOP + '/' + file }
+                
+                # Entry in the DB with the info of the experiment
+                Exp_ID = DBEntry( 'experiments_OP', Info, Info )
+    
+    
+### TABLE `experiments_FF`
+
+    # Find files with form factor experiments
+    EXP_FF = []
+    
+    # Get the path to every README.yaml file with experimental data
+    for path, _, files in os.walk( args.folder + args.experiment_folder + "FormFactors/" ):
+        for file in files:
+            if file.endswith("README.yaml"):
+                EXP_FF.append( path.split("FormFactors/")[1] )
+             
+    # Iterate over each experiment
+    for expFF in EXP_FF:
+        
+        # Get the DOI of the experiment and the path to the README.yaml file
+        with open( args.folder + args.experiment_folder + "FormFactors/" + expFF + '/README.yaml' ) as File:
+            README = yaml.load( File, Loader = yaml.FullLoader )
+            
+        for file in os.listdir( args.folder + args.experiment_folder + "FormFactors/" + expFF ):
+            if file.endswith(".json"):
+            
+                Info = { "doi": README["DOI"],
+                         "path": args.experiment_folder + "FormFactors/" + expFF + '/' + file }
+                
+                # Entry in the DB with the info of the experiment
+                Exp_ID = DBEntry( 'experiments_FF', Info, Info )
+        
+    
     # Iterate over the loaded systems
     for README in systems:
         
         try:
+        #if True:
             print("\nCollecting data from system:")
             print( README["path"] + "\n" )
             
@@ -431,12 +562,12 @@ if __name__ == '__main__':
         
             # In the case a field in the README does not exist, set its value to 0
             for field in ['AUTHORS_CONTACT','COMPOSITION','CPT','DATEOFRUNNING','DIR_WRK',
-                          'DOI','EXPERIMENT','FF','FF_DATE','FF_SOURCE','GRO','LOG','NUMBER_OF_ATOMS',
+                          'DOI','FF','FF_DATE','FF_SOURCE','GRO','LOG','NUMBER_OF_ATOMS',
                           'PREEQTIME','PUBLICATION','SOFTWARE','SOFTWARE_VERSION','SYSTEM','TEMPERATURE',
                           'TIMELEFTOUT','TOP','TPR','TRAJECTORY_SIZE','TRJ','TRJLENGTH','TYPEOFSYSTEM','WARNINGS','ID']:
                 if not field in README: README[field] = 0        
             
-### TABLE 1: forcefields
+    ### TABLE `forcefields`
             # Collect the information about the forcefield
             Info = { "name":   README["FF"],
                      "date":   README["FF_DATE"], 
@@ -446,7 +577,7 @@ if __name__ == '__main__':
             FF_ID = DBEntry( 'forcefields', Info, Info )
         
         
-### TABLE 2: lipids
+    ### TABLE `lipids`
             # Empty dictionaries for the info of the lipids
             Lipids = {}; Lipids_ID = {}; Lipid_Ranking = {}; Lipid_Quality = {}
             # Find the lipids in the composition
@@ -468,13 +599,13 @@ if __name__ == '__main__':
                     Lipids[ key ] = README["COMPOSITION"][ key ]["COUNT"]
                     Lipids_ID[ key ] = Lip_ID
         
-##### TEMPORAL ##### 
-# Must be chenged when the final structure is ready
-# If the LIPID_FragmentQuality.json file will be defined for every system
-# this part can be deleted and just read the quality (try at the end of this
-# part). At this moment the ranking is not necessary in the DB, the web 
-# already provides the result sorted by quality.
-# Same for the heteromolecules.
+    ##### TEMPORAL ##### 
+    # Must be chenged when the final structure is ready
+    # If the LIPID_FragmentQuality.json file will be defined for every system
+    # this part can be deleted and just read the quality (try at the end of this
+    # part). At this moment the ranking is not necessary in the DB, the web 
+    # already provides the result sorted by quality.
+    # Same for the heteromolecules.
                     Lipid_Ranking[ key ] = {}
                     # Find the position of the system in the ranking
                     for file in glob.glob( PATH_RANKING + key + "*" ):
@@ -516,12 +647,14 @@ if __name__ == '__main__':
                                                "sn-2": 0 }
                         
                     for t in ["total", "headgroup", "sn-1", "sn-2"]:
-                        try:    Lipid_Quality[key][t] = Lipid_Quality[key][t]  if not np.isnan( Lipid_Quality[key][t] ) else 0
-                        except: Lipid_Quality[key][t] = 0
-####################
+                        try:    
+                            Lipid_Quality[key][t] = Lipid_Quality[key][t]  if not np.isnan( Lipid_Quality[key][t] ) else 0
+                        except: 
+                            Lipid_Quality[key][t] = 0
+    ####################
                         
     
-### TABLE 3: ions
+    ### TABLE `ions`
             # Empty dictionary for the info of the ions
             Ions = {}
             # Find the ions in the composition
@@ -542,7 +675,7 @@ if __name__ == '__main__':
         
             
         
-### TABLE 4: water_models (rename to solvent better?)
+    ### TABLE `water_models`
             if "SOL" in README["COMPOSITION"]:
                 WatName = README["COMPOSITION"]["SOL"]["NAME"]
                 
@@ -556,10 +689,10 @@ if __name__ == '__main__':
                 Wat_ID = DBEntry( 'water_models', Info, Info )
             
         
-### TABLE 5: heteromolecules
-# Heteromolecules are defined as the lipids for whom a distinction between the
-# different parts (headgroup, sn-1, sn-2) was not made. They could be included
-# in the lipids table and leaving some fields empty.
+    ### TABLE `heteromolecules`
+    # Heteromolecules are defined as the lipids for whom a distinction between the
+    # different parts (headgroup, sn-1, sn-2) was not made. They could be included
+    # in the lipids table and leaving some fields empty.
     
             # Empty dictionaries for the info of the heteromolecules
             Heteromolecules = {}; Heteromolecules_ID = {}; Heteromolecules_Ranking = {} 
@@ -584,8 +717,8 @@ if __name__ == '__main__':
                     Heteromolecules[ key ] = README["COMPOSITION"][ key ]["COUNT"]
                     Heteromolecules_ID[ key ] = Mol_ID
         
-##### TEMPORAL ##### 
-# See the lipids table for the reasons
+    ##### TEMPORAL ##### 
+    # See the lipids table for the reasons
                     Heteromolecules_Ranking[ key ] = {}
                     
                     # Find the position of the system in the raking
@@ -623,12 +756,14 @@ if __name__ == '__main__':
                                                          "tail": 0 }
                         
                     for t in ["total","headgroup","tail"]:
-                        try:    Heteromolecules_Quality[key][t] = Heteromolecules_Quality[key][t] if not np.isnan( Heteromolecules_Quality[key][t] ) else 0
-                        except: Heteromolecules_Quality[key][t] = 0
-####################
+                        try:    
+                            Heteromolecules_Quality[key][t] = Heteromolecules_Quality[key][t] if not np.isnan( Heteromolecules_Quality[key][t] ) else 0
+                        except: 
+                            Heteromolecules_Quality[key][t] = 0
+    ####################
         
         
-### TABLE 6: membranes
+    ### TABLE `membranes`
             # Find the proportion of each lipid in the leaflets
             Names = [ [], [] ]; Number = [ [], [] ]
             
@@ -655,7 +790,7 @@ if __name__ == '__main__':
             Mem_ID = DBEntry( 'membranes', Info, Info )
             
             
-### TABLE 7: trajectories
+    ### TABLE `trajectories`
             # Collect the information about the simulation
             Info = { "id":              README["ID"],
                      "forcefield_id":   FF_ID, 
@@ -686,7 +821,7 @@ if __name__ == '__main__':
             Trj_ID = DBEntry( 'trajectories', Info, Minimal )    
         
             
-### TABLE 8: trajectories_lipids
+    ### TABLE `trajectories_lipids`
             TrjL_ID = {}
             for lipid in Lipids:
                 # Collect the information of each lipid in the simulation
@@ -705,7 +840,7 @@ if __name__ == '__main__':
                 TrjL_ID[ lipid ] = DBEntry( 'trajectories_lipids', Info, Minimal )
             
             
-### TABLE 9: trajectories_water
+    ### TABLE `trajectories_water`
             if "SOL" in README["COMPOSITION"]:
                 # Collect the information of the water in the simulation
                 Info = { "trajectory_id": Trj_ID, 
@@ -721,7 +856,7 @@ if __name__ == '__main__':
                 _ = DBEntry( 'trajectories_water', Info, Minimal )
             
         
-### TABLE 10: trajectories_ions
+    ### TABLE `trajectories_ions`
             TrjI_ID = {}
             for ion in Ions:
                 # Collect the information of each ion in the simulation
@@ -738,7 +873,7 @@ if __name__ == '__main__':
                 TrjI_ID[ ion ] = DBEntry( 'trajectories_ions', Info, Minimal )
         
         
-### TABLE 11: trajectories_heteromolecules
+    ### TABLE `trajectories_heteromolecules`
             TrjM_ID = {}
             for hetero in Heteromolecules:
                 # Collect the information of each heteromolecule in the simulation
@@ -755,8 +890,16 @@ if __name__ == '__main__':
                 # Entry in the DB with the info of the heteromolecules in the simulation
                 TrjM_ID[ hetero ] = DBEntry( 'trajectories_heteromolecules', Info, Minimal )
             
+    ### TABLE `trajectories_membranes``
+    
+            Info = { "trajectory_id": Trj_ID,
+                     "membrane_id": Mem_ID,
+                     "name": README["SYSTEM"] }
+            
+            _ = DBEntry( 'trajectories_membranes', Info, Info )
+            
         
-### TABLE 12: trajectories_analysis
+    ### TABLE `trajectories_analysis`
             # Find the bilayer thickness
             try:
                 with open( PATH_SIMULATION + 'thickness.json' ) as FILE:
@@ -797,8 +940,10 @@ if __name__ == '__main__':
                                    "headgroup": 0,
                                    "tails": 0 }
             
-            try:    FFExp = args.experiment_folder + "FormFactors/" + README["EXPERIMENT"]["FORMFACTOR"]
-            except: FFExp = ''
+            try:    
+                FFExp = args.experiment_folder + "FormFactors/" + README["EXPERIMENT"]["FORMFACTOR"]
+            except: 
+                FFExp = ''
             
             # Collect the information of the analysis of the trajectory
             Info = { "trajectory_id":          Trj_ID,
@@ -820,10 +965,12 @@ if __name__ == '__main__':
             _ = DBEntry( 'trajectories_analysis', Info, Minimal )
             
         
-### TABLE 13: trajectories_analysis_lipids
+    ### TABLE `trajectories_analysis_lipids`
             for lipid in Lipids:
-                try:    OPExp = args.experiment_folder + "OrderParameters/" + [ i for i in README["EXPERIMENT"]["ORDERPARAMETER"][lipid].values()][0] + '/' + lipid + '_Order_Parameters.json'
-                except: OPExp = ''
+                try:    
+                    OPExp = args.experiment_folder + "OrderParameters/" + list(README["EXPERIMENT"]["ORDERPARAMETER"][lipid].values())[0] + '/' + lipid + '_Order_Parameters.json'
+                except: 
+                    OPExp = ''
                 
                 # Collect the information of each lipid in the simulation
                 Info = { "trajectory_id":                Trj_ID,
@@ -844,10 +991,12 @@ if __name__ == '__main__':
                 _ = DBEntry( 'trajectories_analysis_lipids', Info, Minimal )
             
         
-### TABLE 14: trajectories_analysis_heteromolecules
+    ### TABLE `trajectories_analysis_heteromolecules`
             for hetero in Heteromolecules:
-                try:    OPExp = args.experiment_folder + "OrderParameters/" + [ i for i in README["EXPERIMENT"]["ORDERPARAMETER"][hetero].values()][0] + '/' + hetero + '_Order_Parameters.json'
-                except: OPExp = ''       
+                try:    
+                    OPExp = args.experiment_folder + "OrderParameters/" + list(README["EXPERIMENT"]["ORDERPARAMETER"][hetero].values())[0] + '/' + hetero + '_Order_Parameters.json'
+                except: 
+                    OPExp = ''       
         
                 # Collect the information of each heteromolecule in the simulation
                 Info = { "trajectory_id":                Trj_ID,
@@ -867,7 +1016,7 @@ if __name__ == '__main__':
                 _ = DBEntry( 'trajectories_analysis_heteromolecules', Info, Minimal )
         
         
-### TABLE 15: trajectory_analysis_ions
+    ### TABLE `trajectory_analysis_ions`
             for ion in Ions:
                 # Collect the information of the ions in the simulation
                 Info = { "trajectory_id": Trj_ID,
@@ -881,7 +1030,7 @@ if __name__ == '__main__':
                 _ = DBEntry( 'trajectories_analysis_ions', Info, Info )
                 
         
-### TABLE 16: trajectory_analysis_water
+    ### TABLE `trajectory_analysis_water`
             if "SOL" in README["COMPOSITION"]:
                 # Collect the information of the water in the simulation
                 Info = { "trajectory_id": Trj_ID,
@@ -892,11 +1041,11 @@ if __name__ == '__main__':
                 _ = DBEntry( 'trajectories_analysis_water', Info, Info )
         
         
-##### TEMPORAL ##### 
-# The table may be removed in the future, and the quality included in the 
-# trajectory_analysis table.
+    ##### TEMPORAL ##### 
+    # The table may be removed in the future, and the quality included in the 
+    # trajectory_analysis table.
         
-### TABLE 17: ranking_global
+    ### TABLE `ranking_global`
             # Empty dictionary for the ranking
             Ranking = {}
             
@@ -936,7 +1085,7 @@ if __name__ == '__main__':
             _ = DBEntry( 'ranking_global', Info, Minimal )
             
             
-### TABLE 18: ranking_lipids
+    ### TABLE `ranking_lipids`
             # Empty dictionary for the ranking
             Ranking_lipids = {}
             
@@ -959,11 +1108,10 @@ if __name__ == '__main__':
                     FILE.close()
                     
                 for t in ["total", "headgroup", "sn-1", "sn-2"]:
-                    try:    Ranking_lipids[lipid][t] = Ranking_lipids[lipid][t] if not np.isnan( Ranking_lipids[lipid][t] ) else 4242
-                    except: Ranking_lipids[lipid][t] = 4242
-                        
-                    #try:    Lipid_Quality[lipid][t] = Lipid_Quality[lipid][t]  if not np.isnan( Lipid_Quality[lipid][t] ) else 0
-                    #except: Lipid_Quality[lipid][t] = 0
+                    try:    
+                        Ranking_lipids[lipid][t] = Ranking_lipids[lipid][t] if not np.isnan( Ranking_lipids[lipid][t] ) else 4242
+                    except: 
+                        Ranking_lipids[lipid][t] = 4242
                 
                 # Collect the information of the position of the system in the ranking
                 Info = { "trajectory_id": Trj_ID,
@@ -985,7 +1133,7 @@ if __name__ == '__main__':
                 _ = DBEntry( 'ranking_lipids', Info, Minimal )
         
         
-### TABLE 19: ranking_heteromolecules
+    ### TABLE `ranking_heteromolecules`
             # Empty dictionary for the ranking
             Ranking_heteromolecules = {}
             
@@ -1008,11 +1156,10 @@ if __name__ == '__main__':
                     FILE.close()
                 
                 for t in ["total","headgroup","tail"]:
-                    try:    Ranking_heteromolecules[hetero][t] = Ranking_heteromolecules[hetero][t] if not np.isnan( Ranking_heteromolecules[hetero][t] ) else 4242
-                    except: Ranking_heteromolecules[hetero][t] = 4242
-                        
-                    #try:    Heteromolecules_Quality[hetero][t] = Heteromolecules_Quality[hetero][t] if not np.isnan( Heteromolecules_Quality[hetero][t] ) else 0
-                    #except: Heteromolecules_Quality[hetero][t] = 0
+                    try:    
+                        Ranking_heteromolecules[hetero][t] = Ranking_heteromolecules[hetero][t] if not np.isnan( Ranking_heteromolecules[hetero][t] ) else 4242
+                    except: 
+                        Ranking_heteromolecules[hetero][t] = 4242
                 
                 # Collect the information of the position of the system in the ranking
                 Info = { "trajectory_id": Trj_ID,
@@ -1027,13 +1174,108 @@ if __name__ == '__main__':
                 # Entry in the DB with the info of ranking
                 _ = DBEntry( 'ranking_heteromolecules', Info, Minimal )
                 
+            
+            if "EXPERIMENT" in README:
+                if "ORDERPARAMETER" in README["EXPERIMENT"]:
+    ### TABLE `trajectories_experiments_OP`
+                    # The Order Parameters experiments associated to the simulation
+            
+                    ExpOP = README["EXPERIMENT"]["ORDERPARAMETER"]
+                    
+                    # Iterate over the lipids
+                    for mol in ExpOP:
+                        
+                        # Check if there is an experiment associated to the lipid
+                        if ExpOP[mol]:
+                            for doi, path in ExpOP[mol].items():
+                                
+                                for file in os.listdir( args.folder + args.experiment_folder + "OrderParameters/" + path ):
+                                    if file.endswith(".json"):
+                                
+                                        Info = { "trajectory_id": Trj_ID,
+                                                 "lipid_id": { **Lipids_ID, **Heteromolecules_ID }[ mol ],
+                                                 "experiment_id": CheckEntry( 'experiments_OP', 
+                                                                             { "doi": doi, 
+                                                                              "path": args.experiment_folder + "OrderParameters/" + path + "/" + file } )
+                                                 }
+                                        
+                                        _ = DBEntry( 'trajectories_experiments_OP', Info, Info )
+                        
+                        
+    ### TABLE `trajectories_experiments_FF`
+                if "FORMFACTOR" in README["EXPERIMENT"]:
+                    # The Form Factor experiments associated to the simulation
+                    ExpFF = README["EXPERIMENT"]["FORMFACTOR"]
+                                
+                    if ExpFF:
+                        if type(ExpFF) == str:
+                            ExpFF = [ ExpFF ]
+                            
+                            for path in ExpFF:
+                                
+                                for file in os.listdir( args.folder + args.experiment_folder + "FormFactors/" + path ):
+                                    if file.endswith(".json"):
+                                
+                                        Info = { "trajectory_id": Trj_ID,
+                                                 "experiment_id": CheckEntry( 'experiments_FF', 
+                                                                             { "path": args.experiment_folder + "FormFactors/" + path + "/" + file  } )
+                                                 }
+                                        
+                                        _ = DBEntry( 'trajectories_experiments_FF', Info, Info )
                 
         except:
             FAILS.append( README["path"] )
 
+    ### TABLE `trajectories` (again)
+    try:
+        
+        # Generate a new cursor
+        cursor = database.cursor()
+        
+        # Get the list of IDs currently in the DB
+        cursor.execute( SQL_Select("trajectories",["id"]) )
+        List_IDs = cursor.fetchall()
+        
+        maxID = int( open(args.folder + args.simulation_folder + "COUNTER_ID", "r").readlines()[0] )
+        
+        missing_IDs = set(range(1,maxID+1)) - { ID[0] for ID in List_IDs  }
+        
+        Info = { "id":              1,
+                 "forcefield_id":   1,
+                 "membrane_id":     1,
+                 "git_path":        "''",
+                 "system":          "''",
+                 "author":          "''",
+                 "date":            "''",
+                 "dir_wrk":         "''",
+                 "doi":             "''",
+                 "number_of_atoms": 0,
+                 "preeq_time":      "''",
+                 "publication":     "''",
+                 "temperature":     0,
+                 "software":        "''",
+                 "trj_size":        0,
+                 "trj_length":      0,
+                 "timeleftout":     0,}
+    
+        for missing_ID in missing_IDs:    
+            
+            print("\n Adding missing ID:", missing_ID )
+            Info["id"] = missing_ID
+            
+            cursor.execute( f"INSERT INTO `trajectories` ({','.join(map(lambda x:'`'+str(x)+'`',Info.keys()))}) VALUES ({','.join(map(str,Info.values()))}) " )   
+                
+        database.commit()
+        
+        
+    except:
+        pass
+
+
     if FAILS:
         print("\nThe following systems failed. Please check the files.")
         print( "\n" + "\n".join( FAILS ) )
+        
         
 ####################
 
