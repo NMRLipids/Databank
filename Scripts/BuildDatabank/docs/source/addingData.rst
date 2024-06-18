@@ -23,13 +23,7 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 
          python3 AddData.py --help
 
-   After this is finished, you should see a new folder in `Data/simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system. After successfull creation of ``README.yaml`` file, run
-   
-   .. code-block:: bash
-
-	python createIDs.py
-
-   to add the ``ID`` number of the simulation into the ``README.yaml`` file. Commit the created ``README.yaml`` file into the git.
+   After this is finished, you should see a new folder in `Data/simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system. Commit the created ``README.yaml`` file into the git.
 
 #. To perform basic analyses for the added system(s), go to `Databank/Scripts/AnalyzeDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/AnalyzeDatabank>`_ folder and run
 
