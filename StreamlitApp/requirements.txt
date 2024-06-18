@@ -1,0 +1,6 @@
+streamlit
+numpy
+pandas
+MDAnalysis
+PyYAML
+urllib3
