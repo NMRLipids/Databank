@@ -11,11 +11,12 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 import socket
 
 sys.path.append('..')
+import DatabankLib
 from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url
 import DatabankLib.form_factor as form_factor
 
-path = '../../Data/Simulations/'
+path = DatabankLib.NMLDB_EXP_PATH
 
 db_data = databank(path)
 systems = db_data.get_systems()
@@ -23,13 +24,13 @@ systems = db_data.get_systems()
 for system in systems:
     software = system['SOFTWARE']
     # download trajectory and gro files
-    system_path = '../../Data/Simulations/' +  system['path']
+    system_path = os.path.join(path, system['path'])
     doi = system.get('DOI')
     skipDownloading: bool = (doi == 'localhost')
     if skipDownloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
-    if (os.path.isfile(system_path + "/FormFactor.json")):
+    if (os.path.isfile(system_path + os.sep + "FormFactor.json")):
         continue
 
     if system['TYPEOFSYSTEM'] == 'miscellaneous':
@@ -39,7 +40,6 @@ for system in systems:
 
     try:
         if system['UNITEDATOM_DICT']:
-            #continue
             print('United atom simulation')
     except:
         pass
@@ -67,7 +67,7 @@ for system in systems:
     
     output_name = ""
     
-    trj_name = system_path + system['TRJ'][0][0]
+    trj_name = os.path.join(system_path, system['TRJ'][0][0])
 
     socket.setdefaulttimeout(15)
 
@@ -82,7 +82,7 @@ for system in systems:
 
     # make a function like this
     if 'gromacs' in software:
-        tpr_name = system_path + system['TPR'][0][0]
+        tpr_name = os.path.join(system_path, system['TPR'][0][0])
         
         if (skipDownloading):
             if (not os.path.isfile(tpr_name)):
@@ -94,7 +94,7 @@ for system in systems:
                
     if 'openMM' in software or 'NAMD' in software:
         pdb = system.get('PDB')
-        pdb_name = system_path + pdb[0][0]
+        pdb_name = os.path.join(system_path, pdb[0][0])
         if (skipDownloading):
             if (not os.path.isfile(pdb_name)):
                 raise FileNotFoundError(f"PDB should be downloaded [{pdb_name}] by user")
@@ -163,9 +163,9 @@ for system in systems:
         os.system('echo "[ centralAtom ]" >> foo.ndx')
         os.system("tail -n2 foo.ndx | head -n1 |  awk '{print $NF}' >> foo.ndx")
 
-        xtcwhole= system_path + '/whole.xtc'
-        xtcfoo = system_path + '/foo2.xtc'
-        xtccentered= system_path + '/centered.xtc'
+        xtcwhole= os.path.join(system_path, 'whole.xtc')
+        xtcfoo = os.path.join(system_path, 'foo2.xtc')
+        xtccentered= os.path.join(system_path, 'centered.xtc')
         if (not os.path.isfile(xtccentered)):
             print("Make molecules whole in the trajectory")
             #if unitedAtom and system['TRAJECTORY_SIZE'] > 15000000000:
@@ -189,7 +189,7 @@ for system in systems:
     else:
         print('Centering for other than Gromacs may not work if there are jumps over periodic boundary conditions in z-direction.')
 
-    if (not os.path.isfile(system_path + "/FormFactor.json")):
+    if (not os.path.isfile(system_path + os.sep + "FormFactor.json")):
         try:
             if 'gromacs' in system['SOFTWARE']:
                 form_factor.FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
