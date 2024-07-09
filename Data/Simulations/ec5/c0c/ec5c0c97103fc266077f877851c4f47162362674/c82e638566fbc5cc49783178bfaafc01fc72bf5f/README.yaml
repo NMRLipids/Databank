@@ -20,7 +20,7 @@ COMPOSITION:
     COUNT: 1000
 DIR_WRK: /big/comcon1/work/Databank-work
 AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
-SYSTEM: "POP\u0421(300K, 5w/l, OPLS3e)"
+SYSTEM: "POPC(300K, 5w/l, OPLS3e)"
 SOFTWARE_VERSION: Desmond 2019-4
 FF: OPLS3e
 FF_SOURCE: Schrodinger, Inc.
