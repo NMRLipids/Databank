@@ -1,0 +1,25 @@
+DOI: 10.5281/zenodo.12698832
+TRJ: prod_500ns.xtc
+TPR: prod_500ns.tpr
+SOFTWARE: gromacs
+PREEQTIME: 200
+TIMELEFTOUT: 0
+COMPOSITION:
+ SOPC:    # universal name
+  NAME: SOPC        # simulation specific name
+  MAPPING: mappingSOPCcharmm.yaml     # name of mapping file
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+UNITEDATOM_DICT:
+DIR_WRK: /Users/ferdinandhoerstel/Desktop/NMRlipids/Databank/Data/Simulations/fff/temp
+PUBLICATION: 
+AUTHORS_CONTACT: Alexey Nesterenko and Ferdinand Hörstel
+SYSTEM: SOPC
+SOFTWARE_VERSION: 2022.5
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 19/06/2024
+CPT:
+LOG: 
+TOP: topol.top
