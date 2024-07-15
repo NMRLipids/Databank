@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.10183802
+SOFTWARE: gromacs
+TRJ:
+- - popchydr20_10-500ns_step10ps.xtc
+TPR:
+- - analyze.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPC-OPLS3e.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SPC
+    MAPPING: mappingwaterlipid14.yaml
+    COUNT: 4000
+DIR_WRK: set-from-console
+PUBLICATION: 10.1021/acs.jcim.2c00395
+AUTHORS_CONTACT: Milla Kurki
+SYSTEM: 200POPC_4kSOL_300K
+SOFTWARE_VERSION: 2019-4
+FF: OPLS3e
+FF_SOURCE: Shrodinger, Inc.
+FF_DATE: 01/12/2020
+CPT:
+- - desmond_md_popchydr20.cpt
+TOP:
+- - desmond_md_popchydr20-in_converted.top
+GRO:
+- - final.gro
+TRAJECTORY_SIZE: 7189302672
+TRJLENGTH: 489870.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 38800
+DATEOFRUNNING: 05/07/2024
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: {}
