@@ -1,0 +1,29 @@
+DOI: 10.5281/zenodo.10183802
+SOFTWARE: gromacs
+
+TRJ: popchydr20_10-500ns_step10ps.xtc
+TPR: analyze.tpr
+PREEQTIME: 10
+TIMELEFTOUT: 100
+
+COMPOSITION:
+ POPC:
+  NAME: POPC
+  MAPPING: mappingPOPC-OPLS3e.yaml
+ SOL:
+  NAME: SPC
+  MAPPING: mappingwaterlipid14.yaml
+
+DIR_WRK: set-from-console
+PUBLICATION: 10.1021/acs.jcim.2c00395
+AUTHORS_CONTACT: Milla Kurki
+SYSTEM: 200POPC_4kSOL_300K
+SOFTWARE_VERSION: 2019-4
+
+FF: OPLS3e
+FF_SOURCE: Shrodinger, Inc.
+FF_DATE: 01/12/2020
+
+CPT: desmond_md_popchydr20.cpt
+TOP: desmond_md_popchydr20-in_converted.top
+GRO: final.gro
