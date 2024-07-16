@@ -8,13 +8,13 @@ import re
 import buildh
 
 sys.path.append('..')
+from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import *
 from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
 
 ### Initializing the databank
-databankPath = '../../'
-systems = initialize_databank(databankPath)
+systems = initialize_databank()
 
 ## intialize counters for analyzed systems
 ready = 0
@@ -26,7 +26,7 @@ for system in systems:
 
     ## Check if order parameters are calculated or something in the system prevents order parameter calculation
     for key in system['COMPOSITION']:
-        outfilename = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
+        outfilename = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.json')
         #print(outfilename)
         if ( os.path.isfile(outfilename)  or 
              ('WARNINGS' in system.keys() and 
@@ -51,7 +51,7 @@ for system in systems:
     u = system2MDanalysisUniverse(system)
 
     ## Store the local path of the trajectory
-    trj_name = databankPath + '/Data/Simulations/' + path + system.get('TRJ')[0][0]
+    trj_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TRJ')[0][0])
 
     ## Software and time for equilibration period
     software=system['SOFTWARE']
@@ -72,9 +72,9 @@ for system in systems:
 
     ## Set topology file names and make Gromacs trajectories whole
     if 'gromacs' in software:
-        tpr_name = databankPath + '/Data/Simulations/' + path + system.get('TPR')[0][0]
+        tpr_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TPR')[0][0])
 
-        xtcwhole = databankPath + '/Data/Simulations/' + path + '/whole.xtc'
+        xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, 'whole.xtc')
         if (not os.path.isfile(xtcwhole)):
             execStr = f'echo System | {trjconvCOMMAND} -f {trj_name} -s {tpr_name} -o {xtcwhole} -pbc mol -b {str(EQtime)}'
             print("Make molecules whole in the trajectory")
@@ -85,7 +85,7 @@ for system in systems:
             if (rCode != 0):
                 raise RuntimeError("trjconv exited with error (see above)")
     elif 'openMM' in software or 'NAMD' in software:
-        pdb_name = databankPath + '/Data/Simulations/' + path + system.get('PDB')[0][0]
+        pdb_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('PDB')[0][0])
         if (not os.path.isfile(pdb_name)):
             pdb_url = resolve_download_file_url(system.get('DOI'), pdb_name)
             response = urllib.request.urlretrieve(pdb_url, pdb_name)
@@ -95,7 +95,7 @@ for system in systems:
 
     ## Calculate order parameters
     if unitedAtom and 'gromacs' in software:
-        topfile = databankPath + '/Data/Simulations/' + path + '/frame0.gro'
+        topfile = os.path.join(NMLDB_SIMU_PATH, path, 'frame0.gro')
         if g3switch:
             rCode = os.system(f'echo System | editconf -f {tpr_name} -o {topfile}')
             if (rCode != 0):
@@ -110,7 +110,7 @@ for system in systems:
             mapping_file = system['COMPOSITION'][key]['MAPPING']
             mapping_dict = loadMappingFile(mapping_file)
             
-            def_fileNAME = databankPath + '/Data/Simulations/' + path + key + '.def' 
+            def_fileNAME = os.path.join(NMLDB_SIMU_PATH, path, key + '.def')
             def_file = open(def_fileNAME, 'w')
             
             previous_line = ""            
@@ -139,7 +139,7 @@ for system in systems:
             def_file.close()            
              
             #Add hydrogens to trajectory and calculate order parameters with buildH
-            ordPfile = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.dat' 
+            ordPfile = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
 
             lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
 
@@ -153,7 +153,7 @@ for system in systems:
             outfile.write("Atom     Average OP     OP stem\n")
         
             data = {}
-            outfile2 = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
+            outfile2 = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.json')
         
             with open(ordPfile + '.buildH') as OPfile:
                 lines = OPfile.readlines()
@@ -175,7 +175,7 @@ for system in systems:
 
     else:
         if 'gromacs' in software:
-            gro = databankPath + '/Data/Simulations/' + path + '/conf.gro'
+            gro = os.path.join(NMLDB_SIMU_PATH, path, 'conf.gro')
             
             #make gro file
             print("\n Makin gro file")
@@ -202,8 +202,8 @@ for system in systems:
                 print('Calculating ', key,' order parameters')
                 mapping_file = system['COMPOSITION'][key]['MAPPING']
                 resname = system['COMPOSITION'][key]['NAME']
-                outfilename = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.dat'
-                outfilename2 = databankPath + '/Data/Simulations/' + path + key + 'OrderParameters.json'
+                outfilename = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
+                outfilename2 = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.json')
                 if (os.path.isfile(outfilename2)):
                     print('Order parameter file already found')
                     continue

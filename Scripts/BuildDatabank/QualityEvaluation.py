@@ -16,14 +16,15 @@ import scipy.signal
 
 
 sys.path.append('..')
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib.databankLibrary import ( lipids_dict, loadMappingFile )
+from DatabankLib.databankLibrary import ( lipids_dict, loadMappingFile, databank )
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
 class Simulation:
-    def __init__(self, readme, OPdata, FFdata,indexingPath):
-        self.readme = readme
+    def __init__(self, readme, OPdata, FFdata, indexingPath):
+        self.readme = readme.copy()
         self.OPdata = OPdata #dictionary where key is the lipid type and value is order parameter file
         self.FFdata = FFdata
         self.indexingPath = indexingPath    
@@ -609,58 +610,45 @@ def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
       
 
 def loadSimulations():
+
+    db_data = databank()
+    systems = db_data.get_systems()
+
     simulations = []
-#    for subdir, dirs, files in os.walk(r'../../Data/Simulations/f62/739/f627391cd6cddf82078a7a12c4cd22767535b6fe/d9c93bb0ae93ede37c230593a348691012519efc/'): #
-    for subdir, dirs, files in os.walk(r'../../Data/Simulations/'): #
-        for filename1 in files:
-            filepath = subdir + os.sep + filename1
-        
-            if filepath.endswith("README.yaml"):
-                READMEfilepathSimulation = subdir + '/README.yaml'
-                readmeSim = {}
-                with open(READMEfilepathSimulation) as yaml_file_sim:
-                    readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
-                yaml_file_sim.close()    
-                indexingPath = "/".join(filepath.split("/")[4:8])
+    for system in systems:
+        try:
+            experiments = system['EXPERIMENT']
+        except KeyError:
+            continue
+        else:
+            if any(experiments.values()): #if experiments is not empty
 
-                #print(indexingPath)
-                #print(filepath)
-                #print(readmeSim)
-
-                try:
-                    experiments = readmeSim['EXPERIMENT']
-                except KeyError:
-                    # print("No matching experimental data for system " + readmeSim['SYSTEM'] + " in directory " + indexingPath)
-                    continue
-                else:
-                    if any(experiments.values()): #if experiments is not empty
-                        #print(any(experiments))
-                        #print('Experiments found for' + filepath)
-                        #print(experiments)
-                        simOPdata = {} #order parameter files for each type of lipid
-                        simFFdata = {} # form factor data
-                        for filename2 in files:
-                            if filename2.endswith('OrderParameters.json'):
-                                lipid_name = filename2.replace('OrderParameters.json', '')
-                             #  print(lipid_name)
-                                dataPath = subdir + "/" + filename2
-                                OPdata = {}
-                                with open(dataPath) as json_file:
-                                    OPdata = json.load(json_file)
-                                json_file.close()
-                                simOPdata[lipid_name] = OPdata
-                                
-                            elif filename2 == "FormFactor.json":
-                                dataPath = subdir + "/" + filename2
-                                with open(dataPath) as json_file:
-                                    simFFdata = json.load(json_file)
-                                json_file.close()
-                                    
-                        simulations.append(Simulation(readmeSim, simOPdata, simFFdata, indexingPath))
-                    else:
-                        #print("The simulation does not have experimental data.")
+                simOPdata = {} #order parameter files for each type of lipid
+                for lipMol in system['COMPOSITION']:
+                    if lipMol not in lipids_dict:
                         continue
+                    filename2 = os.path.join(NMLDB_SIMU_PATH, system['path'], lipMol + 'OrderParameters.json')
+                    OPdata = {}
+                    try:
+                        with open(filename2) as json_file:
+                            OPdata = json.load(json_file)
+                    except FileNotFoundError:
+                        # OP data for this lipid is missed
+                        pass
+                    simOPdata[lipMol] = OPdata
                 
+                simFFdata = {} # form factor data
+                filename2 = os.path.join(NMLDB_SIMU_PATH, system['path'], "FormFactor.json")
+                try:
+                    with open(filename2) as json_file:
+                        simFFdata = json.load(json_file)
+                except FileNotFoundError:
+                    # FormFactor data for this system is missed
+                    pass
+                simulations.append(Simulation(system, simOPdata, simFFdata, system['path']))
+            else:
+                print("The simulation does not have experimental data.")
+                continue
                     
     return simulations
 
@@ -678,10 +666,8 @@ EvaluatedFFs = 0
 
 
 for simulation in simulations:
-    sub_dirs = simulation.indexingPath.split("/")
-    
     #save OP quality and FF quality here
-    DATAdir = '../../Data/Simulations/' + str(sub_dirs[0]) + '/' + str(sub_dirs[1]) + '/' + str(sub_dirs[2]) + '/' + str(sub_dirs[3])
+    DATAdir = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath)
     print('Analyzing: ', DATAdir)
 
     #fragment_quality_output = {}
@@ -735,16 +721,14 @@ for simulation in simulations:
             print(doi)
             OP_qual_data = {}
             # get readme file of the experiment
-            experimentFilepath = "../../Data/experiments/OrderParameters/" + path
+            experimentFilepath = os.path.join(NMLDB_EXP_PATH, "OrderParameters", path)
             print('Experimental data available at ' + experimentFilepath)
                 
-            READMEfilepathExperiment  = experimentFilepath + '/README.yaml'
+            READMEfilepathExperiment  = os.path.join(experimentFilepath, 'README.yaml')
             experiment = Experiment()
             with open(READMEfilepathExperiment) as yaml_file_exp:
                 readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
                 experiment.readme = readmeExp
-                #print(experiment.readme)
-            yaml_file_exp.close()
 
             exp_OP_filepath = experimentFilepath + '/' + lipid1 + '_Order_Parameters.json'
             #print(exp_OP_filepath)
@@ -840,8 +824,7 @@ for simulation in simulations:
             print('no system quality')
             system_quality[lipid1] = {}
 
-
-        fragment_quality_file = DATAdir + '/' + lipid1 + '_FragmentQuality.json'
+        fragment_quality_file = os.path.join(DATAdir, lipid1 + '_FragmentQuality.json')
 
         FGout = False
         for FG in fragment_quality_output:
@@ -853,15 +836,9 @@ for simulation in simulations:
         if FGout:
             with open(fragment_quality_file, 'w') as f:  #write fragment qualities into a file for a molecule
                  json.dump(fragment_quality_output,f)
-            f.close()
 
- 
-
-        #write into the OrderParameters_quality.json quality data file   
-        outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'               
-          #  outfile1 = DATAdir + '/' + lipid1 + '_OrderParameters_quality.json'
-            #doi : {'carbon hydrogen': [op_sim, sd_sim, stem_sim, op_exp, exp_error, quality] ... }
-        #if data_dict and len(data_dict) > 0:
+        # write into the OrderParameters_quality.json quality data file   
+        outfile1 = os.path.join(DATAdir, lipid1 + '_OrderParameters_quality.json')
         try:
             with open(outfile1, 'w') as f:
                 json.dump(data_dict,f, cls=CompactJSONEncoder)
@@ -875,11 +852,9 @@ for simulation in simulations:
     #print(system_quality)
     #if system_quality:
     system_qual_output = systemQuality(system_quality)
-        #print('system')
-        #print(system_qual_output)
-        #make system quality file
+    # make system quality file
 
-    outfile2 = DATAdir + '/SYSTEM_quality.json'
+    outfile2 = os.path.join(DATAdir, 'SYSTEM_quality.json')
     SQout = False
     for SQ in system_qual_output:
         if system_qual_output[SQ] > 0:
@@ -914,10 +889,10 @@ for simulation in simulations:
     #print(ffexpPath)
     expFFdata = {}
     if len(expFFpath) > 0:
-        for subdir, dirs, files in os.walk(r'../../Data/experiments/FormFactors/' + expFFpath + '/'):
-            for filename in files:
-                filepath = '../../Data/experiments/FormFactors/' + expFFpath + '/' + filename
-                #if filename.endswith('_FormFactor.json'):
+        expFFpath_full = os.path.join(NMLDB_EXP_PATH, "FormFactors", expFFpath)
+        for subdir, dirs, files in os.walk( expFFpath_full ):
+            for filename in files:  
+                filepath = os.path.join(expFFpath_full, filename)
                 if filename.endswith('.json'):
                     #print('Evaluating form factor quality of ', filename)
                     with open(filepath) as json_file:
@@ -929,7 +904,7 @@ for simulation in simulations:
 
     if len(expFFpath) > 0 and len(simFFdata) > 0:
         ffQuality = formfactorQuality(simFFdata, expFFdata)
-        outfile3 = DATAdir + '/FormFactorQuality.json'
+        outfile3 = os.path.join(DATAdir, 'FormFactorQuality.json')
         with open(outfile3,'w') as f:
             json.dump(ffQuality,f)
         f.close()

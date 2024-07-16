@@ -46,6 +46,7 @@ from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
 sys.path.append("..")
+from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import databank, lipids_dict, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
@@ -98,8 +99,7 @@ class Parser:
         self.eq_time_fname = eq_time_fname
 
         # Extracting data from readme
-        #self.indexingPath = "/".join(readme["path"].split("/")[4:8])
-        self.indexingPath = root + readme["path"]
+        self.indexingPath = os.path.join(root, readme["path"])
         print('INdexing path:', self.indexingPath)
         if self.verbose:
             print(f"Parser: Processing trajectory {self.indexingPath}")
@@ -121,8 +121,8 @@ class Parser:
                 self.trj = ""
                 self.tpr = ""
                 self.error = 1
-        self.trj_name = f"{self.root}{self.indexingPath}/{self.trj}"
-        self.tpr_name = f"{self.root}{self.indexingPath}/{self.tpr}"
+        self.trj_name = os.path.join(self.indexingPath, self.trj)
+        self.tpr_name = os.path.join(self.indexingPath, self.tpr)
         self.trj_url = resolve_download_file_url(self.doi, self.trj)
         self.tpr_url = resolve_download_file_url(self.doi, self.tpr)
         self.trjLen = readme["TRJLENGTH"] / 1000  # ns
@@ -166,8 +166,7 @@ class Parser:
             )
             #return 
         #if self.path == self.indexingPath:
-        if os.path.isfile(f"{self.root}{self.indexingPath}" +
-                              f"/{self.eq_time_fname}"):
+        if os.path.isfile( os.path.join(self.indexingPath, self.eq_time_fname) ):
             if self.verbose:
                 print("Parser: Found file with equilibration data. " +
                           "Not processing the trajectory")
@@ -203,17 +202,17 @@ class Parser:
 
     def prepareGMXTraj(self):
         # Look for centered.xtc
-        if os.path.isfile(f"{self.root}{self.indexingPath}/centered.xtc"):
+        if os.path.isfile( os.path.join(self.indexingPath, "centered.xtc") ):
             print("Parser: Founder centered trajectory: centered.xtc")
-            self.trj_name = f"{self.root}{self.indexingPath}/centered.xtc"
+            self.trj_name = os.path.join(self.indexingPath, "centered.xtc")
         # Look for whole.xtc
-        elif os.path.isfile(f"{self.root}{self.indexingPath}/whole.xtc"):
+        elif os.path.isfile( os.path.join(self.indexingPath, "whole.xtc") ):
             print("Parser: Founder whole trajectory: whole.xtc")
-            self.trj_name = f"{self.root}{self.indexingPath}/whole.xtc"
+            self.trj_name = os.path.join(self.indexingPath, "whole.xtc")
         # Run gmx trjconv
         else:
             print("Parser: Making trajectory whole")
-            trj_out_name = f"{self.root}{self.indexingPath}/whole.xtc"
+            trj_out_name = os.path.join(self.indexingPath, "whole.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
                 + f"{self.tpr_name} -pbc mol -o {trj_out_name}"
@@ -222,7 +221,7 @@ class Parser:
 
         # Skip frames for large trajectories
         if self.size > trjSizeCutoff:
-            trj_out_name = f"{self.root}{self.indexingPath}/short.xtc"
+            trj_out_name = os.path.join(self.indexingPath, "short.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
                 + f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
@@ -230,9 +229,9 @@ class Parser:
             self.trj_name = trj_out_name
 
         # Create .gro file
-        if os.path.isfile(f"{self.root}{self.indexingPath}/conf.gro"):
+        if os.path.isfile( os.path.join(self.indexingPath, "conf.gro") ):
             print("Parser: Founder gro file")
-            self.gro_name = f"{self.root}{self.indexingPath}/conf.gro"
+            self.gro_name = os.path.join(self.indexingPath, "conf.gro")
         else:
             print("Parser: Making a gro file from the first frame")
             os.system(
@@ -246,11 +245,12 @@ class Parser:
         except:
             self.traj = mda.Universe(self.gro_name, self.trj_name)
 
+    # TODO: not tested!!
     def prepareOpenMMTraj(self):
         print("openMM or NAMD")
         if self.size > trjSizeCutoff:
-            trj_out_name = f"{self.root}{self.indexingPath}/short.xtc"
-            if os.path.isfile(f"{self.root}{self.indexingPath}/{trj_out_name}"):
+            trj_out_name = os.path.join(self.indexingPath, "short.xtc")
+            if os.path.isfile( trj_out_name):
                 print("Parser: Short trajectory is found")
             else:
                 u = mda.Universe(self.tpr_name, self.trj_name)
@@ -297,9 +297,8 @@ class Parser:
     """
 
     def dumpData(self, data):
-        f = open(f"{self.root}{self.indexingPath}/{self.eq_time_fname}", "w")
-        json.dump(data, f)
-        f.close()
+        with open( os.path.join(self.indexingPath, self.eq_time_fname), "w") as f:
+            json.dump(data, f)
 
 
 """
@@ -846,8 +845,7 @@ if __name__ == "__main__":
 
     warnings.filterwarnings("ignore", category=UserWarning)
 
-    path = "../../Data/Simulations/"
-    db_data = databank(path)
+    db_data = databank()
     # searches through every subfolder of a path
     # and finds every trajectory in databank
     systems = db_data.get_systems()
@@ -884,23 +882,24 @@ if __name__ == "__main__":
     eq_time_fname = "eq_times.json"
 
     for readme in systems:
-        print(readme)
+        print('== Doi: ' + readme['DOI'])
+        print('== System name: ' + readme['SYSTEM'])
         # getting data from databank and preprocessing them
         # Start Parser
         if TEST:
             print("TEST")
-            parser = Parser(path, readme, eq_time_fname, testTraj)
+            parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
         else:
-            parser = Parser(path, readme, eq_time_fname)
+            parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname)
         # Check trajectory
-        print(path,testTraj, readme['path'])
+        print(NMLDB_SIMU_PATH, testTraj, readme['path'])
         print(parser.indexingPath)
         print(parser.validatePath())
         if parser.validatePath() < 0:
             continue
         # Download files
 
-        eq_time_path = path + readme['path'] + "/eq_times.json"
+        eq_time_path = os.path.join(NMLDB_SIMU_PATH, readme['path'], "eq_times.json")
         print(eq_time_path)
         if os.path.isfile(eq_time_path):
             continue

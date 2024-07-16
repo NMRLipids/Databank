@@ -11,20 +11,20 @@ from urllib.error import URLError,HTTPError,ContentTooShortError
 import socket
 
 sys.path.append('..')
-import DatabankLib
+from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url
 import DatabankLib.form_factor as form_factor
 
-path = DatabankLib.NMLDB_EXP_PATH
-
-db_data = databank(path)
+db_data = databank()
 systems = db_data.get_systems()
  
 for system in systems:
+    logger.info("System title: " + system['SYSTEM'])
+    logger.info("System path: " + system['path'])
     software = system['SOFTWARE']
     # download trajectory and gro files
-    system_path = os.path.join(path, system['path'])
+    system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
     doi = system.get('DOI')
     skipDownloading: bool = (doi == 'localhost')
     if skipDownloading:
