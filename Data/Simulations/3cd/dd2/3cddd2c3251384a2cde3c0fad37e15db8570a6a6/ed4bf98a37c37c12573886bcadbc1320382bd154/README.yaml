@@ -36,3 +36,8 @@ TEMPERATURE: 300.0
 NUMBER_OF_ATOMS: 29800
 DATEOFRUNNING: 08/07/2024
 TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      unpublished/nesterenkoPOPC: unpublished/nesterenkoPOPC/1
+  FORMFACTOR: {}
