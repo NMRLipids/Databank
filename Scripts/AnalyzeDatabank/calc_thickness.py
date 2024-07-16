@@ -8,15 +8,19 @@ from tqdm import tqdm
 
 sys.path.append('..')
 from DatabankLib.databankLibrary import databank
+from DatabankLib import NMLDB_SIMU_PATH
 
-path = '../../'
-
-db_data = databank(path)
+db_data = databank()
 systems = db_data.get_systems()
 
-for system in tqdm(systems):
-    WaterDensity_name = '../../' + system['path'] + 'WaterDensity.json'
-    LipidDensity_name = '../../' + system['path'] + 'LipidDensity.json'
+for system in tqdm(systems, desc='Scan over Databank systems'):
+    thickFN = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
+    if (os.path.isfile(thickFN)):
+        # file exist. Skipping
+        continue
+
+    WaterDensity_name = os.path.join(NMLDB_SIMU_PATH, system['path'], 'WaterDensity.json')
+    LipidDensity_name = os.path.join(NMLDB_SIMU_PATH, system['path'], 'LipidDensity.json')
     print(LipidDensity_name)
     try:
         f = open(WaterDensity_name)
@@ -31,7 +35,7 @@ for system in tqdm(systems):
         idx = np.argwhere(np.diff(np.sign(wd - ld ))).flatten()
         #print(system['path'])
         thickness = WaterDensity[idx[1]][0] - WaterDensity[idx[0]][0]
-        f = open('../../' + system['path'] + '/thickness.json', 'w')
+        f = open(thickFN, 'w')
         json.dump(thickness,f)
     except:
         print('Calculation failed for ' +  system['path'])

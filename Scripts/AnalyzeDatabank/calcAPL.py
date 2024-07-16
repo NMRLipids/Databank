@@ -4,26 +4,22 @@
 import os, sys
 import json
 
-### Initializing the databank
-
-### This is the NMRlipids databank repository path
-databankPath = '../../'
-
 sys.path.append('..')
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib import jsonEncoders
 from DatabankLib.databankLibrary import *
 
-
-systems = initialize_databank(databankPath)
-
+### Initializing the databank
+systems = initialize_databank()
 
 ### Loop over simulations in the databank
 for system in systems:
     ## reading software and file path for simulations
-    software=system['SOFTWARE']
+    software = system['SOFTWARE']
     path = system['path']
 
     ## this is checking if area per lipid is already calculated for the systems
-    outfilename = databankPath + '/Data/Simulations/' +  path + 'apl.json'
+    outfilename = os.path.join(NMLDB_SIMU_PATH,  path, 'apl.json')
     if os.path.isfile(outfilename):
         continue
 

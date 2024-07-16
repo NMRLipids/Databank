@@ -7,10 +7,11 @@ import json
 
 from tqdm import tqdm
 sys.path.append('..')
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.databankLibrary import lipids_dict
 
-databank_path = '../../Data/Simulations'
-expbank_path = '../../Data/experiments'
+import logging
+logger = logging.getLogger("__name__")
 
 lipid_numbers_list =  lipids_dict.keys() # should contain all lipid names
 ions_list = ['POT', 'SOD', 'CLA', 'CAL'] # should contain names of all ions
@@ -151,7 +152,7 @@ def loadSimulations():
 
     print("Build simulation tree index...", end='')
     rmIdx = []
-    for subdir, dirs, files in os.walk(databank_path): 
+    for subdir, dirs, files in os.walk(NMLDB_SIMU_PATH): 
         for fn in files:
             if fn == 'README.yaml':
                 rmIdx.append(subdir)
@@ -169,7 +170,7 @@ def loadSimulations():
                 continue
         except:
             pass
-        indexingPath = os.path.relpath(subdir, start=databank_path)
+        indexingPath = os.path.relpath(subdir, start=NMLDB_SIMU_PATH)
         simOPdata = [] # order parameter files for each type of lipid
         simData = {}
 
@@ -205,7 +206,7 @@ def loadExperiments(experimentType):
     print("Build experiments [%s] index..." % experimentType, end='')
     rmIdx = []
 
-    path = os.path.join(expbank_path, experimentType)
+    path = os.path.join(NMLDB_EXP_PATH, experimentType)
     for subdir, dirs, files in os.walk(path): 
         for fn in files:
             if fn == 'README.yaml':
@@ -303,7 +304,7 @@ def findPairs(experiments, simulations):
                         # Add path to experiment into simulation README.yaml
                         # many experiment entries can match to same simulation
                         exp_doi = experiment.readme['DOI'] 
-                        exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(expbank_path, experiment.exptype))
+                        exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(NMLDB_EXP_PATH, experiment.exptype))
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.data.molecule
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
@@ -320,7 +321,7 @@ def findPairs(experiments, simulations):
             sortDict = dict(sorted(unsortDict.items()))
             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid] = sortDict.copy()
 
-        outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
+        outfileDICT = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
             yaml.dump(simulation.readme, f, sort_keys=False)
         
@@ -372,7 +373,7 @@ def main():
         for lipid in simulation.getLipids():
             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
         
-        outfileDICT = os.path.join(databank_path, simulation.indexingPath, 'README.yaml')
+        outfileDICT = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
             yaml.dump(simulation.readme, f, sort_keys=False)
 
