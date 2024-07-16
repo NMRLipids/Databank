@@ -121,8 +121,6 @@ class Parser:
                 self.error = 1
         self.trj_name = os.path.join(self.indexingPath, self.trj)
         self.tpr_name = os.path.join(self.indexingPath, self.tpr)
-        self.trj_url = resolve_download_file_url(self.doi, self.trj)
-        self.tpr_url = resolve_download_file_url(self.doi, self.tpr)
         self.trjLen = readme["TRJLENGTH"] / 1000  # ns
         self.FF = readme.get("FF")
 
@@ -180,11 +178,13 @@ class Parser:
     def downloadTraj(self):
         print("Downloading")
         if not os.path.isfile(self.tpr_name):
+            self.tpr_url = resolve_download_file_url(self.doi, self.tpr)
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading tpr ", self.doi)
             #urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
             download_resource_from_uri(self.tpr_url, self.tpr_name)
         if not os.path.isfile(self.trj_name):
+            self.trj_url = resolve_download_file_url(self.doi, self.trj)
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading trj ", self.doi)
             #urllib.request.urlretrieve(self.trj_url, self.trj_name)
