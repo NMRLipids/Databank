@@ -22,8 +22,9 @@ for system in systems:
     outfilename = os.path.join(NMLDB_SIMU_PATH,  path, 'apl.json')
     if os.path.isfile(outfilename):
         continue
-
+    
     print('Analyzing: ', path)
+    print('Will write into: ', outfilename)
 
     ## calculates the total number of lipids
     Nlipid = GetNlipids(system)
@@ -37,17 +38,12 @@ for system in systems:
     
     ## this calculates the area per lipid as a function of time and stores it in the databank
     apl = {}
-    for ts in u.trajectory:
+    for ts in tqdm(u.trajectory, desc='Scanning the trajectory'):
         if u.trajectory.time >= system['TIMELEFTOUT']*1000:
             dimensions = u.dimensions
-            #print(dimensions)
             aplFrame = u.dimensions[0]*u.dimensions[1]*2/Nlipid
             apl[u.trajectory.time] = aplFrame
-            #print(apl)
 
     with open(outfilename, 'w') as f:
-        json.dump(apl,f)
+        json.dump(apl, f, cls=jsonEncoders.CompactJSONEncoder)
         
-    #print(outfilename)
-        
-
