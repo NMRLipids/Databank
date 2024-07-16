@@ -1,7 +1,8 @@
-import os
-import sys
-import yaml
-import json
+#!/usr/bin/env python3
+# coding: utf-8
+
+import os, sys
+import yaml, json
 import numpy as np
 import scipy
 import math

@@ -1,4 +1,7 @@
-import sys
+#!/usr/bin/env python3
+# coding: utf-8
+
+import sys, os
 import numpy as np
 import json
 from tqdm import tqdm

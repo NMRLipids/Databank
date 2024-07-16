@@ -1,8 +1,14 @@
-# This is the code that generates databank indexing
+#!/usr/bin/env python3
+# coding: utf-8
 
-# IMPORTING LIBRARIES
+"""
+AddData.py script adds a simulation into the Databank based on info.yaml file.
 
-# Working with files and directories
+Returning error codes: 
+2 - filesystem writting errors
+3 - network accessing errors
+"""
+
 import os, sys
 import argparse
 import yaml
