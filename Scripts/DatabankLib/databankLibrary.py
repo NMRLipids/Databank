@@ -24,8 +24,9 @@ import MDAnalysis as mda
 
 __pdoc__ = {}
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
+from . import *
 from .databank_defs import *
 from .databankio import resolve_download_file_url
 
@@ -49,23 +50,22 @@ class databank:
   
     """
     
-    def __init__(self, path=r"../../Data/Simulations/"):
+    def __init__(self, path=NMLDB_SIMU_PATH):
         self.path = path
         self.systems = []
-        self.__load_systems__(path)
+        self.__load_systems__()
         print('Databank initialized from the folder:', os.path.realpath(path))
 
-    def __load_systems__(self, path):
-        for subdir, dirs, files in os.walk(path):
+    def __load_systems__(self):
+        rpath = os.path.realpath(self.path)
+        for subdir, dirs, files in os.walk(rpath):
             for filename in files:
                 filepath = os.path.join(subdir, filename)
-                #print(filepath)
                 if filename == "README.yaml":
                     with open(filepath) as yaml_file:
                         content = yaml.load(yaml_file, Loader=yaml.FullLoader)
-                        size = len(filepath)
-                        sizePath = len(path)
-                        content["path"] = filepath[sizePath : size - 11]
+                        relpath = os.path.relpath(filepath, rpath)
+                        content["path"] = relpath[ : -11]
                         self.systems.append(content)
 
     def get_systems(self):
@@ -83,16 +83,17 @@ class databank:
 #########################FUNCTIONS###################################################
 # functions used in building and analyzing the databank
 
-def initialize_databank(databankPath):
+def initialize_databank(databankPath = None):
     """ 
     Intializes the NMRlipids databank.
 
     :param databankPath: path for the local location of the NMRlipids databank, for example ``../../Databank``
     :return: list of dictionaries that contain the content of README.yaml files for each system.  
     """
-    #sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
-    #from databankLibrary import download_link, lipids_dict, databank
-    path = databankPath + '/Data/Simulations/'
+    if databankPath is not None:
+        path = os.path.join(databankPath, 'Data', 'Simulations')
+    else:
+        path = NMLDB_SIMU_PATH
     db_data = databank(path)
     systems = db_data.get_systems()
     return systems
