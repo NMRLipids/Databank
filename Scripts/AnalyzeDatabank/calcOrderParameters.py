@@ -11,6 +11,7 @@ sys.path.append('..')
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import *
 from DatabankLib.databankio import resolve_download_file_url
+from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib.databankop import find_OP
 
 ### Initializing the databank
@@ -207,37 +208,35 @@ for system in systems:
                 if (os.path.isfile(outfilename2)):
                     print('Order parameter file already found')
                     continue
-                outfile = open(outfilename,'w')
 
                 if 'gromacs' in software:
                     try:
-                        OrdParam = find_OP(mapping_file,tpr_name,xtcwhole,resname)
-                    except:
-                        print('Using tpr did not work, trying with gro')
+                        OrdParam = find_OP(mapping_file, tpr_name, xtcwhole, resname)
+                    except Exception as e:
+                        logger.warning("We got this exception: \n    " + str(e) )
+                        logger.warning('But we will try rebuild the Universe from GROM if using tpr did not work!')
                         OrdParam = find_OP(mapping_file,gro,xtcwhole,resname)
 
                 if 'openMM' in software or 'NAMD' in software:
                     OrdParam = find_OP(mapping_file,pdb_name,trj_name,resname)
                 
-                outfile.write("Atom     Average OP     OP stem\n")
-    
                 data = {}
-                outfile2 = outfilename2 
 
-                for i,op in enumerate(OrdParam):
-                    resops = op.get_op_res
-                    (op.avg, op.std, op.stem) = op.get_avg_std_stem_OP
-                    outfile.write(f'{op.name} {str(op.avg)} {str(op.stem)}\n')
-    
-                    data[str(op.name)]=[]
-                    data[str(op.name)].append(op.get_avg_std_stem_OP)
+                with open(outfilename,'w') as outfile:
+                    outfile.write("Atom     Average OP     OP stem\n")
+
+                    for i,op in enumerate(OrdParam):
+                        resops = op.get_op_res
+                        (op.avg, op.std, op.stem) = op.get_avg_std_stem_OP
+                        outfile.write(f'{op.name} {str(op.avg)} {str(op.stem)}\n')
         
-                with open(outfile2, 'w') as f:
-                    json.dump(data,f)
-                outfile.close()
-                f.close()
+                        data[str(op.name)]=[]
+                        data[str(op.name)].append(op.get_avg_std_stem_OP)
+        
+                with open(outfilename2, 'w') as f:
+                    json.dump(data, f, cls=CompactJSONEncoder)
     
-        print("Order parameters calculated and saved to ",path)
+        print("Order parameters calculated and saved to ", path)
 
     ready = ready + 1
         
