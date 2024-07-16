@@ -154,14 +154,16 @@ except OSError as e:
     logger.error(
         f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}"
     )
-    quit()
+    quit(2)
 
 # Check link status and download files
 
 try:
-    download_links = [
-        resolve_download_file_url(sim["DOI"], fi, validate_uri=True) for fi in files
-    ]
+    download_links = []
+    for fi in files:
+        logger.info(f"Validating file: {fi}..")
+        _x = resolve_download_file_url(sim["DOI"], fi, validate_uri=True)
+        download_links.append(_x)
 
     logger.info(f"Now downloading {len(files)} files ...")
 
@@ -179,18 +181,18 @@ except HTTPError as e:
         )
     else:
         logger.error(f"HTTPError {e.code} while trying to download the file '{e.url}'")
-    quit()
+    quit(3)
 except URLError as e:
     logger.error(
         f"couldn't resolve network adress: {e.reason}. Please check your internet connection."
     )
-    quit()
+    quit(3)
 except Exception as e:
     logger.error(
         f"'{type(e).__name__}' while attempting to download ressources, aborting"
     )
     logger.error(traceback.format_exc())
-    quit()
+    quit(3)
 
 
 # ## Calculate hash of downloaded files
@@ -510,13 +512,9 @@ for key_mol in sim["COMPOSITION"].keys():
     else:
         mapping_file_length = len(mapping_dict.keys())
 
-    try:
-        number_of_atoms += (
+    number_of_atoms += (
             np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
         )
-    except:
-        continue
-
 
 if number_of_atoms != number_of_atomsTRJ:
     stop = input(
