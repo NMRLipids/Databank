@@ -5,6 +5,7 @@ import sys, os
 import numpy as np
 import json
 from tqdm import tqdm
+import traceback
 
 sys.path.append('..')
 from DatabankLib.databankLibrary import databank
@@ -12,6 +13,9 @@ from DatabankLib import NMLDB_SIMU_PATH
 
 db_data = databank()
 systems = db_data.get_systems()
+
+cErr = 0
+cUpp = 0
 
 for system in tqdm(systems, desc='Scan over Databank systems'):
     thickFN = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
@@ -23,19 +27,30 @@ for system in tqdm(systems, desc='Scan over Databank systems'):
     LipidDensity_name = os.path.join(NMLDB_SIMU_PATH, system['path'], 'LipidDensity.json')
     print(LipidDensity_name)
     try:
-        f = open(WaterDensity_name)
-        WaterDensity = json.load(f)
-        f = open(LipidDensity_name)
-        LipidDensity = json.load(f)
-        wd=np.empty(len(WaterDensity))
-        ld=np.empty(len(WaterDensity))
-        for i in range(len(WaterDensity)):
-            wd[i] = WaterDensity[i][1]
-            ld[i] = LipidDensity[i][1]
-        idx = np.argwhere(np.diff(np.sign(wd - ld ))).flatten()
-        #print(system['path'])
-        thickness = WaterDensity[idx[1]][0] - WaterDensity[idx[0]][0]
-        f = open(thickFN, 'w')
-        json.dump(thickness,f)
-    except:
+        with open(WaterDensity_name) as f:
+            WaterDensity = json.load(f)
+        with open(LipidDensity_name) as f:
+            LipidDensity = json.load(f)
+        wd = np.array(WaterDensity)
+        ld = np.array(LipidDensity)
+        idx = np.argwhere(np.diff(np.sign(wd[:,1] - ld[:,1]))).flatten()
+        if len(idx) < 2:
+            print("Dehydrated sample! Standard thickness rule doesn't work. Will extract boxZ.")
+            thickness = wd[-1, 0] - wd[0, 0]
+        else:
+            thickness = wd[idx[1], 0] - wd[idx[0], 0]
+        with open(thickFN, 'w') as f:
+            json.dump(thickness, f)
+            cUpp += 1
+    except Exception as e:
         print('Calculation failed for ' +  system['path'])
+        print(str(e))
+        print(traceback.format_exc())
+        cErr += 1
+
+print(f"""
+===========================================
+Summary:
+ Thickness updated for: {cUpp} systems
+ Thickness calculation failed: {cErr} systems
+""")
