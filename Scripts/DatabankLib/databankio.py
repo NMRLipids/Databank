@@ -3,8 +3,9 @@
 Network communication. Downloading files. Checking links etc.
 """
 
-import os
+import os, time
 import socket
+import urllib.error
 from tqdm import tqdm
 import urllib.request
 
@@ -93,7 +94,7 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     return res
 
 
-def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True) -> str:
+def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True, sleep429=5) -> str:
     """
     :meta private:
     Resolve file URI from supported DOI with given filename
@@ -102,6 +103,7 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
         doi (str): DOI string
         fi_name (str): name of the file to resolve from source
         validate_uri (bool, optional): Check if URI exists. Defaults to True.
+        sleep429 (int, optional): Sleep in seconds if 429 HTTP code returned
 
     Raises:
         NotImplementedError: Unsupported DOI repository
@@ -117,8 +119,21 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True)
 
         # check if ressource exists, may throw exception
         if validate_uri:
-            socket.setdefaulttimeout(10)  # seconds
-            res = urllib.request.urlopen(uri)
+            try:
+                socket.setdefaulttimeout(10)  # seconds
+                res = urllib.request.urlopen(uri, timeout=10)
+            except TimeoutError:
+                raise RuntimeError(f"Cannot open {uri}. Timeout error.")
+            except urllib.error.HTTPError as hte:
+                if hte.code == 429:
+                    if sleep429/5 > 10:
+                        raise TimeoutError("Too many iteration of increasing waiting time!")
+                    logger.warning(f"HTTP error returned from URI: {uri}")
+                    logger.warning(f"Site returns 429 code. Try to sleep {sleep429} seconds and repeat!")
+                    time.sleep(sleep429)
+                    return resolve_download_file_url(doi, fi_name, validate_uri, sleep429 = sleep429+5)
+                else:
+                    raise hte
         return uri
     else:
         raise NotImplementedError(
