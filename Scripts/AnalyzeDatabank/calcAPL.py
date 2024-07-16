@@ -1,5 +1,7 @@
-import os
-import sys
+#!/usr/bin/env python3
+# coding: utf-8
+
+import os, sys
 import json
 
 ### Initializing the databank
