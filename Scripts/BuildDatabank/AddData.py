@@ -42,10 +42,12 @@ from DatabankLib.databankLibrary import (
     loadMappingFile
 )
 # helpers
-from DatabankLib.databankLibrary import (
+from DatabankLib.databankio import (
     download_resource_from_uri,
-    parse_valid_config_settings,
-    resolve_download_file_url,
+    resolve_download_file_url
+)
+from DatabankLib.databankLibrary import (
+    parse_valid_config_settings
 )
 
 
@@ -86,11 +88,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-all_molecules = []
-for key in lipids_dict:
-    all_molecules.append(key)
-for key in molecules_dict:
-    all_molecules.append(key)
+all_molecules = lipids_dict.keys()
 
 input_path = os.path.join(".", args.file)
 
@@ -497,7 +495,7 @@ logger.info(f"LENGTH OF THE TRAJECTORY: {str(sim['TRJLENGTH'])}")
 number_of_atomsTRJ = len(u.atoms)
 
 number_of_atoms = 0
-for key_mol in all_molecules:
+for key_mol in sim["COMPOSITION"].keys():
     mapping_dict = loadMappingFile(sim["COMPOSITION"][key_mol]["MAPPING"])
 
     if sim.get("UNITEDATOM_DICT") and not "SOL" in key_mol:

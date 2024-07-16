@@ -2,15 +2,14 @@
 Module form_factor serves for bilayer form factor calculations.
 """
 
+import sys, os
 import re
 import MDAnalysis as mda
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 import json
 import time
 import gc
-import os
 from pprint import pprint
 from tqdm import tqdm
 
@@ -29,7 +28,6 @@ class NumpyArrayEncoder(CompactJSONEncoder):
         else:
             return CompactJSONEncoder.encode(self, o)
  
-__getWater = lambda readme: 'resname ' + readme['COMPOSITION']['SOL']['NAME']
 
 #for testing purposes to safe time for loading trajectory and creating dictonary
 #the electron.dat will be decripted in the future as the values will be used from the universal mapping file
@@ -40,43 +38,6 @@ electron_dictionary={"H":1,"He":2,"Li":3,"Be":4,"B":5,"C":6,"N":7,"O":8,"F":9,"N
                    "Na":10,"Mg":10,"Al":13,"Si":14,"P":15,"S":16,"Cl":18,"Ar":18,
                    "K":18,"Ca":18,"Sc":21,"Ti":22,"V":23,"Cr":24,"Mn":25,"Fe":26,"Co":27,"Ni":28,
                      "Cu":29,"Zn":30,"Ga":31,"Ge":32,"Vi":0,"Cs":54,"D":0}
-	
-def __filterHbonds(mapping_names):
-    
-    re_H = re.compile(r'M_([A-Z]{1,2}[0-9]{1,4})*H[0-4]{1,2}_M')
-    
-    filtered = list(filter(re_H.match, mapping_names))
-    
-    return filtered
-
-
-def __listNamePairs(mapping_dict,molecule):
-    pairs_dictionary = {}
-    residues = []
-        
-    for mapping_name in mapping_dict.keys():
-        try:
-            residues.append(mapping_dict[mapping_name]['RESIDUE'])
-        except KeyError:
-            continue
-    
-    if residues:
-        pairs_dictionary = dict.fromkeys(residues)
-        print(pairs_dictionary.keys())
-        for res in pairs_dictionary.keys():
-            pairs = []
-            for mapping_name in mapping_dict.keys():
-                if res == mapping_dict[mapping_name]['RESIDUE']:
-                    pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']]) 
-            pairs_dictionary[res] = pairs
-    else:
-        pairs_dictionary = dict.fromkeys([molecule])  
-        pairs = []  
-        for mapping_name in mapping_dict.keys():
-            pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']]) 
-        pairs_dictionary[molecule] = pairs
-    
-    return pairs_dictionary
 
 
 class FormFactor:
@@ -91,34 +52,76 @@ class FormFactor:
     - testing is needed to see stability for rare species.
     
     Examination of FF error spikes is needed!
-    
     """
-    def __init__(self, path, conf,traj,nbin,output,readme,density_type="electron"):
+
+    # Group of static private helper methods
+
+    @staticmethod
+    def __listNamePairs(mapping_dict,molecule):
+        pairs_dictionary = {}
+        residues = []
+            
+        for mapping_name in mapping_dict.keys():
+            try:
+                residues.append(mapping_dict[mapping_name]['RESIDUE'])
+            except KeyError:
+                continue
+        
+        if residues:
+            pairs_dictionary = dict.fromkeys(residues)
+            print(pairs_dictionary.keys())
+            for res in pairs_dictionary.keys():
+                pairs = []
+                for mapping_name in mapping_dict.keys():
+                    if res == mapping_dict[mapping_name]['RESIDUE']:
+                        pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']]) 
+                pairs_dictionary[res] = pairs
+        else:
+            pairs_dictionary = dict.fromkeys([molecule])  
+            pairs = []  
+            for mapping_name in mapping_dict.keys():
+                pairs.append([mapping_name, mapping_dict[mapping_name]['ATOMNAME']]) 
+            pairs_dictionary[molecule] = pairs
+        
+        return pairs_dictionary
+
+
+    @staticmethod
+    def __filterHbonds(mapping_names):
+        re_H = re.compile(r'M_([A-Z]{1,2}[0-9]{1,4})*H[0-4]{1,2}_M')
+        filtered = list(filter(re_H.match, mapping_names))
+        return filtered
+
+    __getWater = staticmethod(lambda rmf: ('resname ' + rmf['COMPOSITION']['SOL']['NAME']))
+
+    # regular methods
+
+    def __init__(self, path, conf, traj, nbin, output, readme, density_type="electron"):
         self.path = path
         self.conf = conf
         self.traj = traj
         self.readme = readme
-        start_time=time.time()
+        start_time = time.time()
         try:
-            self.u = mda.Universe(self.conf,self.traj)
+            self.u = mda.Universe(self.conf, self.traj)
             print()
         except:
             gro = self.path + '/conf.gro'
             print("Generating conf.gro because MDAnalysis cannot read tpr version")
             os.system('echo System | gmx trjconv -s '+ self.conf + ' -f '+ self.traj + ' -dump 0 -o ' + gro)
             self.conf = gro
-            self.u = mda.Universe(self.conf,self.traj)
+            self.u = mda.Universe(self.conf, self.traj)
             
         print("Loading the trajectory takes {:10.6f} s".format(time.time()-start_time))
         
-        #number of bins
+        # number of bins
         self.nbin = nbin
-        #the totatl box size in [nm] - will be probably removed and tpr box size or 
-        #transform of final FF will be used instead
+        # the totatl box size in [nm] - will be probably removed and tpr box size or 
+        # transform of final FF will be used instead
 
         self.output = path + output
         self.lipids = getLipids(readme)
-        self.waters = __getWater(readme)
+        self.waters = FormFactor.__getWater(readme)
         
         self.density_type = density_type
         
@@ -168,7 +171,7 @@ class FormFactor:
         #get the name of molecule used in simulation files
         molname = self.readme['COMPOSITION'][molecule]['NAME']
       
-        pairs_residue = __listNamePairs(self.system_mapping[molname], molname)
+        pairs_residue = FormFactor.__listNamePairs(self.system_mapping[molname], molname)
         
         # if lipid is split to multiple residues
         selection_txt = ""
@@ -230,8 +233,8 @@ class FormFactor:
                     molecule2 = self.readme['COMPOSITION'][molecule1]['NAME']
                     electrons=[]
 
-                    pairs_residue = __listNamePairs(self.system_mapping[molecule2], molecule2)
-                    atomsH = __filterHbonds(self.system_mapping[molecule2].keys()) #list of hydrogen atoms
+                    pairs_residue = FormFactor.__listNamePairs(self.system_mapping[molecule2], molecule2)
+                    atomsH = FormFactor.__filterHbonds(self.system_mapping[molecule2].keys()) #list of hydrogen atoms
                     
                     # extract explicit atoms and get the mapping names
                     for res in pairs_residue.keys():
@@ -321,7 +324,7 @@ class FormFactor:
 
     def calculate_density(self):
         c = self.u.select_atoms(self.lipids)
-        print(c)
+        print(c) #TODO: remove excessive debug printing!
         
         box_z = self.u.dimensions[2] # + 10 if fails
         print(box_z)
@@ -334,10 +337,10 @@ class FormFactor:
         density_lipids_center = np.zeros(self.nbin)
         density_waters_center = np.zeros(self.nbin)
         
-        """Calculte density profiles and FF from individual frames"""
-        start_time=time.time()
-        min_z=10000000
-        frame=0
+        # Calculte density profiles and FF from individual frames
+        start_time = time.time()
+        min_z = 10000000
+        frame = 0
 
         ElectronNumbers = {}
 
@@ -407,8 +410,7 @@ class FormFactor:
         weightsWATERS = weightsALL[ [_a.index for _a in cwaters] ]
         print("done.")
         
-        print("Starting interating over the trajectory..")
-        for ts in tqdm(self.u.trajectory):
+        for ts in tqdm(self.u.trajectory, desc="Iterating over trajectory"):
             #count the index of the frame, numbered from 0, used to be used for the density profile averaging
             #posible not needed now
             frame += 1 #ts.frame
@@ -474,14 +476,16 @@ class FormFactor:
         
   
         FF_range = np.linspace(0,999,1000)
-        fa_aver, fb_aver = self.fourier(density_data[final_FF_start:final_FF_end,1],density_data[final_FF_end,0]-density_data[final_FF_start,0],FF_range,density_data[1,0]-density_data[0,0])
+        fa_aver, fb_aver = self.fourier(density_data[final_FF_start:final_FF_end,1],
+                                        density_data[final_FF_end,0]-density_data[final_FF_start,0],
+                                        FF_range,density_data[1,0]-density_data[0,0])
         
-        """Plot density profiles from the average density with minimal box"""
+        # Plot density profiles from the average density with minimal box
         fourrier_result2= np.sqrt(np.multiply(fa_aver,fa_aver)+np.multiply(fb_aver,fb_aver))
         fourrier_data2 = np.vstack((FF_range*0.1*0.01,fourrier_result2)).transpose()
         
-        """Save data into files"""
-        #minimum box size density
+        # Save data into files
+        # minimum box size density
         with open(str(self.output)+"TotalDensity.dat", 'wb') as f:
             np.savetxt(f, density_data[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
             
@@ -494,11 +498,11 @@ class FormFactor:
         with open(str(self.output)+"WaterDensity.dat", 'wb') as f:
             np.savetxt(f, density_waters_center[final_FF_start+1:final_FF_end-1,:],fmt='%8.4f  %.8f')
 
-        #this is the important file form factors
+        # this is the important file form factors
         with open(str(self.output)+"FormFactor.dat", 'wb') as f:
             np.savetxt(f, fourrier_data2,fmt='%8.4f  %.8f')
             
-        """ write output in json """
+        # write outputs in JSON
         
         with open(str(self.output)+"TotalDensity.json", 'w') as f:
             json.dump(density_data[final_FF_start+1:final_FF_end-1,:],f, cls=NumpyArrayEncoder)
@@ -511,56 +515,40 @@ class FormFactor:
                      
         with open(str(self.output)+"FormFactor.json", 'w') as f:
             json.dump(fourrier_data2,f,cls=NumpyArrayEncoder)
-            
+    # end calculate_density        
         
-    def plot_density(self,data):
-        plt.figure(figsize=(15, 6))
-        plt.plot(data[:,0],data[:,1])
-        plt.xlabel("Membrane normal [nm]")
-        plt.show()
-        
+    def fourier(self, ff_density, box_z, FF_range, d_ff):
+        """Calculates fourier transform of ff_density in the FF_range.
+        It calculates a "height" of a bin for FF puroposes; in this case the number of bins is constant and the 
+        bin width changes.
 
-    
-    def plot_fourier_final(self,data):
-        plt.figure(figsize=(15, 6))
-        plt.plot(data[:,0],data[:,1])
-        plt.xlabel("q [A]")
-        plt.show()
+        Args:
+            ff_density (_type_): TODO: fill
+            box_z (_type_): TODO: fill
+            FF_range (_type_): TODO: fill
+            d_ff (_type_): TODO: fill
+
+        Returns:
+            _type_: TODO: fill
+        """
         
-    def plot_fourier_final_run(self,data,data2):
-        plt.figure(figsize=(15, 6))
-        plt.plot(data[:,0],data[:,1])
-        plt.errorbar(data[:,0],data[:,1],data[:,2])
-        plt.plot(data2[:,0],data2[:,1])
-        plt.xlabel("q [A]")
-        plt.show()
-        
-    
-    def fourier(self,ff_density,box_z,FF_range,d_ff):
-        """Calculates fourier transform of ff_density in the FF_range"""
-        #calculate a "height" of a bin for FF puroposes; in this case the number of bins is constant and the 
-        #bin width changes
-        
-        
-        """Creates the direct space coordinates"""
-        #the calculations are stable with rounding (and others) errors in the direct space coordinates
+        # Creates the direct space coordinates
+        # the calculations are stable with rounding (and others) errors in the direct space coordinates
         ff_x = np.linspace(-box_z/2,box_z/2,ff_density.shape[0]+1)[:-1] + box_z/(2*ff_density.shape[0])
-        ff_x2 = np.linspace(-box_z/2,box_z/2,ff_density.shape[0]+1)[:-1] + d_ff/2
-             
         
         k=0
         bulk=0
-        while k*d_ff<0.33:
-            bulk+=ff_density[k]+ff_density[-k-1]
-            k+=1
-        bulk/=(2*k)
+        while k*d_ff < 0.33:
+            bulk += ff_density[k] + ff_density[-k-1]
+            k += 1
+        bulk /= (2*k)
             
-        fa=np.zeros(FF_range.shape[0])
-        fb=np.zeros(FF_range.shape[0])
+        fa = np.zeros(FF_range.shape[0])
+        fb = np.zeros(FF_range.shape[0])
         
         for j in range (0,ff_density.shape[0]):
-            fa+=(ff_density[j]-bulk)*np.cos(FF_range*ff_x[j]*0.01)*d_ff
-            fb+=(ff_density[j]-bulk)*np.sin(FF_range*ff_x[j]*0.01)*d_ff
+            fa += (ff_density[j]-bulk)*np.cos(FF_range*ff_x[j]*0.01)*d_ff
+            fb += (ff_density[j]-bulk)*np.sin(FF_range*ff_x[j]*0.01)*d_ff
 
         return fa, fb
  

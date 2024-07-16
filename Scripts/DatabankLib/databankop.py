@@ -17,7 +17,7 @@ import sys
 import re
 import MDAnalysis as mda
 import numpy as np
-import warnings
+import warnings #TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
