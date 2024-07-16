@@ -72,9 +72,8 @@ for preparing trajectories:
        trajectories
     4. Concatenate trajectories
 """
-
-
 class Parser:
+
     """
     Constructor for Parser:
         root          - path to the directory with trajectories
@@ -83,7 +82,6 @@ class Parser:
         path          - name of a particular trajectory
         v             - verbosity for testing
     """
-
     def __init__(self,
                  root,
                  readme,
@@ -152,7 +150,6 @@ class Parser:
         3. If path is provided and current path is equal to the provided one,
            parser reports that it finds the trajectory for the analysis.
     """
-
     def validatePath(self):
         if self.error > 0:
             # This is an error message. Printing even in silent mode
@@ -180,7 +177,6 @@ class Parser:
     """
     Basic trajectory and TPR download.
     """
-
     def downloadTraj(self):
         print("Downloading")
         if not os.path.isfile(self.tpr_name):
@@ -199,7 +195,6 @@ class Parser:
     trajectory is found, use it. Otherwise, call gmx trjconv to make whole
     trajectory. The selected trajectory is loaded into Universe.
     """
-
     def prepareGMXTraj(self):
         # Look for centered.xtc
         if os.path.isfile( os.path.join(self.indexingPath, "centered.xtc") ):
@@ -273,7 +268,6 @@ class Parser:
     Create Concatenator and corresponding concatenated trajectories for
     all lipids available for the trajectory.
     """
-
     def concatenateTraj(self):
         self.concatenated_trajs = []
         for lipid in self.lipids:
@@ -295,7 +289,6 @@ class Parser:
     """
     Write data to json file
     """
-
     def dumpData(self, data):
         with open( os.path.join(self.indexingPath, self.eq_time_fname), "w") as f:
             json.dump(data, f)
@@ -384,7 +377,6 @@ class Topology:
     won't be the case for DOPC. Currently the algorithm is using that all three
     groups differ
     """
-
     def assignResnames(self, resnames):
         if self.isMergeNeeded():
             resnameDict = {}
@@ -424,7 +416,6 @@ class Topology:
     groups differ
     TODO: get the correspondence from structure
     """
-
     def runMerger(self):
         resnames = self.getLipidResnames()
         resnameDict = self.assignResnames(resnames)
@@ -462,9 +453,8 @@ It has the following methods:
     3. alignTraj method to perform the alignment of the concatenated trajectory
     4. The enveloping concatenate method
 """
-
-
 class Concatenator:
+
     """
     Constructor for Concatenator:
         topology      - topology for lipid
@@ -472,7 +462,6 @@ class Concatenator:
         lipid_name    - lipid name in the databank
         lipid_resname - lipid resname in the trajectory
     """
-
     def __init__(self, topology, traj, lipid_name, lipid_resname):
         self.topology = topology
         self.traj = traj
@@ -495,7 +484,6 @@ class Concatenator:
     (this is needed for autocorrelation time analysis), and finally merges
     individual lipid trajectories.
     """
-
     def concatenateTraj(self):
         traj = self.traj.trajectory
         n_frames = len(traj)
@@ -543,7 +531,6 @@ class Concatenator:
     trajectories of individual lipids (this is needed for autocorrelation
     time analysis), and finally merges individual lipid trajectories.
     """
-
     def concatenateTrajWithMerging(self):
         traj = self.traj.trajectory
         n_frames = len(traj)
@@ -595,7 +582,6 @@ class Concatenator:
     average structure after alignment to the first frame, and (2) it alignes
     the structure to the calculated average structure in (1).
     """
-
     def alignTraj(self, concatenated_traj):
         # Compute average structure after alignment to the first frame
         av = align.AverageStructure(concatenated_traj, ref_frame=0).run()
@@ -615,7 +601,6 @@ class Concatenator:
     """
     Simple enveloping function to perform concatenation
     """
-
     def concatenate(self):
         print(f"Concatenator: Concatenating lipid {self.lipid_name}")
         if not self.topology.isMergeNeeded():
@@ -642,9 +627,8 @@ Class PCA is a class that actually performs PCA. It has the following methods:
     5. get_autocorrelations calculates the autocorrelation timeseries for
        trajectory
 """
-
-
 class PCA:
+
     """
     Constructor for PCA:
         aligned_traj - np.array with positions of concatenated and aligned
@@ -654,7 +638,6 @@ class PCA:
         n_frames     - number of frames in the concatenated trajectory
         traj_time    - trajectory length in ns
     """
-
     def __init__(self, aligned_traj, av_pos, n_lipid, n_frames, traj_time):
         self.aligned_traj = aligned_traj
         self.av_pos = av_pos
@@ -666,7 +649,6 @@ class PCA:
     PCA calculates the PCA. First the data is centered and then covariance
     matrix is calculated manually.
     """
-
     def PCA(self):
         # centering of positions relative to the origin
         X = self.aligned_traj.astype(np.float64)
@@ -690,7 +672,6 @@ class PCA:
     """
     Projecting the trajectory on the 1st principal component
     """
-
     def get_proj(self, cdata):
         # projection on PC1
         proj = np.tensordot(cdata, self.eig_vecs[0:1], axes=(1, 1)).T
@@ -701,7 +682,6 @@ class PCA:
     """
     Autocorrelation calculation for individual lipid.
     """
-
     def get_lipid_autocorrelation(self, data, variance, mean):
         # Centering the data
         data -= mean
@@ -713,7 +693,6 @@ class PCA:
     """
     Autocorrelation calculation for the trajectory.
     """
-
     def get_autocorrelations(self):
         variance = self.proj.var()
         mean = self.proj.mean()
@@ -744,14 +723,12 @@ autocorrelation data. It includes the following methods:
        calculates the decay time
     4. calculate_time method calculates the estimated equilibration time
 """
-
-
 class TimeEstimator:
+
     """
     Constructor for PCA:
         autocorrelation - autocorrelation data
     """
-
     def __init__(self, autocorrelation):
         self.autocorrelation = autocorrelation
 
@@ -767,7 +744,6 @@ class TimeEstimator:
     array[0]. The method returns the interval inbetween the array gets below
     cutoff.
     """
-
     def get_nearest_value(self, iterable, value):
         try:
             A = np.where(iterable < value)[0][0]
@@ -786,7 +762,6 @@ class TimeEstimator:
     """
     Estimates autocorrelation decay time.
     """
-
     def timerelax(self):
         time = self.autocorrelation[:, 0]
         autocorrelation = self.autocorrelation[:, 1]
@@ -824,7 +799,6 @@ class TimeEstimator:
     autocorrelation decay time. They are linearly connected and the
     coefficient is calculated experimentally.
     """
-
     def calculate_time(self):
         # relaxation time at e^1 decay
         te1 = self.timerelax()

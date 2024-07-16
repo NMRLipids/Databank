@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-import os
-import sys
+import os, sys
 import urllib.request
-
-import urllib.request
-from urllib.error import URLError,HTTPError,ContentTooShortError
-
 import socket
+
+import logging
+logger = logging.getLogger(__name__)
 
 sys.path.append('..')
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url
 import DatabankLib.form_factor as form_factor
+
 
 db_data = databank()
 systems = db_data.get_systems()

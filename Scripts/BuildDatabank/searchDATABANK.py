@@ -6,6 +6,7 @@ import yaml
 import json
 
 from tqdm import tqdm
+
 sys.path.append('..')
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.databankLibrary import lipids_dict
@@ -42,7 +43,6 @@ class Simulation:
         for key in self.readme['COMPOSITION'].keys():
             if key in molecules:
                 lipids.append(key)
-
         return lipids
     
     def getIons(self, ions):
@@ -82,15 +82,10 @@ class Simulation:
             for lipid in lipids1:
                 if molecule in exp_counter_ions.keys() and lipid == exp_counter_ions[molecule]:
                     N_lipid = self.readme['COMPOSITION'][lipid]['COUNT']
-                 #   print(molecule + " " + lipid)
-                 #   print(self.readme)
                     lipids2.append(sum(N_lipid))
         
         N_molecule = N_molecule - sum(lipids2)
-       # print(N_molecule)
-        
         c_molecule = (N_molecule * c_water) / N_water
-        #print(c_molecule)
         
         return c_molecule
         
@@ -104,11 +99,11 @@ class Simulation:
         try:
             if (N_water / N_lipids) > 25 :
                 tot_lipid_c = 'full hydration'
-              #  print('full hydration')
             else:
                 tot_lipid_c = (N_lipids * c_water) / N_water
         except ZeroDivisionError:
-            print(self.readme)    
+            logger.warning("Division by zero when determining lipid concentration!")
+            print(self.readme) 
         return tot_lipid_c
         
 ##################
