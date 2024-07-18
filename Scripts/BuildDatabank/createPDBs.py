@@ -20,18 +20,34 @@ for system in systems:
 
     print('Analyzing: ', system['path'])
 
+    doi = system.get('DOI')
+    
+    tpr_name = None
     try:
-        doi = system.get('DOI')
         tpr = system.get('TPR')
         tpr_name = os.path.join(path, system.get('TPR')[0][0])
         
         if (not os.path.isfile(tpr_name)):
             tpr_url = resolve_download_file_url(doi, tpr[0][0])
             response = urllib.request.urlretrieve(tpr_url, tpr_name)
-    
-        if 'gromacs' in system['SOFTWARE']:
-            os.system('gmx editconf -f '+ tpr_name + ' -o ' + outfilename)
-            
     except:
-        pass
+        print("There is no TPR for this system. We will try GRO.")
+    else:
+        os.system('gmx editconf -f '+ tpr_name + ' -o ' + outfilename)
+        continue
+
+    gro_name = None
+    try:
+        gro = system.get('GRO')
+        gro_name = os.path.join(path, system.get('GRO')[0][0])
+        
+        if (not os.path.isfile(gro_name)):
+            gro_url = resolve_download_file_url(doi, gro[0][0])
+            response = urllib.request.urlretrieve(gro_url, gro_name)
+    except:
+        print("There is no GRO for this system. We will skip it.")
+    else:
+        os.system('gmx editconf -f '+ gro_name + ' -o ' + outfilename)
+        continue
+
 
