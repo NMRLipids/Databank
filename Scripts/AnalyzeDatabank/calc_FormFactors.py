@@ -8,15 +8,14 @@ import socket
 import logging
 logger = logging.getLogger(__name__)
 
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.databankLibrary import lipids_dict, databank, loadMappingFile
+from DatabankLib.databankLibrary import lipids_dict, initialize_databank, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url
-import DatabankLib.form_factor as form_factor
+from DatabankLib.form_factor import FormFactor
 
 
-db_data = databank()
-systems = db_data.get_systems()
+systems = initialize_databank()
  
 for system in systems:
     logger.info("System title: " + system['SYSTEM'])
@@ -191,9 +190,9 @@ for system in systems:
     if (not os.path.isfile(system_path + os.sep + "FormFactor.json")):
         try:
             if 'gromacs' in system['SOFTWARE']:
-                form_factor.FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
+                FormFactor(system_path, tpr_name, xtccentered, 200, output_name,  system)
             if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
-                form_factor.FormFactor(system_path, pdb_name, trj_name, 200, output_name,  system)
+                FormFactor(system_path, pdb_name, trj_name, 200, output_name,  system)
         except ValueError as e:
             # Here it was expected to have allow_pickle-type errors.
             # but I suppose, we cannot simply ignore them because it means that the code breaks at this place,

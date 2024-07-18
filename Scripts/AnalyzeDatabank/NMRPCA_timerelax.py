@@ -45,9 +45,9 @@ from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
 
-sys.path.append("..")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.databankLibrary import databank, lipids_dict, loadMappingFile
+from DatabankLib.databankLibrary import initialize_databank, lipids_dict, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
 
@@ -819,10 +819,9 @@ if __name__ == "__main__":
 
     warnings.filterwarnings("ignore", category=UserWarning)
 
-    db_data = databank()
     # searches through every subfolder of a path
     # and finds every trajectory in databank
-    systems = db_data.get_systems()
+    systems = initialize_databank()
 
     i = 0
     listall = []

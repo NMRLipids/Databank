@@ -7,12 +7,11 @@ import json
 from tqdm import tqdm
 import traceback
 
-sys.path.append('..')
-from DatabankLib.databankLibrary import databank
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from DatabankLib.databankLibrary import initialize_databank
 from DatabankLib import NMLDB_SIMU_PATH
 
-db_data = databank()
-systems = db_data.get_systems()
+systems = initialize_databank()
 
 cErr = 0
 cUpp = 0
