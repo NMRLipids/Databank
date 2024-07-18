@@ -7,7 +7,7 @@ import urllib.request
 import re
 import buildh
 
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.databankLibrary import *
 from DatabankLib.databankio import resolve_download_file_url

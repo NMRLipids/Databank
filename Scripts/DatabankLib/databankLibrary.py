@@ -13,9 +13,8 @@ import urllib, logging
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from typing import List
 
-import json
+import json, yaml
 import os
 import numpy as np
 import math
@@ -128,10 +127,10 @@ def CalcAreaPerMolecule(system):
 
     :return: area per lipid (Å^2)
     """
-    APLpath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'apl.json'
+    APLpath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'apl.json')
     try:
-        f = open(APLpath)
-        APLdata = json.load(f)
+        with open(APLpath) as f:
+            APLdata = json.load(f)
         sumAPL = 0
         sumIND = 0
         for i,j in APLdata.items():
@@ -152,14 +151,13 @@ def GetThickness(system):
 
     :return: membrane thickess (nm)
     """
-    ThicknessPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'thickness.json'
+    ThicknessPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
     try:
-        f = open(ThicknessPath)
-        thickness = json.load(f)
+        with open(ThicknessPath) as f:
+            thickness = json.load(f)
         return(thickness)
     except:
         return 0
-        #print('thickness.json not found from' + system['path'])
 
 
 def ShowEquilibrationTimes(system):
@@ -170,10 +168,9 @@ def ShowEquilibrationTimes(system):
     :param system: NMRlipids databank dictionary defining a simulation.
     """
     
-    EqTimesPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'eq_times.json'
+    EqTimesPath = os.path.join(NMLDB_EXP_PATH, system['path'], 'eq_times.json')
     
     try:
-        #if (os.path.isfile(EqTimesPath)):
         with open(EqTimesPath) as f:
             EqTimeDict = json.load(f)
     except:
@@ -182,7 +179,7 @@ def ShowEquilibrationTimes(system):
 
     for i in EqTimeDict:
         print(i+':', EqTimeDict[i])
-            
+
 def GetNlipids(system):
     """ 
     Returns the total number of lipids in a simulation defined by ``system``. 
@@ -513,15 +510,13 @@ def simulation2universal_atomnames(system,molecule,atom):
 
     :return: force field specific atom name
     """
+    mapping = loadMappingFile(system['COMPOSITION'][molecule]['MAPPING'])
+    try:
+        m_atom1 = mapping[atom]["ATOMNAME"]
+    except:
+        print(atom, ' was not found from ', system['COMPOSITION'][molecule]['MAPPING'])
+        return
 
-    mapping_file_path = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + system['COMPOSITION'][molecule]['MAPPING']
-    with open(mapping_file_path, "rt") as mapping_file:
-        mapping = yaml.load(mapping_file, Loader=yaml.FullLoader)
-        try:
-            m_atom1 = mapping[atom]["ATOMNAME"]
-        except:
-            print(atom, ' was not found from ', str(mapping_file_path))
-            return   
     return m_atom1
 
 def loadMappingFile(mapping_file):
@@ -532,12 +527,10 @@ def loadMappingFile(mapping_file):
     
     :return: mapping dictionary
     """
-    mapping_file_path = os.path.dirname(os.path.realpath(__file__)) + '/mapping_files/' + mapping_file
+    mapping_file_path = os.path.join(NMLDB_ROOT_PATH, 'DatabankLib', 'mapping_files', mapping_file)
     mapping_dict = {}
     with open(mapping_file_path, "r") as yaml_file:
         mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    yaml_file.close()
-    
     return mapping_dict
 
 def getAtoms(system, lipid):
@@ -629,15 +622,14 @@ def system2MDanalysisUniverse(system):
 
     :return: MDAnalysis universe
     """
-    print(os.path.dirname(os.path.realpath(__file__)))
-    systemPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] 
+    systemPath = os.path.join(NMLDB_SIMU_PATH, system['path'])
     doi = system.get('DOI')
     skipDownloading: bool = (doi == 'localhost')
     if skipDownloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
     trj = system.get('TRJ')
-    trj_name = systemPath + system.get('TRJ')[0][0]
+    trj_name = os.path.join(systemPath, system.get('TRJ')[0][0])
     software = system['SOFTWARE']
 
     if (skipDownloading):
@@ -662,7 +654,7 @@ def system2MDanalysisUniverse(system):
         try:
             u = mda.Universe(tpr_name, trj_name)
         except:
-            conf = systemPath + '/conf.gro'
+            conf = os.path.join(systemPath, 'conf.gro')
             if (not os.path.isfile(tpr_name)):
                 print("Generating conf.gro because MDAnalysis cannot read tpr version")
                 if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
@@ -673,7 +665,7 @@ def system2MDanalysisUniverse(system):
 
     elif 'openMM' or 'NAMD' in software:
         pdb = system.get('PDB')
-        pdb_name = systemPath + pdb[0][0]
+        pdb_name = os.path.join(systemPath, pdb[0][0])
         if skipDownloading:
             if (not os.path.isfile(pdb_name)):
                 raise FileNotFoundError(f"PDB should be downloaded [{pdb_name}]")
@@ -700,18 +692,7 @@ def read_trj_PN_angles(molname, atom1, atom2, MDAuniverse):
 
     :return: list where the first element are the angles of all molecules as a function of time, second element contains time averages for each molecule, third element contains the average angle over time and molecules, and fourth element is the error of the mean calculated over molecules. 
     """
-
-    #systemPath = os.path.dirname(os.path.realpath(__file__)) + system['path'] 
-    
-    #if 'gromacs' in system['SOFTWARE']:
-    #    print(systemPath, system['TPR'][0][0])
-    #    top_fname = systemPath + system['TPR'][0][0]
-    #else:
-    #    top_fname = system['PDB']
-    #traj_fname =  systemPath +  system['TRJ'][0][0]
-
-    mol = MDAuniverse #mda.Universe(top_fname, traj_fname)
-
+    mol = MDAuniverse
     selection = mol.select_atoms(
         "resname " + molname + " and (name " + atom1 + ")",
         "resname " + molname + " and (name " + atom2 + ")",
@@ -826,7 +807,7 @@ class YamlBadConfigException(Exception):
         Exception.__init__(self, *args, **kwargs)
 
 
-def parse_valid_config_settings(info_yaml: dict) -> (dict, List[str]):
+def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
     """
     :meta private:
     Parses, validates and updates dict entries from yaml configuration file.
@@ -1001,19 +982,17 @@ def GetFormFactorMin(system):
 
     :return: list of form factor minima
     """
-    FormFactorPath = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path'] + 'FormFactor.json'
-    #try:
-    f = open(FormFactorPath)
-    FormFactor = json.load(f)
-    min = 1000
-    iprev = FormFactor[0][1]
+    formFactorPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'FormFactor.json')
+    with open(formFactorPath) as f:
+        formFactor = json.load(f)
+    iprev = formFactor[0][1]
     iprevD = 0
     minX = []
-    for i in FormFactor:
+    for i in formFactor:
         iD = i[1]-iprev
         if iD > 0 and iprevD < 0 and i[0] > 0.1:
             minX.append(i[0])
-        iprevD = i[1]-iprev
+        iprevD = i[1] - iprev
         iprev = i[1]
         
     return(minX)
@@ -1028,7 +1007,7 @@ def averageOrderParameters(system):
     :return: average of sn-1 and sn-2 order parameters
     """
     
-    path = os.path.dirname(os.path.realpath(__file__)) + '/../../Data/Simulations/' + system['path']
+    path = os.path.join(NMLDB_SIMU_PATH, system['path'])
     
     sn1sum = 0
     sn1count = 0
@@ -1037,7 +1016,7 @@ def averageOrderParameters(system):
     
     for lipid in system['COMPOSITION']:
         if lipid in lipids_dict and not 'CHOL' in lipid:
-            OPpathSIM = path + lipid + 'OrderParameters.json'
+            OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
             with open(OPpathSIM) as json_file:
                 OPsim = json.load(json_file)
     
