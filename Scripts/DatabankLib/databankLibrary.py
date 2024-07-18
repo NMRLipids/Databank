@@ -22,96 +22,11 @@ logger = logging.getLogger(__name__)
 
 from . import *
 from .databank_defs import *
+from .core import *
 from .databankio import resolve_download_file_url
-
-##############CLASS FOR LOOPING OVER SYSTEMS#######################################
-
-import yaml
-
-
-class databank:
-    """ :meta private: 
-    Representation of all simulation in the NMR lipids databank. 
-
-        `path` should be the local location of /Data/Simulations/ in the NMRlipids databank folder. Example usage to loop over systems: 
-   
-            path = '../../Data/Simulations/'
-            db_data = databank(path)
-            systems = db_data.get_systems()
-
-            for system in systems:
-                print(system)
-  
-    """
-    
-    def __init__(self, path=NMLDB_SIMU_PATH):
-        self.path = path
-        self.systems = []
-        self.__load_systems__()
-        print('Databank initialized from the folder:', os.path.realpath(path))
-
-    def __load_systems__(self):
-        rpath = os.path.realpath(self.path)
-        for subdir, dirs, files in os.walk(rpath):
-            for filename in files:
-                filepath = os.path.join(subdir, filename)
-                if filename == "README.yaml":
-                    with open(filepath) as yaml_file:
-                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
-                        relpath = os.path.relpath(filepath, rpath)
-                        content["path"] = relpath[ : -11]
-                        self.systems.append(content)
-
-    def get_systems(self):
-        """ Returns a list of all systems in the NMRlipids databank """
-        return self.systems
-
-#    def pie_temperature(self):
-#        list_feature = [int(float(system["TEMPERATURE"])) for system in self.systems]
-#        import collections
-
-#        counter = collections.Counter(list_feature)
-#        plt.pie(counter.values(), labels=counter.keys(), normalize=True)
-
 
 #########################FUNCTIONS###################################################
 # functions used in building and analyzing the databank
-
-def initialize_databank(databankPath = None):
-    """ 
-    Intializes the NMRlipids databank.
-
-    :param databankPath: path for the local location of the NMRlipids databank, for example ``../../Databank``
-    :return: list of dictionaries that contain the content of README.yaml files for each system.  
-    """
-    if databankPath is not None:
-        path = os.path.join(databankPath, 'Data', 'Simulations')
-    else:
-        path = NMLDB_SIMU_PATH
-    db_data = databank(path)
-    systems = db_data.get_systems()
-    return systems
-
-
-def print_README(system):
-    """ 
-    Prints the content of ``system`` dictionary in human readable format. 
-
-    :param system: NMRlipids databank dictionary defining a simulation.
-
-    """
-    if system == 'example':
-        readmePath = '../data/simulations/READMEexplanations.yaml'
-        with open(readmePath, 'r') as file:
-            readmeFile = yaml.safe_load(file)
-    else:
-        readmeFile = system
-            
-    for key in readmeFile:
-        print('\033[1m' + key + ":" + '\033[0m')
-        print(" ", readmeFile[key])
-
-
 
 def CalcAreaPerMolecule(system):
     """ 
