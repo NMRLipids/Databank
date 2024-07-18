@@ -1,1 +1,49 @@
-[{"SM16": {"sn-1": 0.34122348267956315, "sn-2": NaN, "headgroup": NaN, "total": 0.34122348267956315}, "TotalQuality": {"headgroup": 0, "tails": 0.17061174133978158, "total": 0.34122348267956315, "FFQuality": 1.9999999999999962}, "system": {"DOI": "10.5281/zenodo.8338253", "SOFTWARE": "NAMD", "TRJ": [["traj_center.dcd"]], "PDB": [["struct.pdb"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "TEMPERATURE": 328.15, "COMPOSITION": {"SM16": {"NAME": "PSM", "MAPPING": "mappingSM16charmm.yaml", "COUNT": [100, 100]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 9000}}, "DIR_WRK": "/home/sosamuli/temp/DataBank/", "PUBLICATION": "Doktorova et al. 2020 J. Phys. Chem. B. article (DOI 10.1021/acs.jpcb.0c03389)", "AUTHORS_CONTACT": "Milka Doktorova", "SYSTEM": "PSM NAMD", "SOFTWARE_VERSION": null, "FF": "Charmm36", "FF_SOURCE": null, "FF_DATE": null, "TOP": null, "TRAJECTORY_SIZE": 3694041396, "TRJLENGTH": 287.16934554, "NUMBER_OF_ATOMS": 52400, "DATEOFRUNNING": "13/09/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 765, "EXPERIMENT": {"ORDERPARAMETER": {"SM16": {"10.1021/acs.jpcb.0c03389": "10.1021/acs.jpcb.0c03389/3"}}, "FORMFACTOR": "10.1021/acs.jpcb.0c03389/2"}, "path": "68d/39e/68d39e96aca23aeaa4ea2567e0e0cb8b8903a694/68d39e96aca23aeaa4ea2567e0e0cb8b8903a694/"}}]
+[
+    {
+        "SM16": { "sn-1": 0.341223, "sn-2": nan, "headgroup": nan, "total": 0.341223 },
+        "TotalQuality": { "headgroup": 0, "tails": 0.170612, "total": 0.341223, "FFQuality": 2 },
+        "system": {
+            "DOI": "10.5281/zenodo.8338253",
+            "SOFTWARE": "NAMD",
+            "TRJ": [
+                ["traj_center.dcd"]
+            ],
+            "PDB": [
+                ["struct.pdb"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "TEMPERATURE": 328.15,
+            "COMPOSITION": {
+                "SM16": {
+                    "NAME": "PSM",
+                    "MAPPING": "mappingSM16charmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 9000 }
+            },
+            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
+            "PUBLICATION": "Doktorova et al. 2020 J. Phys. Chem. B. article (DOI 10.1021/acs.jpcb.0c03389)",
+            "AUTHORS_CONTACT": "Milka Doktorova",
+            "SYSTEM": "PSM NAMD",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm36",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "TOP": null,
+            "TRAJECTORY_SIZE": 3694041396,
+            "TRJLENGTH": 287.169,
+            "NUMBER_OF_ATOMS": 52400,
+            "DATEOFRUNNING": "13/09/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 765,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "SM16": { "10.1021/acs.jpcb.0c03389": "10.1021/acs.jpcb.0c03389/3" }
+                },
+                "FORMFACTOR": "10.1021/acs.jpcb.0c03389/2"
+            },
+            "path": "68d/39e/68d39e96aca23aeaa4ea2567e0e0cb8b8903a694/68d39e96aca23aeaa4ea2567e0e0cb8b8903a694/"
+        }
+    }
+]

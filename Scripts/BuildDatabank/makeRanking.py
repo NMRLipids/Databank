@@ -73,7 +73,7 @@ for SortBasedOn in Fragments:
     
     outputfile = os.path.join(NMLDB_DATA_PATH, 'Ranking', 'SYSTEM_' + SortBasedOn + '_Ranking.json')
     with open(outputfile, "w") as fp:
-        json.dump(SortedQualities, fp, default=str)
+        json.dump(SortedQualities, fp, default=str, cls=CompactJSONEncoder)
     print('Sorted based on ', SortBasedOn, ' quality and saved to', outputfile)
         
 
@@ -90,10 +90,8 @@ SortedQualities = sorted(NewQualities, key = lambda i: i['TotalQuality']['FFQual
     
 outputfile = os.path.join(NMLDB_DATA_PATH, 'Ranking', 'SYSTEM_FormFactor_Ranking.json')
 with open(outputfile, "w") as fp:
-    json.dump(SortedQualities, fp, default=str)
-print('Sorted based on form factor quality and saved to', outputfile)
-    
-
+    json.dump(SortedQualities, fp, default=str, cls=CompactJSONEncoder)
+print('Sorted based on form factor quality and saved to', outputfile)    
 
 
 ##### Sorting best simulations for each lipid
@@ -114,5 +112,6 @@ for SortBasedOn in Fragments:
         if SortedQualities:
             outputfile = os.path.join(NMLDB_DATA_PATH, 'Ranking', lipid + '_' + SortBasedOn + '_Ranking.json')
             with open(outputfile, "w") as fp:
-                json.dump(SortedQualities, fp, default=str)
-            print('Quality of', SortBasedOn, ' of ' ,lipid, 'sorted and saved to', outputfile) #,'in simulation: ',  simulation[lipid][SortBasedOn])
+                json.dump(SortedQualities, fp, default=str, cls=CompactJSONEncoder)
+            print('Quality of', SortBasedOn, ' of ' ,lipid, 'sorted and saved to', outputfile) 
+            #,'in simulation: ',  simulation[lipid][SortBasedOn])

@@ -1,1 +1,434 @@
-[{"DMPC": {"sn-1": 0.1873727711959831, "sn-2": 0.17455906743805252, "headgroup": 0.6239817916603583, "total": 0.328637876764798}, "TotalQuality": {"headgroup": 0.6239817916603583, "tails": 0.18096591931701783, "total": 0.328637876764798}, "system": {"DOI": "10.5281/zenodo.8431710", "TRJ": [["DMPC-md313-pme.trr"]], "TPR": [["dmpc-md313-pme.tpr"]], "SOFTWARE": "gromacs", "PREEQTIME": 0, "TIMELEFTOUT": 100, "TEMPERATURE": 313.15, "COMPOSITION": {"DMPC": {"NAME": "DMPC", "MAPPING": "mappingDMPCcharmm.yaml", "COUNT": [32, 32]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200}}, "DIR_WRK": "/big/comcon1/work/Databank-work", "AUTHORS_CONTACT": "Alexey Nesterenko", "SYSTEM": "DMPC(313K,pme)", "SOFTWARE_VERSION": 2022.5, "FF": "Charmm36", "FF_SOURCE": "CHARMM-GUI", "FF_DATE": "01/07/2022", "CPT": [["DMPC-md313-pme.cpt"]], "LOG": [["DMPC-md313-pme.log"]], "TOP": [["DMPC_small.top"]], "TRAJECTORY_SIZE": 22175353872, "TRJLENGTH": 538540.0, "NUMBER_OF_ATOMS": 17152, "DATEOFRUNNING": "16/10/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 789, "EXPERIMENT": {"ORDERPARAMETER": {"DMPC": {"10.1039/B508190D": "10.1039/B508190D/3"}}, "FORMFACTOR": {}}, "path": "363/f08/363f08e91a530262e31f644cb4cbae005e81d780/56713ad1f468d3999034adbaa151a942f371ca2f/"}}, {"DMPC": {"sn-1": 0.1773388818949227, "sn-2": 0.20754079299896497, "headgroup": 0.5994532878190483, "total": 0.3281109875709786}, "TotalQuality": {"headgroup": 0.5994532878190483, "tails": 0.19243983744694382, "total": 0.3281109875709786}, "system": {"DOI": "10.5281/zenodo.8431710", "TRJ": [["DMPC-md313-rfz.trr"]], "TPR": [["dmpc-md313-rfz.tpr"]], "SOFTWARE": "gromacs", "PREEQTIME": 0, "TIMELEFTOUT": 100, "TEMPERATURE": 313.15, "COMPOSITION": {"DMPC": {"NAME": "DMPC", "MAPPING": "mappingDMPCcharmm.yaml", "COUNT": [32, 32]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200}}, "DIR_WRK": "/big/comcon1/work/Databank-work", "AUTHORS_CONTACT": "Alexey Nesterenko", "SYSTEM": "DMPC(313K,rfz)", "SOFTWARE_VERSION": 2022.5, "FF": "Charmm36", "FF_SOURCE": "CHARMM-GUI", "FF_DATE": "01/07/2022", "CPT": [["DMPC-md313-rfz.cpt"]], "LOG": [["DMPC-md313-rfz.log"]], "TOP": [["DMPC_small.top"]], "TRAJECTORY_SIZE": 24375430296, "TRJLENGTH": 591970.0, "NUMBER_OF_ATOMS": 17152, "DATEOFRUNNING": "12/10/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 788, "EXPERIMENT": {"ORDERPARAMETER": {"DMPC": {"10.1039/B508190D": "10.1039/B508190D/3"}}, "FORMFACTOR": {}}, "path": "7f1/e99/7f1e99b0c92a51bd40e6664bdf40de523f9bdf73/6346ff94833ef129996b37a4e6ca64ded246b253/"}}]
+[
+    {
+        "DMPC": { "sn-1": 0.886972, "sn-2": 0.413867, "headgroup": 0.645573, "total": 0.648804 },
+        "TotalQuality": { "headgroup": 0.645573, "tails": 0.650419, "total": 0.648804 },
+        "system": {
+            "DOI": "10.5281/zenodo.10952764",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["centered_pbcmol-50-500.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 50,
+            "TIMELEFTOUT": 50,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 2000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200DMPC_2kSOL_300K",
+            "SOFTWARE_VERSION": 2022.2,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "10/2023",
+            "CPT": [
+                ["production.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["production.gro"]
+            ],
+            "TRAJECTORY_SIZE": 4925131896,
+            "TRJLENGTH": 450010,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 29600,
+            "DATEOFRUNNING": "10/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/2" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 809,
+            "path": "016/283/0162831e71a4b86478b4c1a302886f094fe156a7/13397d54f5210854bef5a1f1f71677131ba01729/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.840703, "sn-2": 0.44926, "headgroup": 0.690114, "total": 0.660026 },
+        "TotalQuality": { "headgroup": 0.690114, "tails": 0.644982, "total": 0.660026 },
+        "system": {
+            "DOI": "10.5281/zenodo.10958132",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["dmpc5_centered_150-500.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 150,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 1000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200DMPC_2kSOL_300K",
+            "SOFTWARE_VERSION": 2022.2,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "10/2023",
+            "CPT": [
+                ["production.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["production.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3466218752,
+            "TRJLENGTH": 350010,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 26600,
+            "DATEOFRUNNING": "11/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 800,
+            "path": "744/ed2/744ed265f5ec9eefb48da656a79c1883c8f85c6c/9b31adf0381afa9adfcb6a8ca5855fe73d8a8979/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.779124, "sn-2": 0.558427, "headgroup": 0.658454, "total": 0.665335 },
+        "TotalQuality": { "headgroup": 0.658454, "tails": 0.668775, "total": 0.665335 },
+        "system": {
+            "DOI": "10.5281/zenodo.11044615",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DMPC_fh_0-500ns.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 50,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCopls4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 9000 }
+            },
+            "DIR_WRK": "/set-in-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki (Lindstr\u00f6m)",
+            "SYSTEM": "200DMPC_9000SOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2022-2",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Schrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["DMPC_fh.gro"]
+            ],
+            "TRAJECTORY_SIZE": 9320137004,
+            "TRJLENGTH": 499930,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 50600,
+            "DATEOFRUNNING": "15/05/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 813,
+            "path": "c3f/028/c3f028c4e9ea5847cc395d4f40ce6acf68efda32/496930b1c06fc484c4103b90e8302534f85f9372/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.380422, "sn-2": 0.797613, "headgroup": 0.691747, "total": 0.62326 },
+        "TotalQuality": { "headgroup": 0.691747, "tails": 0.589017, "total": 0.62326 },
+        "system": {
+            "DOI": "10.5281/zenodo.11045998",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DMPC_5wl_50-500ns.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 50,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCopls4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 1000 }
+            },
+            "DIR_WRK": "/set-in-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki (Lindstr\u00f6m)",
+            "SYSTEM": "200DMPC_1000SOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2022-2",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Schrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["DMPC_5wl.gro"]
+            ],
+            "TRAJECTORY_SIZE": 4506693236,
+            "TRJLENGTH": 449930,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 26600,
+            "DATEOFRUNNING": "15/05/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 811,
+            "path": "170/92a/17092a63b14085b6445c83d0f0e69520d3ed3268/15d69a06033fcbe25db6a439fcd7206459b68c7b/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.297003, "sn-2": 0.803646, "headgroup": 0.783104, "total": 0.627918 },
+        "TotalQuality": { "headgroup": 0.783104, "tails": 0.550325, "total": 0.627918 },
+        "system": {
+            "DOI": "10.5281/zenodo.11045073",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DMPC_10wl_120-500ns.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 120,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCopls4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 2000 }
+            },
+            "DIR_WRK": "/set-in-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki (Lindstr\u00f6m)",
+            "SYSTEM": "200DMPC_2000SOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2022-2",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Schrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["DMPC_10wl.gro"]
+            ],
+            "TRAJECTORY_SIZE": 4204880480,
+            "TRJLENGTH": 379930,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 29600,
+            "DATEOFRUNNING": "15/05/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/2" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 810,
+            "path": "0bd/8bd/0bd8bd58f66c8ef8c6c5b5ba78eefcc3589775cd/2a5c22606ac14be5ab7d31bcdde4b90f04796988/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.195691, "sn-2": 0.176456, "headgroup": 0.657282, "total": 0.343143 },
+        "TotalQuality": { "headgroup": 0.657282, "tails": 0.186073, "total": 0.343143 },
+        "system": {
+            "DOI": "10.5281/zenodo.10949663",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["production.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 10000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200DMPC_10kSOL_300K",
+            "SOFTWARE_VERSION": 2022.2,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "10/2023",
+            "CPT": [
+                ["production.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["production.gro"]
+            ],
+            "TRAJECTORY_SIZE": 9904706876,
+            "TRJLENGTH": 500010,
+            "TEMPERATURE": 314,
+            "NUMBER_OF_ATOMS": 53600,
+            "DATEOFRUNNING": "10/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 808,
+            "path": "f8a/f16/f8af169dd74cbbb67247869c50483ba94767b62c/6780b9a6f2f5bd0ac45772065f9b022fa67bfbff/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.187373, "sn-2": 0.174559, "headgroup": 0.623982, "total": 0.328638 },
+        "TotalQuality": { "headgroup": 0.623982, "tails": 0.180966, "total": 0.328638 },
+        "system": {
+            "DOI": "10.5281/zenodo.8431710",
+            "TRJ": [
+                ["DMPC-md313-pme.trr"]
+            ],
+            "TPR": [
+                ["dmpc-md313-pme.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "TEMPERATURE": 313.15,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/big/comcon1/work/Databank-work",
+            "AUTHORS_CONTACT": "Alexey Nesterenko",
+            "SYSTEM": "DMPC(313K,pme)",
+            "SOFTWARE_VERSION": 2022.5,
+            "FF": "Charmm36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "01/07/2022",
+            "CPT": [
+                ["DMPC-md313-pme.cpt"]
+            ],
+            "LOG": [
+                ["DMPC-md313-pme.log"]
+            ],
+            "TOP": [
+                ["DMPC_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 22175353872,
+            "TRJLENGTH": 538540,
+            "NUMBER_OF_ATOMS": 17152,
+            "DATEOFRUNNING": "16/10/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 789,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                },
+                "FORMFACTOR": {}
+            },
+            "path": "363/f08/363f08e91a530262e31f644cb4cbae005e81d780/56713ad1f468d3999034adbaa151a942f371ca2f/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.177339, "sn-2": 0.207541, "headgroup": 0.599453, "total": 0.328111 },
+        "TotalQuality": { "headgroup": 0.599453, "tails": 0.19244, "total": 0.328111 },
+        "system": {
+            "DOI": "10.5281/zenodo.8431710",
+            "TRJ": [
+                ["DMPC-md313-rfz.trr"]
+            ],
+            "TPR": [
+                ["dmpc-md313-rfz.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "TEMPERATURE": 313.15,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/big/comcon1/work/Databank-work",
+            "AUTHORS_CONTACT": "Alexey Nesterenko",
+            "SYSTEM": "DMPC(313K,rfz)",
+            "SOFTWARE_VERSION": 2022.5,
+            "FF": "Charmm36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "01/07/2022",
+            "CPT": [
+                ["DMPC-md313-rfz.cpt"]
+            ],
+            "LOG": [
+                ["DMPC-md313-rfz.log"]
+            ],
+            "TOP": [
+                ["DMPC_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 24375430296,
+            "TRJLENGTH": 591970,
+            "NUMBER_OF_ATOMS": 17152,
+            "DATEOFRUNNING": "12/10/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 788,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                },
+                "FORMFACTOR": {}
+            },
+            "path": "7f1/e99/7f1e99b0c92a51bd40e6664bdf40de523f9bdf73/6346ff94833ef129996b37a4e6ca64ded246b253/"
+        }
+    }
+]

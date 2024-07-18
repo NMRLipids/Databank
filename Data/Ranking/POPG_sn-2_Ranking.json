@@ -1,1 +1,52 @@
-[{"POPG": {"sn-1": 0.09804306431192422, "sn-2": 0.4812668001855044, "headgroup": 0.11602082640085662, "total": 0.23177689696609508}, "TotalQuality": {"headgroup": 0.11602082640085662, "tails": 0.2896549322487143, "total": 0.23177689696609508}, "system": {"DOI": "10.5281/zenodo.546133", "SOFTWARE": "gromacs", "TRJ": [["md50ns_chunk03.xtc"]], "TPR": [["md50ns_chunk02.tpr"]], "PREEQTIME": 200, "TIMELEFTOUT": 0, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Favela-Rosales, Fernando", "SYSTEM": "288POPG_10664SOL_288SOD_298K", "SOFTWARE_VERSION": "5.0.4", "FF": "Slipids", "FF_SOURCE": null, "FF_DATE": "pre-2020", "CPT": null, "LOG": null, "TOP": null, "COMPOSITION": {"POPG": {"NAME": "POPG", "MAPPING": "mappingPOPGslipids.yaml", "COUNT": [144, 144]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 10664}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 288}}, "TRAJECTORY_SIZE": 642454772, "TRJLENGTH": 50020.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 68856, "DATEOFRUNNING": "01/11/2021", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPG": {"10.5281/zenodo.4748647": "10.1021/jacs.1c05549/1", "unpublished/ferreiraPOPG": "unpublished/ferreiraPOPG/1"}}, "FORMFACTOR": {}}, "ID": 207, "path": "b56/b24/b56b24dc9838e1bfc337c1cc2f2880a82d5f7330/09d478c46cc9c5fe4f3d50ce4ca26d28e59fd099/"}}]
+[
+    {
+        "POPG": { "sn-1": 0.0980431, "sn-2": 0.481267, "headgroup": 0.116021, "total": 0.231777 },
+        "TotalQuality": { "headgroup": 0.116021, "tails": 0.289655, "total": 0.231777 },
+        "system": {
+            "DOI": "10.5281/zenodo.546133",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md50ns_chunk03.xtc"]
+            ],
+            "TPR": [
+                ["md50ns_chunk02.tpr"]
+            ],
+            "PREEQTIME": 200,
+            "TIMELEFTOUT": 0,
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Favela-Rosales, Fernando",
+            "SYSTEM": "288POPG_10664SOL_288SOD_298K",
+            "SOFTWARE_VERSION": "5.0.4",
+            "FF": "Slipids",
+            "FF_SOURCE": null,
+            "FF_DATE": "pre-2020",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "COMPOSITION": {
+                "POPG": {
+                    "NAME": "POPG",
+                    "MAPPING": "mappingPOPGslipids.yaml",
+                    "COUNT": [144, 144]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 10664 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 288 }
+            },
+            "TRAJECTORY_SIZE": 642454772,
+            "TRJLENGTH": 50020,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 68856,
+            "DATEOFRUNNING": "01/11/2021",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPG": { "10.5281/zenodo.4748647": "10.1021/jacs.1c05549/1", "unpublished/ferreiraPOPG": "unpublished/ferreiraPOPG/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 207,
+            "path": "b56/b24/b56b24dc9838e1bfc337c1cc2f2880a82d5f7330/09d478c46cc9c5fe4f3d50ce4ca26d28e59fd099/"
+        }
+    }
+]
