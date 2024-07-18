@@ -10,7 +10,7 @@ from tqdm import tqdm
 import urllib.request
 
 import logging
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 def download_resource_from_uri(
     uri: str, dest: str, override_if_exists: bool = False
