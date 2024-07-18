@@ -1,60 +1,20 @@
-import os
+import os, sys
 import urllib.request
-import yaml
 
 """
-This script is made library-independent by intention. 
-We want to be able to run it without additional dependecies.
-TODO: remove additional dependencies and import only directroy names
+Creates PDB for every GROMACS-system and 
+It imports just `core` and `databankio` to avoid additional dependecies.
 """
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from DatabankLib.core import initialize_databank
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.databankio import resolve_download_file_url
 
-class databank:
-    """ :meta private: 
-    Representation of all simulation in the NMR lipids databank. 
-
-        `path` should be the local location of /Data/Simulations/ in the NMRlipids databank folder. Example usage to loop over systems: 
-   
-            path = '../../Data/Simulations/'
-            db_data = databank(path)
-            systems = db_data.get_systems()
-
-            for system in systems:
-                print(system)
-  
-    """
-    
-    def __init__(self, path=r"../../Data/Simulations/"):
-        self.path = path
-        self.systems = []
-        self.__load_systems__(path)
-        print('Databank initialized from the folder:', os.path.realpath(path))
-
-    def __load_systems__(self, path):
-        for subdir, dirs, files in os.walk(path):
-            for filename in files:
-                filepath = os.path.join(subdir, filename)
-                #print(filepath)
-                if filename == "README.yaml":
-                    with open(filepath) as yaml_file:
-                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
-                        size = len(filepath)
-                        sizePath = len(path)
-                        content["path"] = filepath[sizePath : size - 11]
-                        self.systems.append(content)
-
-    def get_systems(self):
-        """ Returns a list of all systems in the NMRlipids databank """
-        return self.systems
-
-
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
-
+systems = initialize_databank()
 
 for system in systems:
-    path = '../../Data/Simulations/' + system['path']
-    outfilename = path + 'conf.pdb'
+    path =  os.path.join(NMLDB_SIMU_PATH, system['path'])
+    outfilename = os.path.join(path, 'conf.pdb')
     if os.path.isfile(outfilename):
         continue
 
@@ -63,11 +23,10 @@ for system in systems:
     try:
         doi = system.get('DOI')
         tpr = system.get('TPR')
-        trj_name = path + system.get('TRJ')[0][0]
-        tpr_name = path + system.get('TPR')[0][0]
-        tpr_url = resolve_download_file_url(doi, tpr[0][0])
+        tpr_name = os.path.join(path, system.get('TPR')[0][0])
         
         if (not os.path.isfile(tpr_name)):
+            tpr_url = resolve_download_file_url(doi, tpr[0][0])
             response = urllib.request.urlretrieve(tpr_url, tpr_name)
     
         if 'gromacs' in system['SOFTWARE']:
@@ -75,7 +34,4 @@ for system in systems:
             
     except:
         pass
-
-
-        
 

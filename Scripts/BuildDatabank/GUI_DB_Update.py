@@ -21,6 +21,10 @@ import pymysql
 import argparse
 import numpy as np
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_DATA_PATH, NMLDB_EXP_PATH, NMLDB_ROOT_PATH
+import DatabankLib.databank_defs as NMRDict
+from DatabankLib.core import initialize_databank
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # ARGUMENTS
@@ -31,20 +35,6 @@ parser = argparse.ArgumentParser(description =
     '''NMRLipids Update v1.0''')
 
 # Ubication of data
-parser.add_argument( "-f", "--folder", type= str, default = 'Databank-main',
-    help= ''' Absolute path of the copy of the repository.\n
-    Default: %(default)s ''' )
-
-parser.add_argument( "-sf", "--simulation_folder", type = str, default = 'Data/Simulations/',
-    help = ''' Path of the simulation folder in the repositoty.\n
-    Default: %(default)s ''' )
-parser.add_argument( "-rf", "--ranking_folder", type = str, default = 'Data/Ranking/',
-    help = ''' Path of the ranking folder in the repositoty.\n
-    Default: %(default)s ''' )
-parser.add_argument( "-ef", "--experiment_folder", type = str, default = 'Data/experiments/',
-    help = ''' Path of the experiments folder in the repositoty.\n
-    Default: %(default)s ''' )
-
 parser.add_argument( "-c", "--config", type=str, default = "config.json",
     help = ''' JSON file with the configuration of the connection to the DB.
     Default: %(default)s ''')
@@ -55,66 +45,6 @@ parser.add_argument( "-s", "--systems", type = str, nargs = '+', # REQUIRED
 
 args = parser.parse_args()
 
-
-sys.path.insert(1, args.folder + '/Scripts/BuildDatabank/')
-import databank_defs as NMRDict
-
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-#  Elements from databankLibrary
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-class databank:
-    """ :meta private: 
-    Representation of all simulation in the NMR lipids databank. 
-
-        `path` should be the local location of /Data/Simulations/ in the NMRlipids databank folder. Example usage to loop over systems: 
-   
-            path = '../../Data/Simulations/'
-            db_data = databank(path)
-            systems = db_data.get_systems()
-
-            for system in systems:
-                print(system)
-  
-    """
-    
-    def __init__(self, path=r"../../Data/Simulations/"):
-        self.path = path
-        self.systems = []
-        self.__load_systems__(path)
-        print('Databank initialized from the folder:', os.path.realpath(path))
-
-    def __load_systems__(self, path):
-        for subdir, dirs, files in os.walk(path):
-            for filename in files:
-                filepath = os.path.join(subdir, filename)
-                #print(filepath)
-                if filename == "README.yaml":
-                    with open(filepath) as yaml_file:
-                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
-                        size = len(filepath)
-                        sizePath = len(path)
-                        content["path"] = filepath[sizePath : size - 11]
-                        self.systems.append(content)
-
-    def get_systems(self):
-        """ Returns a list of all systems in the NMRlipids databank """
-        return self.systems
-
-
-def initialize_databank(databankPath):
-    """ 
-    Intializes the NMRlipids databank.
-
-    :param databankPath: path for the local location of the NMRlipids databank, for example ``../../Databank``
-    :return: list of dictionaries that contain the content of README.yaml files for each system.  
-    """
-    #sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
-    #from databankLibrary import download_link, lipids_dict, databank
-    path = databankPath + '/Data/Simulations/'
-    db_data = databank(path)
-    systems = db_data.get_systems()
-    return systems
 
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -440,27 +370,24 @@ if __name__ == '__main__':
     # Conect to the database
     database = pymysql.connect( **config )
     
-    # Format of the folder
-    args.folder = os.path.abspath( args.folder ) + '/'
-    
     # Path to the ranking files
-    PATH_RANKING = args.folder + args.ranking_folder
+    PATH_RANKING = os.path.join( NMLDB_DATA_PATH, "Ranking" )
+    PATH_SIMULATIONS = NMLDB_SIMU_PATH
+    PATH_EXPERIMENTS = NMLDB_EXP_PATH
+
     
     # If -s(ystems) is given, only modify that entries
     try:
         systems = []
         for system in args.systems:
             # Format the system info
-            if system[0] == '/':
-                system = system[1:]
-            if system[-1] != '/':
-                system += '/'
+            system = system.strip("/\\")
             
             # The path to the simulation file
-            PATH_SIMULATION = args.folder + args.simulation_folder + system
+            PATH_SIMULATION = os.path.join( PATH_SIMULATIONS, system )
                 
             # Read the README.yaml file, the information of the simulation
-            with open( PATH_SIMULATION + 'README.yaml' ) as File:
+            with open( os.path.join(PATH_SIMULATION, 'README.yaml') ) as File:
                 README = yaml.load( File, Loader = yaml.FullLoader )
                 
             # Add the math of the file
@@ -471,7 +398,7 @@ if __name__ == '__main__':
 
     except:
         # Initialize the whole databank
-        systems = initialize_databank( args.folder )
+        systems = initialize_databank()
         
         # Remove the content of the tables and reset the autoincrements
         for table in TABLE_LIST[::-1]:
@@ -497,25 +424,26 @@ if __name__ == '__main__':
      
     # Find files with order parameters experiments
     EXP_OP = []
+    PATH_EXPERIMENTS_OP = os.path.join( PATH_EXPERIMENTS, "OrderParameters")
     
     # Get the path to every README.yaml file with experimental data
-    for path, _, files in os.walk( args.folder + args.experiment_folder + "OrderParameters/" ):
+    for path, _, files in os.walk( PATH_EXPERIMENTS_OP ):
         for file in files:
             if file.endswith("README.yaml"):
-                EXP_OP.append( path.split("OrderParameters/")[1] )
+                EXP_OP.append( os.path.relpath(path, PATH_EXPERIMENTS_OP) )
              
     # Iterate over each experiment
     for expOP in EXP_OP:
         
         # Get the DOI of the experiment and the path to the README.yaml file
-        with open( args.folder + args.experiment_folder + "OrderParameters/" + expOP + '/README.yaml' ) as File:
+        with open( os.path.join(PATH_EXPERIMENTS_OP, expOP, 'README.yaml') ) as File:
             README = yaml.load( File, Loader = yaml.FullLoader )
         
-        for file in os.listdir( args.folder + args.experiment_folder + "OrderParameters/" + expOP ):
+        for file in os.listdir( os.path.join(PATH_EXPERIMENTS_OP, expOP) ):
             if file.endswith(".json"):
             
                 Info = { "doi": README["DOI"],
-                         "path": args.experiment_folder + "OrderParameters/" + expOP + '/' + file }
+                         "path": os.path.join(PATH_EXPERIMENTS_OP, expOP, file) }
                 
                 # Entry in the DB with the info of the experiment
                 Exp_ID = DBEntry( 'experiments_OP', Info, Info )
@@ -525,25 +453,26 @@ if __name__ == '__main__':
 
     # Find files with form factor experiments
     EXP_FF = []
+    PATH_EXPERIMENTS_FF = os.path.join( PATH_EXPERIMENTS, "FormFactors")
     
     # Get the path to every README.yaml file with experimental data
-    for path, _, files in os.walk( args.folder + args.experiment_folder + "FormFactors/" ):
+    for path, _, files in os.walk( PATH_EXPERIMENTS_FF ):
         for file in files:
             if file.endswith("README.yaml"):
-                EXP_FF.append( path.split("FormFactors/")[1] )
+                EXP_FF.append( os.path.relpath(path, PATH_EXPERIMENTS_FF) )
              
     # Iterate over each experiment
     for expFF in EXP_FF:
         
         # Get the DOI of the experiment and the path to the README.yaml file
-        with open( args.folder + args.experiment_folder + "FormFactors/" + expFF + '/README.yaml' ) as File:
+        with open( os.path.join(PATH_EXPERIMENTS_FF, expFF, 'README.yaml') ) as File:
             README = yaml.load( File, Loader = yaml.FullLoader )
             
-        for file in os.listdir( args.folder + args.experiment_folder + "FormFactors/" + expFF ):
+        for file in os.listdir( os.path.join(PATH_EXPERIMENTS_FF, expFF) ):
             if file.endswith(".json"):
             
                 Info = { "doi": README["DOI"],
-                         "path": args.experiment_folder + "FormFactors/" + expFF + '/' + file }
+                         "path": os.path.join(PATH_EXPERIMENTS_FF, expFF, file) }
                 
                 # Entry in the DB with the info of the experiment
                 Exp_ID = DBEntry( 'experiments_FF', Info, Info )
@@ -558,7 +487,7 @@ if __name__ == '__main__':
             print( README["path"] + "\n" )
             
             # The location of the files
-            PATH_SIMULATION = args.folder + args.simulation_folder + README["path"]    
+            PATH_SIMULATION = os.path.join(PATH_SIMULATIONS, README["path"])
         
             # In the case a field in the README does not exist, set its value to 0
             for field in ['AUTHORS_CONTACT','COMPOSITION','CPT','DATEOFRUNNING','DIR_WRK',
@@ -608,7 +537,7 @@ if __name__ == '__main__':
     # Same for the heteromolecules.
                     Lipid_Ranking[ key ] = {}
                     # Find the position of the system in the ranking
-                    for file in glob.glob( PATH_RANKING + key + "*" ):
+                    for file in glob.glob( os.path.join(PATH_RANKING, key) + "*" ):
         
                         #print(file)
                         
@@ -637,7 +566,7 @@ if __name__ == '__main__':
                       
                     # Read the quality file of the lipid (this will remain if the rest is removed)
                     try:
-                        with open( PATH_SIMULATION + key + '_FragmentQuality.json' ) as FILE:
+                        with open( os.path.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
                             Lipid_Quality[ key ] = json.load( FILE )
                         FILE.close()
                     except:
@@ -722,7 +651,7 @@ if __name__ == '__main__':
                     Heteromolecules_Ranking[ key ] = {}
                     
                     # Find the position of the system in the raking
-                    for file in glob.glob( PATH_RANKING + key + "*" ):
+                    for file in glob.glob( os.path.join(PATH_RANKING, key) + "*" ):
                         
                         # Type of ranking
                         kind = re.search( '_(.*)_', file ).group(1)
@@ -747,7 +676,7 @@ if __name__ == '__main__':
                         FILE.close()
                         
                     try:
-                        with open( PATH_SIMULATION + key + '_FragmentQuality.json' ) as FILE:
+                        with open( os.path.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
                             Heteromolecules_Quality[ key ] = json.load( FILE )
                         FILE.close()
                     except:
@@ -902,7 +831,7 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis`
             # Find the bilayer thickness
             try:
-                with open( PATH_SIMULATION + 'thickness.json' ) as FILE:
+                with open( os.path.join(PATH_SIMULATION, 'thickness.json') ) as FILE:
                     BLT = json.load( FILE )
                 FILE.close()
             except:
@@ -910,7 +839,7 @@ if __name__ == '__main__':
             
             # Find the area per lipid
             try:
-                with open( PATH_SIMULATION + 'apl.json' ) as FILE:
+                with open( os.path.join(PATH_SIMULATION, 'apl.json') ) as FILE:
                     # Load the file
                     ApL = json.load( FILE )
                     
@@ -924,7 +853,7 @@ if __name__ == '__main__':
             
             # Form factor quality
             try:
-                with open( PATH_SIMULATION + 'FormFactorQuality.json' ) as FILE:
+                with open( os.path.join(PATH_SIMULATION, 'FormFactorQuality.json') ) as FILE:
                     FFQ = json.load( FILE )
                 FILE.close()
             except:
@@ -932,7 +861,7 @@ if __name__ == '__main__':
             
             # Read the quality file for the whole system
             try: 
-                with open( PATH_SIMULATION + 'SYSTEM_quality.json' ) as FILE:
+                with open( os.path.join(PATH_SIMULATION, 'SYSTEM_quality.json') ) as FILE:
                     QUALITY_SYSTEM = json.load( FILE )
                 FILE.close()
             except:
@@ -941,7 +870,7 @@ if __name__ == '__main__':
                                    "tails": 0 }
             
             try:    
-                FFExp = args.experiment_folder + "FormFactors/" + README["EXPERIMENT"]["FORMFACTOR"]
+                FFExp = os.path.join(PATH_EXPERIMENTS_FF, README["EXPERIMENT"]["FORMFACTOR"])
             except: 
                 FFExp = ''
             
@@ -949,8 +878,8 @@ if __name__ == '__main__':
             Info = { "trajectory_id":          Trj_ID,
                      "bilayer_thickness":      BLT,
                      "area_per_lipid":         APL,
-                     "area_per_lipid_file":    args.simulation_folder + README["path"] + 'apl.json',
-                     "form_factor_file":       args.simulation_folder + README["path"] + 'FormFactor.json',
+                     "area_per_lipid_file":    os.path.join(PATH_SIMULATIONS, README["path"], 'apl.json'),
+                     "form_factor_file":       os.path.join(PATH_SIMULATIONS, README["path"], 'FormFactor.json'),
                      "quality_total":          QUALITY_SYSTEM["total"],
                      "quality_headgroups":     QUALITY_SYSTEM["headgroup"],
                      "quality_tails":          QUALITY_SYSTEM["tails"],
@@ -968,7 +897,10 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis_lipids`
             for lipid in Lipids:
                 try:    
-                    OPExp = args.experiment_folder + "OrderParameters/" + list(README["EXPERIMENT"]["ORDERPARAMETER"][lipid].values())[0] + '/' + lipid + '_Order_Parameters.json'
+                    OPExp = os.path.join(
+                            PATH_EXPERIMENTS_OP,
+                            list(README["EXPERIMENT"]["ORDERPARAMETER"][lipid].values())[0], 
+                            lipid + '_Order_Parameters.json')
                 except: 
                     OPExp = ''
                 
@@ -979,9 +911,9 @@ if __name__ == '__main__':
                          "quality_hg":                   Lipid_Quality[ lipid ]["headgroup"],
                          "quality_sn-1":                 Lipid_Quality[ lipid ]["sn-1"],
                          "quality_sn-2":                 Lipid_Quality[ lipid ]["sn-1"],
-                         "order_parameters_file":        args.simulation_folder + README["path"] + lipid + 'OrderParameters.json',
+                         "order_parameters_file":        os.path.join(PATH_SIMULATIONS, README["path"], lipid + 'OrderParameters.json'),
                          "order_parameters_experiment":  OPExp,
-                         "order_parameters_quality":     args.simulation_folder + README["path"] + lipid + '_OrderParameters_quality.json' }
+                         "order_parameters_quality":     os.path.join(PATH_SIMULATIONS, README["path"], lipid + '_OrderParameters_quality.json') }
                 
                 # The minimal information that identifies the lipid in the simulation
                 Minimal = { "trajectory_id": Trj_ID,
@@ -994,7 +926,9 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis_heteromolecules`
             for hetero in Heteromolecules:
                 try:    
-                    OPExp = args.experiment_folder + "OrderParameters/" + list(README["EXPERIMENT"]["ORDERPARAMETER"][hetero].values())[0] + '/' + hetero + '_Order_Parameters.json'
+                    OPExp = os.path.join( PATH_EXPERIMENTS_OP,
+                        list(README["EXPERIMENT"]["ORDERPARAMETER"][hetero].values())[0],
+                        hetero + '_Order_Parameters.json')
                 except: 
                     OPExp = ''       
         
@@ -1004,9 +938,9 @@ if __name__ == '__main__':
                          "quality_total":                Heteromolecules_Quality[ hetero ]["total"],
                          "quality_hg":                   Heteromolecules_Quality[ hetero ]["headgroup"],
                          "quality_tails":                Heteromolecules_Quality[ hetero ]["tail"],
-                         "order_parameters_file":        args.simulation_folder + README["path"] + hetero + 'OrderParameters.json' ,
+                         "order_parameters_file":        os.path.join(PATH_SIMULATIONS, README["path"], hetero + 'OrderParameters.json') ,
                          "order_parameters_experiment":  OPExp,
-                         "order_parameters_quality":     args.simulation_folder + README["path"] + hetero + '_OrderParameters_quality.json' }
+                         "order_parameters_quality":     os.path.join(PATH_SIMULATIONS, README["path"], hetero + '_OrderParameters_quality.json') }
         
                 # The minimal information that identifies the heteromolecule in the simulation
                 Minimal = { "trajectory_id": Trj_ID,
@@ -1049,7 +983,7 @@ if __name__ == '__main__':
             # Empty dictionary for the ranking
             Ranking = {}
             
-            for file in glob.glob( PATH_RANKING + "SYSTEM" + "*" ):
+            for file in glob.glob( os.path.join(PATH_RANKING, "SYSTEM") + "*" ):
                 
                 # Type of ranking
                 kind = re.search( '_(.*)_', file.split("/")[-1] ).group(1)
@@ -1092,7 +1026,7 @@ if __name__ == '__main__':
             for lipid in Lipids:
                 Ranking_lipids[ lipid ] = {}
                 
-                for file in glob.glob( PATH_RANKING + lipid + "*" ):
+                for file in glob.glob( os.path.join(PATH_RANKING, lipid) + "*" ):
                     # Type of ranking
                     kind = re.search( '_(.*)_', file ).group(1)
                     
@@ -1140,7 +1074,7 @@ if __name__ == '__main__':
             for hetero in Heteromolecules:
                 Ranking_heteromolecules[ hetero ] = {}
                 
-                for file in glob.glob( PATH_RANKING + hetero + "*" ):
+                for file in glob.glob( os.path.join(PATH_RANKING, hetero) + "*" ):
                     # Type of ranking
                     kind = re.search( '_(.*)_', file ).group(1)
                     
@@ -1189,14 +1123,15 @@ if __name__ == '__main__':
                         if ExpOP[mol]:
                             for doi, path in ExpOP[mol].items():
                                 
-                                for file in os.listdir( args.folder + args.experiment_folder + "OrderParameters/" + path ):
+                                for file in os.listdir( os.path.join(PATH_EXPERIMENTS_OP, path) ):
                                     if file.endswith(".json"):
                                 
                                         Info = { "trajectory_id": Trj_ID,
                                                  "lipid_id": { **Lipids_ID, **Heteromolecules_ID }[ mol ],
                                                  "experiment_id": CheckEntry( 'experiments_OP', 
-                                                                             { "doi": doi, 
-                                                                              "path": args.experiment_folder + "OrderParameters/" + path + "/" + file } )
+                                                       { "doi": doi, 
+                                                         "path": 
+                                            os.path.join(PATH_EXPERIMENTS_OP, path, file) } )
                                                  }
                                         
                                         _ = DBEntry( 'trajectories_experiments_OP', Info, Info )
@@ -1213,12 +1148,14 @@ if __name__ == '__main__':
                             
                             for path in ExpFF:
                                 
-                                for file in os.listdir( args.folder + args.experiment_folder + "FormFactors/" + path ):
+                                for file in os.listdir( os.path.join(PATH_EXPERIMENTS_FF, path) ):
                                     if file.endswith(".json"):
                                 
                                         Info = { "trajectory_id": Trj_ID,
                                                  "experiment_id": CheckEntry( 'experiments_FF', 
-                                                                             { "path": args.experiment_folder + "FormFactors/" + path + "/" + file  } )
+                                                       { "path": 
+                                                       os.path.join(PATH_EXPERIMENTS_FF, path, file)
+                                                       } )
                                                  }
                                         
                                         _ = DBEntry( 'trajectories_experiments_FF', Info, Info )
@@ -1236,7 +1173,7 @@ if __name__ == '__main__':
         cursor.execute( SQL_Select("trajectories",["id"]) )
         List_IDs = cursor.fetchall()
         
-        maxID = int( open(args.folder + args.simulation_folder + "COUNTER_ID", "r").readlines()[0] )
+        maxID = int( open( os.path.join(PATH_SIMULATIONS, "COUNTER_ID"), "r").readlines()[0] )
         
         missing_IDs = set(range(1,maxID+1)) - { ID[0] for ID in List_IDs  }
         
