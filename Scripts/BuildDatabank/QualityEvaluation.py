@@ -12,10 +12,10 @@ import re
 import scipy.stats
 import scipy.signal
 
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib.databankLibrary import ( lipids_dict, loadMappingFile, databank )
+from DatabankLib.databankLibrary import ( lipids_dict, loadMappingFile, initialize_databank )
 
 lipid_numbers_list = lipids_dict.keys() # should contain all lipid names
 #################################
@@ -460,8 +460,7 @@ def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
 
 def loadSimulations():
 
-    db_data = databank()
-    systems = db_data.get_systems()
+    systems = initialize_databank()
 
     simulations = []
     for system in systems:

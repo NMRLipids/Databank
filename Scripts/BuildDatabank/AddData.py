@@ -31,7 +31,7 @@ pd.set_option("display.max_colwidth", 1000)
 
 from MDAnalysis import Universe
 
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # import databank dictionaries
 from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,

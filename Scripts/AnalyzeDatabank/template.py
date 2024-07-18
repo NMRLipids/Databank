@@ -1,5 +1,4 @@
-import os
-import sys
+import os, sys
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -7,12 +6,10 @@ import MDAnalysis
 import urllib.request
 import yaml
 
-sys.path.append('..')
-from DatabankLib.databankLibrary import download_link, lipids_dict, databank
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from DatabankLib.databankLibrary import initialize_databank, lipids_dict
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
+systems = initialize_databank()
 
 for system in systems:
     print(system)

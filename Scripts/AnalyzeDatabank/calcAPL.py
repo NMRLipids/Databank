@@ -4,7 +4,7 @@
 import os, sys
 import json
 
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib import jsonEncoders
 from DatabankLib.databankLibrary import *
