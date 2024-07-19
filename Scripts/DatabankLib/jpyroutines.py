@@ -29,8 +29,8 @@ def ShowTable(SortedQualities, quality):
         try:
             StoredToTable['Forcefield'] = i['system']['FF']
         except:
-            Markdown('**FAILURE:** no FF defined for the system')
-            display(i['system'])
+            display(Markdown('**FAILURE:** no FF defined for the system'))
+            display(i['system']['path'])
             continue
 
         molecules = ''
