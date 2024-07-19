@@ -1656,7 +1656,7 @@
     },
     {
         "POPC": { "sn-1": 0.65361, "sn-2": 0.573684, "headgroup": 0.55767, "total": 0.594988 },
-        "CHOL": { "headgroup": nan, "tail": 0.260704, "total": 0.260704 },
+        "CHOL": { "headgroup": NaN, "tail": 0.260704, "total": 0.260704 },
         "TotalQuality": { "headgroup": 0.139418, "tails": 0.218588, "total": 0.213923, "FFQuality": 3.2858 },
         "system": {
             "DOI": "10.5281/zenodo.3871006",
@@ -1861,7 +1861,7 @@
         }
     },
     {
-        "CHOL": { "headgroup": nan, "tail": 0.253082, "total": 0.253082 },
+        "CHOL": { "headgroup": NaN, "tail": 0.253082, "total": 0.253082 },
         "POPC": { "sn-1": 0.416507, "sn-2": 0.565004, "headgroup": 0.616026, "total": 0.532512 },
         "TotalQuality": { "headgroup": 0.154006, "tails": 0.185959, "total": 0.196398, "FFQuality": 2.9858 },
         "system": {
@@ -2277,7 +2277,7 @@
         }
     },
     {
-        "CHOL": { "headgroup": nan, "tail": 0.236988, "total": 0.236988 },
+        "CHOL": { "headgroup": NaN, "tail": 0.236988, "total": 0.236988 },
         "POPC": { "sn-1": 0.725696, "sn-2": 0.520653, "headgroup": 0.737738, "total": 0.661362 },
         "TotalQuality": { "headgroup": 0.184434, "tails": 0.215041, "total": 0.224588, "FFQuality": 3.1858 },
         "system": {
@@ -2425,6 +2425,7 @@
             "NUMBER_OF_ATOMS": 32512,
             "DATEOFRUNNING": "02/04/2024",
             "TYPEOFSYSTEM": "lipid bilayer",
+            "FF": "OpenFF",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
                     "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
@@ -2497,7 +2498,7 @@
         }
     },
     {
-        "CHOL": { "headgroup": nan, "tail": 0.235516, "total": 0.235516 },
+        "CHOL": { "headgroup": NaN, "tail": 0.235516, "total": 0.235516 },
         "POPC": { "sn-1": 0.597845, "sn-2": 0.493814, "headgroup": 0.706088, "total": 0.599249 },
         "TotalQuality": { "headgroup": 0.176522, "tails": 0.195336, "total": 0.208691, "FFQuality": 3.3858 },
         "system": {
@@ -2749,7 +2750,7 @@
     },
     {
         "POPC": { "sn-1": 0.471655, "sn-2": 0.453463, "headgroup": 0.614173, "total": 0.513097 },
-        "CHOL": { "headgroup": nan, "tail": 0.199254, "total": 0.199254 },
+        "CHOL": { "headgroup": NaN, "tail": 0.199254, "total": 0.199254 },
         "TotalQuality": { "headgroup": 0.153543, "tails": 0.165453, "total": 0.178088, "FFQuality": 3.5858 },
         "system": {
             "DOI": "10.5281/zenodo.163345",
@@ -2964,7 +2965,7 @@
         }
     },
     {
-        "CHOL": { "headgroup": nan, "tail": 0.199736, "total": 0.199736 },
+        "CHOL": { "headgroup": NaN, "tail": 0.199736, "total": 0.199736 },
         "POPC": { "sn-1": 0.44323, "sn-2": 0.392013, "headgroup": 0.642205, "total": 0.492483 },
         "TotalQuality": { "headgroup": 0.160551, "tails": 0.154339, "total": 0.173055, "FFQuality": 3.6858 },
         "system": {
@@ -3891,7 +3892,7 @@
     },
     {
         "POPC": { "sn-1": 0.168412, "sn-2": 0.237278, "headgroup": 0.066708, "total": 0.157466 },
-        "CHOL": { "headgroup": nan, "tail": 0.170506, "total": 0.170506 },
+        "CHOL": { "headgroup": NaN, "tail": 0.170506, "total": 0.170506 },
         "TotalQuality": { "headgroup": 0.016677, "tails": 0.0933378, "total": 0.081993, "FFQuality": 1.2858 },
         "system": {
             "DOI": "10.5281/zenodo.4643862",
@@ -4110,7 +4111,7 @@
     },
     {
         "POPC": { "sn-1": 0.265404, "sn-2": 0.116756, "headgroup": 0.0647363, "total": 0.148966 },
-        "CHOL": { "headgroup": nan, "tail": 0.173932, "total": 0.173932 },
+        "CHOL": { "headgroup": NaN, "tail": 0.173932, "total": 0.173932 },
         "TotalQuality": { "headgroup": 0.0161841, "tails": 0.0912531, "total": 0.0807244, "FFQuality": 1.1858 },
         "system": {
             "DOI": "10.5281/zenodo.4537794",

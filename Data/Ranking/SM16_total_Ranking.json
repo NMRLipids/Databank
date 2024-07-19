@@ -1,6 +1,6 @@
 [
     {
-        "SM16": { "sn-1": 0.341223, "sn-2": nan, "headgroup": nan, "total": 0.341223 },
+        "SM16": { "sn-1": 0.341223, "sn-2": NaN, "headgroup": NaN, "total": 0.341223 },
         "TotalQuality": { "headgroup": 0, "tails": 0.170612, "total": 0.341223, "FFQuality": 2 },
         "system": {
             "DOI": "10.5281/zenodo.8338253",
