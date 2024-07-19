@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-import json
+import json, math
 
 class CompactJSONEncoder(json.JSONEncoder):
     """A JSON Encoder that puts small containers on single lines."""
@@ -35,7 +35,12 @@ class CompactJSONEncoder(json.JSONEncoder):
         if isinstance(o, dict):
             return self._encode_object(o)
         if isinstance(o, float):  # Use scientific notation for floats
-            return format(o, "g")
+            if math.isnan(o):
+                # !very important. Otherwise it will put "nan" with lowercase,
+                # which is not recognized by standard json DEcoder
+                return "NaN"
+            else:
+                return format(o, "g")
         return json.dumps(
             o,
             skipkeys=self.skipkeys,
