@@ -158,7 +158,7 @@ def loadMappingFile(mapping_file):
     
     :return: mapping dictionary
     """
-    mapping_file_path = os.path.join(NMLDB_ROOT_PATH, 'DatabankLib', 'mapping_files', mapping_file)
+    mapping_file_path = os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 'mapping_files', mapping_file)
     mapping_dict = {}
     with open(mapping_file_path, "r") as yaml_file:
         mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
