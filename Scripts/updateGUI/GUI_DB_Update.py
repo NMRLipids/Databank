@@ -12,6 +12,7 @@ Created on Tue Nov 16 14:27:05 2021
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 import os
+import os.path as osp
 import re
 import sys
 import glob
@@ -20,11 +21,16 @@ import yaml
 import pymysql
 import argparse
 import numpy as np
+import numbers
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(osp.abspath(osp.join(osp.dirname(__file__), '..')))
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_DATA_PATH, NMLDB_EXP_PATH, NMLDB_ROOT_PATH
 import DatabankLib.databank_defs as NMRDict
 from DatabankLib.core import initialize_databank
+
+# most of paths should be inserted into the DB relative to repo root
+def genRpath(apath):
+    return osp.relpath(apath, NMLDB_ROOT_PATH)
 
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # ARGUMENTS
@@ -53,7 +59,7 @@ args = parser.parse_args()
 
 def SQL_Select( Table: str, Values: list, Condition: dict = {} ) -> str:
     '''
-    Generate a SQL query to select values in a table
+    Generate a SQL query to select values in a table. It compares floats with 1E-5 tolerance!
 
     Parameters
     ----------
@@ -73,9 +79,15 @@ def SQL_Select( Table: str, Values: list, Condition: dict = {} ) -> str:
     '''
     Query = ' SELECT ' + ", ".join( map( lambda x: f'`{x}`', Values ))  + f' FROM `{Table}` '
     # Add a condition to the search
-    if Condition: 
-        Query += 'WHERE ' + " AND ".join( map( lambda x: f'`{x[0]}`="{x[1]}"', Condition.items()) )
-    #return String
+    if Condition:
+        comps = []
+        for k,v in Condition.items():
+            if isinstance(v, numbers.Number) and v != np.ceil(v):
+                comp = f'ABS( `{k}` - {v}) < 1E-5'
+            else:
+                comp = f'`{k}` = "{v}"'
+            comps.append(comp)
+        Query += 'WHERE ' + " AND ".join(comps)
     return Query
 
 
@@ -159,23 +171,21 @@ def CheckEntry( Table: str, Information: dict = {} ) -> int:
     '''
     
     # Create a cursor
-    cursor = database.cursor()
-    
-    # Find the ID(s) of the entry matching the condition
-    cursor.execute( SQL_Select( Table, [ "id" ], Information ) )
-    
-    # The list of IDs
-    ID = cursor.fetchall()
-    
+    with database.cursor() as cursor:
+        # Find the ID(s) of the entry matching the condition
+        cursor.execute( SQL_Select( Table, [ "id" ], Information ) )
+        # The list of IDs
+        ID = cursor.fetchone()
+
+    # return None imidiately if the record is not found
+    if ID is None:
+        return ID
+     
     # More than ID will raise an error
-    if len(ID)!=1:
-        return None
-    # If only 1 ID, extract its value
-    else:
-        if type(ID[0]) == int:
-            return ID[0]
-        else: 
-            return ID[0][0]
+    assert len(ID) == 1
+
+    # extract ID-s value
+    return ID[0]
 
 
 def CreateEntry( Table: str, Information: dict ) -> int:
@@ -195,25 +205,26 @@ def CreateEntry( Table: str, Information: dict ) -> int:
         ID of the entry in the table. If it does not work, value will be 0.
     '''
     
-    # Function
-    #   CreateEntry
-    # Add a new entry to a table in the DB.
-    
     # Create a cursor
-    cursor = database.cursor()
-    
-    # Execute the query creating a new entry
-    cursor.execute( SQL_Create( Table, Information ) )
+    with database.cursor() as cursor:
+        # Execute the query creating a new entry
+        res = cursor.execute( SQL_Create( Table, Information ) )
     
     # Commit the changes
     database.commit()
-    
+
+    # Num rows affected should be 1 
+    if res != 1:
+        print("ERROR: record wasn't inserted!")
+        print(Information)
+        return 0
+
     # Check if the entry was created
-    ID = CheckEntry( Table, Information )
-    
+    ID = CheckEntry( Table, Information )    
     # If there is not an ID, raise an error (the table was not created)
     if not ID:
         print("WARNING: Something may have gone wrong with the table {}".format(Table))
+        print(Information)
         return 0
     # If an ID is obtained, the entry was created succesfuly
     else:
@@ -236,11 +247,10 @@ def UpdateEntry( Table: str, Information: dict, Condition: dict ):
     '''
     
     # Create a cursor
-    cursor = database.cursor()
-    
-    # Execute the query updating an entry
-    cursor.execute( SQL_Update( Table, Information, Condition ) )
-    
+    with database.cursor() as cursor:
+        # Execute the query updating an entry
+        cursor.execute( SQL_Update( Table, Information, Condition ) )
+
     # Commit the changes
     database.commit()
     
@@ -322,10 +332,9 @@ def ResetTable( Table: str ):
     '''
     
     # Create a cursor
-    cursor = database.cursor()
-    
-    cursor.execute( f' DELETE FROM `{Table}`' )
-    cursor.execute( f'ALTER TABLE `{Table}` AUTO_INCREMENT=1' )
+    with database.cursor() as cursor:
+        cursor.execute( f' DELETE FROM `{Table}`' )
+        cursor.execute( f'ALTER TABLE `{Table}` AUTO_INCREMENT=1' )
 
     return
 
@@ -371,32 +380,30 @@ if __name__ == '__main__':
     database = pymysql.connect( **config )
     
     # Path to the ranking files
-    PATH_RANKING = os.path.join( NMLDB_DATA_PATH, "Ranking" )
+    PATH_RANKING = osp.join( NMLDB_DATA_PATH, "Ranking" )
     PATH_SIMULATIONS = NMLDB_SIMU_PATH
     PATH_EXPERIMENTS = NMLDB_EXP_PATH
 
-    
     # If -s(ystems) is given, only modify that entries
-    try:
+    if args.systems is not None:
         systems = []
         for system in args.systems:
             # Format the system info
             system = system.strip("/\\")
             
             # The path to the simulation file
-            PATH_SIMULATION = os.path.join( PATH_SIMULATIONS, system )
+            PATH_SIMULATION = osp.join( PATH_SIMULATIONS, system )
                 
             # Read the README.yaml file, the information of the simulation
-            with open( os.path.join(PATH_SIMULATION, 'README.yaml') ) as File:
+            with open( osp.join(PATH_SIMULATION, 'README.yaml') ) as File:
                 README = yaml.load( File, Loader = yaml.FullLoader )
                 
             # Add the math of the file
             README["path"] = system    
                 
             systems.append( README )
-        
 
-    except:
+    else:
         # Initialize the whole databank
         systems = initialize_databank()
         
@@ -424,26 +431,26 @@ if __name__ == '__main__':
      
     # Find files with order parameters experiments
     EXP_OP = []
-    PATH_EXPERIMENTS_OP = os.path.join( PATH_EXPERIMENTS, "OrderParameters")
+    PATH_EXPERIMENTS_OP = osp.join( PATH_EXPERIMENTS, "OrderParameters")
     
     # Get the path to every README.yaml file with experimental data
     for path, _, files in os.walk( PATH_EXPERIMENTS_OP ):
         for file in files:
             if file.endswith("README.yaml"):
-                EXP_OP.append( os.path.relpath(path, PATH_EXPERIMENTS_OP) )
+                EXP_OP.append( osp.relpath(path, PATH_EXPERIMENTS_OP) )
              
     # Iterate over each experiment
     for expOP in EXP_OP:
         
         # Get the DOI of the experiment and the path to the README.yaml file
-        with open( os.path.join(PATH_EXPERIMENTS_OP, expOP, 'README.yaml') ) as File:
+        with open( osp.join(PATH_EXPERIMENTS_OP, expOP, 'README.yaml') ) as File:
             README = yaml.load( File, Loader = yaml.FullLoader )
         
-        for file in os.listdir( os.path.join(PATH_EXPERIMENTS_OP, expOP) ):
+        for file in os.listdir( osp.join(PATH_EXPERIMENTS_OP, expOP) ):
             if file.endswith(".json"):
             
                 Info = { "doi": README["DOI"],
-                         "path": os.path.join(PATH_EXPERIMENTS_OP, expOP, file) }
+                         "path": genRpath(osp.join(PATH_EXPERIMENTS_OP, expOP, file)) }
                 
                 # Entry in the DB with the info of the experiment
                 Exp_ID = DBEntry( 'experiments_OP', Info, Info )
@@ -453,26 +460,26 @@ if __name__ == '__main__':
 
     # Find files with form factor experiments
     EXP_FF = []
-    PATH_EXPERIMENTS_FF = os.path.join( PATH_EXPERIMENTS, "FormFactors")
+    PATH_EXPERIMENTS_FF = osp.join( PATH_EXPERIMENTS, "FormFactors")
     
     # Get the path to every README.yaml file with experimental data
     for path, _, files in os.walk( PATH_EXPERIMENTS_FF ):
         for file in files:
             if file.endswith("README.yaml"):
-                EXP_FF.append( os.path.relpath(path, PATH_EXPERIMENTS_FF) )
+                EXP_FF.append( osp.relpath(path, PATH_EXPERIMENTS_FF) )
              
     # Iterate over each experiment
     for expFF in EXP_FF:
         
         # Get the DOI of the experiment and the path to the README.yaml file
-        with open( os.path.join(PATH_EXPERIMENTS_FF, expFF, 'README.yaml') ) as File:
+        with open( osp.join(PATH_EXPERIMENTS_FF, expFF, 'README.yaml') ) as File:
             README = yaml.load( File, Loader = yaml.FullLoader )
             
-        for file in os.listdir( os.path.join(PATH_EXPERIMENTS_FF, expFF) ):
+        for file in os.listdir( osp.join(PATH_EXPERIMENTS_FF, expFF) ):
             if file.endswith(".json"):
             
                 Info = { "doi": README["DOI"],
-                         "path": os.path.join(PATH_EXPERIMENTS_FF, expFF, file) }
+                         "path": genRpath(osp.join(PATH_EXPERIMENTS_FF, expFF, file)) }
                 
                 # Entry in the DB with the info of the experiment
                 Exp_ID = DBEntry( 'experiments_FF', Info, Info )
@@ -487,7 +494,7 @@ if __name__ == '__main__':
             print( README["path"] + "\n" )
             
             # The location of the files
-            PATH_SIMULATION = os.path.join(PATH_SIMULATIONS, README["path"])
+            PATH_SIMULATION = osp.join(PATH_SIMULATIONS, README["path"])
         
             # In the case a field in the README does not exist, set its value to 0
             for field in ['AUTHORS_CONTACT','COMPOSITION','CPT','DATEOFRUNNING','DIR_WRK',
@@ -537,7 +544,7 @@ if __name__ == '__main__':
     # Same for the heteromolecules.
                     Lipid_Ranking[ key ] = {}
                     # Find the position of the system in the ranking
-                    for file in glob.glob( os.path.join(PATH_RANKING, key) + "*" ):
+                    for file in glob.glob( osp.join(PATH_RANKING, key) + "*" ):
         
                         #print(file)
                         
@@ -562,13 +569,10 @@ if __name__ == '__main__':
                             if not kind in Lipid_Ranking[ key ]:
                                 Lipid_Ranking[ key ][kind] =  0 
                         
-                        FILE.close()
-                      
                     # Read the quality file of the lipid (this will remain if the rest is removed)
                     try:
-                        with open( os.path.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
+                        with open( osp.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
                             Lipid_Quality[ key ] = json.load( FILE )
-                        FILE.close()
                     except:
                         Lipid_Quality[key] = { "total": 0,
                                                "headgroup": 0,
@@ -651,7 +655,7 @@ if __name__ == '__main__':
                     Heteromolecules_Ranking[ key ] = {}
                     
                     # Find the position of the system in the raking
-                    for file in glob.glob( os.path.join(PATH_RANKING, key) + "*" ):
+                    for file in glob.glob( osp.join(PATH_RANKING, key) + "*" ):
                         
                         # Type of ranking
                         kind = re.search( '_(.*)_', file ).group(1)
@@ -673,12 +677,9 @@ if __name__ == '__main__':
                             if not kind in Heteromolecules_Ranking[ key ]:
                                 Heteromolecules_Ranking[ key ][kind] =  0
                         
-                        FILE.close()
-                        
                     try:
-                        with open( os.path.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
+                        with open( osp.join(PATH_SIMULATION, key + '_FragmentQuality.json') ) as FILE:
                             Heteromolecules_Quality[ key ] = json.load( FILE )
-                        FILE.close()
                     except:
                         Heteromolecules_Quality[key] = { "total": 0,
                                                          "headgroup": 0,
@@ -831,15 +832,14 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis`
             # Find the bilayer thickness
             try:
-                with open( os.path.join(PATH_SIMULATION, 'thickness.json') ) as FILE:
+                with open( osp.join(PATH_SIMULATION, 'thickness.json') ) as FILE:
                     BLT = json.load( FILE )
-                FILE.close()
             except:
                 BLT = 0
             
             # Find the area per lipid
             try:
-                with open( os.path.join(PATH_SIMULATION, 'apl.json') ) as FILE:
+                with open( osp.join(PATH_SIMULATION, 'apl.json') ) as FILE:
                     # Load the file
                     ApL = json.load( FILE )
                     
@@ -853,24 +853,23 @@ if __name__ == '__main__':
             
             # Form factor quality
             try:
-                with open( os.path.join(PATH_SIMULATION, 'FormFactorQuality.json') ) as FILE:
+                with open( osp.join(PATH_SIMULATION, 'FormFactorQuality.json') ) as FILE:
                     FFQ = json.load( FILE )
-                FILE.close()
             except:
                 FFQ = [4242, 0]
             
             # Read the quality file for the whole system
             try: 
-                with open( os.path.join(PATH_SIMULATION, 'SYSTEM_quality.json') ) as FILE:
+                with open( osp.join(PATH_SIMULATION, 'SYSTEM_quality.json') ) as FILE:
                     QUALITY_SYSTEM = json.load( FILE )
-                FILE.close()
             except:
                 QUALITY_SYSTEM = { "total": 0,
                                    "headgroup": 0,
                                    "tails": 0 }
             
             try:    
-                FFExp = os.path.join(PATH_EXPERIMENTS_FF, README["EXPERIMENT"]["FORMFACTOR"])
+                FFExp = genRpath(
+                    osp.join(PATH_EXPERIMENTS_FF, README["EXPERIMENT"]["FORMFACTOR"]) )
             except: 
                 FFExp = ''
             
@@ -878,8 +877,10 @@ if __name__ == '__main__':
             Info = { "trajectory_id":          Trj_ID,
                      "bilayer_thickness":      BLT,
                      "area_per_lipid":         APL,
-                     "area_per_lipid_file":    os.path.join(PATH_SIMULATIONS, README["path"], 'apl.json'),
-                     "form_factor_file":       os.path.join(PATH_SIMULATIONS, README["path"], 'FormFactor.json'),
+                     "area_per_lipid_file":    genRpath(
+                         osp.join(PATH_SIMULATIONS, README["path"], 'apl.json') ),
+                     "form_factor_file":       genRpath(
+                         osp.join(PATH_SIMULATIONS, README["path"], 'FormFactor.json') ),
                      "quality_total":          QUALITY_SYSTEM["total"],
                      "quality_headgroups":     QUALITY_SYSTEM["headgroup"],
                      "quality_tails":          QUALITY_SYSTEM["tails"],
@@ -897,10 +898,10 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis_lipids`
             for lipid in Lipids:
                 try:    
-                    OPExp = os.path.join(
+                    OPExp = genRpath( osp.join(
                             PATH_EXPERIMENTS_OP,
                             list(README["EXPERIMENT"]["ORDERPARAMETER"][lipid].values())[0], 
-                            lipid + '_Order_Parameters.json')
+                            lipid + '_Order_Parameters.json') )
                 except: 
                     OPExp = ''
                 
@@ -911,9 +912,12 @@ if __name__ == '__main__':
                          "quality_hg":                   Lipid_Quality[ lipid ]["headgroup"],
                          "quality_sn-1":                 Lipid_Quality[ lipid ]["sn-1"],
                          "quality_sn-2":                 Lipid_Quality[ lipid ]["sn-1"],
-                         "order_parameters_file":        os.path.join(PATH_SIMULATIONS, README["path"], lipid + 'OrderParameters.json'),
+                         "order_parameters_file":        genRpath(
+                             osp.join(PATH_SIMULATIONS, README["path"], lipid + 'OrderParameters.json') ),
                          "order_parameters_experiment":  OPExp,
-                         "order_parameters_quality":     os.path.join(PATH_SIMULATIONS, README["path"], lipid + '_OrderParameters_quality.json') }
+                         "order_parameters_quality":     genRpath(
+                             osp.join(PATH_SIMULATIONS, README["path"], lipid + '_OrderParameters_quality.json') ) 
+                        }
                 
                 # The minimal information that identifies the lipid in the simulation
                 Minimal = { "trajectory_id": Trj_ID,
@@ -926,9 +930,9 @@ if __name__ == '__main__':
     ### TABLE `trajectories_analysis_heteromolecules`
             for hetero in Heteromolecules:
                 try:    
-                    OPExp = os.path.join( PATH_EXPERIMENTS_OP,
+                    OPExp = genRpath( osp.join( PATH_EXPERIMENTS_OP,
                         list(README["EXPERIMENT"]["ORDERPARAMETER"][hetero].values())[0],
-                        hetero + '_Order_Parameters.json')
+                        hetero + '_Order_Parameters.json') )
                 except: 
                     OPExp = ''       
         
@@ -938,9 +942,12 @@ if __name__ == '__main__':
                          "quality_total":                Heteromolecules_Quality[ hetero ]["total"],
                          "quality_hg":                   Heteromolecules_Quality[ hetero ]["headgroup"],
                          "quality_tails":                Heteromolecules_Quality[ hetero ]["tail"],
-                         "order_parameters_file":        os.path.join(PATH_SIMULATIONS, README["path"], hetero + 'OrderParameters.json') ,
+                         "order_parameters_file":        genRpath(
+                             osp.join(PATH_SIMULATIONS, README["path"], hetero + 'OrderParameters.json') ),
                          "order_parameters_experiment":  OPExp,
-                         "order_parameters_quality":     os.path.join(PATH_SIMULATIONS, README["path"], hetero + '_OrderParameters_quality.json') }
+                         "order_parameters_quality":     genRpath(
+                             osp.join(PATH_SIMULATIONS, README["path"], hetero + '_OrderParameters_quality.json') ) 
+                        }
         
                 # The minimal information that identifies the heteromolecule in the simulation
                 Minimal = { "trajectory_id": Trj_ID,
@@ -983,7 +990,7 @@ if __name__ == '__main__':
             # Empty dictionary for the ranking
             Ranking = {}
             
-            for file in glob.glob( os.path.join(PATH_RANKING, "SYSTEM") + "*" ):
+            for file in glob.glob( osp.join(PATH_RANKING, "SYSTEM") + "*" ):
                 
                 # Type of ranking
                 kind = re.search( '_(.*)_', file.split("/")[-1] ).group(1)
@@ -1001,8 +1008,6 @@ if __name__ == '__main__':
                     if not kind in Ranking:
                         Ranking[ kind ] = 4242
                 
-                FILE.close()
-            
             # Collect the information of the position of the system in the ranking
             Info = { "trajectory_id": Trj_ID,
                      "ranking_total": Ranking["total"],
@@ -1026,7 +1031,7 @@ if __name__ == '__main__':
             for lipid in Lipids:
                 Ranking_lipids[ lipid ] = {}
                 
-                for file in glob.glob( os.path.join(PATH_RANKING, lipid) + "*" ):
+                for file in glob.glob( osp.join(PATH_RANKING, lipid) + "*" ):
                     # Type of ranking
                     kind = re.search( '_(.*)_', file ).group(1)
                     
@@ -1038,8 +1043,6 @@ if __name__ == '__main__':
                         for SIM in range(len(RANKING_LIST)):
                             if README["path"] in RANKING_LIST[SIM]["system"]["path"]: 
                                 Ranking_lipids[ lipid ][ kind ] = SIM + 1
-                    
-                    FILE.close()
                     
                 for t in ["total", "headgroup", "sn-1", "sn-2"]:
                     try:    
@@ -1074,7 +1077,7 @@ if __name__ == '__main__':
             for hetero in Heteromolecules:
                 Ranking_heteromolecules[ hetero ] = {}
                 
-                for file in glob.glob( os.path.join(PATH_RANKING, hetero) + "*" ):
+                for file in glob.glob( osp.join(PATH_RANKING, hetero) + "*" ):
                     # Type of ranking
                     kind = re.search( '_(.*)_', file ).group(1)
                     
@@ -1087,8 +1090,6 @@ if __name__ == '__main__':
                             if README["path"] in RANKING_LIST[SIM]["system"]["path"]: 
                                 Ranking_heteromolecules[ hetero ][ kind ] = SIM + 1
                     
-                    FILE.close()
-                
                 for t in ["total","headgroup","tail"]:
                     try:    
                         Ranking_heteromolecules[hetero][t] = Ranking_heteromolecules[hetero][t] if not np.isnan( Ranking_heteromolecules[hetero][t] ) else 4242
@@ -1123,15 +1124,17 @@ if __name__ == '__main__':
                         if ExpOP[mol]:
                             for doi, path in ExpOP[mol].items():
                                 
-                                for file in os.listdir( os.path.join(PATH_EXPERIMENTS_OP, path) ):
+                                for file in os.listdir( osp.join(PATH_EXPERIMENTS_OP, path) ):
                                     if file.endswith(".json"):
                                 
                                         Info = { "trajectory_id": Trj_ID,
                                                  "lipid_id": { **Lipids_ID, **Heteromolecules_ID }[ mol ],
-                                                 "experiment_id": CheckEntry( 'experiments_OP', 
+                                                 "experiment_id": CheckEntry( 
+                                                     'experiments_OP', 
                                                        { "doi": doi, 
-                                                         "path": 
-                                            os.path.join(PATH_EXPERIMENTS_OP, path, file) } )
+                                                         "path": genRpath(
+                                            osp.join(PATH_EXPERIMENTS_OP, path, file) ) 
+                                                        } )
                                                  }
                                         
                                         _ = DBEntry( 'trajectories_experiments_OP', Info, Info )
@@ -1148,62 +1151,63 @@ if __name__ == '__main__':
                             
                             for path in ExpFF:
                                 
-                                for file in os.listdir( os.path.join(PATH_EXPERIMENTS_FF, path) ):
+                                for file in os.listdir( osp.join(PATH_EXPERIMENTS_FF, path) ):
                                     if file.endswith(".json"):
                                 
                                         Info = { "trajectory_id": Trj_ID,
-                                                 "experiment_id": CheckEntry( 'experiments_FF', 
-                                                       { "path": 
-                                                       os.path.join(PATH_EXPERIMENTS_FF, path, file)
-                                                       } )
+                                                 "experiment_id": CheckEntry( 
+                                                     'experiments_FF', 
+                                                     { "path": genRpath(
+                                                       osp.join(PATH_EXPERIMENTS_FF, path, file) )
+                                                     } )
                                                  }
                                         
                                         _ = DBEntry( 'trajectories_experiments_FF', Info, Info )
                 
-        except:
+        except Exception as err:
+            print("Exception: "+str(err))
             FAILS.append( README["path"] )
 
     ### TABLE `trajectories` (again)
     try:
         
         # Generate a new cursor
-        cursor = database.cursor()
-        
-        # Get the list of IDs currently in the DB
-        cursor.execute( SQL_Select("trajectories",["id"]) )
-        List_IDs = cursor.fetchall()
-        
-        maxID = int( open( os.path.join(PATH_SIMULATIONS, "COUNTER_ID"), "r").readlines()[0] )
-        
-        missing_IDs = set(range(1,maxID+1)) - { ID[0] for ID in List_IDs  }
-        
-        Info = { "id":              1,
-                 "forcefield_id":   1,
-                 "membrane_id":     1,
-                 "git_path":        "''",
-                 "system":          "''",
-                 "author":          "''",
-                 "date":            "''",
-                 "dir_wrk":         "''",
-                 "doi":             "''",
-                 "number_of_atoms": 0,
-                 "preeq_time":      "''",
-                 "publication":     "''",
-                 "temperature":     0,
-                 "software":        "''",
-                 "trj_size":        0,
-                 "trj_length":      0,
-                 "timeleftout":     0,}
-    
-        for missing_ID in missing_IDs:    
+        with database.cursor() as cursor:
             
-            print("\n Adding missing ID:", missing_ID )
-            Info["id"] = missing_ID
+            # Get the list of IDs currently in the DB
+            cursor.execute( SQL_Select("trajectories",["id"]) )
+            List_IDs = cursor.fetchall()
             
-            cursor.execute( f"INSERT INTO `trajectories` ({','.join(map(lambda x:'`'+str(x)+'`',Info.keys()))}) VALUES ({','.join(map(str,Info.values()))}) " )   
+            maxID = int( open( osp.join(PATH_SIMULATIONS, "COUNTER_ID"), "r").readlines()[0] )
+            
+            missing_IDs = set(range(1,maxID+1)) - { ID[0] for ID in List_IDs  }
+            
+            Info = { "id":              1,
+                    "forcefield_id":   1,
+                    "membrane_id":     1,
+                    "git_path":        "''",
+                    "system":          "''",
+                    "author":          "''",
+                    "date":            "''",
+                    "dir_wrk":         "''",
+                    "doi":             "''",
+                    "number_of_atoms": 0,
+                    "preeq_time":      "''",
+                    "publication":     "''",
+                    "temperature":     0,
+                    "software":        "''",
+                    "trj_size":        0,
+                    "trj_length":      0,
+                    "timeleftout":     0,}
+        
+            for missing_ID in missing_IDs:    
+                
+                print("\n Adding missing ID:", missing_ID )
+                Info["id"] = missing_ID
+                
+                cursor.execute( f"INSERT INTO `trajectories` ({','.join(map(lambda x:'`'+str(x)+'`',Info.keys()))}) VALUES ({','.join(map(str,Info.values()))}) " )   
                 
         database.commit()
-        
         
     except:
         pass
