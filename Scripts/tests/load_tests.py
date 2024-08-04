@@ -2,7 +2,6 @@ import sys, os
 from urllib.error import HTTPError
 import pytest
 
-sys.path.append('..')
 import DatabankLib.databankio as dio 
 
 
