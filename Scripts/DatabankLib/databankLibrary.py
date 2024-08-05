@@ -273,21 +273,27 @@ def system2MDanalysisUniverse(system):
             response = urllib.request.urlretrieve(trj_url, trj_name)
 
     if 'gromacs' in software: 
-        tpr = system.get('TPR')
-        tpr_name = systemPath + tpr[0][0]
-        if skipDownloading:
-            if (not os.path.isfile(tpr_name)):
-                raise FileNotFoundError(f"TPR should be downloaded [{tpr_name}]")
-        else:
-            tpr_url = resolve_download_file_url(doi, tpr[0][0])
-            if (not os.path.isfile(tpr_name)):
-                response = urllib.request.urlretrieve(tpr_url, tpr_name)
+        tpr_name = 'stub'
         try:
+            tpr = system.get('TPR')
+            tpr_name = os.path.join(systemPath, tpr[0][0])
+            if skipDownloading:
+                if (not os.path.isfile(tpr_name)):
+                    raise FileNotFoundError(f"TPR should be downloaded [{tpr_name}]")
+            else:
+                tpr_url = resolve_download_file_url(doi, tpr[0][0])
+                if (not os.path.isfile(tpr_name)):
+                    response = urllib.request.urlretrieve(tpr_url, tpr_name)
+
             u = mda.Universe(tpr_name, trj_name)
         except:
-            conf = os.path.join(systemPath, 'conf.gro')
-            if (not os.path.isfile(tpr_name)):
-                print("Generating conf.gro because MDAnalysis cannot read tpr version")
+            try: 
+                gro = system.get('GRO')
+                conf = os.path.join(systemPath, gro[0][0])
+            except:
+                conf = os.path.join(systemPath, 'conf.gro')
+            if (os.path.isfile(tpr_name)):
+                print("Generating conf.gro because MDAnalysis cannot (probably!) read tpr version")
                 if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
                     os.system('echo System | editconf -f '+ tpr_name + ' -o ' + conf)
                 else:
