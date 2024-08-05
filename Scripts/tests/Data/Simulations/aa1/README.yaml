@@ -35,6 +35,8 @@ TPR:
 - - 281.tpr
 TRJ:
 - - 281.xtc
+GRO:
+- - 281.gro
 LOG: null
 SOFTWARE: gromacs
 DIR_WRK: /set-locally
