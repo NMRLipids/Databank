@@ -6,7 +6,30 @@ Can be imported without additional libraries to scan Databank system file tree!
 
 import os
 import yaml
+import collections.abc
 from . import NMLDB_SIMU_PATH
+
+class SystemsCollection(collections.abc.Sequence):
+    """Immutable collection of system dicts. Can be accessed by ID using loc()."""
+
+    def __init__(self, iterable=[]):
+        self.data = iterable
+        self.__genIndexByID()
+
+    def __genIndexByID(self):
+        self._idx = dict()
+        for i in range(len(self)):
+            if 'ID' in self[i].keys():
+                self._idx[self[i]['ID']] = i
+
+    def __getitem__(self, i):
+        return self.data[i]
+
+    def __len__(self):
+        return len(self.data)
+
+    def loc(self, id: int):
+        return self.data[self._idx[id]]
 
 class databank:
     """ :meta private: 
@@ -24,11 +47,12 @@ class databank:
     
     def __init__(self):
         self.path = NMLDB_SIMU_PATH
-        self.systems = []
-        self.__load_systems__()
+        _systems = self.__load_systems__()
+        self.systems = SystemsCollection(_systems)
         print('Databank initialized from the folder:', os.path.realpath(self.path))
 
     def __load_systems__(self):
+        systems = []
         rpath = os.path.realpath(self.path)
         for subdir, dirs, files in os.walk(rpath):
             for filename in files:
@@ -38,7 +62,8 @@ class databank:
                         content = yaml.load(yaml_file, Loader=yaml.FullLoader)
                         relpath = os.path.relpath(filepath, rpath)
                         content["path"] = relpath[ : -11]
-                        self.systems.append(content)
+                        systems.append(content)
+        return systems
 
     def get_systems(self):
         """ Returns a list of all systems in the NMRlipids databank """
