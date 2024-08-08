@@ -18,17 +18,6 @@ from .jsonEncoders import CompactJSONEncoder
 from .databankio import resolve_download_file_url
 from .databankop import find_OP
 
-## Universal success codes
-
-RCODE_SKIPPED: int = 0
-""" Success code 0: calculation skipped """
-
-RCODE_COMPUTED: int = 1
-""" Success code 1: calculation sucessful """
-
-RCODE_ERROR: int = 2
-""" Success code 2: calculation failed """
-
 
 #TODO: use in calcAPL.py
 def computeAPL(system: dict, recompute: bool = False) -> int:
@@ -172,7 +161,7 @@ def computeOP(system: dict, recompute: bool = False) -> int:
                 if (rCode != 0):
                     raise RuntimeError("editconf exited with error (see above)")
             else:
-                rCode = os.system('echo System | {trjconvCOMMAND} -f {xtcwhole} -s {tpr_name} -dump 0 -o {topfile}' )
+                rCode = os.system(f'echo System | {trjconvCOMMAND} -f {xtcwhole} -s {tpr_name} -dump 0 -o {topfile}' )
                 if (rCode != 0):
                     raise RuntimeError(f"trjconv ({trjconvCOMMAND}) exited with error (see above)") 
 
@@ -321,3 +310,5 @@ def computeOP(system: dict, recompute: bool = False) -> int:
         return RCODE_ERROR
 
     return RCODE_COMPUTED
+
+##TODO: use in calcFormF

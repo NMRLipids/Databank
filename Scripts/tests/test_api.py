@@ -7,7 +7,7 @@ import DatabankLib
 
 @pytest.fixture(autouse=True, scope="session")
 def header_session_scope():
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations")
+    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
     with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
         print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
         yield
@@ -21,7 +21,7 @@ def systems():
     yield s
 
 def test_initialize_n(systems):
-    assert len(systems) == 1
+    assert len(systems) == 4
 
 def test_print_README(systems, capsys):
     from DatabankLib.core import print_README
