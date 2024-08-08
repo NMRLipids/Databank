@@ -79,6 +79,7 @@ def computeAPL(system: dict, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 #TODO: implement onlyLipid
+#TODO: use in calcOrderParameter
 def computeOP(system: dict, recompute: bool = False) -> int:
     """_summary_
 
@@ -138,7 +139,11 @@ def computeOP(system: dict, recompute: bool = False) -> int:
     try:
         ## Set topology file names and make Gromacs trajectories whole
         if 'gromacs' in software:
-            tpr_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TPR')[0][0])
+            try:
+                tpr_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TPR')[0][0])
+            except Exception as ee:
+                print("TPR is required for OP calculations!")
+                raise ee
 
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, 'whole.xtc')
             if (not os.path.isfile(xtcwhole)):
@@ -207,13 +212,19 @@ def computeOP(system: dict, recompute: bool = False) -> int:
                 #Add hydrogens to trajectory and calculate order parameters with buildH
                 ordPfile = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
 
-                lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
+                lipid_json_file = [
+                    os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 
+                                 'lipid_json_buildH', 
+                                 system['UNITEDATOM_DICT'][key] + '.json') ]
 
                 if (not os.path.isfile(lipid_json_file[0])):
                     lipid_json_file = None
                 
                 print(system['UNITEDATOM_DICT'][key])
-                buildh.launch(coord_file=topfile, def_file=def_fileNAME, lipid_type=system['UNITEDATOM_DICT'][key], lipid_jsons=lipid_json_file, traj_file=xtcwhole , out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+                buildh.launch(coord_file=topfile, def_file=def_fileNAME, 
+                              lipid_type=system['UNITEDATOM_DICT'][key], 
+                              lipid_jsons=lipid_json_file, traj_file=xtcwhole , 
+                              out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
 
                 outfile = open(ordPfile,'w')
                 outfile.write("Atom     Average OP     OP stem\n")

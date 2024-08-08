@@ -142,7 +142,10 @@ for system in systems:
             #Add hydrogens to trajectory and calculate order parameters with buildH
             ordPfile = os.path.join(NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
 
-            lipid_json_file = ['./lipid_json_buildH/' + system['UNITEDATOM_DICT'][key] + '.json']
+            lipid_json_file = [
+                os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 
+                                'lipid_json_buildH', 
+                                system['UNITEDATOM_DICT'][key] + '.json') ]
 
             if (not os.path.isfile(lipid_json_file[0])):
                 lipid_json_file = None
