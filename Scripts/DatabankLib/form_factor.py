@@ -15,6 +15,7 @@ from tqdm import tqdm
 
 from .databankLibrary import lipids_dict, loadMappingFile, getLipids
 from .jsonEncoders import CompactJSONEncoder
+from . import NMLDB_ROOT_PATH
 
 nav = 6.02214129e+23
 gc.collect()
@@ -105,10 +106,13 @@ class FormFactor:
         try:
             self.u = mda.Universe(self.conf, self.traj)
             print()
-        except:
-            gro = self.path + '/conf.gro'
+        except Exception as e:
+            if (self.conf[-3:] == 'gro'):
+                raise e
+            # assume conf was TPR
+            gro = self.path + os.sep + 'conf.gro'
             print("Generating conf.gro because MDAnalysis cannot read tpr version")
-            os.system('echo System | gmx trjconv -s '+ self.conf + ' -f '+ self.traj + ' -dump 0 -o ' + gro)
+            os.system(f'echo System | gmx trjconv -s {self.conf} -f {self.traj} -dump 0 -o {gro}')
             self.conf = gro
             self.u = mda.Universe(self.conf, self.traj)
             
@@ -369,7 +373,11 @@ class FormFactor:
                     ElectronNumbers[ResName] = {}
                 
                 if UA and key1 in lipids_dict:
-                    UAlipidjsonNAME = './lipid_json_buildH/' + self.readme['UNITEDATOM_DICT'][key1] + '.json'
+                    UAlipidjsonNAME = os.path.join(
+                        NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
+                        'lipid_json_buildH', 
+                        self.readme['UNITEDATOM_DICT'][key1] + '.json' )
+
                     with open(UAlipidjsonNAME) as json_file:
                         UAlipidjson = json.load(json_file)
 
