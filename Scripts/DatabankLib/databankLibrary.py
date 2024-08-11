@@ -290,6 +290,14 @@ def system2MDanalysisUniverse(system):
             try: 
                 gro = system.get('GRO')
                 conf = os.path.join(systemPath, gro[0][0])
+
+                if skipDownloading:
+                    if (not os.path.isfile(conf)):
+                        raise FileNotFoundError(f"GRO should be downloaded [{conf}]")
+                else:
+                    gro_url = resolve_download_file_url(doi, gro[0][0])
+                    if (not os.path.isfile(conf)):
+                        response = urllib.request.urlretrieve(gro_url, conf)
             except:
                 conf = os.path.join(systemPath, 'conf.gro')
             if (os.path.isfile(tpr_name)):

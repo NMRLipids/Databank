@@ -30,7 +30,7 @@ def systems():
     for _s in s:
         gbGen = lambda x: glob.glob(os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
         clearList = ['*.json', '*.dat', 'conf.gro', 'frame0.gro', '*.dat', '*.buildH', '.*', '#*',
-                     '*.def', 'whole.xtc']
+                     '*.def', 'whole.xtc', 'centered.xtc']
         for pat in clearList:
             for f in gbGen(pat):
                 os.remove(f)
@@ -46,6 +46,8 @@ def systemLoadTraj(systems):
     ## TEARDOWN SYSTEM-LOADING
     print('DBG: Wiping trajectory data.')
     for s in systems:
+        if s.get('DOI') == 'localhost':
+            continue # don't remove in this case!
         for wp in ['GRO', 'TPR', 'TRJ']:
             try:
                 file_ = s[wp][0][0]
@@ -61,7 +63,7 @@ def systemLoadTraj(systems):
 ## Every test function is parametrized with system ID to make clear reporting
 ## about which system actually fails on a test function.
 
-@pytest.mark.parametrize("systemid", [281, 566, 787])
+@pytest.mark.parametrize("systemid", [86, 243, 281, 566, 787])
 def test_analyze_apl(systems, systemLoadTraj, systemid):
     from DatabankLib.analyze import computeAPL
 
@@ -93,6 +95,25 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex):
     # now check only 1st lipid
     cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
         s['path'], list(s['COMPOSITION'].keys())[0] + 'OrderParameters.json')
+    assert os.path.isfile(cFile)
+    assert os.path.getsize(cFile) > 1e3 
+
+@pytest.mark.parametrize("systemid, rcodex", 
+                         [   (281, DatabankLib.RCODE_COMPUTED), 
+                             (566, DatabankLib.RCODE_COMPUTED), 
+                             (787, DatabankLib.RCODE_ERROR),
+                             (243, DatabankLib.RCODE_COMPUTED),
+                             (86,  DatabankLib.RCODE_COMPUTED)     ], )
+def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
+    from DatabankLib.analyze import computeFF
+    s = systems.loc(systemid)
+    rCode = computeFF(s)
+    assert rCode == rcodex
+    if rcodex == DatabankLib.RCODE_ERROR:
+        return
+    
+    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+        s['path'], 'FormFactor.json')
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 1e3 
 
