@@ -1,0 +1,53 @@
+DOI: 10.5281/zenodo.11614468
+SOFTWARE: gromacs
+TRJ:
+- - 566.xtc
+TPR:
+- - 566.tpr
+GRO:
+- - 566.gro
+PREEQTIME: 0
+TIMELEFTOUT: 0
+COMPOSITION:
+  POPC:
+    NAME: PC
+    MAPPING: mappingPOPClipid14.yaml
+    COUNT:
+    - 60
+    - 60
+  CHOL:
+    NAME: CHL
+    MAPPING: mappingCHOLESTEROLlipid14.yaml
+    COUNT:
+    - 4
+    - 4
+  SOL:
+    NAME: WAT
+    MAPPING: mappingwaterlipid14.yaml
+    COUNT: 3968
+DIR_WRK: /usr/home/bort/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: Jesper J Madsen
+SYSTEM: 120POPC_8CHOL_3968SOL_303K
+SOFTWARE_VERSION: 5.0.4
+FF: Lipid14
+FF_SOURCE: null
+FF_DATE: null
+CPT: null
+LOG: null
+TOP:
+- - md.top
+TRAJECTORY_SIZE: 43000000
+TRJLENGTH: 200100.0
+TEMPERATURE: 303.0
+NUMBER_OF_ATOMS: 28576
+DATEOFRUNNING: 03/01/2022
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+    CHOL: {}
+  FORMFACTOR: {}
+WARNINGS:
+  PBC: z-jumps
+ID: 566
