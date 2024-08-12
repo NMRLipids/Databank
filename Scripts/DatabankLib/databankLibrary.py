@@ -13,7 +13,7 @@ import urllib, logging
 from tqdm import tqdm
 
 import json, yaml
-import os
+import os, sys
 import numpy as np
 import math
 import MDAnalysis as mda
@@ -112,23 +112,20 @@ def getLipids(system, molecules=lipids_dict.keys()):
 
     :return: a string using MDAnalysis notation that can used to select all lipids from the ``system``.
     """
-    lipids = 'resname '
 
+    resSet = set()
     for key in system['COMPOSITION'].keys():
         if key in molecules:
             m_file = system['COMPOSITION'][key]['MAPPING']
             mapping_dict = loadMappingFile(m_file)
-            for atom in mapping_dict:
-                print(mapping_dict[atom])
-                try:
-                    lipids = lipids + mapping_dict[atom]['RESIDUE'] + ' or resname '
-                except:
-                    lipids = lipids + system['COMPOSITION'][key]['NAME'] + ' or resname '
-                    break
+            try:
+                for atom in mapping_dict:
+                    resSet.add(mapping_dict[atom]['RESIDUE'])
+            except:
+                resSet.add( system['COMPOSITION'][key]['NAME'] )
+    
+    lipids = 'resname ' + ' or resname '.join( sorted(list(resSet)) )
 
-                 
-    lipids = lipids[:-12]
-    print(lipids)
     return lipids
 
         
@@ -141,12 +138,17 @@ def simulation2universal_atomnames(system,molecule,atom):
 
     :return: force field specific atom name
     """
-    mapping = loadMappingFile(system['COMPOSITION'][molecule]['MAPPING'])
+    try:
+        mapping = loadMappingFile(system['COMPOSITION'][molecule]['MAPPING'])
+    except:
+        sys.stderr.write('Mapping file was not found!\n')
+        return None
+
     try:
         m_atom1 = mapping[atom]["ATOMNAME"]
     except:
-        print(atom, ' was not found from ', system['COMPOSITION'][molecule]['MAPPING'])
-        return
+        sys.stderr.write(f"{atom} was not found from {system['COMPOSITION'][molecule]['MAPPING']}!")
+        return None
 
     return m_atom1
 
@@ -182,7 +184,7 @@ def getAtoms(system, lipid):
   
     return atoms
 
-def getUniversalAtomName(system,atomName,lipid):
+def getUniversalAtomName(system: dict, atomName: str, lipid: str):
     """
     Returns the universal atom name corresponding the simulation specific ``atomName`` of a ``lipid`` in a simulation defined by the ``system``.
 
@@ -190,12 +192,12 @@ def getUniversalAtomName(system,atomName,lipid):
     :param atomName: simulation specific atomname
     :param lipid: universal lipid name
 
-    :return: universal atomname (string)
+    :return: universal atomname (string) or None
     """
     try:
         mappingFile = system['COMPOSITION'][lipid]['MAPPING']
     except:
-        print('Mapping file was not found')
+        sys.stderr.write('Mapping file was not found!\n')
         return None
 
     mappingDict = loadMappingFile(mappingFile)
@@ -205,7 +207,7 @@ def getUniversalAtomName(system,atomName,lipid):
         if simName == atomName:
             return universalName
 
-    print('Atom was not found')
+    sys.stderr.write('Atom was not found!\n')
     return None
 
 def calc_angle(atoms, com):

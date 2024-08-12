@@ -44,6 +44,17 @@ def test_CalcAreaPerMolecule(systems, systemid, result):
     apm = CalcAreaPerMolecule(sys0)
     assert abs(apm - result) < 6e-4
 
+@pytest.mark.parametrize("systemid, result", 
+                         [   (281, 4142.234), 
+                             (566, 3923.568), 
+                             (787, 4694.191),
+                             (243, 2241.920),
+                             (86,  3869.417)     ], )
+def test_calcArea(systems, systemid, result):
+    from DatabankLib.databankLibrary import calcArea
+    sys0 = systems.loc(systemid)
+    area = calcArea(sys0)
+    assert abs(area - result) < 6e-4
 
 @pytest.mark.parametrize("systemid, result", 
                          [   (281, 128), 
@@ -112,6 +123,7 @@ def test_averageOrderParameters(systems, systemid, result):
     sn1,sn2 =  averageOrderParameters(sys0)
     assert (sn1-result[0])**2 + (sn2-result[1])**2 < 1e-5
 
+## Tests behavior when averageOrderParameters cannot find calculated OP data
 
 @pytest.mark.parametrize("systemid", [ 787], )
 def test_raises_averageOrderParameters(systems, systemid):
@@ -120,3 +132,113 @@ def test_raises_averageOrderParameters(systems, systemid):
     with pytest.raises(FileNotFoundError) as exc_info:
         sn1,sn2 =  averageOrderParameters(sys0)
     assert 'OrderParameters.json' in str(exc_info.value)
+
+
+@pytest.mark.parametrize("systemid, lipid, result", 
+                         [   (281, ['POPC/P'], ['M_G3P2_M']), 
+                             (566, ['POPC/P31','CHOL/C1'], ['M_G3P2_M', 'M_C1_M']), 
+                             (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P2_M', 'M_G3P2_M', 'M_G3P2_M']),
+                             (243, ['DPPC/P8'], ['M_G3P2_M']),
+                             (86,  ['POPE/P8'], ['M_G3P2_M'])     ], )
+def test_getUniversalAtomName(systems, systemid, lipid, result):
+    from DatabankLib.databankLibrary import getUniversalAtomName
+    sys0 = systems.loc(systemid)
+    i = 0
+    for lipat in lipid:
+        lip,atom = tuple(lipat.split('/'))
+        uname = getUniversalAtomName(sys0, atom, lip)
+        assert uname == result[i]
+        i += 1
+
+## Test fail-behavior of getUniversalAtomName
+
+@pytest.mark.parametrize("systemid, lipat, result", 
+                         [   (243, 'DPPC/nonExisting', "Atom was not found"),
+                             (243, 'nonExisting/P8', "Mapping file was not found") ] )
+def test_bad_getUniversalAtomName(systems, systemid, lipat, result, capsys):
+    from DatabankLib.databankLibrary import getUniversalAtomName
+    sys0 = systems.loc(systemid)
+    lip,atom = tuple(lipat.split('/'))
+    uname = getUniversalAtomName(sys0, atom, lip)
+    output = capsys.readouterr().err.rstrip()
+    assert result in output
+    assert uname is None
+
+@pytest.mark.parametrize("systemid, lipid, result", 
+                         [   (243, 'DPPC', "44ea5"),
+                             (787, 'TOCL', "78629") ] )
+def test_getAtoms(systems, systemid, lipid, result):
+    from DatabankLib.databankLibrary import getAtoms
+    sys0 = systems.loc(systemid)
+    atoms = getAtoms(sys0, lipid).split()
+    atoms = ",".join(sorted(atoms))
+    import hashlib
+    md5_hash = hashlib.md5()
+    md5_hash.update(atoms.encode('ascii'))
+    hx = md5_hash.hexdigest()[:5]
+    assert hx == result
+
+@pytest.mark.parametrize("systemid, lipid, result", 
+                         [   (281, ['POPC'], [134]), 
+                             (566, ['POPC','CHOL'], [134, 74]), 
+                             (787, ['TOCL', 'POPC', 'POPE'], [248, 134, 125]),
+                             (243, ['DPPC'], [130]),
+                             (86,  ['POPE'], [125])     ], )
+def test_loadMappingFile(systems, systemid, lipid, result):
+    from DatabankLib.databankLibrary import loadMappingFile
+    sys0 = systems.loc(systemid)
+    i = 0
+    for lip in lipid:
+        mpf = loadMappingFile(sys0['COMPOSITION'][lip]['MAPPING'])
+        assert len(mpf) == result[i]
+        i += 1
+
+@pytest.mark.xfail(reason="Improper file name", run=True, 
+                   raises=FileNotFoundError, strict=True)
+def test_raise_loadMappingFile():
+    from DatabankLib.databankLibrary import loadMappingFile
+    mpf = loadMappingFile('file-doesnot-exist')
+    print(mpf)
+
+
+@pytest.mark.parametrize("systemid, lipid, result", 
+                         [   (281, ['POPC/P'], ['M_G3P2_M']), 
+                             (566, ['POPC/P31','CHOL/C1'], ['M_G3P2_M', 'M_C1_M']), 
+                             (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P2_M', 'M_G3P2_M', 'M_G3P2_M']),
+                             (243, ['DPPC/P8'], ['M_G3P2_M']),
+                             (86,  ['POPE/P8'], ['M_G3P2_M'])     ], )
+def test_simulation2universal_atomnames(systems, systemid, lipid, result):
+    from DatabankLib.databankLibrary import simulation2universal_atomnames
+    sys0 = systems.loc(systemid)
+    i = 0
+    for lipat in lipid:
+        lip,atom = tuple(lipat.split('/'))
+        sname = simulation2universal_atomnames(sys0, lip, result[i])
+        assert sname == atom
+        i += 1
+
+
+@pytest.mark.parametrize("systemid, lipat, result", 
+                         [   (243, 'DPPC/nonExisting', "was not found from mappingDPPCberger.yaml"),
+                             (243, 'nonExisting/M_G1_M', "Mapping file was not found") ] )
+def test_bad_simulation2universal_atomnames(systems, systemid, lipat, result, capsys):
+    from DatabankLib.databankLibrary import simulation2universal_atomnames
+    sys0 = systems.loc(systemid)
+    lip,atom = tuple(lipat.split('/'))
+    sname = simulation2universal_atomnames(sys0, lip, atom)
+    output = capsys.readouterr().err.rstrip()
+    assert result in output
+    assert sname is None
+
+
+@pytest.mark.parametrize("systemid, result", 
+                         [   (281, "resname POPC"), 
+                             (566, "resname CHL or resname OL or resname PA or resname PC"), 
+                             (787, "resname POPC or resname POPE or resname TOCL2"),
+                             (243, "resname DPPC"),
+                             (86,  "resname POPE")     ], )
+def test_getLipids(systems, systemid, result):
+    from DatabankLib.databankLibrary import getLipids
+    sys0 = systems.loc(systemid)
+    gl = getLipids(sys0)
+    assert gl == result
