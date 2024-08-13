@@ -8,6 +8,7 @@ import buildh
 import urllib.request
 import socket
 from tqdm import tqdm
+import numpy as np
 
 
 logger = logging.getLogger(__name__)
@@ -69,6 +70,39 @@ def computeAPL(system: dict, recompute: bool = False) -> int:
         json.dump(apl, f, cls=CompactJSONEncoder)
     
     return RCODE_COMPUTED
+
+def computeTH(system: dict, recompute: bool = False) -> int:
+    thickFN = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
+    if (os.path.isfile(thickFN) and not recompute):
+        # file exist. Skipping
+        return RCODE_SKIPPED
+
+    WaterDensity_name = os.path.join(NMLDB_SIMU_PATH, system['path'], 'WaterDensity.json')
+    LipidDensity_name = os.path.join(NMLDB_SIMU_PATH, system['path'], 'LipidDensity.json')
+    print(LipidDensity_name)
+    try:
+        with open(WaterDensity_name) as f:
+            WaterDensity = json.load(f)
+        with open(LipidDensity_name) as f:
+            LipidDensity = json.load(f)
+        wd = np.array(WaterDensity)
+        ld = np.array(LipidDensity)
+        idx = np.argwhere(np.diff(np.sign(wd[:,1] - ld[:,1]))).flatten()
+        if len(idx) < 2:
+            print("Dehydrated sample! Standard thickness rule doesn't work. Will extract boxZ.")
+            thickness = wd[-1, 0] - wd[0, 0]
+        else:
+            thickness = wd[idx[1], 0] - wd[idx[0], 0]
+        with open(thickFN, 'w') as f:
+            json.dump(thickness, f)
+    except Exception as e:
+        print('Calculation failed for ' +  system['path'])
+        print(str(e))
+        print(traceback.format_exc())
+        return RCODE_ERROR
+
+    return RCODE_COMPUTED 
+ 
 
 #TODO: implement onlyLipid
 #TODO: use in calcOrderParameter

@@ -242,3 +242,49 @@ def test_getLipids(systems, systemid, result):
     sys0 = systems.loc(systemid)
     gl = getLipids(sys0)
     assert gl == result
+
+## TEST thickness calculation here because it is not trajectory-based, but JSON-based
+
+@pytest.mark.parametrize("systemid, result", 
+                         [   (566, DatabankLib.RCODE_SKIPPED), 
+                             (787, DatabankLib.RCODE_ERROR),
+                             (86,  DatabankLib.RCODE_SKIPPED)     ], )
+def test_analyze_th(systems, systemid, result):
+    from DatabankLib.analyze import computeTH
+    sys0 = systems.loc(systemid)
+    rc = computeTH(sys0)
+    assert rc == result
+    if rc == DatabankLib.RCODE_ERROR:
+        fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+                    sys0['path'],
+                    'thickness.json')
+        assert os.path.isfile(fn) # file is not created
+
+@pytest.fixture(scope='function')
+def wipeth(systems):
+    # TD-FIXTURE FOR REMOVING THICKNESS AFTER TEST CALCULATIONS
+    yield
+    # TEARDOWN
+    for sid in [243,281]:
+        sys0 = systems.loc(sid)
+        fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, sys0['path'], 'thickness.json')
+        try:
+            os.remove(fn)
+        except:
+            pass
+
+@pytest.mark.parametrize("systemid, result, thickres", 
+                         [   (281, DatabankLib.RCODE_COMPUTED, 4.18335), 
+                             (243, DatabankLib.RCODE_COMPUTED, 4.27262) ], )
+def test_analyze_th(systems, systemid, result, wipeth, thickres):
+    from DatabankLib.analyze import computeTH
+    sys0 = systems.loc(systemid)
+    rc = computeTH(sys0)
+    assert rc == result
+    fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+                    sys0['path'],
+                    'thickness.json')
+    assert os.path.isfile(fn)
+    with open(fn, 'r') as file:
+        data = float(file.read().rstrip())
+    assert abs(data - thickres) < 1e-5
