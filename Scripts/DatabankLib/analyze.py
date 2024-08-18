@@ -9,6 +9,7 @@ import urllib.request
 import socket
 from tqdm import tqdm
 import numpy as np
+import gc
 
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,76 @@ from .jsonEncoders import CompactJSONEncoder
 from .databankio import resolve_download_file_url
 from .databankop import find_OP
 from .form_factor import FormFactor
+from . import analyze_nmrpca as nmrpca
+
+# TODO: substitute in main file
+def computeNMRPCA(system: dict, recompute: bool = False) -> int:
+    """Compute eq_times.json using NMR PCA analysis.
+
+    Args:
+        system (dict): one of systems of the Databank
+        recompute (bool, optional): Delete previous apl.json and recompute it if True. Defaults to False.
+    Returns:
+        int success code (RCODE_...)
+    """
+    print('== Doi: ' + system['DOI'])
+    print('== System name: ' + system['SYSTEM'])
+    # getting data from databank and preprocessing them
+    # Start Parser
+    # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
+    parser = nmrpca.Parser(NMLDB_SIMU_PATH, system, 'eq_times.json')
+    # Check trajectory
+    print(parser.indexingPath)
+    print(parser.validatePath())
+    if parser.validatePath() < 0:
+        return RCODE_ERROR
+    # Download files
+
+    eq_time_path = os.path.join(NMLDB_SIMU_PATH, system['path'], "eq_times.json")
+    print(eq_time_path)
+    if (os.path.isfile(eq_time_path) and not recompute):
+        return RCODE_SKIPPED
+
+    if ('WARNINGS' in system and 
+        system['WARNINGS'] is not None and 
+        'AMBIGUOUS_ATOMNAMES' in system['WARNINGS']):
+        return RCODE_SKIPPED
+
+    if ('WARNINGS' in system and 
+        system['WARNINGS'] is not None and
+        'SKIP_EQTIMES' in system['WARNINGS']):
+        return RCODE_SKIPPED
+
+    parser.downloadTraj()
+    # Prepare trajectory
+    parser.prepareTraj()
+    # Concatenate trajectory
+    parser.concatenateTraj()
+    equilibration_times = {}
+    # Iterate over trajectories for different lipids
+    for traj in parser.concatenated_trajs:
+        print(f"Main: parsing lipid {traj[4]}")
+        # Creat PCA for trajectory
+        pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trjLen)
+        # Run PCA
+        data = pca_runner.PCA()
+        print("Main: PCA: done")
+        # Project trajectory on PC1
+        pca_runner.get_proj(data)
+        print("Main: Projections: done")
+        # Calculate autocorrelations
+        pca_runner.get_autocorrelations()
+        print("Main: Autocorrelations: done")
+        # Estimate equilibration time
+        te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
+        equilibration_times[traj[4]] = te2 / parser.trjLen
+        print("Main: EQ time: done")
+
+        print(te2 / parser.trjLen)
+    
+    parser.dumpData(equilibration_times)
+    gc.collect()
+    return RCODE_COMPUTED
 
 
 #TODO: use in calcAPL.py
