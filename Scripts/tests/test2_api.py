@@ -1,12 +1,19 @@
+"""
+`test_api` contains tests of API those functions, which doesn't require making MDAnalysis
+Universe and recomputing something. These functions just read README files and precomputed 
+JSON data.
+
+Test data is stored in `./Data/Simulations.2`
+"""
+
 from unittest import mock
 import sys, os
 from urllib.error import HTTPError
 import pytest
 
-import DatabankLib
-
-@pytest.fixture(autouse=True, scope="session")
-def header_session_scope():
+@pytest.fixture(autouse=True, scope="module")
+def header_module_scope():
+    import DatabankLib
     _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
     with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
         print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
@@ -246,10 +253,11 @@ def test_getLipids(systems, systemid, result):
 ## TEST thickness calculation here because it is not trajectory-based, but JSON-based
 
 @pytest.mark.parametrize("systemid, result", 
-                         [   (566, DatabankLib.RCODE_SKIPPED), 
-                             (787, DatabankLib.RCODE_ERROR),
-                             (86,  DatabankLib.RCODE_SKIPPED)     ], )
+                         [   (566, 0), 
+                             (787, 2),
+                             (86,  0)     ], )
 def test_analyze_th(systems, systemid, result):
+    import DatabankLib
     from DatabankLib.analyze import computeTH
     sys0 = systems.loc(systemid)
     rc = computeTH(sys0)
@@ -258,10 +266,11 @@ def test_analyze_th(systems, systemid, result):
         fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
                     sys0['path'],
                     'thickness.json')
-        assert os.path.isfile(fn) # file is not created
+        assert not os.path.isfile(fn) # file is not created
 
 @pytest.fixture(scope='function')
 def wipeth(systems):
+    import DatabankLib
     # TD-FIXTURE FOR REMOVING THICKNESS AFTER TEST CALCULATIONS
     yield
     # TEARDOWN
@@ -274,9 +283,10 @@ def wipeth(systems):
             pass
 
 @pytest.mark.parametrize("systemid, result, thickres", 
-                         [   (281, DatabankLib.RCODE_COMPUTED, 4.18335), 
-                             (243, DatabankLib.RCODE_COMPUTED, 4.27262) ], )
+                         [   (281, 1, 4.18335), 
+                             (243, 1, 4.27262) ], )
 def test_analyze_th(systems, systemid, result, wipeth, thickres):
+    import DatabankLib
     from DatabankLib.analyze import computeTH
     sys0 = systems.loc(systemid)
     rc = computeTH(sys0)
@@ -288,3 +298,17 @@ def test_analyze_th(systems, systemid, result, wipeth, thickres):
     with open(fn, 'r') as file:
         data = float(file.read().rstrip())
     assert abs(data - thickres) < 1e-5
+
+
+@pytest.mark.parametrize("systemid, result", 
+                         [   (281, None), 
+                             (243, None),
+                             (566, 4.2576), 
+                             (787, None),
+                             (86,  4.1327)     ], )
+def test_GetThickness(systems, systemid, result):
+    from DatabankLib.databankLibrary import GetThickness
+    sys0 = systems.loc(systemid)
+    th = GetThickness(sys0)
+    assert (th is None and result is None) or abs(float(th) - float(result)) < 1e-4
+

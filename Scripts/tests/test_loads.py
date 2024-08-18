@@ -1,29 +1,13 @@
+"""
+`test_loads` tests ONLY functions related to downloading files and/or resolving links.
+"""
+
 import sys, os
 from urllib.error import HTTPError
 import pytest
 
 import DatabankLib.databankio as dio 
 
-
-# @pytest.mark.parametrize("input, expected_output", [
-#     ((1, 1), 2),
-#     ((-1, 5), 4),
-#     ((0, 0), 0),
-#     ((3.5, 4.5), 8),
-# ])
-# def test__nameOffunction(input, expected_output)
-#   assert add_two_numbers(*input) == expected_output
-
-
-
-# helpers
-#from databankLibrary import (
-#    download_resource_from_uri,
-#    parse_valid_config_settings,
-#    resolve_download_file_url,
-#)
-
-# == download_resource_from_uri ==
 
 class TestDownloadResourceFromUri:
 
