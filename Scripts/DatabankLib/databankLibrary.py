@@ -59,7 +59,7 @@ def GetThickness(system):
 
     :param system: NMRlipids databank dictionary defining a simulation.
 
-    :return: membrane thickess (nm)
+    :return: membrane thickess (nm) or None
     """
     ThicknessPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
     try:
@@ -67,7 +67,7 @@ def GetThickness(system):
             thickness = json.load(f)
         return(thickness)
     except:
-        return 0
+        return None
 
 
 def ShowEquilibrationTimes(system):
@@ -328,7 +328,7 @@ def system2MDanalysisUniverse(system):
     return u
 
 
-def read_trj_PN_angles(molname, atom1, atom2, MDAuniverse):
+def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Universe):
     """
     Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe. 
 
@@ -337,7 +337,10 @@ def read_trj_PN_angles(molname, atom1, atom2, MDAuniverse):
     :param atom2: name of the N atom in the simulation
     :param MDAuniverse: MDAnalysis universe of the simulation to be analyzed
 
-    :return: list where the first element are the angles of all molecules as a function of time, second element contains time averages for each molecule, third element contains the average angle over time and molecules, and fourth element is the error of the mean calculated over molecules. 
+    :return: tuple (angles of all molecules as a function of time, 
+                    time averages for each molecule, 
+                    the average angle over time and molecules, 
+                    the error of the mean calculated over molecules)
     """
     mol = MDAuniverse
     selection = mol.select_atoms(
