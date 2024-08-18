@@ -1,3 +1,11 @@
+"""
+`test_analyze` tests functions performing databank recomputing. It starts mostly from downloading 
+everything from testing repository. 
+#TODO: compare _de novo_ computed files to the stored files in `./Data/Simulations.2`
+
+Test data is stored in `./Data/Simulations.1`
+"""
+
 from unittest import mock
 import os, glob
 import pytest
@@ -11,8 +19,8 @@ import DatabankLib
 ## On teardown stage we clear the folders.
 
 
-@pytest.fixture(autouse=True, scope="session")
-def header_session_scope():
+@pytest.fixture(autouse=True, scope="module")
+def header_module_scope():
     _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
     with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
         print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
@@ -42,6 +50,7 @@ def systemLoadTraj(systems):
     print('DBG: Download trajectory data.')
     for s in systems:
         u = system2MDanalysisUniverse(s)
+        del(u)
     yield
     ## TEARDOWN SYSTEM-LOADING
     print('DBG: Wiping trajectory data.')
@@ -116,4 +125,3 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
         s['path'], 'FormFactor.json')
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 1e3 
-
