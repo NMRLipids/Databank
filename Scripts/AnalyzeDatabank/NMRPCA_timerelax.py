@@ -41,8 +41,6 @@ if __name__ == "__main__":
         # Start Parser
         # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
         parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname)
-        # Check trajectory
-        print(NMLDB_SIMU_PATH, testTraj, readme['path'])
         print(parser.indexingPath)
         print(parser.validatePath())
         if parser.validatePath() < 0:
