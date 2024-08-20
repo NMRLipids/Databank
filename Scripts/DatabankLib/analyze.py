@@ -1,6 +1,6 @@
 
 import json
-import os
+import os, sys
 import logging
 import re
 import traceback
@@ -42,14 +42,12 @@ def computeNMRPCA(system: dict, recompute: bool = False) -> int:
     parser = nmrpca.Parser(NMLDB_SIMU_PATH, system, 'eq_times.json')
     # Check trajectory
     print(parser.indexingPath)
-    print(parser.validatePath())
-    if parser.validatePath() < 0:
+    vPcode = parser.validatePath()
+    print("ValidatePath code: ", vPcode)
+    if vPcode > 0:
+        sys.stderr.write("Some errors in analyze_nmrpca.py::Parser constructor.\n")
         return RCODE_ERROR
-    # Download files
-
-    eq_time_path = os.path.join(NMLDB_SIMU_PATH, system['path'], "eq_times.json")
-    print(eq_time_path)
-    if (os.path.isfile(eq_time_path) and not recompute):
+    elif  vPcode < 0 and not recompute:
         return RCODE_SKIPPED
 
     if ('WARNINGS' in system and 
@@ -62,6 +60,7 @@ def computeNMRPCA(system: dict, recompute: bool = False) -> int:
         'SKIP_EQTIMES' in system['WARNINGS']):
         return RCODE_SKIPPED
 
+    # Download files
     parser.downloadTraj()
     # Prepare trajectory
     parser.prepareTraj()
