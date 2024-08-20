@@ -125,3 +125,15 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
         s['path'], 'FormFactor.json')
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 1e3 
+
+@pytest.mark.parametrize("systemid, rcodex", 
+                         [   (281, DatabankLib.RCODE_COMPUTED), 
+                             (566, DatabankLib.RCODE_COMPUTED), 
+                             (787, DatabankLib.RCODE_ERROR),
+                             (243, DatabankLib.RCODE_COMPUTED),
+                             (86,  DatabankLib.RCODE_COMPUTED)     ], )
+def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex):
+    from DatabankLib.analyze import computeNMRPCA
+    s = systems.loc(systemid)
+    rCode = computeNMRPCA(s)
+    assert rCode == rcodex

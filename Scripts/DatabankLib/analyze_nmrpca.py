@@ -36,14 +36,19 @@ Alexander Kuzmin
 
 import os
 import json
-import MDAnalysis as mda
 import numpy as np
-from MDAnalysis.analysis import align
-from MDAnalysis.analysis.base import AnalysisFromFunction
 from scipy import signal
+import MDAnalysis as mda
 
 from .databankLibrary import lipids_dict, loadMappingFile
 from .databankio import resolve_download_file_url, download_resource_from_uri
+
+import warnings
+# suppress some MDAnalysis warnings issued from mda.analysis.align
+warnings.filterwarnings('ignore')
+
+from MDAnalysis.analysis import align
+from MDAnalysis.analysis.base import AnalysisFromFunction
 
 
 SKIPLIPIDS = ["CHOL", "DCHOL"]
