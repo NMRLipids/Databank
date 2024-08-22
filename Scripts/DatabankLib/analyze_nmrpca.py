@@ -224,14 +224,14 @@ class Parser:
             self.trj_name = trj_out_name
 
         # Create .gro file
-        if os.path.isfile( os.path.join(self.indexingPath, "conf.gro") ):
-            print("Parser: Founder gro file")
-            self.gro_name = os.path.join(self.indexingPath, "conf.gro")
+        self.gro_name = os.path.join(self.indexingPath, "conf.gro")
+        if os.path.isfile( self.gro_name ):
+            print("Parser: Found gro file")
         else:
             print("Parser: Making a gro file from the first frame")
             os.system(
                 f"echo System | gmx trjconv -s {self.tpr_name}"
-                + f" -f {self.trj_name} -dump 0 -o conf.gro"
+                + f" -f {self.trj_name} -dump 0 -o {self.gro_name}"
             )
 
         # Loading trajectory
@@ -420,13 +420,13 @@ class Topology:
         resnames = self.getLipidResnames()
         resnameDict = self.assignResnames(resnames)
         head_residues = [
-            r.atoms.select_atoms("not name H* and mass > 0.8")
+            r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[HEADGRP]}"
             ).residues
         ]
         sn_1_residues = [
-            r.atoms.select_atoms("not name H* and mass > 0.8")
+            r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN1]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
@@ -434,7 +434,7 @@ class Topology:
             ).residues
         ]
         sn_2_residues = [
-            r.atoms.select_atoms("not name H* and mass > 0.8")
+            r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resnameDict[TAILSN2]} and "
                 + f"around {mergeCutoff} (resname {resnameDict[HEADGRP]} "
