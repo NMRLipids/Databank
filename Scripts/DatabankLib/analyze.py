@@ -60,6 +60,13 @@ def computeNMRPCA(system: dict, recompute: bool = False) -> int:
         'SKIP_EQTIMES' in system['WARNINGS']):
         return RCODE_SKIPPED
 
+    # Check if TPR is defined and non-null or "" 
+    try:
+        _ = system['TPR'][0][0]; __ = _[0]
+    except:
+        sys.stderr.write("TPR is required for NMRPCA analysis!")
+        return RCODE_ERROR
+
     # Download files
     parser.downloadTraj()
     # Prepare trajectory
