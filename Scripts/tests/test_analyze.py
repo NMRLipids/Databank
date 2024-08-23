@@ -1,7 +1,6 @@
 """
 `test_analyze` tests functions performing databank recomputing. It starts mostly from downloading 
 everything from testing repository. 
-#TODO: compare _de novo_ computed files to the stored files in `./Data/Simulations.2`
 
 Test data is stored in `./Data/Simulations.1`
 """
@@ -72,6 +71,49 @@ def systemLoadTraj(systems):
 ## Every test function is parametrized with system ID to make clear reporting
 ## about which system actually fails on a test function.
 
+
+def compareJSONsBtwSD(jsfn: str):
+    """Function to call from the test to compare JSON to the precomputed one.
+    Raises standard assertion to fail the test.
+
+    Args:
+        jsfn (_type_): relative path from simulation folder
+    """
+    import json
+    import numpy as np
+
+    _p1 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
+    _p2 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
+    jsf1 = os.path.join(_p1, jsfn)
+    jsf2 = os.path.join(_p2, jsfn)
+
+    with open(jsf1) as f:
+        j1 = json.load(f)
+    with open(jsf2) as f:
+        j2 = json.load(f)
+    
+    assert(type(j1) == type(j2))
+
+    if type(j1) == list:
+        assert len(j1) == len(j2), f"Problem in {jsfn} comparison: lists has different lengths!"
+        for k1 in range(len(j1)):
+            _a = (np.array(j1[k1]) - np.array(j2[k1])).ravel()
+            assert (_a**2).sum() < 1e-7, (
+               f"Problem in {jsfn} comparison: {k1} line.\n" +
+               f"Computed: {str(j1[k1])} \n" +
+               f"Pre-computed: {str(j2[k1])}" )
+    elif type(j1) == dict:
+        for k1 in j1:
+            _a = (np.array(j1[k1]) - np.array(j2[k1])).ravel()
+            assert (_a**2).sum() < 1e-7, (
+               f"Problem in {jsfn} comparison: {k1} field.\n" +
+               f"Computed: {str(j1[k1])} \n" +
+               f"Pre-computed: {str(j2[k1])}" )
+    
+    print(f"Data {jsfn} was compared against precomputed!")
+        
+
+    
 @pytest.mark.parametrize("systemid", [86, 243, 281, 566, 787])
 def test_analyze_apl(systems, systemLoadTraj, systemid):
     from DatabankLib.analyze import computeAPL
@@ -85,6 +127,9 @@ def test_analyze_apl(systems, systemLoadTraj, systemid):
                                     s['path'], 'apl.json')
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 1e3
+    compareJSONsBtwSD(
+        os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH) 
+    )
 
 
 @pytest.mark.parametrize("systemid, rcodex", 
@@ -95,17 +140,21 @@ def test_analyze_apl(systems, systemLoadTraj, systemid):
                              (86,  DatabankLib.RCODE_COMPUTED)     ], )
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex):
     from DatabankLib.analyze import computeOP
+    from DatabankLib.databank_defs import lipids_dict
     s = systems.loc(systemid)
     rCode = computeOP(s)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
     
-    # now check only 1st lipid
-    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
-        s['path'], list(s['COMPOSITION'].keys())[0] + 'OrderParameters.json')
-    assert os.path.isfile(cFile)
-    assert os.path.getsize(cFile) > 1e3 
+    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_dict.keys())):
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+            s['path'], lip + 'OrderParameters.json')
+        assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
+        assert os.path.getsize(cFile) > 1e3, f"File {cFile} for {lip} is less than 1K!" 
+        compareJSONsBtwSD(
+            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH) 
+        )
 
 @pytest.mark.parametrize("systemid, rcodex", 
                          [   (281, DatabankLib.RCODE_COMPUTED), 
@@ -120,11 +169,16 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
-    
-    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
-        s['path'], 'FormFactor.json')
-    assert os.path.isfile(cFile)
-    assert os.path.getsize(cFile) > 1e3 
+
+    for fn in ['FormFactor.json', 'TotalDensity.json', 'WaterDensity.json', 'LipidDensity.json']:
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+            s['path'], fn)
+        assert os.path.isfile(cFile)
+        assert os.path.getsize(cFile) > 1e3 
+        compareJSONsBtwSD(
+            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH) 
+        )
+
 
 @pytest.mark.parametrize("systemid, rcodex", 
                          [   (281, DatabankLib.RCODE_COMPUTED), 
@@ -137,3 +191,14 @@ def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex):
     s = systems.loc(systemid)
     rCode = computeNMRPCA(s)
     assert rCode == rcodex
+
+    if rCode == DatabankLib.RCODE_ERROR:
+        return
+    
+    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, 
+                                    s['path'], 'eq_times.json')
+    assert os.path.isfile(cFile)
+    assert os.path.getsize(cFile) > 10
+    compareJSONsBtwSD(
+        os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH) 
+    )
