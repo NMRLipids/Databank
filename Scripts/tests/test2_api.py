@@ -312,3 +312,28 @@ def test_GetThickness(systems, systemid, result):
     th = GetThickness(sys0)
     assert (th is None and result is None) or abs(float(th) - float(result)) < 1e-4
 
+@pytest.mark.parametrize("systemid, result", 
+                         [ (243, "0.37135"),
+                           (86, "1.5018"),
+                           (566, "1.174") ] )
+def test_ShowEquilibrationTimes(systems, capsys, systemid, result):
+    from DatabankLib.databankLibrary import ShowEquilibrationTimes
+    from DatabankLib.databank_defs import lipids_dict
+    sys0 = systems.loc(systemid)
+    seqt = ShowEquilibrationTimes(sys0)
+    captured = capsys.readouterr()
+    print("\n========\n",captured, "\n=========\n")
+    lips = list(set(sys0['COMPOSITION'].keys()).intersection(lipids_dict.keys()))
+    for lip in lips:
+        if lip in ["CHOL", "DCHOL"]:
+            continue # for them eq_times are not computed
+        assert lip in captured.out
+    assert result in captured.out
+
+
+@pytest.mark.xfail(reason="EQtimes were not computed", run=True, 
+                   raises=FileNotFoundError, strict=True)
+def test_ShowEquilibrationTimes_fail(systems):
+    sys0 = systems.loc(787)
+    from DatabankLib.databankLibrary import ShowEquilibrationTimes
+    ShowEquilibrationTimes(sys0)
