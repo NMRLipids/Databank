@@ -70,7 +70,7 @@ def GetThickness(system):
         return None
 
 
-def ShowEquilibrationTimes(system):
+def ShowEquilibrationTimes(system: dict):
     """ 
     Prints relative equilibration time for each lipid within a simulation defined by ``system``. 
     Relative equilibration times are calculated with ``NMRPCA_timerelax.py`` and stored in ``eq_times.json`` files.
@@ -78,14 +78,13 @@ def ShowEquilibrationTimes(system):
     :param system: NMRlipids databank dictionary defining a simulation.
     """
     
-    EqTimesPath = os.path.join(NMLDB_EXP_PATH, system['path'], 'eq_times.json')
+    EqTimesPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'eq_times.json')
     
     try:
         with open(EqTimesPath) as f:
             EqTimeDict = json.load(f)
     except:
-        print('eq_times.json not found')
-        exit()
+        raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
 
     for i in EqTimeDict:
         print(i+':', EqTimeDict[i])
