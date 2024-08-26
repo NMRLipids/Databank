@@ -50,8 +50,13 @@ warnings.filterwarnings('ignore')
 from MDAnalysis.analysis import align
 from MDAnalysis.analysis.base import AnalysisFromFunction
 
-
-SKIPLIPIDS = ["CHOL", "DCHOL"]
+#TODO: now there are only regular phospholipids. The list should be verified by method authors.
+ALLOWLIPIDS = [
+    "POPC","POPG","POPS","POPE","PYPC","DMPC","DPPC","DPPE","DPPG",
+    "DEPC","DRPC","DYPC","DLPC","DLIPC","DOPC","DOPE","DDOPC","DOPS",
+    "DSPC","DAPC","SDPE","SOPC","POPI","SAPI","SAPI24","SAPI25",
+    "SLPI"
+]
 
 mergeCutoff = 2.0
 trjSizeCutoff = 5000000000
@@ -271,7 +276,7 @@ class Parser:
     def concatenateTraj(self):
         self.concatenated_trajs = []
         for lipid in self.lipids:
-            if lipid in SKIPLIPIDS:
+            if lipid not in ALLOWLIPIDS:
                 # We do not treat cholesterols
                 continue
             topology = Topology(
