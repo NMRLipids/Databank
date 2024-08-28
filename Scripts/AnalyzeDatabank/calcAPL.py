@@ -2,48 +2,29 @@
 # coding: utf-8
 
 import os, sys
-import json
+
+import logging
+logger = logging.getLogger(__name__)
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib import jsonEncoders
-from DatabankLib.databankLibrary import *
+import DatabankLib
+from DatabankLib.core import initialize_databank
+from DatabankLib.analyze import computeAPL
 
-### Initializing the databank
+
 systems = initialize_databank()
+resDict = {DatabankLib.RCODE_COMPUTED: 0, 
+           DatabankLib.RCODE_SKIPPED: 0,
+           DatabankLib.RCODE_ERROR: 0}
 
-### Loop over simulations in the databank
 for system in systems:
-    ## reading software and file path for simulations
-    software = system['SOFTWARE']
-    path = system['path']
+    logger.info("System title: " + system['SYSTEM'])
+    logger.info("System path: " + system['path'])
+    res = computeAPL(system)
+    resDict[res] += 1
 
-    ## this is checking if area per lipid is already calculated for the systems
-    outfilename = os.path.join(NMLDB_SIMU_PATH,  path, 'apl.json')
-    if os.path.isfile(outfilename):
-        continue
-    
-    print('Analyzing: ', path)
-    print('Will write into: ', outfilename)
-
-    ## calculates the total number of lipids
-    Nlipid = GetNlipids(system)
-
-    ## makes MDAnalysis universe from the system. This also downloads the data if not yet locally available
-    u = system2MDanalysisUniverse(system)
-
-    if u is None:
-        print('Generation of MDAnalysis universe failed in folder', path)
-        continue
-    
-    ## this calculates the area per lipid as a function of time and stores it in the databank
-    apl = {}
-    for ts in tqdm(u.trajectory, desc='Scanning the trajectory'):
-        if u.trajectory.time >= system['TIMELEFTOUT']*1000:
-            dimensions = u.dimensions
-            aplFrame = u.dimensions[0]*u.dimensions[1]*2/Nlipid
-            apl[u.trajectory.time] = aplFrame
-
-    with open(outfilename, 'w') as f:
-        json.dump(apl, f, cls=jsonEncoders.CompactJSONEncoder)
-        
+print(f"""
+COMPUTED: {resDict[DatabankLib.RCODE_COMPUTED]}
+ SKIPPED: {resDict[DatabankLib.RCODE_SKIPPED]}
+   ERROR: {resDict[DatabankLib.RCODE_ERROR]}
+""")
