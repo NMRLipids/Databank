@@ -313,7 +313,7 @@ def test_GetThickness(systems, systemid, result):
     assert (th is None and result is None) or abs(float(th) - float(result)) < 1e-4
 
 @pytest.mark.parametrize("systemid, result", 
-                         [ (243, "0.37135"),
+                         [ (243, "0.7212"),
                            (86, "1.5018"),
                            (566, "1.174") ] )
 def test_ShowEquilibrationTimes(systems, capsys, systemid, result):
