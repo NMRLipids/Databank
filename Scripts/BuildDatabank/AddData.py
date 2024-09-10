@@ -33,6 +33,7 @@ from MDAnalysis import Universe
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # import databank dictionaries
+import DatabankLib
 from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,
     create_databank_directories,
@@ -72,9 +73,7 @@ parser.add_argument(
     "-o",
     "--output-dir",
     help="set custom output directory",
-    default=os.path.join(
-        Path(os.getcwd()).parents[1].absolute(), "Data", "Simulations"
-    ),
+    default=DatabankLib.NMLDB_SIMU_PATH
 )
 
 args = parser.parse_args()
