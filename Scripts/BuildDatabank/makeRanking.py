@@ -19,15 +19,11 @@ qualities = []
 for system in systems:
     quality_dict = {}
     path = os.path.join(NMLDB_SIMU_PATH, system['path'])
-    READMEfilepath = os.path.join(path, 'README.yaml')
-    
-    with open(READMEfilepath, 'r') as yaml_file:
-        readme = yaml.load(yaml_file, Loader=yaml.FullLoader)
     
     TotalQualityFilePath = os.path.join(path, 'SYSTEM_quality.json')
     
     FragmentQ = {}
-    for lipid in readme['COMPOSITION']:
+    for lipid in system['COMPOSITION']:
         QualityFile = os.path.join(path, lipid + '_FragmentQuality.json')
         try:
             with open(QualityFile, 'r') as json_file:
@@ -114,4 +110,3 @@ for SortBasedOn in Fragments:
             with open(outputfile, "w") as fp:
                 json.dump(SortedQualities, fp, default=str, cls=CompactJSONEncoder)
             print('Quality of', SortBasedOn, ' of ' ,lipid, 'sorted and saved to', outputfile) 
-            #,'in simulation: ',  simulation[lipid][SortBasedOn])
