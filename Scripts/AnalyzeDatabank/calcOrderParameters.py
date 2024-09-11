@@ -12,19 +12,20 @@ from DatabankLib.core import initialize_databank
 from DatabankLib.analyze import computeOP
 
 
-systems = initialize_databank()
-resDict = {DatabankLib.RCODE_COMPUTED: 0, 
-           DatabankLib.RCODE_SKIPPED: 0,
-           DatabankLib.RCODE_ERROR: 0}
+if __name__ == "__main__":
+    systems = initialize_databank()
+    resDict = {DatabankLib.RCODE_COMPUTED: 0, 
+              DatabankLib.RCODE_SKIPPED: 0,
+              DatabankLib.RCODE_ERROR: 0}
 
-for system in systems:
-    logger.info("System title: " + system['SYSTEM'])
-    logger.info("System path: " + system['path'])
-    res = computeOP(system)
-    resDict[res] += 1
+    for system in systems:
+        logger.info("System title: " + system['SYSTEM'])
+        logger.info("System path: " + system['path'])
+        res = computeOP(system)
+        resDict[res] += 1
 
-print(f"""
-COMPUTED: {resDict[DatabankLib.RCODE_COMPUTED]}
- SKIPPED: {resDict[DatabankLib.RCODE_SKIPPED]}
-   ERROR: {resDict[DatabankLib.RCODE_ERROR]}
-""")
+    print(f"""
+    COMPUTED: {resDict[DatabankLib.RCODE_COMPUTED]}
+    SKIPPED: {resDict[DatabankLib.RCODE_SKIPPED]}
+      ERROR: {resDict[DatabankLib.RCODE_ERROR]}
+    """)
