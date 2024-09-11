@@ -32,8 +32,8 @@ AUTHORS_CONTACT: Ollila, Samuli
 SYSTEM: 90POPC_38PAzePCprot_7632SOL_298K
 SOFTWARE_VERSION: 4.5
 FF: Berger
-FF_SOURCE: "H. Khandelia and O. G. Mouritsen, Biophysical Journal, 2009, 96(7), 2734\
-  \ \u2013 2743, http://dx.doi.org/10.1016/j.bpj.2009.01.007 for PAzePCprot"
+FF_SOURCE: H. Khandelia and O. G. Mouritsen, Biophysical Journal, 2009, 96(7), 2734
+  – 2743, http://dx.doi.org/10.1016/j.bpj.2009.01.007 for PAzePCprot
 FF_DATE: null
 CPT: null
 LOG: null

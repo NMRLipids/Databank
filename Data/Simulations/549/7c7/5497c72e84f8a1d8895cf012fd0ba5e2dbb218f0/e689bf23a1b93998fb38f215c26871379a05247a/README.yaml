@@ -31,7 +31,7 @@ COMPOSITION:
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
-AUTHORS_CONTACT: "PE\xD3N, Antonio"
+AUTHORS_CONTACT: PEÓN, Antonio
 SYSTEM: POPE_POPG_SOD_SOL_310K
 SOFTWARE_VERSION: 2018.3
 FF: Lipid17 for lipids and AMBER ff15ipq for ions
