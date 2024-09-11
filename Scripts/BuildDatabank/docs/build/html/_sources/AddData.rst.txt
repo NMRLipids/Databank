@@ -1,7 +1,6 @@
-AddData module
+AddData.py
 ==============
 
-.. automodule:: AddData
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. _AddDataPy:
+
+.. automodule:: BuildDatabank.AddData

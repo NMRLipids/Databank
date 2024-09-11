@@ -3,7 +3,10 @@
 Adding simulations into the NMRlipids databank
 ------------------------------------
 
-Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. The first three steps can be performed using graphical GitHub interface. To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids databank git <https://github.com/NMRLipids/Databank/>`_.
+Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform 
+automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. 
+The first three steps can be performed using graphical GitHub interface. 
+To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids databank git <https://github.com/NMRLipids/Databank/>`_.
 
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository. If you want to use other repository than Zenodo, please do not hesitate to open an `GitHub issue <https://github.com/NMRLipids/Databank/issues>`_ on this.
 
@@ -15,7 +18,7 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 
    .. code-block:: bash
 		   
-         python3 AddData.py -f {path to the info.yaml file that you created}
+         python3 AddData.py -f {path to the info.yaml file that you created} -w {working-directory}
 
    For available command line arguments, you can run
 
@@ -23,13 +26,7 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 
          python3 AddData.py --help
 
-   After this is finished, you should see a new folder in `Data/simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system. After successfull creation of ``README.yaml`` file, run
-   
-   .. code-block:: bash
-
-	python createIDs.py
-
-   to add the ``ID`` number of the simulation into the ``README.yaml`` file. Commit the created ``README.yaml`` file into the git.
+   After this is finished, you should see a new folder in `Data/simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system. Commit the created ``README.yaml`` file into the git.
 
 #. To perform basic analyses for the added system(s), go to `Databank/Scripts/AnalyzeDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/AnalyzeDatabank>`_ folder and run
 
@@ -74,5 +71,7 @@ Stepwise instructions to add simulation into the NMRlipids databank, run the bas
 
 	
 #. Finally, commit the added data into your fork and make a pull request into the main branch.
+
+Check :doc:`AddData` for details.
 
 

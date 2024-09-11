@@ -1,7 +1,7 @@
-createPDBs module
+createPDBs.py script
 =================
 
-.. automodule:: createPDBs
+.. automodule:: updateGUI.createPDBs
    :members:
    :undoc-members:
    :show-inheritance:

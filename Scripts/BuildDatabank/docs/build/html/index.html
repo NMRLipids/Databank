@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to NMRlipids databank’s documentation! &mdash; NMRlipids databank 4.9.2023 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,7 +16,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -50,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Project structure</a></li>
 </ul>
 
         </div>
@@ -124,7 +127,7 @@ as described in <a class="reference internal" href="moleculesAndMapping.html#mol
 <h2>System requirements<a class="headerlink" href="#system-requirements" title="Link to this heading"></a></h2>
 <p>The code has been tested in Linux environment with python 3.7 or newer and recent <a class="reference external" href="https://manual.gromacs.org/current/install-guide/index.html">Gromacs</a> version installed.</p>
 <p>Setup using conda as distribution:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>databank<span class="w"> </span><span class="nv">python</span><span class="o">==</span><span class="m">3</span>.7.16<span class="w"> </span>MDAnalysis<span class="w"> </span>MDAnalysisTests
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>databank<span class="w"> </span><span class="nv">python</span><span class="o">==</span><span class="m">3</span>.7<span class="w"> </span>MDAnalysis
 conda<span class="w"> </span>activate<span class="w"> </span>databank
 <span class="o">(</span>databank<span class="o">)</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>tqdm<span class="w"> </span>pyyaml
 </pre></div>
@@ -159,9 +162,10 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#dir-wrk-compulsory">DIR_WRK (compulsory)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#unitedatom-dict-compulsory-for-united-atom-trajectories">UNITEDATOM_DICT (compulsory for united atom trajectories)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#typeofsystem-compulsory">TYPEOFSYSTEM (compulsory)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#system-compulsory">SYSTEM (compulsory)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#publication">PUBLICATION</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#authors-contact">AUTHORS_CONTACT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#system">SYSTEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#batchid">BATCHID</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#software-version">SOFTWARE_VERSION</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#ff">FF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#ff-source">FF_SOURCE</a></li>
@@ -170,6 +174,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#cpt-gromacs">CPT (Gromacs)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#log-gromacs">LOG (Gromacs)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#top-gromacs">TOP (Gromacs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#edr-gromacs">EDR (Gromacs)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#trajectory-size">TRAJECTORY_SIZE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#trjlength">TRJLENGTH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#temperature">TEMPERATURE</a></li>
@@ -177,6 +182,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#dateofrunnig">DATEOFRUNNIG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#experiment">EXPERIMENT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#composition-output">COMPOSITION (output)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="READMEcontent.html#id">ID</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
@@ -196,27 +202,22 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.initialize_databank"><code class="docutils literal notranslate"><span class="pre">initialize_databank()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.print_README"><code class="docutils literal notranslate"><span class="pre">print_README()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.CalcAreaPerMolecule"><code class="docutils literal notranslate"><span class="pre">CalcAreaPerMolecule()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.GetThickness"><code class="docutils literal notranslate"><span class="pre">GetThickness()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.ShowEquilibrationTimes"><code class="docutils literal notranslate"><span class="pre">ShowEquilibrationTimes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.GetNlipids"><code class="docutils literal notranslate"><span class="pre">GetNlipids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.getLipids"><code class="docutils literal notranslate"><span class="pre">getLipids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.plotSimulation"><code class="docutils literal notranslate"><span class="pre">plotSimulation()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.simulation2universal_atomnames"><code class="docutils literal notranslate"><span class="pre">simulation2universal_atomnames()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.read_mapping_file"><code class="docutils literal notranslate"><span class="pre">read_mapping_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.loadMappingFile"><code class="docutils literal notranslate"><span class="pre">loadMappingFile()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.getAtoms"><code class="docutils literal notranslate"><span class="pre">getAtoms()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.getUniversalAtomName"><code class="docutils literal notranslate"><span class="pre">getUniversalAtomName()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.ShowTable"><code class="docutils literal notranslate"><span class="pre">ShowTable()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.system2MDanalysisUniverse"><code class="docutils literal notranslate"><span class="pre">system2MDanalysisUniverse()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.calcArea"><code class="docutils literal notranslate"><span class="pre">calcArea()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.GetFormFactorMin"><code class="docutils literal notranslate"><span class="pre">GetFormFactorMin()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.averageOrderParameters"><code class="docutils literal notranslate"><span class="pre">averageOrderParameters()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.calcLipidFraction"><code class="docutils literal notranslate"><span class="pre">calcLipidFraction()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#databankLibrary.getHydrationLevel"><code class="docutils literal notranslate"><span class="pre">getHydrationLevel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.CalcAreaPerMolecule"><code class="docutils literal notranslate"><span class="pre">CalcAreaPerMolecule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.GetThickness"><code class="docutils literal notranslate"><span class="pre">GetThickness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.ShowEquilibrationTimes"><code class="docutils literal notranslate"><span class="pre">ShowEquilibrationTimes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.GetNlipids"><code class="docutils literal notranslate"><span class="pre">GetNlipids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.getLipids"><code class="docutils literal notranslate"><span class="pre">getLipids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.simulation2universal_atomnames"><code class="docutils literal notranslate"><span class="pre">simulation2universal_atomnames()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.loadMappingFile"><code class="docutils literal notranslate"><span class="pre">loadMappingFile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.getAtoms"><code class="docutils literal notranslate"><span class="pre">getAtoms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.getUniversalAtomName"><code class="docutils literal notranslate"><span class="pre">getUniversalAtomName()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.system2MDanalysisUniverse"><code class="docutils literal notranslate"><span class="pre">system2MDanalysisUniverse()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.calcArea"><code class="docutils literal notranslate"><span class="pre">calcArea()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.GetFormFactorMin"><code class="docutils literal notranslate"><span class="pre">GetFormFactorMin()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.averageOrderParameters"><code class="docutils literal notranslate"><span class="pre">averageOrderParameters()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.calcLipidFraction"><code class="docutils literal notranslate"><span class="pre">calcLipidFraction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="databankLibrary.html#DatabankLib.databankLibrary.getHydrationLevel"><code class="docutils literal notranslate"><span class="pre">getHydrationLevel()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a><ul>
@@ -224,6 +225,14 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
 <li class="toctree-l2"><a class="reference internal" href="exampleAndTutorials.html#id2">Show ranking tables of simulations based in their quality against experimental data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exampleAndTutorials.html#id6">Template for more advance API usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exampleAndTutorials.html#id9">Showing statistics from the NMRlipids databank</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Project structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#databanklib">DatabankLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#analyzedatabank">AnalyzeDatabank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#builddatabank">BuildDatabank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#updategui">updateGUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#tests">tests</a></li>
 </ul>
 </li>
 </ul>
@@ -249,7 +258,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>databank
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+    <p>&#169; Copyright 2024, Samuli Ollila.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
