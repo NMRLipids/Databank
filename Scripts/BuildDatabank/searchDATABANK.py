@@ -3,12 +3,13 @@
 
 import os, sys
 import yaml
-import json
 
 from tqdm import tqdm
+from typing import List, IO
 
 sys.path.append('..')
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
+from DatabankLib.core import initialize_databank
 from DatabankLib.databankLibrary import lipids_dict
 
 import logging
@@ -20,22 +21,14 @@ ions_list = ['POT', 'SOD', 'CLA', 'CAL'] # should contain names of all ions
 LIP_CONC_REL_THRESHOLD = 0.15 # relative acceptable error for determination of 
                               # the hydration in ssNMR
 
-class Data:
-    def __init__(self, molecule, data_path):
-        self.molecule = molecule
-        self.data = {}
-        self.__load_data__(data_path)
-    
-    def __load_data__(self,data_path):
-        with open(data_path) as json_file:
-            self.data = json.load(json_file)
-
-        
 class Simulation:
-    def __init__(self, readme, data, indexingPath):
+
+    readme: dict = None
+    indexingPath: str = None
+
+    def __init__(self, readme):
         self.readme = readme
-        self.data = {}      
-        self.indexingPath = indexingPath
+        self.indexingPath = readme['path']
     
     def getLipids(self, molecules=lipid_numbers_list):
         lipids = []
@@ -53,8 +46,8 @@ class Simulation:
                 
         return simIons
 
-    #fraction of each lipid with respect to total amount of lipids      
-    def molarFraction(self, molecule,molecules=lipid_numbers_list): #only for lipids
+    # fraction of each lipid with respect to total amount of lipids      
+    def molarFraction(self, molecule,molecules=lipid_numbers_list) -> float: #only for lipids
         sum_lipids = 0
         number = sum(self.readme['COMPOSITION'][molecule]['COUNT']) 
         
@@ -108,14 +101,14 @@ class Simulation:
         
 ##################
 class Experiment:
-    def __init__(self, readme, data, dataPath,exptype):
+    def __init__(self, readme: dict, molname: str, dataPath: str, exptype: str):
         self.readme = readme
-        self.data = data #object Data
+        self.molname = molname # dictionary about existence of data files for particular lipids
         self.dataPath = dataPath
         self.exptype = exptype
         
-    def getLipids(self, molecules=lipid_numbers_list):
-        lipids = []
+    def getLipids(self, molecules=lipid_numbers_list) -> List[str]:
+        lipids : List[str] = []
         for key in molecules:
             try:
                 if key in self.readme['MOLAR_FRACTIONS'].keys():
@@ -124,8 +117,8 @@ class Experiment:
                 continue
         return lipids
     
-    def getIons(self, ions):
-        expIons = []
+    def getIons(self, ions) -> List[str]:
+        expIons : List[str] = []
         
         for key in ions:
             try:
@@ -140,52 +133,27 @@ class Experiment:
                 continue
         return expIons
         
-def loadSimulations():
+def loadSimulations() -> List[Simulation]:
     """
     Generates the list of Simulation objects. Go through all README.yaml files.
     """
 
-    print("Build simulation tree index...", end='')
-    rmIdx = []
-    for subdir, dirs, files in os.walk(NMLDB_SIMU_PATH): 
-        for fn in files:
-            if fn == 'README.yaml':
-                rmIdx.append(subdir)
-    print('%d READMEs loaded.' % len(rmIdx) )
+    systems = initialize_databank()
+    simulations : List[Simulation] = []
 
-    print("Loading information about every simulation in the bank.")
-    simulations = []
-    for subdir in tqdm(rmIdx, "Simulations"):
-        READMEfilepathSimulation = os.path.join(subdir, 'README.yaml')
-        # it exists because we collected only dirs with README.yaml
-        with open(READMEfilepathSimulation) as yaml_file_sim:
-            readmeSim = yaml.load(yaml_file_sim, Loader=yaml.FullLoader)
+    for system in systems:
+        # conditions of exclusions
         try:
-            if readmeSim['WARNINGS']['NOWATER']:
+            if system['WARNINGS']['NOWATER']:
                 continue
         except:
             pass
-        indexingPath = os.path.relpath(subdir, start=NMLDB_SIMU_PATH)
-        simOPdata = [] # order parameter files for each type of lipid
-        simData = {}
-
-        for filename in os.listdir(subdir): 
-            filepath = os.path.join(subdir, filename)
-        
-            if filename == 'fourierFromFinalDensity.json': ## TODO: WHAT IS THAT???
-                simData['FormFactors'] = Data("system", filepath)
-            elif filename.endswith('OrderParameters.json'):
-                lipid_name = filename.replace('OrderParameters.json', '')
-            #  print(dataPath)
-                op_data = Data(lipid_name, filepath)
-                simOPdata.append(op_data)
-                            
-        simData['OrderParameters'] = simOPdata
-        simulations.append(Simulation(readmeSim, simData, indexingPath))
+       
+        simulations.append(Simulation(system))
 
     return simulations
  
-def loadExperiments(experimentType):
+def loadExperiments(experimentType: str) -> List[Experiment]:
     """
     Loops over the experiment entries in the experiment databank and read experiment 
     readme and order parameter files into objects.
@@ -209,27 +177,24 @@ def loadExperiments(experimentType):
     print('%d READMEs loaded.' % len(rmIdx) )
 
     print("Loading data for each experiment.")
-    experiments = []
+    experiments : List[Experiment] = []
     for subdir in tqdm(rmIdx, desc='Experiment'):
         READMEfilepathExperiment = os.path.join(subdir, 'README.yaml')
         with open(READMEfilepathExperiment) as yaml_file_exp:
             readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-        opData = {}
 
         for fname in os.listdir(subdir):
-            dataPath = os.path.join(subdir, fname)
             if fname.endswith(dataFile):
                 molecule_name = ""
                 if experimentType == "OrderParameters":
                     molecule_name = fname.replace(dataFile,'')
                 elif experimentType == "FormFactors": 
                     molecule_name = 'system'   
-                expData = Data(molecule_name, dataPath)
-                experiments.append(Experiment(readmeExp, expData, subdir, experimentType))
+                experiments.append(Experiment(readmeExp, molecule_name, subdir, experimentType))
           
     return experiments
  
-def findPairs(experiments, simulations):
+def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
     pairs = []
     for simulation in tqdm(simulations, desc='Simulation'):
         sim_lipids = simulation.getLipids()
@@ -301,7 +266,7 @@ def findPairs(experiments, simulations):
                         exp_doi = experiment.readme['DOI'] 
                         exp_path = os.path.relpath(experiment.dataPath, start=os.path.join(NMLDB_EXP_PATH, experiment.exptype))
                         if experiment.exptype == "OrderParameters":
-                            lipid = experiment.data.molecule
+                            lipid = experiment.molname
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path
                         elif experiment.exptype == "FormFactors":
                             simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
@@ -318,11 +283,13 @@ def findPairs(experiments, simulations):
 
         outfileDICT = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
-            yaml.dump(simulation.readme, f, sort_keys=False)
+            if "path" in simulation.readme.keys():
+                del(simulation.readme['path'])
+            yaml.dump(simulation.readme, f, sort_keys=False, allow_unicode=True)
         
     return pairs
 
-def logPairs(pairs, fd):
+def logPairs(pairs, fd: IO[str]) -> None:
     """
     Write found correspondences into log file.
 
@@ -361,6 +328,7 @@ def main():
     simulations = loadSimulations()
 
     # clear all EXPERIMENT sections in all simulations
+    # TODO: check if EXPERIMENT section changed and trigger the action!
     for simulation in simulations:
         simulation.readme['EXPERIMENT'] = {}
         simulation.readme['EXPERIMENT']['ORDERPARAMETER']= {}
@@ -370,7 +338,7 @@ def main():
         
         outfileDICT = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
         with open(outfileDICT, 'w') as f:
-            yaml.dump(simulation.readme, f, sort_keys=False)
+            yaml.dump(simulation.readme, f, sort_keys=False, allow_unicode=True)
 
     experimentsOrderParameters = loadExperiments('OrderParameters')
     experimentsFormFactors = loadExperiments('FormFactors')
