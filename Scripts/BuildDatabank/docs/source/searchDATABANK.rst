@@ -1,7 +1,7 @@
 searchDATABANK module
 =====================
 
-.. automodule:: searchDATABANK
+.. automodule:: BuildDatabank.searchDATABANK
    :members:
    :undoc-members:
    :show-inheritance:

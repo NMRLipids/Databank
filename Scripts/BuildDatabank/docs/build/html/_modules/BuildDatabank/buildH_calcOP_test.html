@@ -1,37 +1,83 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuildDatabank.buildH_calcOP_test &mdash; NMRlipids databank 4.9.2023 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>buildH_calcOP_test &#8212; NMRlipids databank 4.9.2023 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=10ee5b61"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="../../index.html" class="icon icon-home">
+            NMRlipids databank
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../READMEcontent.html">User input and content of README.yaml files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../addingData.html">Adding simulations into the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../addingExpData.html">Adding experimental data into the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../moleculesAndMapping.html">Universal molecule and atom names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../databankLibrary.html">NMRlipids databank API functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../exampleAndTutorials.html">Examples and tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Project structure</a></li>
+</ul>
 
-          <div class="body" role="main">
-            
-  <h1>Source code for buildH_calcOP_test</h1><div class="highlight"><pre>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NMRlipids databank</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">BuildDatabank.buildH_calcOP_test</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for BuildDatabank.buildH_calcOP_test</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># coding: utf-8</span>
 
@@ -73,14 +119,15 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">mda</span>
 <span class="kn">import</span> <span class="nn">MDAnalysis.coordinates.XTC</span> <span class="k">as</span> <span class="nn">XTC</span>
 
-<span class="kn">import</span> <span class="nn">dic_lipids</span>
-
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">DatabankLib.dic_lipids</span> <span class="k">as</span> <span class="nn">dic_lipids</span>
 
 <span class="c1"># Constants.</span>
 <span class="c1"># From https://en.wikipedia.org/wiki/Carbon%E2%80%93hydrogen_bond</span>
@@ -94,7 +141,9 @@
 <span class="n">PICKLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_OP">[docs]</a><span class="k">def</span> <span class="nf">calc_OP</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_OP">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.calc_OP">[docs]</a>
+<span class="k">def</span> <span class="nf">calc_OP</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the Order Parameter of a CH bond (OP).</span>
 
 <span class="sd">    OP is calculated according to equation:</span>
@@ -129,7 +178,10 @@
     <span class="k">return</span> <span class="n">S</span></div>
 
 
-<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+
+<div class="viewcode-block" id="normalize">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.normalize">[docs]</a>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalizes a vector.</span>
 
 <span class="sd">    Parameters</span>
@@ -144,7 +196,10 @@
     <span class="k">return</span> <span class="n">vec</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="norm"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.norm">[docs]</a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+
+<div class="viewcode-block" id="norm">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.norm">[docs]</a>
+<span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the norm of a vector.</span>
 
 <span class="sd">    Parameters</span>
@@ -159,7 +214,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vec</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="calc_angle"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_angle">[docs]</a><span class="k">def</span> <span class="nf">calc_angle</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_angle">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.calc_angle">[docs]</a>
+<span class="k">def</span> <span class="nf">calc_angle</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the valence angle between atom1, atom2 and atom3.</span>
 
 <span class="sd">    Note: atom2 is the central atom.</span>
@@ -183,7 +241,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">costheta</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="vec2quaternion"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.vec2quaternion">[docs]</a><span class="k">def</span> <span class="nf">vec2quaternion</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vec2quaternion">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.vec2quaternion">[docs]</a>
+<span class="k">def</span> <span class="nf">vec2quaternion</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Translates a vector of 3 elements and angle theta to a quaternion.</span>
 
 <span class="sd">    Parameters</span>
@@ -204,7 +265,10 @@
     <span class="k">return</span> <span class="n">q</span></div>
 
 
-<div class="viewcode-block" id="calc_rotation_matrix"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.calc_rotation_matrix">[docs]</a><span class="k">def</span> <span class="nf">calc_rotation_matrix</span><span class="p">(</span><span class="n">quaternion</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calc_rotation_matrix">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.calc_rotation_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">calc_rotation_matrix</span><span class="p">(</span><span class="n">quaternion</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Translates a quaternion to a rotation matrix.</span>
 
 <span class="sd">    Parameters</span>
@@ -233,7 +297,10 @@
     <span class="k">return</span> <span class="n">matrix</span></div>
 
 
-<div class="viewcode-block" id="apply_rotation"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.apply_rotation">[docs]</a><span class="k">def</span> <span class="nf">apply_rotation</span><span class="p">(</span><span class="n">vec_to_rotate</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">rad_angle</span><span class="p">):</span>
+
+<div class="viewcode-block" id="apply_rotation">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.apply_rotation">[docs]</a>
+<span class="k">def</span> <span class="nf">apply_rotation</span><span class="p">(</span><span class="n">vec_to_rotate</span><span class="p">,</span> <span class="n">rotation_axis</span><span class="p">,</span> <span class="n">rad_angle</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotates a vector around an axis by a given angle.</span>
 
 <span class="sd">    Note: the rotation axis is a vector of 3 elements.</span>
@@ -258,7 +325,10 @@
     <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">vec_rotated</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pandasdf2pdb"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.pandasdf2pdb">[docs]</a><span class="k">def</span> <span class="nf">pandasdf2pdb</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pandasdf2pdb">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.pandasdf2pdb">[docs]</a>
+<span class="k">def</span> <span class="nf">pandasdf2pdb</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string in PDB format from a pandas dataframe.</span>
 
 <span class="sd">    Parameters</span>
@@ -302,7 +372,10 @@
     <span class="k">return</span> <span class="n">s</span></div>
 
 
-<div class="viewcode-block" id="cross_product"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.cross_product">[docs]</a><span class="k">def</span> <span class="nf">cross_product</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cross_product">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.cross_product">[docs]</a>
+<span class="k">def</span> <span class="nf">cross_product</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the cross product between vectors A &amp; B.</span>
 
 <span class="sd">    Source: http://hyperphysics.phy-astr.gsu.edu/hbase/vvec.html.</span>
@@ -327,7 +400,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_CH2"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH2">[docs]</a><span class="k">def</span> <span class="nf">get_CH2</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_CH2">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.get_CH2">[docs]</a>
+<span class="k">def</span> <span class="nf">get_CH2</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the 2 hydrogens of a sp3 carbon (methylene group).</span>
 
 <span class="sd">    Parameters</span>
@@ -367,7 +443,10 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">hcoor_H1</span><span class="p">,</span> <span class="n">hcoor_H2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_CH"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH">[docs]</a><span class="k">def</span> <span class="nf">get_CH</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">,</span> <span class="n">helper3</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_CH">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.get_CH">[docs]</a>
+<span class="k">def</span> <span class="nf">get_CH</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">,</span> <span class="n">helper3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the unique hydrogen of a sp3 carbon.</span>
 
 <span class="sd">    Parameters</span>
@@ -396,7 +475,10 @@
     <span class="k">return</span> <span class="n">coor_H</span></div>
 
 
-<div class="viewcode-block" id="get_CH_double_bond"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH_double_bond">[docs]</a><span class="k">def</span> <span class="nf">get_CH_double_bond</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_CH_double_bond">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.get_CH_double_bond">[docs]</a>
+<span class="k">def</span> <span class="nf">get_CH_double_bond</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the hydrogen of a sp2 carbon.</span>
 
 <span class="sd">    Parameters</span>
@@ -431,7 +513,10 @@
     <span class="k">return</span> <span class="n">coor_H</span></div>
 
 
-<div class="viewcode-block" id="get_CH3"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_CH3">[docs]</a><span class="k">def</span> <span class="nf">get_CH3</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_CH3">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.get_CH3">[docs]</a>
+<span class="k">def</span> <span class="nf">get_CH3</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">helper1</span><span class="p">,</span> <span class="n">helper2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstructs the 3 hydrogens of a sp3 carbon (methyl group).</span>
 
 <span class="sd">    Parameters</span>
@@ -479,6 +564,7 @@
     <span class="k">return</span> <span class="n">coor_He</span><span class="p">,</span> <span class="n">coor_Hr</span><span class="p">,</span> <span class="n">coor_Hs</span></div>
 
 
+
 <span class="c1">###</span>
 <span class="c1">### The next two functions (buildHs_on_1C() and build_all_Hs_calc_OP())</span>
 <span class="c1">### build new H, calculate the order parameter and write the new traj with Hs</span>
@@ -486,7 +572,9 @@
 <span class="c1">### Note: they are slow, they shouldn&#39;t be used if the user doesn&#39;t want to</span>
 <span class="c1">###       write the trajectory. Instead, fast_build_all_Hs() should be used.</span>
 <span class="c1">###</span>
-<div class="viewcode-block" id="buildHs_on_1C"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.buildHs_on_1C">[docs]</a><span class="k">def</span> <span class="nf">buildHs_on_1C</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+<div class="viewcode-block" id="buildHs_on_1C">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.buildHs_on_1C">[docs]</a>
+<span class="k">def</span> <span class="nf">buildHs_on_1C</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds 1, 2 or 3 H on a given carbon.</span>
 
 <span class="sd">    This function is a wrapper which gathers the coordinates of the helpers</span>
@@ -546,7 +634,10 @@
                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typeofH2build</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="build_all_Hs_calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.build_all_Hs_calc_OP">[docs]</a><span class="k">def</span> <span class="nf">build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">,</span>
+
+<div class="viewcode-block" id="build_all_Hs_calc_OP">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.build_all_Hs_calc_OP">[docs]</a>
+<span class="k">def</span> <span class="nf">build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">,</span>
                          <span class="n">universe_wH</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_OP</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">dic_corresp_numres_index_dic_OP</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">return_coors</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -697,6 +788,7 @@
                                                       <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">new_df_atoms</span></div>
 
+
 <span class="c1">###</span>
 <span class="c1">### The next 4 functions (fast_build_all_Hs_calc_OP(), fast_buildHs_on_1C(),</span>
 <span class="c1">### make_dic_lipids_with_indexes() and get_indexes()) should be used when the</span>
@@ -704,7 +796,9 @@
 <span class="c1">### By using fast indexing to individual Catoms and helpers, they</span>
 <span class="c1">### are much faster.</span>
 <span class="c1">###</span>
-<div class="viewcode-block" id="fast_buildHs_on_1C"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.fast_buildHs_on_1C">[docs]</a><span class="k">def</span> <span class="nf">fast_buildHs_on_1C</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">ix_first_atom_res</span><span class="p">):</span>
+<div class="viewcode-block" id="fast_buildHs_on_1C">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.fast_buildHs_on_1C">[docs]</a>
+<span class="k">def</span> <span class="nf">fast_buildHs_on_1C</span><span class="p">(</span><span class="n">dic_lipids_with_indexes</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">Cname</span><span class="p">,</span> <span class="n">ix_first_atom_res</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds 1, 2 or 3 H on a given carbon using fast indexing.</span>
 
 <span class="sd">    This function is a fast wrapper which gathers the coordinates of the</span>
@@ -766,7 +860,10 @@
                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typeofH2build</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_indexes"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.get_indexes">[docs]</a><span class="k">def</span> <span class="nf">get_indexes</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_indexes">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.get_indexes">[docs]</a>
+<span class="k">def</span> <span class="nf">get_indexes</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the index of helpers for a given carbon.</span>
 
 <span class="sd">    Parameters</span>
@@ -807,7 +904,10 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">helper1_ix</span><span class="p">,</span> <span class="n">helper2_ix</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="make_dic_lipids_with_indexes"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_lipids_with_indexes">[docs]</a><span class="k">def</span> <span class="nf">make_dic_lipids_with_indexes</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
+
+<div class="viewcode-block" id="make_dic_lipids_with_indexes">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.make_dic_lipids_with_indexes">[docs]</a>
+<span class="k">def</span> <span class="nf">make_dic_lipids_with_indexes</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expands dic_lipid and adds the index of each atom and helper.</span>
 
 <span class="sd">    IMPORTANT: the index of each atom/helper is given with respect to the</span>
@@ -901,7 +1001,10 @@
     <span class="k">return</span> <span class="n">dic_lipids_with_indexes</span></div>
 
 
-<div class="viewcode-block" id="fast_build_all_Hs_calc_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.fast_build_all_Hs_calc_OP">[docs]</a><span class="k">def</span> <span class="nf">fast_build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">):</span>
+
+<div class="viewcode-block" id="fast_build_all_Hs_calc_OP">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.fast_build_all_Hs_calc_OP">[docs]</a>
+<span class="k">def</span> <span class="nf">fast_build_all_Hs_calc_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_Cname2Hnames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build Hs and calc OP using fast indexing.</span>
 
 <span class="sd">    This function uses fast indexing to carbon atoms and helper atoms. It</span>
@@ -1031,7 +1134,10 @@
         <span class="nb">print</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="make_dic_atname2genericname"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_atname2genericname">[docs]</a><span class="k">def</span> <span class="nf">make_dic_atname2genericname</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="make_dic_atname2genericname">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.make_dic_atname2genericname">[docs]</a>
+<span class="k">def</span> <span class="nf">make_dic_atname2genericname</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a dict of correspondance between generic H names and PDB names.</span>
 
 <span class="sd">    This dict will look like the following: {(&#39;C1&#39;, &#39;H11&#39;): &#39;gamma1_1&#39;, ...}.</span>
@@ -1066,7 +1172,10 @@
                           <span class="s2">&quot;file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">dic</span></div>
 
-<div class="viewcode-block" id="init_dic_OP"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.init_dic_OP">[docs]</a><span class="k">def</span> <span class="nf">init_dic_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span><span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_atname2genericname</span><span class="p">):</span>
+
+<div class="viewcode-block" id="init_dic_OP">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.init_dic_OP">[docs]</a>
+<span class="k">def</span> <span class="nf">init_dic_OP</span><span class="p">(</span><span class="n">universe_woH</span><span class="p">,</span><span class="n">dic_lipid</span><span class="p">,</span> <span class="n">dic_atname2genericname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO Complete docstring.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">### To calculate the error, we need to first average over the</span>
@@ -1100,7 +1209,10 @@
     <span class="k">return</span> <span class="n">dic_OP</span><span class="p">,</span> <span class="n">dic_corresp_numres_index_dic_OP</span></div>
 
 
-<div class="viewcode-block" id="make_dic_Cname2Hnames"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.make_dic_Cname2Hnames">[docs]</a><span class="k">def</span> <span class="nf">make_dic_Cname2Hnames</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">):</span>
+
+<div class="viewcode-block" id="make_dic_Cname2Hnames">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.make_dic_Cname2Hnames">[docs]</a>
+<span class="k">def</span> <span class="nf">make_dic_Cname2Hnames</span><span class="p">(</span><span class="n">dic_OP</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO Complete Docstring.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1113,8 +1225,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dic_Cname2Hnames contains:&quot;</span><span class="p">,</span> <span class="n">dic</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dic</span></div>
 
+
 <span class="c1">#Anne: Modification to use buildH_calcOP.py also as a module within another python script</span>
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">topfile</span><span class="p">,</span> <span class="n">lipid</span><span class="p">,</span> <span class="n">def_file</span><span class="p">,</span> <span class="n">trajfile</span><span class="p">,</span> <span class="n">outOP</span><span class="p">,</span> <span class="n">opdbxtc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">topfile</span><span class="p">,</span> <span class="n">lipid</span><span class="p">,</span> <span class="n">def_file</span><span class="p">,</span> <span class="n">trajfile</span><span class="p">,</span> <span class="n">outOP</span><span class="p">,</span> <span class="n">opdbxtc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 
     <span class="c1"># Get the dictionary with helper info using residue name (args.lipid</span>
     <span class="c1"># argument). Beware, this dict is then called `dic_lipid` *without s*,</span>
@@ -1304,7 +1419,10 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results written to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outOP</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="parseCommandLineArgs"><a class="viewcode-back" href="../buildH_calcOP_test.html#buildH_calcOP_test.parseCommandLineArgs">[docs]</a><span class="k">def</span> <span class="nf">parseCommandLineArgs</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parseCommandLineArgs">
+<a class="viewcode-back" href="../../buildH_calcOP_test.html#BuildDatabank.buildH_calcOP_test.parseCommandLineArgs">[docs]</a>
+<span class="k">def</span> <span class="nf">parseCommandLineArgs</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
     <span class="c1"># Avoid tpr for topology cause there&#39;s no .coord there!</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;topfile&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
@@ -1327,6 +1445,7 @@
                         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OP_buildH.out&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">args</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -1360,65 +1479,31 @@
 
 </pre></div>
 
+           </div>
           </div>
-          
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Samuli Ollila.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">NMRlipids databank</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2023, Samuli Ollila.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

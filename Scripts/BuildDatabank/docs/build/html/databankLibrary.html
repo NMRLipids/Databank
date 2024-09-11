@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NMRlipids databank API functions &mdash; NMRlipids databank 4.9.2023 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,7 +16,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -50,30 +52,26 @@
 <li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data into the NMRlipids databank</a></li>
 <li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">NMRlipids databank API functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.initialize_databank"><code class="docutils literal notranslate"><span class="pre">initialize_databank()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.print_README"><code class="docutils literal notranslate"><span class="pre">print_README()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.CalcAreaPerMolecule"><code class="docutils literal notranslate"><span class="pre">CalcAreaPerMolecule()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.GetThickness"><code class="docutils literal notranslate"><span class="pre">GetThickness()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.ShowEquilibrationTimes"><code class="docutils literal notranslate"><span class="pre">ShowEquilibrationTimes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.GetNlipids"><code class="docutils literal notranslate"><span class="pre">GetNlipids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.getLipids"><code class="docutils literal notranslate"><span class="pre">getLipids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.plotSimulation"><code class="docutils literal notranslate"><span class="pre">plotSimulation()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.simulation2universal_atomnames"><code class="docutils literal notranslate"><span class="pre">simulation2universal_atomnames()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.read_mapping_file"><code class="docutils literal notranslate"><span class="pre">read_mapping_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.loadMappingFile"><code class="docutils literal notranslate"><span class="pre">loadMappingFile()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.getAtoms"><code class="docutils literal notranslate"><span class="pre">getAtoms()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.getUniversalAtomName"><code class="docutils literal notranslate"><span class="pre">getUniversalAtomName()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.ShowTable"><code class="docutils literal notranslate"><span class="pre">ShowTable()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.system2MDanalysisUniverse"><code class="docutils literal notranslate"><span class="pre">system2MDanalysisUniverse()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.calcArea"><code class="docutils literal notranslate"><span class="pre">calcArea()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.GetFormFactorMin"><code class="docutils literal notranslate"><span class="pre">GetFormFactorMin()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.averageOrderParameters"><code class="docutils literal notranslate"><span class="pre">averageOrderParameters()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.calcLipidFraction"><code class="docutils literal notranslate"><span class="pre">calcLipidFraction()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#databankLibrary.getHydrationLevel"><code class="docutils literal notranslate"><span class="pre">getHydrationLevel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.CalcAreaPerMolecule"><code class="docutils literal notranslate"><span class="pre">CalcAreaPerMolecule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.GetThickness"><code class="docutils literal notranslate"><span class="pre">GetThickness()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.ShowEquilibrationTimes"><code class="docutils literal notranslate"><span class="pre">ShowEquilibrationTimes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.GetNlipids"><code class="docutils literal notranslate"><span class="pre">GetNlipids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.getLipids"><code class="docutils literal notranslate"><span class="pre">getLipids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.simulation2universal_atomnames"><code class="docutils literal notranslate"><span class="pre">simulation2universal_atomnames()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.loadMappingFile"><code class="docutils literal notranslate"><span class="pre">loadMappingFile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.getAtoms"><code class="docutils literal notranslate"><span class="pre">getAtoms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.getUniversalAtomName"><code class="docutils literal notranslate"><span class="pre">getUniversalAtomName()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.system2MDanalysisUniverse"><code class="docutils literal notranslate"><span class="pre">system2MDanalysisUniverse()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.read_trj_PN_angles"><code class="docutils literal notranslate"><span class="pre">read_trj_PN_angles()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.calcArea"><code class="docutils literal notranslate"><span class="pre">calcArea()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.GetFormFactorMin"><code class="docutils literal notranslate"><span class="pre">GetFormFactorMin()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.averageOrderParameters"><code class="docutils literal notranslate"><span class="pre">averageOrderParameters()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.calcLipidFraction"><code class="docutils literal notranslate"><span class="pre">calcLipidFraction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DatabankLib.databankLibrary.getHydrationLevel"><code class="docutils literal notranslate"><span class="pre">getHydrationLevel()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Project structure</a></li>
 </ul>
 
         </div>
@@ -113,9 +111,11 @@
 </div>
 <p>You can then start to work with the <a class="reference external" href="https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb">template</a> or write a code from the scratch. The minimum python code to intialize NMRlipids databank is</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">databankPath</span> <span class="o">=</span>  <span class="s1">&#39;./Databank/&#39;</span>   <span class="c1"># this is the local path for the cloned Databank git</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">databankPath</span> <span class="o">+</span> <span class="s1">&#39;/Scripts/BuildDatabank/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">databankLibrary</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;/home/joe/Databank/Scripts/&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">DatabankLib</span>
+<span class="kn">from</span> <span class="nn">DatabankLib.core</span> <span class="kn">import</span> <span class="n">initialize_databank</span>
+
 <span class="n">systems</span> <span class="o">=</span> <span class="n">initialize_databank</span><span class="p">(</span><span class="n">databankPath</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -126,34 +126,9 @@
 </div>
 <p>Examples on analyses over NMRlipids databank can be found from the <a class="reference external" href="https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb">template</a> and <a class="reference external" href="https://github.com/NMRLipids/DataBankManuscript/tree/main/scripts">codes used to analyze the results for the NMRlipids databank manuscript</a>.</p>
 <p>The functions available to analyze the simulations are listed in here:</p>
-<dl class="py function" id="module-databankLibrary">
-<dt class="sig sig-object py" id="databankLibrary.initialize_databank">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">initialize_databank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databankPath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#initialize_databank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.initialize_databank" title="Link to this definition"></a></dt>
-<dd><p>Intializes the NMRlipids databank.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>databankPath</strong> – path for the local location of the NMRlipids databank, for example <code class="docutils literal notranslate"><span class="pre">../../Databank</span></code></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of dictionaries that contain the content of README.yaml files for each system.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.print_README">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">print_README</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#print_README"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.print_README" title="Link to this definition"></a></dt>
-<dd><p>Prints the content of <code class="docutils literal notranslate"><span class="pre">system</span></code> dictionary in human readable format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>system</strong> – NMRlipids databank dictionary defining a simulation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.CalcAreaPerMolecule">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">CalcAreaPerMolecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#CalcAreaPerMolecule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.CalcAreaPerMolecule" title="Link to this definition"></a></dt>
+<dl class="py function" id="module-DatabankLib.databankLibrary">
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.CalcAreaPerMolecule">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">CalcAreaPerMolecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#CalcAreaPerMolecule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.CalcAreaPerMolecule" title="Link to this definition"></a></dt>
 <dd><p>Calculates average area per lipid for a simulation defined with <code class="docutils literal notranslate"><span class="pre">system</span></code>.
 It is using the <code class="docutils literal notranslate"><span class="pre">apl.json</span></code> file where area per lipid as a function of time calculated by the <code class="docutils literal notranslate"><span class="pre">calcAPL.py</span></code> is stored.</p>
 <dl class="field-list simple">
@@ -167,8 +142,8 @@ It is using the <code class="docutils literal notranslate"><span class="pre">apl
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.GetThickness">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetThickness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#GetThickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.GetThickness" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.GetThickness">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetThickness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#GetThickness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.GetThickness" title="Link to this definition"></a></dt>
 <dd><p>Gets thickness for a simulation defined with <code class="docutils literal notranslate"><span class="pre">system</span></code> from the <code class="docutils literal notranslate"><span class="pre">thickness.json</span></code> file
 where thickness calculated by the <code class="docutils literal notranslate"><span class="pre">calc_thickness.py</span></code> is stored.</p>
 <dl class="field-list simple">
@@ -176,14 +151,14 @@ where thickness calculated by the <code class="docutils literal notranslate"><sp
 <dd class="field-odd"><p><strong>system</strong> – NMRlipids databank dictionary defining a simulation.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>membrane thickess (nm)</p>
+<dd class="field-even"><p>membrane thickess (nm) or None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.ShowEquilibrationTimes">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">ShowEquilibrationTimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#ShowEquilibrationTimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.ShowEquilibrationTimes" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.ShowEquilibrationTimes">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">ShowEquilibrationTimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#ShowEquilibrationTimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.ShowEquilibrationTimes" title="Link to this definition"></a></dt>
 <dd><p>Prints relative equilibration time for each lipid within a simulation defined by <code class="docutils literal notranslate"><span class="pre">system</span></code>.
 Relative equilibration times are calculated with <code class="docutils literal notranslate"><span class="pre">NMRPCA_timerelax.py</span></code> and stored in <code class="docutils literal notranslate"><span class="pre">eq_times.json</span></code> files.</p>
 <dl class="field-list simple">
@@ -194,8 +169,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.GetNlipids">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetNlipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#GetNlipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.GetNlipids" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.GetNlipids">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetNlipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#GetNlipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.GetNlipids" title="Link to this definition"></a></dt>
 <dd><p>Returns the total number of lipids in a simulation defined by <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -208,8 +183,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.getLipids">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getLipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">dict_keys(['POPC',</span> <span class="pre">'POPG',</span> <span class="pre">'POPS',</span> <span class="pre">'POPE',</span> <span class="pre">'PYPC',</span> <span class="pre">'PAzePCprot',</span> <span class="pre">'PAzePCdeprot',</span> <span class="pre">'DMPC',</span> <span class="pre">'DPPC',</span> <span class="pre">'DPPE',</span> <span class="pre">'DPPG',</span> <span class="pre">'DEPC',</span> <span class="pre">'DRPC',</span> <span class="pre">'DYPC',</span> <span class="pre">'DLPC',</span> <span class="pre">'DLIPC',</span> <span class="pre">'DOG',</span> <span class="pre">'DOPC',</span> <span class="pre">'DOPE',</span> <span class="pre">'DDOPC',</span> <span class="pre">'DOPS',</span> <span class="pre">'DSPC',</span> <span class="pre">'DAPC',</span> <span class="pre">'DMTAP',</span> <span class="pre">'SDG',</span> <span class="pre">'SDPE',</span> <span class="pre">'SOPC',</span> <span class="pre">'POPI',</span> <span class="pre">'SAPI',</span> <span class="pre">'SAPI24',</span> <span class="pre">'SAPI25',</span> <span class="pre">'SLPI',</span> <span class="pre">'CER',</span> <span class="pre">'CER180',</span> <span class="pre">'CHOL',</span> <span class="pre">'DCHOL',</span> <span class="pre">'DHMDMAB',</span> <span class="pre">'SLiPC',</span> <span class="pre">'SM16',</span> <span class="pre">'SM18',</span> <span class="pre">'TOCL',</span> <span class="pre">'TLCL_0H',</span> <span class="pre">'GM1',</span> <span class="pre">'DPPGK'])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#getLipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.getLipids" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.getLipids">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getLipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">dict_keys(['POPC',</span> <span class="pre">'POPG',</span> <span class="pre">'POPS',</span> <span class="pre">'POPE',</span> <span class="pre">'PYPC',</span> <span class="pre">'PAzePCprot',</span> <span class="pre">'PAzePCdeprot',</span> <span class="pre">'DMPC',</span> <span class="pre">'DPPC',</span> <span class="pre">'DPPE',</span> <span class="pre">'DPPG',</span> <span class="pre">'DEPC',</span> <span class="pre">'DRPC',</span> <span class="pre">'DYPC',</span> <span class="pre">'DLPC',</span> <span class="pre">'DLIPC',</span> <span class="pre">'DOG',</span> <span class="pre">'DOPC',</span> <span class="pre">'DOPE',</span> <span class="pre">'DDOPC',</span> <span class="pre">'DOPS',</span> <span class="pre">'DSPC',</span> <span class="pre">'DAPC',</span> <span class="pre">'DMTAP',</span> <span class="pre">'SDG',</span> <span class="pre">'SDPE',</span> <span class="pre">'SOPC',</span> <span class="pre">'POPI',</span> <span class="pre">'SAPI',</span> <span class="pre">'SAPI24',</span> <span class="pre">'SAPI25',</span> <span class="pre">'SLPI',</span> <span class="pre">'CER',</span> <span class="pre">'CER180',</span> <span class="pre">'CHOL',</span> <span class="pre">'DCHOL',</span> <span class="pre">'DHMDMAB',</span> <span class="pre">'SLiPC',</span> <span class="pre">'SM16',</span> <span class="pre">'SM18',</span> <span class="pre">'TOCL',</span> <span class="pre">'TLCL_0H',</span> <span class="pre">'GM1',</span> <span class="pre">'DPPGK',</span> <span class="pre">'GB3'])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#getLipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.getLipids" title="Link to this definition"></a></dt>
 <dd><p>Returns a string using MDAnalysis notation that can used to select all lipids from the <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -222,22 +197,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.plotSimulation">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">plotSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#plotSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.plotSimulation" title="Link to this definition"></a></dt>
-<dd><p>Creates plots of form factor and C-H bond order parameters for the selected <code class="docutils literal notranslate"><span class="pre">lipid</span></code> from a simulation with the given <code class="docutils literal notranslate"><span class="pre">ID</span></code> number.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ID</strong> – NMRlipids databank ID number of the simulation</p></li>
-<li><p><strong>lipid</strong> – universal molecul name of the lipid</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.simulation2universal_atomnames">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">simulation2universal_atomnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#simulation2universal_atomnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.simulation2universal_atomnames" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.simulation2universal_atomnames">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">simulation2universal_atomnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#simulation2universal_atomnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.simulation2universal_atomnames" title="Link to this definition"></a></dt>
 <dd><p>Get force field specific atom name corresponding to universal atom name from the <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -253,25 +214,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.read_mapping_file">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_mapping_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#read_mapping_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.read_mapping_file" title="Link to this definition"></a></dt>
-<dd><p>Get force field specific atom name corresponding to universal atom name from the mapping file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>mapping_file</strong> – path for the mapping file</p></li>
-<li><p><strong>atom1</strong> – universal atom name</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>force field specific atom name</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.loadMappingFile">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">loadMappingFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#loadMappingFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.loadMappingFile" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.loadMappingFile">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">loadMappingFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#loadMappingFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.loadMappingFile" title="Link to this definition"></a></dt>
 <dd><p>Load mapping file into a dictionary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Param<span class="colon">:</span></dt>
@@ -284,8 +228,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.getAtoms">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getAtoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#getAtoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.getAtoms" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.getAtoms">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getAtoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#getAtoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.getAtoms" title="Link to this definition"></a></dt>
 <dd><p>Return system specific atom names of a lipid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -301,8 +245,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.getUniversalAtomName">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getUniversalAtomName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#getUniversalAtomName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.getUniversalAtomName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.getUniversalAtomName">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getUniversalAtomName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#getUniversalAtomName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.getUniversalAtomName" title="Link to this definition"></a></dt>
 <dd><p>Returns the universal atom name corresponding the simulation specific <code class="docutils literal notranslate"><span class="pre">atomName</span></code> of a <code class="docutils literal notranslate"><span class="pre">lipid</span></code> in a simulation defined by the <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -313,29 +257,16 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>universal atomname (string)</p>
+<dd class="field-even"><p>universal atomname (string) or None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.ShowTable">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">ShowTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SortedQualities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#ShowTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.ShowTable" title="Link to this definition"></a></dt>
-<dd><p>Shows a table of simulation qualities against experimental data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>SortedQualities</strong> – list of dictionaries to be shown, available in folder <code class="docutils literal notranslate"><span class="pre">Data/Ranking/</span></code></p></li>
-<li><p><strong>quality</strong> – should be either <code class="docutils literal notranslate"><span class="pre">TotalQuality</span></code> or universal lipid name. First one shows the system total quality. Latter shows the individual lipid quality.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.system2MDanalysisUniverse">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">system2MDanalysisUniverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#system2MDanalysisUniverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.system2MDanalysisUniverse" title="Link to this definition"></a></dt>
-<dd><p>Takes the <code class="docutils literal notranslate"><span class="pre">system</span></code> dictionary as an input, downloads the required files to the NMRlipids databank directory and retuns MDAnalysis universe corressponding the <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.system2MDanalysisUniverse">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">system2MDanalysisUniverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#system2MDanalysisUniverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.system2MDanalysisUniverse" title="Link to this definition"></a></dt>
+<dd><p>Takes the <code class="docutils literal notranslate"><span class="pre">system</span></code> dictionary as an input, downloads the required files to the NMRlipids databank
+directory and retuns MDAnalysis universe corressponding the <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>system</strong> – NMRlipids databank dictionary describing the simulation.</p>
@@ -347,8 +278,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.read_trj_PN_angles">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_trj_PN_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MDAuniverse</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#read_trj_PN_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.read_trj_PN_angles" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.read_trj_PN_angles">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">read_trj_PN_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MDAuniverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Universe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#read_trj_PN_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.read_trj_PN_angles" title="Link to this definition"></a></dt>
 <dd><p>Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -360,14 +291,17 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list where the first element are the angles of all molecules as a function of time, second element contains time averages for each molecule, third element contains the average angle over time and molecules, and fourth element is the error of the mean calculated over molecules.</p>
+<dd class="field-even"><p>tuple (angles of all molecules as a function of time,
+time averages for each molecule,
+the average angle over time and molecules,
+the error of the mean calculated over molecules)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.calcArea">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calcArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#calcArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.calcArea" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.calcArea">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calcArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#calcArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.calcArea" title="Link to this definition"></a></dt>
 <dd><p>Returns area of the calculated based on the area per lipid stored in the databank.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -380,8 +314,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.GetFormFactorMin">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetFormFactorMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#GetFormFactorMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.GetFormFactorMin" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.GetFormFactorMin">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">GetFormFactorMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#GetFormFactorMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.GetFormFactorMin" title="Link to this definition"></a></dt>
 <dd><p>Return list of minima of form factor of <code class="docutils literal notranslate"><span class="pre">system</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -394,8 +328,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.averageOrderParameters">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">averageOrderParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#averageOrderParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.averageOrderParameters" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.averageOrderParameters">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">averageOrderParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#averageOrderParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.averageOrderParameters" title="Link to this definition"></a></dt>
 <dd><p>Returns average order paramaters of sn-1 and sn-2 acyl chains based on universal atom names. The names starting with M_G1C will be assigned to sn-1 and names starting M_G2C to sn-2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters system<span class="colon">:</span></dt>
@@ -408,8 +342,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.calcLipidFraction">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calcLipidFraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#calcLipidFraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.calcLipidFraction" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.calcLipidFraction">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">calcLipidFraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#calcLipidFraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.calcLipidFraction" title="Link to this definition"></a></dt>
 <dd><p>Returns the number fraction of <code class="docutils literal notranslate"><span class="pre">lipid</span></code> with respect to total number of lipids.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -425,8 +359,8 @@ Relative equilibration times are calculated with <code class="docutils literal n
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="databankLibrary.getHydrationLevel">
-<span class="sig-prename descclassname"><span class="pre">databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getHydrationLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/databankLibrary.html#getHydrationLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#databankLibrary.getHydrationLevel" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="DatabankLib.databankLibrary.getHydrationLevel">
+<span class="sig-prename descclassname"><span class="pre">DatabankLib.databankLibrary.</span></span><span class="sig-name descname"><span class="pre">getHydrationLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DatabankLib/databankLibrary.html#getHydrationLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.databankLibrary.getHydrationLevel" title="Link to this definition"></a></dt>
 <dd><p>Returns hydration level of the system, i.e., number of water molecules divided by number of lipid molecules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -451,7 +385,7 @@ Relative equilibration times are calculated with <code class="docutils literal n
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+    <p>&#169; Copyright 2024, Samuli Ollila.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

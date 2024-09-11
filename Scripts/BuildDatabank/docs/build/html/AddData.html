@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AddData module &mdash; NMRlipids databank 4.9.2023 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>AddData.py &mdash; NMRlipids databank 4.9.2023 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -14,11 +16,13 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QualityEvaluation script" href="QualityEvaluation.html" />
+    <link rel="prev" title="Project structure" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,7 +45,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="READMEcontent.html">User input and content of README.yaml files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
@@ -49,6 +53,21 @@
 <li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project structure</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="modules.html#databanklib">DatabankLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#analyzedatabank">AnalyzeDatabank</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#builddatabank">BuildDatabank</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AddData.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QualityEvaluation.html">QualityEvaluation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="searchDATABANK.html">searchDATABANK module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="check_mappings.html">check_mappings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="buildH_calcOP_test.html">buildH_calcOP_test module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#updategui">updateGUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#tests">tests</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -65,7 +84,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">AddData module</li>
+          <li class="breadcrumb-item"><a href="modules.html">Project structure</a></li>
+      <li class="breadcrumb-item active">AddData.py</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/AddData.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -75,19 +95,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="adddata-module">
-<h1>AddData module<a class="headerlink" href="#adddata-module" title="Link to this heading"></a></h1>
+  <section id="adddata-py">
+<h1>AddData.py<a class="headerlink" href="#adddata-py" title="Link to this heading"></a></h1>
+<p id="module-BuildDatabank.AddData"><span id="adddatapy"></span><code class="docutils literal notranslate"><span class="pre">AddData.py</span></code> script adds a simulation into the Databank based on <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> file.</p>
+<dl class="simple">
+<dt>Returning error codes:</dt><dd><p>2 - filesystem writting errors;
+3 - network accessing errors.</p>
+</dd>
+</dl>
+<p>usage:
+<code class="docutils literal notranslate"><span class="pre">AddData.py</span> <span class="pre">Script</span> <span class="pre">[-h]</span> <span class="pre">[-f</span> <span class="pre">FILE]</span> <span class="pre">[-d]</span> <span class="pre">[-n]</span> <span class="pre">[-w</span> <span class="pre">WORK_DIR]</span> <span class="pre">[-o</span> <span class="pre">OUTPUT_DIR]</span></code></p>
+<dl>
+<dt>options:</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">-f <var>FILE</var></span>, <span class="option">--file <var>FILE</var></span></kbd></dt>
+<dd><p>Input config file in yaml format.</p>
+</dd>
+<dt><kbd><span class="option">-d</span>, <span class="option">--debug</span></kbd></dt>
+<dd><p>enable debug logging output</p>
+</dd>
+<dt><kbd><span class="option">-n</span>, <span class="option">--no-cache</span></kbd></dt>
+<dd><p>always redownload repository files</p>
+</dd>
+<dt><kbd><span class="option">-w <var>WORK_DIR</var></span>, <span class="option">--work-dir <var>WORK_DIR</var></span></kbd></dt>
+<dd><p>set custom temporary working directory</p>
+</dd>
+<dt><kbd><span class="option">-o <var>OUTPUT_DIR</var></span>, <span class="option">--output-dir <var>OUTPUT_DIR</var></span></kbd></dt>
+<dd><p>set custom output directo</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Project structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="QualityEvaluation.html" class="btn btn-neutral float-right" title="QualityEvaluation script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+    <p>&#169; Copyright 2024, Samuli Ollila.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

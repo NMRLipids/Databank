@@ -12,13 +12,13 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'NMRlipids databank'
-copyright = '2023, Samuli Ollila'
+copyright = '2024, Samuli Ollila'
 author = 'Samuli Ollila'
 
 # The full version, including alpha/beta/rc tags

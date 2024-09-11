@@ -21,9 +21,11 @@ You can then start to work with the `template <https://github.com/NMRLipids/data
 .. code-block::
 
    import sys
-   databankPath =  './Databank/'   # this is the local path for the cloned Databank git
-   sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
-   from databankLibrary import * 
+   sys.path.insert(1, '/home/joe/Databank/Scripts/')
+
+   import DatabankLib
+   from DatabankLib.core import initialize_databank
+
    systems = initialize_databank(databankPath)
 
 After running this, ``systems`` is the list of dictionaries where each dictionary is a simulation in the NMRlipids databank. A simulation dictionary contains the content of the README.yaml for that simulation. The content of README.yaml files is described in :ref:`readmecontent`. ``systems`` can be then used to loop over all simulations:
@@ -38,7 +40,7 @@ Examples on analyses over NMRlipids databank can be found from the `template <ht
 
 The functions available to analyze the simulations are listed in here:
 
-.. automodule:: databankLibrary
+.. automodule:: DatabankLib.databankLibrary
    :members:
    :undoc-members:
    :show-inheritance:
