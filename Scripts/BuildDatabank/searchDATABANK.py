@@ -240,8 +240,8 @@ def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
 
                 switch = 0
             
-                if ( (type(exp_total_lipid_concentration) == float) and 
-                     (type(sim_total_lipid_concentration) == float) ):
+                if ( isinstance(exp_total_lipid_concentration, (int,float) ) and 
+                     isinstance(sim_total_lipid_concentration, (int, float) ) ):
                     if ( (exp_total_lipid_concentration / sim_total_lipid_concentration > 1 - LIP_CONC_REL_THRESHOLD) and 
                          (exp_total_lipid_concentration / sim_total_lipid_concentration < 1 + LIP_CONC_REL_THRESHOLD) ):
                         switch = 1
@@ -256,8 +256,8 @@ def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
                     
                     if ( (mf_ok == len(sim_lipids)) and 
                          (c_ok == len(sim_ions)) and 
-                         (t_exp >= float(t_sim) - 2.0) and 
-                         (t_exp <= float(t_sim) + 2.0) ):
+                         (t_exp > float(t_sim) - 2.5) and 
+                         (t_exp < float(t_sim) + 2.5) ):
                         # !we found the match!
                         pairs.append([simulation, experiment])
 
