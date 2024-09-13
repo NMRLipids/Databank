@@ -8,8 +8,8 @@ Converting OP dat file into properly organized JSON format.
 import os, yaml, json, re, math
 
 import sys
-sys.path.append('../../../Scripts/BuildDatabank')
-from jsonEncoders import CompactJSONEncoder
+sys.path.append('../../../Scripts')
+from DatabankLib.jsonEncoders import CompactJSONEncoder
 
 data_file = sys.argv[1]
 print("Converting from: ", data_file)
