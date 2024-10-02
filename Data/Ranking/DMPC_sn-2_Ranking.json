@@ -180,7 +180,7 @@
             "DIR_WRK": "set-from-console",
             "PUBLICATION": null,
             "AUTHORS_CONTACT": "Milla Kurki",
-            "SYSTEM": "200DMPC_2kSOL_300K",
+            "SYSTEM": "200DMPC_1kSOL_300K",
             "SOFTWARE_VERSION": 2022.2,
             "FF": "CHARMM36",
             "FF_SOURCE": "CHARMM-GUI",

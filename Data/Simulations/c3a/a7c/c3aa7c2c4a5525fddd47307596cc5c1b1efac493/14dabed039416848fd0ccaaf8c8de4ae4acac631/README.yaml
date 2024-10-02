@@ -19,8 +19,8 @@ COMPOSITION:
     MAPPING: mappingTIP3PCHARMMgui.yaml
     COUNT: 2000
 DIR_WRK: /big/comcon1/work/Databank-work
-AUTHORS_CONTACT: "Milla Kurki (Lindstr\xF6m)"
-SYSTEM: "POP\u0421(300K, 10w/l, CHARMM36)"
+AUTHORS_CONTACT: Milla Kurki (Lindström)
+SYSTEM: POPС(300K, 10w/l, CHARMM36)
 SOFTWARE_VERSION: 2019.5
 FF: Charmm36
 FF_SOURCE: CHARMM-GUI
