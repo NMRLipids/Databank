@@ -1,5 +1,116 @@
 [
     {
+        "POPC": { "sn-1": 0.883118, "sn-2": 0.836928, "headgroup": 0.707064, "total": 0.809037 },
+        "TotalQuality": { "headgroup": 0.707064, "tails": 0.860023, "total": 0.809037 },
+        "system": {
+            "DOI": "10.5281/zenodo.10183802",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["popchydr20_10-500ns_step10ps.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 10,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPC-OPLS3e.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 4000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": "10.1021/acs.jcim.2c00395",
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_4kSOL_300K",
+            "SOFTWARE_VERSION": "2019-4",
+            "FF": "OPLS3e",
+            "FF_SOURCE": "Shrodinger, Inc.",
+            "FF_DATE": "01/12/2020",
+            "CPT": [
+                ["desmond_md_popchydr20.cpt"]
+            ],
+            "TOP": [
+                ["desmond_md_popchydr20-in_converted.top"]
+            ],
+            "GRO": [
+                ["final.gro"]
+            ],
+            "TRAJECTORY_SIZE": 7189302672,
+            "TRJLENGTH": 489870,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 38800,
+            "DATEOFRUNNING": "05/07/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/5" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 815,
+            "path": "4c0/a5a/4c0a5a56fa8bf3206b53d7f036e1785f99ee12b2/0096be1477092d8c53aadb8dc86cc18584c9f4a3/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.882846, "sn-2": 0.849806, "headgroup": 0.707664, "total": 0.813439 },
+        "TotalQuality": { "headgroup": 0.707664, "tails": 0.866326, "total": 0.813439 },
+        "system": {
+            "DOI": "10.5281/zenodo.10929839",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["popc_20wl_opls4_step10ps_20-500ns.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 20,
+            "TIMELEFTOUT": 80,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPC-OPLS4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 4000 }
+            },
+            "DIR_WRK": "/set-in-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki (Lindstr\u00f6m)",
+            "SYSTEM": "200POPC_4000SOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2022-2",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Schrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": [
+                ["desmond_md_popc_20wl_opls4.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["structure.top"]
+            ],
+            "GRO": [
+                ["popc_20wl_opls4.gro"]
+            ],
+            "TRAJECTORY_SIZE": 7043393424,
+            "TRJLENGTH": 479930,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 38800,
+            "DATEOFRUNNING": "18/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/5" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 803,
+            "path": "d8c/596/d8c5962a1961606bf11d5d8d159df45b5da9a31d/4514cc6549784a6dc5129c8082c492175e7a35b7/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.867617, "sn-2": 0.846107, "headgroup": 0.664068, "total": 0.792597 },
         "TotalQuality": { "headgroup": 0.664068, "tails": 0.856862, "total": 0.792597 },
         "system": {
@@ -217,6 +328,60 @@
             "WARNINGS": { "TIMESTEP": "incorrect" },
             "ID": 805,
             "path": "692/0a3/6920a30724aaee777ec0b58cbcf374950e2f8c5a/a9d3cacb63c4303cc7ede19f21c58b8550e47b04/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.847915, "sn-2": 0.804974, "headgroup": 0.736974, "total": 0.796621 },
+        "TotalQuality": { "headgroup": 0.736974, "tails": 0.826444, "total": 0.796621, "FFQuality": 0.155 },
+        "system": {
+            "DOI": "10.5281/zenodo.10958387",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["POPC_structure_fh_0-500ns_step10ps.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPC-OPLS4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 9000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_9kSOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2021-3",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Shrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": [
+                ["POPC_desmond_md_job_fh.cpt"]
+            ],
+            "TOP": [
+                ["POPC_structure_fh.top"]
+            ],
+            "GRO": [
+                ["POPC_structure_fh.gro"]
+            ],
+            "TRAJECTORY_SIZE": 10047004124,
+            "TRJLENGTH": 499930,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 53800,
+            "DATEOFRUNNING": "05/07/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 814,
+            "path": "2f2/fd1/2f2fd1090599f0d917f14a70eb4ce89c84aa6723/52286e8550f901dd9ecae96198f9e3aa18566755/"
         }
     },
     {
@@ -702,6 +867,60 @@
             "WARNINGS": { "PBC": "z-jumps" },
             "ID": 369,
             "path": "89d/a41/89da414cb29d949f428fda5cb6b91a217fc25a37/00d3801d4ed021bc79b766e016586f9ad4d38232/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.732261, "sn-2": 0.715665, "headgroup": 0.660021, "total": 0.702649 },
+        "TotalQuality": { "headgroup": 0.660021, "tails": 0.723963, "total": 0.702649 },
+        "system": {
+            "DOI": "10.5281/zenodo.10949612",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["popc_5wl_opls4_350-1000ns.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 350,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPC-OPLS4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 1000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_1kSOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2022-2",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Shrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": [
+                ["desmond_md_popc_5wl_opls4.cpt"]
+            ],
+            "TOP": [
+                ["popc_5wl_opls4.top"]
+            ],
+            "GRO": [
+                ["popc_5wl_opls4.gro"]
+            ],
+            "TRAJECTORY_SIZE": 7417292152,
+            "TRJLENGTH": 649840,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 29800,
+            "DATEOFRUNNING": "08/07/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 817,
+            "path": "3cd/dd2/3cddd2c3251384a2cde3c0fad37e15db8570a6a6/ed4bf98a37c37c12573886bcadbc1320382bd154/"
         }
     },
     {
@@ -1324,6 +1543,118 @@
         }
     },
     {
+        "POPC": { "sn-1": 0.628062, "sn-2": 0.717292, "headgroup": 0.627061, "total": 0.657472 },
+        "TotalQuality": { "headgroup": 0.627061, "tails": 0.672677, "total": 0.657472 },
+        "system": {
+            "DOI": "10.5281/zenodo.10908936",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["centered_pbcmol-50-500.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 50,
+            "TIMELEFTOUT": 50,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 2400 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_2400SOL_300K",
+            "SOFTWARE_VERSION": 2022.4,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "03/2024",
+            "CPT": [
+                ["production.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["production.gro"]
+            ],
+            "TRAJECTORY_SIZE": 5666540128,
+            "TRJLENGTH": 450010,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 34000,
+            "DATEOFRUNNING": "07/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 798,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/3" }
+                },
+                "FORMFACTOR": {}
+            },
+            "path": "575/13b/57513b7ed199f77f6406c79e9c66316e555b66a5/915a33e59d398ef532541e7c1560a2da7a20a2ee/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.626724, "sn-2": 0.599934, "headgroup": 0.678667, "total": 0.635108 },
+        "TotalQuality": { "headgroup": 0.678667, "tails": 0.613329, "total": 0.635108 },
+        "system": {
+            "DOI": "10.5281/zenodo.10908508",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["centered_pbcmol-210-500.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 200,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 1500 }
+            },
+            "DIR_WRK": "set-from-console",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_1500SOL_300K",
+            "SOFTWARE_VERSION": 2022.4,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "03/2024",
+            "CPT": [
+                ["production.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["production.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3359147172,
+            "TRJLENGTH": 290010,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 31300,
+            "DATEOFRUNNING": "07/04/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 806,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/2" }
+                },
+                "FORMFACTOR": {}
+            },
+            "path": "2c1/a18/2c1a180e14094b67c31e15f4976e4b3acc648588/b004a96e182a76cc5cb64fce0229208737e7f90e/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.62552, "sn-2": 0.5132, "headgroup": 0.617383, "total": 0.585368 },
         "TotalQuality": { "headgroup": 0.617383, "tails": 0.56936, "total": 0.585368, "FFQuality": 1.055 },
         "system": {
@@ -1574,6 +1905,55 @@
             },
             "ID": 675,
             "path": "1e8/02f/1e802f341a0d4237aaf224d5c5d85530026be0bf/24e5ed8a70975452504d9092b4f8c51bf5dc6186/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.558975, "sn-2": 0.778032, "headgroup": 0.611751, "total": 0.649586 },
+        "TotalQuality": { "headgroup": 0.611751, "tails": 0.668503, "total": 0.649586 },
+        "system": {
+            "DOI": "10.5281/zenodo.13498",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["20WperL_50ns.xtc"]
+            ],
+            "TPR": [
+                ["20.tpr"]
+            ],
+            "PREEQTIME": 50,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCMaciejewskiRog1.yaml",
+                    "COUNT": [143, 145]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 5760 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": "10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878",
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "288POPC_5760SOL_298K",
+            "SOFTWARE_VERSION": "4.5.5",
+            "FF": "MacRog",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "TRAJECTORY_SIZE": 1034619540,
+            "TRJLENGTH": 50010,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 55872,
+            "DATEOFRUNNING": "17/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/5" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 606,
+            "path": "1cf/5b8/1cf5b86ae03a9c69a520d6aa84efb1488b37096f/4e2199958d6361d53df071b10e33836d6761fe73/"
         }
     },
     {
