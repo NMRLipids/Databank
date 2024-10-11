@@ -188,6 +188,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "BOG": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    }
 }
 
 
