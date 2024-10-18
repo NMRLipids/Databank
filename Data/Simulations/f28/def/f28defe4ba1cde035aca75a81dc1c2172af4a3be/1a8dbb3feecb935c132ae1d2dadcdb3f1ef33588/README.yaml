@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.13933145
+TRJ:
+- - TOCL_Na_prod500ns.trr
+TPR:
+- - TOCL_Na_prod500ns.tpr
+GRO:
+- - TOCL_Na_prod500ns.gro
+CPT: null
+LOG: null
+EDR:
+- - TOCL_Na_prod500ns.edr
+TOP:
+- - TOCL_Na.top
+SOFTWARE: gromacs
+PREEQTIME: 100
+TIMELEFTOUT: 0
+TEMPERATURE: 303.15
+COMPOSITION:
+  TOCL:
+    NAME: TOCL2
+    MAPPING: mappingTOCLcharmm.yaml
+    COUNT:
+    - 33
+    - 33
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 5280
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 143
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 11
+DIR_WRK: /big/comcon1/work/Databank-work
+AUTHORS_CONTACT: Nesterenko Alexey
+SYSTEM: TOCL_66_Na_Cl_T303_40w/P
+SOFTWARE_VERSION: 2023.2
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/01/2024
+PUBLICATION: null
+TRAJECTORY_SIZE: 3884816808
+TRJLENGTH: 500100.0
+NUMBER_OF_ATOMS: 32362
+DATEOFRUNNING: 16/10/2024
+TYPEOFSYSTEM: lipid bilayer
