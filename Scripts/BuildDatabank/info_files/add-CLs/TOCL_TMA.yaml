@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.13933145
+
+TRJ: TOCL_TMA_prod500ns.trr
+TPR: TOCL_TMA_prod500.tpr
+GRO: TOCL_TMA_prod500ns.gro
+CPT:
+LOG:
+EDR: TOCL_TMA_prod500ns.edr
+TOP: TOCL_TMA.top
+
+SOFTWARE: gromacs
+PREEQTIME: 100
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ TOCL:
+  NAME: TOCL2
+  MAPPING: mappingTOCLcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ TMA:
+  NAME: TMA
+  MAPPING: mappingTMAcharmmF.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Nesterenko Alexey
+
+SYSTEM: TOCL_66_TMA_Cl_T303_32w/P
+SOFTWARE_VERSION: 2023.2
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/01/2024
+
+PUBLICATION:
+

@@ -1,0 +1,42 @@
+# Topology made for cardiolipin simulations
+# its protons are badly numerated
+# the actual topology is deposited here: https://doi.org/10.5281/zenodo.13933145
+
+M_N_M:
+  ATOMNAME: N
+
+M_C1_M:
+  ATOMNAME: C1
+M_C1H1_M:
+  ATOMNAME: H4
+M_C1H2_M:
+  ATOMNAME: H5
+M_C1H3_M:
+  ATOMNAME: H9
+
+M_C2_M:
+  ATOMNAME: C2
+M_C2H1_M:
+  ATOMNAME: H6
+M_C2H2_M:
+  ATOMNAME: H7
+M_C2H3_M:
+  ATOMNAME: H8
+
+M_C3_M:
+  ATOMNAME: C3
+M_C3H1_M:
+  ATOMNAME: H1
+M_C3H2_M:
+  ATOMNAME: H2
+M_C3H3_M:
+  ATOMNAME: H3
+
+M_C4_M:
+  ATOMNAME: C4
+M_C4H1_M:
+  ATOMNAME: H10
+M_C4H2_M:
+  ATOMNAME: H11
+M_C4H3_M:
+  ATOMNAME: H12

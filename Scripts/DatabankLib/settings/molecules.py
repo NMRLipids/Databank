@@ -228,6 +228,10 @@ molecules_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "TMA": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    }
 }
 
 
