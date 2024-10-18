@@ -1,0 +1,14 @@
+DOI: unpublished/nesterenkoDMPCbOG
+TEMPERATURE: 298
+MOLAR_FRACTIONS:
+  DMPC: 0.6
+  BOG: 0.4
+ION_CONCENTRATIONS:
+  POT: 0
+  SOD: 0
+  CLA: 0
+  CAL: 0
+TOTAL_LIPID_CONCENTRATION: 5.3
+# 3:2 DMPC:betaOG system
+# 26 mass % water
+COUNTER_IONS:
