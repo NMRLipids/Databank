@@ -1,0 +1,14 @@
+DOI: unpublished/hoerstelCL
+TEMPERATURE: 300.5
+MOLAR_FRACTIONS:
+  TLCL_0H: 1
+ION_CONCENTRATIONS:
+  POT: 0
+  SOD: 0
+  CLA: 0
+  CAL: 0
+TOTAL_LIPID_CONCENTRATION: 'full hydration'
+COUNTER_IONS:
+  SOD: TLCL_0H
+# Bovine heart CL (mostly TLCLC).sodium salt had pH OK 
+# after just adding water.. 

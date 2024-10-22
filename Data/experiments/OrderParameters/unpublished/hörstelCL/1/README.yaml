@@ -1,0 +1,14 @@
+DOI: unpublished/hoerstelCL
+TEMPERATURE: 300.5
+MOLAR_FRACTIONS:
+  TOCL: 1
+ION_CONCENTRATIONS:
+  POT: 0
+  SOD: 0
+  CLA: 0
+  CAL: 0
+TOTAL_LIPID_CONCENTRATION: 'full hydration'
+COUNTER_IONS:
+  SOD: TOCL
+# TOCL/Na+ extracted from liposomes in sodium-boric buffer with Folch method
+# resulting ammount is 24 water per phosphate which we consider a good hydration.
