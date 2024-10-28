@@ -176,6 +176,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "TMCL": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "GM1": {
         "REQUIRED": False,
         "TYPE": "string",
