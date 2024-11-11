@@ -1,6 +1,6 @@
 on:
   schedule: 
-    # runs once a week on sunday
+    # runs once a day
     - cron: "55 23 * * *"
     
 jobs:
