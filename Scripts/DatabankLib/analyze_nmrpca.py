@@ -43,18 +43,18 @@ import MDAnalysis as mda
 from .databankLibrary import lipids_dict, loadMappingFile
 from .databankio import resolve_download_file_url, download_resource_from_uri
 
+from MDAnalysis.analysis.base import AnalysisFromFunction
 import warnings
 # suppress some MDAnalysis warnings issued from mda.analysis.align
 warnings.filterwarnings('ignore')
+from MDAnalysis.analysis import align  # noqa
 
-from MDAnalysis.analysis import align
-from MDAnalysis.analysis.base import AnalysisFromFunction
-
-#TODO: now there are only regular phospholipids. The list should be verified by method authors.
+# TODO: now there are only regular phospholipids.
+# The list should be verified by method authors.
 ALLOWLIPIDS = [
-    "POPC","POPG","POPS","POPE","PYPC","DMPC","DPPC","DPPE","DPPG",
-    "DEPC","DRPC","DYPC","DLPC","DLIPC","DOPC","DOPE","DDOPC","DOPS",
-    "DSPC","DAPC","SDPE","SOPC","POPI","SAPI","SAPI24","SAPI25",
+    "POPC", "POPG", "POPS", "POPE", "PYPC", "DMPC", "DPPC", "DPPE", "DPPG",
+    "DEPC", "DRPC", "DYPC", "DLPC", "DLIPC", "DOPC", "DOPE", "DDOPC", "DOPS",
+    "DSPC", "DAPC", "SDPE", "SOPC", "POPI", "SAPI", "SAPI24", "SAPI25",
     "SLPI"
 ]
 
@@ -68,31 +68,31 @@ HEADGRP = "headgroup"
 # In case you want to test for a specific coordinate change the flag to yes
 TEST = False
 
-"""
-Class Parser is a basic class to work with the trajectory. It has basic utility
-for preparing trajectories:
+
+class Parser:
+    """
+    Class Parser is a basic class to work with the trajectory. It has basic utility
+    for preparing trajectories:
+
     1. Checking if simulation has a correct name
     2. Checking if trajectory is downloaded. Downloading, if not
     3. Calling AmberMerger to merge head groups and tails for Amber
-       trajectories
+    trajectories
     4. Concatenate trajectories
-"""
-class Parser:
+    """
 
-    """
-    Constructor for Parser:
-        root          - path to the directory with trajectories
-        readme        - simulation data
-        eq_time_fname - name of the output file
-        path          - name of a particular trajectory
-        v             - verbosity for testing
-    """
-    def __init__(self,
-                 root,
-                 readme,
-                 eq_time_fname="eq_times.json",
-                 path=None,
-                 v=True):
+    def __init__(
+            self, root, readme, eq_time_fname="eq_times.json",
+            path=None, v=True):
+        """
+        Constructor for Parser:
+            root          - path to the directory with trajectories
+            readme        - simulation data
+            eq_time_fname - name of the output file
+            path          - name of a particular trajectory
+            v             - verbosity for testing
+        """
+
         # Technical
         self.verbose = v
         self.error = 0
@@ -144,16 +144,16 @@ class Parser:
 
         self.path = path
 
-    """
-    Path validation. Behaviour depends on the input.
+    def validatePath(self):
+        """
+        Path validation. Behaviour depends on the input.
         1. If ther were any errors, validation fails. Currently the only
-           error tested is that .xtc and .tpr files are not present. This
-           is the case for non-GROMACS trajectories.
+        error tested is that .xtc and .tpr files are not present. This
+        is the case for non-GROMACS trajectories.
         2. If path is not provided, parser is iterating over all trajectories.
         3. If path is provided and current path is equal to the provided one,
-           parser reports that it finds the trajectory for the analysis.
-    """
-    def validatePath(self):
+        parser reports that it finds the trajectory for the analysis.
+        """
         if self.error > 0:
             # This is an error message. Printing even in silent mode
             print(
@@ -164,49 +164,47 @@ class Parser:
                 "Parser: Iterating over all trajectories. "
                 + f"Current trajectory is {self.indexingPath}"
             )
-            #return 
-        #if self.path == self.indexingPath:
-        if os.path.isfile( os.path.join(self.indexingPath, self.eq_time_fname) ):
+            # return
+        # if self.path == self.indexingPath:
+        if os.path.isfile(os.path.join(self.indexingPath, self.eq_time_fname)):
             if self.verbose:
-                print("Parser: Found file with equilibration data. " +
-                          "Not processing the trajectory")
+                print("Parser: Found file with equilibration data. \n"
+                      "Not processing the trajectory")
                 return -1
         if self.verbose:
             print(f"Parser: Found trajectory {self.indexingPath}")
         return 0
 
-        #return -1
-
-    """
-    Basic trajectory and TPR download.
-    """
     def downloadTraj(self):
+        """
+        Basic trajectory and TPR download.
+        """
         print("Downloading")
         if not os.path.isfile(self.tpr_name):
             self.tpr_url = resolve_download_file_url(self.doi, self.tpr)
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading tpr ", self.doi)
-            #urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
+            # urllib.request.urlretrieve(self.tpr_url, self.tpr_name)
             download_resource_from_uri(self.tpr_url, self.tpr_name)
         if not os.path.isfile(self.trj_name):
             self.trj_url = resolve_download_file_url(self.doi, self.trj)
             # This is a log message. Printing even in silent mode
             print("Parser: Downloading trj ", self.doi)
-            #urllib.request.urlretrieve(self.trj_url, self.trj_name)
+            # urllib.request.urlretrieve(self.trj_url, self.trj_name)
             download_resource_from_uri(self.trj_url, self.trj_name)
 
-    """
-    Preparing trajectory. If centered trajectory is found, use it. If whole
-    trajectory is found, use it. Otherwise, call gmx trjconv to make whole
-    trajectory. The selected trajectory is loaded into Universe.
-    """
     def prepareGMXTraj(self):
+        """
+        Preparing trajectory. If centered trajectory is found, use it. If whole
+        trajectory is found, use it. Otherwise, call gmx trjconv to make whole
+        trajectory. The selected trajectory is loaded into Universe.
+        """
         # Look for centered.xtc
-        if os.path.isfile( os.path.join(self.indexingPath, "centered.xtc") ):
+        if os.path.isfile(os.path.join(self.indexingPath, "centered.xtc")):
             print("Parser: Founder centered trajectory: centered.xtc")
             self.trj_name = os.path.join(self.indexingPath, "centered.xtc")
         # Look for whole.xtc
-        elif os.path.isfile( os.path.join(self.indexingPath, "whole.xtc") ):
+        elif os.path.isfile(os.path.join(self.indexingPath, "whole.xtc")):
             print("Parser: Founder whole trajectory: whole.xtc")
             self.trj_name = os.path.join(self.indexingPath, "whole.xtc")
         # Run gmx trjconv
@@ -215,7 +213,7 @@ class Parser:
             trj_out_name = os.path.join(self.indexingPath, "whole.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
-                + f"{self.tpr_name} -pbc mol -o {trj_out_name}"
+                f"{self.tpr_name} -pbc mol -o {trj_out_name}"
             )
             self.trj_name = trj_out_name
 
@@ -224,25 +222,25 @@ class Parser:
             trj_out_name = os.path.join(self.indexingPath, "short.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
-                + f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
+                f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
             )
             self.trj_name = trj_out_name
 
         # Create .gro file
         self.gro_name = os.path.join(self.indexingPath, "conf.gro")
-        if os.path.isfile( self.gro_name ):
+        if os.path.isfile(self.gro_name):
             print("Parser: Found gro file")
         else:
             print("Parser: Making a gro file from the first frame")
             os.system(
-                f"echo System | gmx trjconv -s {self.tpr_name}"
-                + f" -f {self.trj_name} -dump 0 -o {self.gro_name}"
+                f"echo System | gmx trjconv -s {self.tpr_name} "
+                f" -f {self.trj_name} -dump 0 -o {self.gro_name}"
             )
 
         # Loading trajectory
         try:
             self.traj = mda.Universe(self.tpr_name, self.trj_name)
-        except:
+        except Exception:
             self.traj = mda.Universe(self.gro_name, self.trj_name)
 
     # TODO: not tested!!
@@ -250,17 +248,17 @@ class Parser:
         print("openMM or NAMD")
         if self.size > trjSizeCutoff:
             trj_out_name = os.path.join(self.indexingPath, "short.xtc")
-            if os.path.isfile( trj_out_name):
+            if os.path.isfile(trj_out_name):
                 print("Parser: Short trajectory is found")
             else:
                 u = mda.Universe(self.tpr_name, self.trj_name)
-                with mda.Writer(trj_out_name, 
+                with mda.Writer(trj_out_name,
                                 u.select_atoms("all").n_atoms) as W:
                     for ts in u.trajectory[::10]:
                         W.write(u.select_atoms("all"))
 
             self.trj_name = trj_out_name
-        
+
         self.traj = mda.Universe(self.tpr_name, self.trj_name)
 
     def prepareTraj(self):
@@ -269,11 +267,12 @@ class Parser:
         else:
             self.prepareGMXTraj()
 
-    """
-    Create Concatenator and corresponding concatenated trajectories for
-    all lipids available for the trajectory.
-    """
     def concatenateTraj(self):
+        """
+        Create Concatenator and corresponding concatenated trajectories for
+        all lipids available for the trajectory.
+        """
+
         self.concatenated_trajs = []
         for lipid in self.lipids:
             if lipid not in ALLOWLIPIDS:
@@ -291,48 +290,49 @@ class Parser:
                                         self.composition[lipid]["NAME"])
             self.concatenated_trajs.append(concatenator.concatenate())
 
-    """
-    Write data to json file
-    """
     def dumpData(self, data):
-        with open( os.path.join(self.indexingPath, self.eq_time_fname), "w") as f:
+        """
+        Write data to json file
+        """
+        with open(os.path.join(self.indexingPath,
+                               self.eq_time_fname), "w") as f:
             json.dump(data, f)
-
-
-"""
-Class Topology is a class needed to extract lipid specific data and also to
-merge lipids from Amber trajectories, where lipid is often represented as 3
-residue types. It has the following methods:
-    1. Simple constructor, which sets the force field,residue names,
-       trajectory, and loads mapping_file
-    2. Mapping file loader
-    3. Function that outputs atomNames
-    4. Checker if the merge is needed. Currently defunct
-    5. Runner, that returns lists for head, tail1, tail2 orders for merging
-       Currently defunct
-"""
 
 
 class Topology:
     """
-    Constructor for Topology:
-        ff            - force field name
-        traj          - MDAnalysis trajectory
-        lipid_resname - name of lipid
-        mapping_file  - path to maping file
+    Class Topology is a class needed to extract lipid specific data and also to
+    merge lipids from Amber trajectories, where lipid is often represented as 3
+    residue types. It has the following methods:
+
+    1. Simple constructor, which sets the force field,residue names, trajectory,
+    and loads mapping_file
+    2. Mapping file loader
+    3. Function that outputs atomNames
+    4. Checker if the merge is needed. Currently defunct
+    5. Runner, that returns lists for head, tail1, tail2 orders for merging
+
+    Currently defunct
     """
 
     def __init__(self, ff, traj, lipid_resname, mapping_file):
+        """
+        Constructor for Topology:
+            ff            - force field name
+            traj          - MDAnalysis trajectory
+            lipid_resname - name of lipid
+            mapping_file  - path to maping file
+        """
+
         self.ff = ff
         self.lipid_resname = lipid_resname
         self.traj = traj
         self.mapping = loadMappingFile(mapping_file)
 
-    """
-    Extract all names of heavy atoms from the mapping
-    """
-
     def atomNames(self):
+        """
+        Extract all names of heavy atoms from the mapping
+        """
         atoms = []
         for key in self.mapping:
             atom = self.mapping[key]["ATOMNAME"]
@@ -341,13 +341,13 @@ class Topology:
             atoms.append(atom)
         return atoms
 
-    """
-    Checker for merge. Currently it checks if the RESIDUE key is in the
-    mapping file.
-    NOTE: This has to be changed if the content of mapping file changes
-    """
-
     def isMergeNeeded(self):
+        """
+        Checker for merge. Currently it checks if the RESIDUE key is in the
+        mapping file.
+        NOTE: This has to be changed if the content of mapping file changes
+        """
+
         if "RESIDUE" not in self.mapping[list(self.mapping.keys())[0]].keys():
             return False
         resnames = []
@@ -361,11 +361,10 @@ class Topology:
             return resnames
         return False
 
-    """
-    Helper function that gets the residue names for lipid, if merge is needed
-    """
-
     def getLipidResnames(self):
+        """
+        Helper function that gets the residue names for lipid, if merge is needed
+        """
         resnames = self.isMergeNeeded()
         if self.isMergeNeeded():
             return resnames
@@ -375,14 +374,14 @@ class Topology:
         else:
             return self.lipid_resname
 
-    """
-    Helper function that finds head, sn-1 and sn-2 tails
-    NOTE: currently there are only lipids with 2 different tails available in
-    databank: e.g. POPC or POPG. This leads to different names of tails. This
-    won't be the case for DOPC. Currently the algorithm is using that all three
-    groups differ
-    """
     def assignResnames(self, resnames):
+        """
+        Helper function that finds head, sn-1 and sn-2 tails
+        NOTE: currently there are only lipids with 2 different tails available in
+        databank: e.g. POPC or POPG. This leads to different names of tails. This
+        won't be the case for DOPC. Currently the algorithm is using that all three
+        groups differ
+        """
         if self.isMergeNeeded():
             resnameDict = {}
             # First find headgroup
@@ -413,15 +412,16 @@ class Topology:
         else:
             return None
 
-    """
-    Find lipid tails that correspond to a particular head-group.
-    NOTE: currently there are only lipids with 2 different tails available in
-    databank: e.g. POPC or POPG. This leads to different names of tails. This
-    won't be the case for DOPC. Currently the algorithm is using that all three
-    groups differ
-    TODO: get the correspondence from structure
-    """
     def runMerger(self):
+        """
+        Find lipid tails that correspond to a particular head-group.
+        NOTE: currently there are only lipids with 2 different tails available in
+        databank: e.g. POPC or POPG. This leads to different names of tails. This
+        won't be the case for DOPC. Currently the algorithm is using that all three
+        groups differ
+        TODO: get the correspondence from structure
+        """
+
         resnames = self.getLipidResnames()
         resnameDict = self.assignResnames(resnames)
         head_residues = [
@@ -449,25 +449,25 @@ class Topology:
         return head_residues, sn_1_residues, sn_2_residues
 
 
-"""
-Class Concatenator is a class needed to concatenate trajectory for lipid types.
-It has the following methods:
+class Concatenator:
+    """
+    Class Concatenator is a class needed to concatenate trajectory for lipid types.
+    It has the following methods:
     1. Simple constructor, which sets the topology,residue names, and
-       trajectory
+    trajectory
     2. concatenateTraj method to do the basic by lipid concatenation
     3. alignTraj method to perform the alignment of the concatenated trajectory
     4. The enveloping concatenate method
-"""
-class Concatenator:
+    """
 
-    """
-    Constructor for Concatenator:
-        topology      - topology for lipid
-        traj          - MDAnalysis trajectory
-        lipid_name    - lipid name in the databank
-        lipid_resname - lipid resname in the trajectory
-    """
     def __init__(self, topology, traj, lipid_name, lipid_resname):
+        """
+        Constructor for Concatenator:
+            topology      - topology for lipid
+            traj          - MDAnalysis trajectory
+            lipid_name    - lipid name in the databank
+            lipid_resname - lipid resname in the trajectory
+        """
         self.topology = topology
         self.traj = traj
         self.lipid_name = lipid_name
@@ -482,14 +482,14 @@ class Concatenator:
             self.tail1list = None
             self.tail2list = None
 
-    """
-    concatenateTraj performs basic trajectory concatination. First, it extracts
-    coordinates from trajectory, next, it reshapes the coordinate array, swaps
-    time and resid axes to obtain continuous trajectories of individual lipids
-    (this is needed for autocorrelation time analysis), and finally merges
-    individual lipid trajectories.
-    """
     def concatenateTraj(self):
+        """
+        concatenateTraj performs basic trajectory concatination. First, it extracts
+        coordinates from trajectory, next, it reshapes the coordinate array, swaps
+        time and resid axes to obtain continuous trajectories of individual lipids
+        (this is needed for autocorrelation time analysis), and finally merges
+        individual lipid trajectories.
+        """
         traj = self.traj.trajectory
         n_frames = len(traj)
 
@@ -528,15 +528,15 @@ class Concatenator:
 
         return concatenated_traj, n_lipid, n_frames * n_lipid
 
-    """
-    concatenateTrajWithMerging performs basic trajectory concatination. In
-    contrast to basic concatenateTraj it additionally merges splitted lipids.
-    First, it creates extracts coordinates from trajectory, next, it reshapes
-    the coordinate array, swaps time and resid axes to obtain continuous
-    trajectories of individual lipids (this is needed for autocorrelation
-    time analysis), and finally merges individual lipid trajectories.
-    """
     def concatenateTrajWithMerging(self):
+        """
+        concatenateTrajWithMerging performs basic trajectory concatination. In
+        contrast to basic concatenateTraj it additionally merges splitted lipids.
+        First, it creates extracts coordinates from trajectory, next, it reshapes
+        the coordinate array, swaps time and resid axes to obtain continuous
+        trajectories of individual lipids (this is needed for autocorrelation
+        time analysis), and finally merges individual lipid trajectories.
+        """
         traj = self.traj.trajectory
         n_frames = len(traj)
 
@@ -619,42 +619,42 @@ class Concatenator:
         return aligned_traj, av_pos, n_lipid, n_frames, self.lipid_name
 
 
-"""
-Class PCA is a class that actually performs PCA. It has the following methods:
+class PCA:
+    """
+    Class PCA is a class that actually performs PCA. It has the following methods:
     1. Simple constructor, which sets the aligned trajtory, average coordinates,
-       number of lipids, number of frames in the concatenated trajectory and
-       trajectory length in ns
+    number of lipids, number of frames in the concatenated trajectory and
+    trajectory length in ns
     2. PCA prepares the trajectory coordinates for analysis and calculates
-       principal components
+    principal components
     3. get_proj projects the trajectory on principal components
     4. get_lipid_autocorrelation calculates the autocorrelation timeseries for
-       individual lipid
+    individual lipid
     5. get_autocorrelations calculates the autocorrelation timeseries for
-       trajectory
-"""
-class PCA:
+    trajectory
+    """
 
-    """
-    Constructor for PCA:
-        aligned_traj - np.array with positions of concatenated and aligned
-                       trajectory
-        av_pos       - np.array with average positions for the lipid
-        n_lipid      - number of lipids of particular type in the system
-        n_frames     - number of frames in the concatenated trajectory
-        traj_time    - trajectory length in ns
-    """
     def __init__(self, aligned_traj, av_pos, n_lipid, n_frames, traj_time):
+        """
+        Constructor for PCA:
+            aligned_traj - np.array with positions of concatenated and aligned
+                        trajectory
+            av_pos       - np.array with average positions for the lipid
+            n_lipid      - number of lipids of particular type in the system
+            n_frames     - number of frames in the concatenated trajectory
+            traj_time    - trajectory length in ns
+        """
         self.aligned_traj = aligned_traj
         self.av_pos = av_pos
         self.n_lipid = n_lipid
         self.n_frames = n_frames
         self.traj_time = traj_time
 
-    """
-    PCA calculates the PCA. First the data is centered and then covariance
-    matrix is calculated manually.
-    """
     def PCA(self):
+        """
+        PCA calculates the PCA. First the data is centered and then covariance
+        matrix is calculated manually.
+        """
         # centering of positions relative to the origin
         X = self.aligned_traj.astype(np.float64)
         X = X.reshape(self.n_frames, self.av_pos.shape[1]) - self.av_pos
@@ -674,20 +674,20 @@ class PCA:
 
         return X
 
-    """
-    Projecting the trajectory on the 1st principal component
-    """
     def get_proj(self, cdata):
+        """
+        Projecting the trajectory on the 1st principal component
+        """
         # projection on PC1
         proj = np.tensordot(cdata, self.eig_vecs[0:1], axes=(1, 1)).T
         proj = np.concatenate(np.array(proj), axis=None)
 
         self.proj = proj
 
-    """
-    Autocorrelation calculation for individual lipid.
-    """
     def get_lipid_autocorrelation(self, data, variance, mean):
+        """
+        Autocorrelation calculation for individual lipid.
+        """
         # Centering the data
         data -= mean
         # Convolve the data
@@ -695,10 +695,10 @@ class PCA:
         # Weight the correlation to get the result in range -1 to 1
         return r / (variance * (np.arange(len(data), 0, -1)))
 
-    """
-    Autocorrelation calculation for the trajectory.
-    """
     def get_autocorrelations(self):
+        """
+        Autocorrelation calculation for the trajectory.
+        """
         variance = self.proj.var()
         mean = self.proj.mean()
         # extract the trajectories for individual lipids
@@ -718,43 +718,43 @@ class PCA:
         self.autocorrelation = np.array([T, R]).T
 
 
-"""
-Class TimeEstimator is a class that estimates equilbration time from
-autocorrelation data. It includes the following methods:
-    1. Simple constructor, which sets the autocorrelation data
-    2. Helper method get_nearest_value that finds the interval in the data
-       where the autocorrelation falls below specific value
-    3. timerelax method calculates the logarithms of autocorrelation and
-       calculates the decay time
-    4. calculate_time method calculates the estimated equilibration time
-"""
 class TimeEstimator:
+    """
+    Class TimeEstimator is a class that estimates equilbration time from
+    autocorrelation data. It includes the following methods:
+        1. Simple constructor, which sets the autocorrelation data
+        2. Helper method get_nearest_value that finds the interval in the data
+        where the autocorrelation falls below specific value
+        3. timerelax method calculates the logarithms of autocorrelation and
+        calculates the decay time
+        4. calculate_time method calculates the estimated equilibration time
+    """
 
-    """
-    Constructor for PCA:
-        autocorrelation - autocorrelation data
-    """
     def __init__(self, autocorrelation):
+        """
+        Constructor for PCA:
+            autocorrelation - autocorrelation data
+        """
         self.autocorrelation = autocorrelation
 
-    """
-    get_nearest_value method return the indices that frame the particular value
-    As an input it gets an array, which is expected to decay. The method tries
-    to find and index (index_A), for which the array gets below the cutoff value
-    for the first time. Then, for index_A-1 the array was larger than the cutoff
-    value for the last time. It means that the function, represented by the
-    array data is equal to cutoff somewhere between timesteps that correspond to
-    index_A-1 and index_A. It can happen, that this index_A is equal 0. Then,
-    method searches for the first occurance, where array is smaller than
-    array[0]. The method returns the interval inbetween the array gets below
-    cutoff.
-    """
     def get_nearest_value(self, iterable, value):
+        """
+        get_nearest_value method return the indices that frame the particular value
+        As an input it gets an array, which is expected to decay. The method tries
+        to find and index (index_A), for which the array gets below the cutoff value
+        for the first time. Then, for index_A-1 the array was larger than the cutoff
+        value for the last time. It means that the function, represented by the
+        array data is equal to cutoff somewhere between timesteps that correspond to
+        index_A-1 and index_A. It can happen, that this index_A is equal 0. Then,
+        method searches for the first occurance, where array is smaller than
+        array[0]. The method returns the interval inbetween the array gets below
+        cutoff.
+        """
         try:
             A = np.where(iterable < value)[0][0]
-        except:
+        except Exception:
             print("TimeEstimator: Autocorrelations do not converge. "
-                  + "We shift to extrapolation regime.")
+                  "We shift to extrapolation regime.")
             A = np.where(iterable == np.min(iterable))[0][0]
             return A, A - 1
 
@@ -764,10 +764,10 @@ class TimeEstimator:
             B = A - 1
         return A, B
 
-    """
-    Estimates autocorrelation decay time.
-    """
     def timerelax(self):
+        """
+        Estimates autocorrelation decay time.
+        """
         time = self.autocorrelation[:, 0]
         autocorrelation = self.autocorrelation[:, 1]
 
@@ -799,14 +799,13 @@ class TimeEstimator:
 
         return T_relax1
 
-    """
-    Basic enveloping method that estimates equilibration time from
-    autocorrelation decay time. They are linearly connected and the
-    coefficient is calculated experimentally.
-    """
     def calculate_time(self):
+        """
+        Basic enveloping method that estimates equilibration time from
+        autocorrelation decay time. They are linearly connected and the
+        coefficient is calculated experimentally.
+        """
         # relaxation time at e^1 decay
         te1 = self.timerelax()
 
         return te1 * 49  # 49 from sample data average of tkss2/tac1
-

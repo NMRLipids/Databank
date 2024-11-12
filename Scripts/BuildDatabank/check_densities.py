@@ -1,8 +1,6 @@
-import sys
 import json
 import yaml
 
-sys.path.append('..')
 from DatabankLib.core import initialize_databank
 
 if __name__ == "__main__":
@@ -12,22 +10,22 @@ if __name__ == "__main__":
         WaterDensity_name = system['path'] + 'WaterDensity.json'
         try:
             f = open(WaterDensity_name)
-            #print('Density file not found')
+            # print('Density file not found')
             WaterDensity = json.load(f)
             center = round(len(WaterDensity)/2)
-            #print(WaterDensity[center][1], WaterDensity[0][1])
+            # print(WaterDensity[center][1], WaterDensity[0][1])
             if WaterDensity[center][1] > WaterDensity[0][1]:
                 print(system['path'])
                 system['WARNINGS'] = {}
                 system['WARNINGS']['PBC'] = 'z-jumps'
-                #print(system)
+                # print(system)
 
-                outfileDICT= system['path'] + '/README.yaml'
+                outfileDICT = system['path'] + '/README.yaml'
                 with open(outfileDICT, 'w') as f:
-                    yaml.dump(system,f, sort_keys=False)
-                
-                #os.system('rm ' + system['path'] + '/*Density*')
-                #os.system('rm ' + system['path'] + '/FormFactor*')
-        except:
+                    yaml.dump(system, f, sort_keys=False)
+
+                # os.system('rm ' + system['path'] + '/*Density*')
+                # os.system('rm ' + system['path'] + '/FormFactor*')
+        except Exception:
             pass
-            #print('Density file not found from ' +  system['path'])
+            # print('Density file not found from ' +  system['path'])
