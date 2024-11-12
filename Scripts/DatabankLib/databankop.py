@@ -2,7 +2,7 @@
     :meta private:
  calculation of order parameters of lipid bilayers
  from a MD trajectory
- 
+
  meant for use with NMRlipids projects
  ------------------------------------------------------------
  Made by Joe,  Last edit 2017/02/02
@@ -17,13 +17,14 @@ import sys
 import re
 import MDAnalysis as mda
 import numpy as np
-import warnings #TODO: should we change to NMRlipids' logger?
+import warnings  # TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
+
+from .databankLibrary import loadMappingFile
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
 bond_len_max_sq = bond_len_max**2
 
-from .databankLibrary import loadMappingFile
 
 class OrderParameter:
     """
@@ -37,7 +38,7 @@ class OrderParameter:
 
     def __init__(
         self, resname, atom_A_name, atom_B_name, M_atom_A_name, M_atom_B_name, *args
-    ):  
+    ):
         """
         it doesn't matter which comes first,
         atom A or B, for OP calculation.
@@ -62,7 +63,8 @@ class OrderParameter:
                         "provided name >> {} << is empty! \n \
                     Cannot use empty names for atoms and OP definitions."
                     )  # .format(field)
-        # extra optional arguments allow setting avg,std values -- suitable for reading-in results of this script
+        # extra optional arguments allow setting avg,std values -- suitable for
+        # reading-in results of this script
         if len(args) == 0:
             self.avg = None
             self.std = None
@@ -73,7 +75,8 @@ class OrderParameter:
             self.stem = None
         else:
             warnings.warn(
-                "Number of optional positional arguments is {len}, not 2 or 0. Args: {args}\nWrong file format?"
+                f"Number of optional positional arguments is {len}, not 2 or 0."
+                f" Args: {args}\nWrong file format?"
             )
         self.traj = []  # for storing OPs
         self.selection = []
@@ -92,9 +95,9 @@ class OrderParameter:
             resnr = atoms[0].resid
             d = np.sqrt(d2)
             warnings.warn(
-                "Atomic distance for atoms \
-            {at1} and {at2} in residue no. {resnr} is suspiciously \
-            long: {d}!\nPBC removed???"
+                f"Atomic distance for atoms"
+                f"{at1} and {at2} in residue no. {resnr} is suspiciously "
+                f"long: {d}!\nPBC removed???"
             )
         cos2 = vec[2] ** 2 / d2
         S = 0.5 * (3.0 * cos2 - 1.0)
@@ -137,7 +140,8 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
     goes through every frame and
     evaluates each Order Parameter "S" from the list of OPs ordPars.
     ordPars : list of OrderParameter class
-       each item in this list describes an Order parameter to be calculated in the trajectory
+       each item in this list describes an Order parameter to be calculated in the
+       trajectory
     top : str
         filename of a top file (e.g. conf.gro)
     trajs : list of strings
@@ -146,21 +150,22 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
     # read-in topology and trajectory
     mol = mda.Universe(top, trajs)
 
-    # make atom selections for each OP and store it as its attribute for later use in trajectory
+    # make atom selections for each OP and store it as its attribute for later use
+    # in trajectory
     c = -1
     improperOPs = []
     for op in ordPars:
         c += 1
         # selection = pairs of atoms, split-by residues
         selStr = "resname {rnm} and name {atA} {atB}".format(
-                rnm=op.resname, atA=op.atAname, atB=op.atBname )
+                rnm=op.resname, atA=op.atAname, atB=op.atBname)
         selection = mol.select_atoms(selStr).atoms.split("residue")
         if len(selection) == 0:
-           warnings.warn(
-f"Selection is empty: [{selStr}].  \
-Check carefully residue name and names in the mapping file.")
-           improperOPs.append(c)
-           continue
+            warnings.warn(
+                f"Selection is empty: [{selStr}]. "
+                f"Check carefully residue name and names in the mapping file.")
+            improperOPs.append(c)
+            continue
 
         for res in selection:
             # check if we have only 2 atoms (A & B) selected
@@ -170,22 +175,22 @@ Check carefully residue name and names in the mapping file.")
                 nat = res.n_atoms
                 print(atA, atB, nat)
                 warnings.warn(
-                    f"Selection >> name {atA} {atB} << \
-contains {nat} atoms, but should contain exactly 2!" )
+                    f"Selection >> name {atA} {atB} << "
+                    f"contains {nat} atoms, but should contain exactly 2!")
                 improperOPs.append(c)
                 continue
 
         op.selection = selection
-    
+
     # remove OPs, which are incorrect
     improperOPs.sort(reverse=True)
     for i in improperOPs:
-        del(ordPars[i])
+        del ordPars[i]
 
     # go through trajectory frame-by-frame
     Nframes = len(mol.trajectory)
     for op in ordPars:
-        #print(op.selection)
+        # print(op.selection)
         Nres = len(op.selection)
         op.traj = [0] * Nres
 
@@ -230,7 +235,7 @@ def parse_op_input(mapping_file: str, lipid_name: str):
             atomC = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
             try:
                 resname = mapping_dict[mapping_key]["RESIDUE"]
-            except:
+            except (KeyError, TypeError):
                 pass
             atomH = []
         elif (
@@ -244,14 +249,16 @@ def parse_op_input(mapping_file: str, lipid_name: str):
             atomH = []
 
         if atomH and not len(atomC):
-            print("Cannot define carbon for the hydrogen %s (%s)" % (atomH[0], atomH[1]), 
-                file=sys.stderr )
+            print(
+                f"Cannot define carbon for the hydrogen {atomH[0]} ({atomH[1]})",
+                file=sys.stderr)
             continue
         if atomH and len(atomC):
             items = [atomC[1], atomH[1], atomC[0], atomH[0]]
             op = OrderParameter(resname, items[0], items[1], items[2], items[3])
             ordPars.append(op)
     return ordPars
+
 
 def find_OP(inp_fname: str, top_fname: str, traj_fname: str, lipid_name: str):
     """Externally used funcion for computing OP values.

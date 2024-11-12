@@ -1,12 +1,13 @@
 from xml.etree import ElementTree as ET
 
+
 def openmm_input(input, type):
 
-    if type == 'inp':
+    if type == "inp":
 
         return read_inp_input(input)
 
-    elif type == 'xml':
+    elif type == "xml":
 
         return read_xml_input(input)
 
@@ -15,18 +16,17 @@ def read_inp_input(input):
 
     try:
 
-        filename = open(input, 'r')
+        filename = open(input, "r")
         print(filename.name)
 
     except FileNotFoundError:
 
-        print('File does not exist')
+        print("File does not exist")
 
-    with open(filename.name, 'r') as f:
+    with open(filename.name, "r") as f:
 
         tmp_type = []
         tmp_value = []
-
 
         for line in f:
 
@@ -39,24 +39,25 @@ def read_inp_input(input):
 
     return [tmp_type, tmp_value]
 
+
 def read_xml_input(input):
 
     try:
 
-        filename = open(input, 'r')
+        filename = open(input, "r")
 
     except FileNotFoundError:
 
-        print('File does not exist')
+        print("File does not exist")
 
     tree = ET.parse(filename.name)
-    temp = [value for key, value in tree.getroot()[1].attrib.items() if 'temperature' in key.lower()]
+    temp = [
+        value
+        for key, value in tree.getroot()[1].attrib.items()
+        if "temperature" in key.lower()
+    ]
 
-    return(['temp'],[temp])
-
-
-
-
+    return (["temp"], [temp])
 
 
 class openmmParser:
@@ -64,10 +65,11 @@ class openmmParser:
     def __init__(self, filename, type):
         [properties, values] = openmm_input(filename, type)
         print(properties)
-        self.temperature = float(values[properties.index('temp')])
- #       self.pressure = values[properties.index('p_ref')]
- #       self.ptype = values[properties.index('p_type')]
- #       self.dt = values[properties.index('dt')]
+        self.temperature = float(values[properties.index("temp")])
+
+    #       self.pressure = values[properties.index('p_ref')]
+    #       self.ptype = values[properties.index('p_type')]
+    #       self.dt = values[properties.index('dt')]
 
     def setTempurature(self, temp):
 
@@ -84,10 +86,3 @@ class openmmParser:
     def setDt(self, dt):
 
         self.dt = dt
-
-
-
-
-
-
-

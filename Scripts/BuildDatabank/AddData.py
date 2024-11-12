@@ -8,7 +8,7 @@ Returning error codes:
     2 - filesystem writting errors;
     3 - network accessing errors.
 
-usage: 
+usage:
 ``AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]``
 
 options:
@@ -19,10 +19,10 @@ options:
   -w WORK_DIR, --work-dir WORK_DIR
                         set custom temporary working directory
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        set custom output directo    
+                        set custom output directory
 """
 
-import os, sys
+import os
 import argparse
 import yaml
 import logging
@@ -30,21 +30,14 @@ import shutil
 import pprint
 import traceback
 from datetime import date
-from pathlib import Path
 from random import randint
 from urllib.error import URLError, HTTPError
 from copy import deepcopy
 import pandas as pd
 import numpy as np
 
-pd.set_option("display.max_rows", 500)
-pd.set_option("display.max_columns", 500)
-pd.set_option("display.width", 1000)
-pd.set_option("display.max_colwidth", 1000)
-
 from MDAnalysis import Universe
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # import databank dictionaries
 import DatabankLib
 from DatabankLib.databankLibrary import (
@@ -64,18 +57,25 @@ from DatabankLib.databankLibrary import (
     parse_valid_config_settings
 )
 
+pd.set_option("display.max_rows", 500)
+pd.set_option("display.max_columns", 500)
+pd.set_option("display.width", 1000)
+pd.set_option("display.max_colwidth", 1000)
+
 
 if __name__ == "__main__":
     # parse input yaml file
     parser = argparse.ArgumentParser(
-        prog="AddData.py Script", description="Add a new dataset to the NMRLipids databank"
+        prog="AddData.py Script",
+        description="Add a new dataset to the NMRLipids databank"
     )
     parser.add_argument("-f", "--file", help="Input config file in yaml " "format.")
     parser.add_argument(
         "-d", "--debug", help="enable debug logging output", action="store_true"
     )
     parser.add_argument(
-        "-n", "--no-cache", help="always redownload repository files", action="store_true"
+        "-n", "--no-cache", help="always redownload repository files",
+        action="store_true"
     )
     parser.add_argument(
         "-w", "--work-dir", help="set custom temporary working directory", default=""
@@ -127,13 +127,14 @@ if __name__ == "__main__":
         quit()
     except Exception as e:
         logger.error(
-            f"an '{type(e).__name__}' occured while processing '{input_path}', script has been aborted"
+            f"an '{type(e).__name__}' occured while processing"
+            f" '{input_path}', script has been aborted"
         )
         logger.error(e)
         quit()
     else:
         logger.info(
-            f"all entries in simulation are understood and will be further processed"
+            "all entries in simulation are understood and will be further processed"
         )
         logger.debug("valid sim entry keys:")
         pp = pprint.PrettyPrinter(width=41, compact=True)
@@ -145,7 +146,8 @@ if __name__ == "__main__":
     if args.work_dir:
         dir_wrk = args.work_dir
         logger.warning(
-            f"--work_dir override, ignoring 'DIR_WRK' from configuration file: {sim['DIR_WRK']}"
+            f"--work_dir override, ignoring 'DIR_WRK' from "
+            f"configuration file: {sim['DIR_WRK']}"
         )
     else:
         dir_wrk = sim["DIR_WRK"]
@@ -187,14 +189,17 @@ if __name__ == "__main__":
     except HTTPError as e:
         if e.code == 404:
             logger.error(
-                f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?"
+                f"ressource not found on server '{e.url}' (404)."
+                " Wrong DOI link or file name?"
             )
         else:
-            logger.error(f"HTTPError {e.code} while trying to download the file '{e.url}'")
+            logger.error(f"HTTPError {e.code} while trying to "
+                         f"download the file '{e.url}'")
         quit(3)
     except URLError as e:
         logger.error(
-            f"couldn't resolve network adress: {e.reason}. Please check your internet connection."
+            f"couldn't resolve network adress: {e.reason}."
+            " Please check your internet connection."
         )
         quit(3)
     except Exception as e:
@@ -204,8 +209,7 @@ if __name__ == "__main__":
         logger.error(traceback.format_exc())
         quit(3)
 
-
-    # ## Calculate hash of downloaded files
+    # -- Calculate hash of downloaded files
 
     sim_hashes = deepcopy(sim)
 
@@ -261,7 +265,7 @@ if __name__ == "__main__":
                         sha1_list_requied.append(file_hash)
 
                     sim_hashes[key_sim] = files_list  # TODO Problematic
-        except KeyError as e:  # It is notmal that fails for "ID" and "SOFTWARE"
+        except KeyError:  # It is notmal that fails for "ID" and "SOFTWARE"
             continue
 
     logger.info(f"Summary of downloaded files:{os.linesep}")
@@ -269,20 +273,24 @@ if __name__ == "__main__":
     print()
 
     # Calculate the hash of a file contaning the hashes of each of the required files
-    # This should be always invariant as it will be used unique identifier for a simualtion
-    # Note order the hashes of the required files before calculating the hash (That means that the required files cannot change)
+    # This should be always invariant as it will be used unique identifier for a
+    # simualtion. Note order the hashes of the required files before calculating the
+    # hash (That means that the required files cannot change)
 
-    # Calculates numbers of lipid molecules in each leaflet. This is done by checking on which side of the centre
-    # of mass the membrane each the centre of mass of a lipid molecule is.
-    # If a lipid molecule is split so that headgroup and tails are their own residues, the centre of mass of the
-    # headgroup is used in the calculation.
-    ################################################################################################################
+    # Calculates numbers of lipid molecules in each leaflet. This is done by checking
+    # on which side of the centre of mass the membrane each the centre of mass of a
+    # lipid molecule is. If a lipid molecule is split so that headgroup and tails are
+    # their own residues, the centre of mass of the headgroup is used in the
+    # calculation.
+    ####################################################################################
 
     logger.info(
-        "Calculating the numbers of lipid molecules in each leaflet based on the center of mass of the membrane and lipids."
+        "Calculating the numbers of lipid molecules in each leaflet based on the "
+        "center of mass of the membrane and lipids."
     )
     logger.info(
-        "If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used."
+        "If a lipid molecule is split to multiple residues, the centre of mass of"
+        " the headgroup is used."
     )
 
     top = ""
@@ -296,13 +304,12 @@ if __name__ == "__main__":
         top = os.path.join(dir_tmp, sim["PDB"][0][0])
     else:
         logger.error(
-        "SOFTWARE '%s' is not a proper option.\n"
-        "Use either 'gromacs', 'openMM', or 'NAMD'.")
+            "SOFTWARE '%s' is not a proper option.\n"
+            "Use either 'gromacs', 'openMM', or 'NAMD'.")
         quit()
 
     leaflet1 = 0  # total number of lipids in upper leaflet
     leaflet2 = 0  # total number of lipids in lower leaflet
-
 
     gro = os.path.join(dir_tmp, "frame0.gro")
     NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
@@ -314,32 +321,29 @@ if __name__ == "__main__":
     except Exception as e:
         logger.warning(e)
         logger.info(
-            "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ..."
+            "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
+            "read tpr version ..."
         )
-        if ( "WARNINGS" in sim and 
+        if (
+            "WARNINGS" in sim and
             sim["WARNINGS"] is not None and
-            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
-            logger.debug(
-                f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 22000 -o {gro}'"
-            )
-            os.system(
-                "echo System | gmx trjconv -s "
-                + top
-                + " -f "
-                + traj
-                + " -dump 22000 -o "
-                + gro
+            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
+           ):
+            execStr = (
+                f"executing 'echo System | gmx trjconv -s {top} -f {traj} "
+                f"-dump 22000 -o {gro}'"
             )
         else:
-            logger.debug(
-                f"executing 'echo System | gmx trjconv -s {top} -f {traj} -dump 0 -o {gro}'"
+            execStr = (
+                f"executing 'echo System | gmx trjconv -s {top} -f {traj}"
+                f" -dump 0 -o {gro}'"
             )
-            os.system(
-                "echo System | gmx trjconv -s " + top + " -f " + traj + " -dump 0 -o " + gro
-            )
+        logger.debug(execStr)
+        os.system(execStr)
         try:
             u = Universe(gro, traj)
-            u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
+            # write first frame into gro file
+            u.atoms.write(gro, frames=u.trajectory[[0]])
         except Exception as e:
             logger.warning(e)
     finally:
@@ -351,14 +355,14 @@ if __name__ == "__main__":
     try:
         groFORu0 = os.path.join(dir_tmp, sim["GRO"][0][0])
         logger.debug(groFORu0)
-    except:
+    except Exception:
         groFORu0 = gro
 
     if sim["SOFTWARE"] == "gromacs":
         u0 = Universe(groFORu0)
     elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
         u0 = Universe(top)
-        
+
     lipids = []
 
     # select lipids
@@ -386,8 +390,9 @@ if __name__ == "__main__":
         if molecules.n_residues > 0:
             lipids.append(u0.select_atoms(selection))
 
-    # join all the selected the lipids together to make a selection of the entire membrane and calculate the
-    # z component of the centre of mass of the membrane
+    # join all the selected the lipids together to make a selection of the entire
+    # membrane and calculate the z component of the centre of mass of
+    # the membrane
     membrane = u0.select_atoms("")
     R_membrane_z = 0
     if lipids != []:
@@ -396,7 +401,7 @@ if __name__ == "__main__":
         R_membrane_z = membrane.center_of_mass()[2]
     logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
 
-    #####number of each lipid per leaflet
+    # ---- number of each lipid per leaflet
 
     for key_mol in lipids_dict:
         leaflet1 = 0
@@ -417,7 +422,7 @@ if __name__ == "__main__":
                         + " or "
                     )
                     break
-                    #print(selection)
+                    # print(selection)
                 else:
                     selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                     break
@@ -445,8 +450,8 @@ if __name__ == "__main__":
             logger.info(f"Number of '{key_mol}' in upper leaflet: {str(leaflet1)}")
             logger.info(f"Number of '{key_mol}' in lower leaflet: {str(leaflet2)}")
 
-    ###########################################################################################
-    # numbers of other molecules
+    # ----- numbers of other molecules
+
     for key_mol in molecules_dict:
         try:
             mol_name = sim["COMPOSITION"][key_mol]["NAME"]
@@ -482,10 +487,12 @@ if __name__ == "__main__":
         file1 = os.path.join(dir_tmp, "tpr.txt")
 
         logger.info("Exporting information with gmx dump")
-        if ( "WARNINGS" in sim
-            and sim["WARNINGS"] is not None
-            and "GROMACS_VERSION" in sim["WARNINGS"]
-            and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3" ):
+        if (
+            "WARNINGS" in sim and
+            sim["WARNINGS"] is not None and
+            "GROMACS_VERSION" in sim["WARNINGS"] and
+            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
+           ):
             os.system("echo System | gmxdump -s " + top + " > " + file1)
             TemperatureKey = "ref_t"
         else:
@@ -501,8 +508,7 @@ if __name__ == "__main__":
     logger.info(f"TEMPERATURE: {str(sim['TEMPERATURE'])}")
     logger.info(f"LENGTH OF THE TRAJECTORY: {str(sim['TRJLENGTH'])}")
 
-
-    ## Check that the number of atoms between data and README.yaml match
+    # Check that the number of atoms between data and README.yaml match
 
     number_of_atomsTRJ = len(u.atoms)
 
@@ -510,7 +516,7 @@ if __name__ == "__main__":
     for key_mol in sim["COMPOSITION"].keys():
         mapping_dict = loadMappingFile(sim["COMPOSITION"][key_mol]["MAPPING"])
 
-        if sim.get("UNITEDATOM_DICT") and not "SOL" in key_mol:
+        if sim.get("UNITEDATOM_DICT") and "SOL" not in key_mol:
             mapping_file_length = 0
 
             for key in mapping_dict.keys():
@@ -528,32 +534,35 @@ if __name__ == "__main__":
 
     if number_of_atoms != number_of_atomsTRJ:
         stop = input(
-            f"Number of atoms in trajectory {number_of_atomsTRJ} and README.yaml {number_of_atoms} do no match. Check the mapping files and molecule names. {os.linesep} If you know what you are doing, you can still continue the running the script. Do you want to (y/n)?"
+            f"Number of atoms in trajectory {number_of_atomsTRJ} and README.yaml "
+            f"{number_of_atoms} do no match. Check the mapping files and molecule"
+            f" names. {os.linesep} If you know what you are doing, you can still "
+            "continue the running the script. Do you want to (y/n)?"
         )
         if stop == "n":
             os._exit("Interrupted because atomnumbers did not match")
         if stop == "y":
             logger.warning(
-                "Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!"
+                "Progressed even thought that atom numbers did not match."
+                " CHECK RESULTS MANUALLY!"
             )
 
     sim["NUMBER_OF_ATOMS"] = number_of_atomsTRJ
     logger.info(f"Number of atoms in the system: {str(sim['NUMBER_OF_ATOMS'])}")
 
-
-    #####DATE OF RUNNING#####
+    # ---- DATE OF RUNNING ----
     today = date.today().strftime("%d/%m/%Y")
     # print(today)
     sim["DATEOFRUNNING"] = today
 
     logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
 
-    # Type of system is currently hard coded because only lipid bilayers are currently added.
-    # When we go for other systems, this will be given by user.
-    if not "TYPEOFSYSTEM" in list(sim.keys()):
+    # Type of system is currently hard coded because only lipid bilayers are currently
+    # added. When we go for other systems, this will be given by user.
+    if "TYPEOFSYSTEM" not in list(sim.keys()):
         sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
-    # # Save to databank
+    # ---- Save to databank
 
     try:
         directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
