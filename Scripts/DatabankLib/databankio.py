@@ -3,7 +3,8 @@
 Network communication. Downloading files. Checking links etc.
 """
 
-import os, time
+import os
+import time
 import socket
 import urllib.error
 from tqdm import tqdm
@@ -11,6 +12,7 @@ import urllib.request
 
 import logging
 logger = logging.getLogger(__name__)
+
 
 def download_resource_from_uri(
     uri: str, dest: str, override_if_exists: bool = False
@@ -22,7 +24,8 @@ def download_resource_from_uri(
     Args:
         uri (str): file URL
         dest (str): file destination path
-        override_if_exists (bool, optional): Override dest. file if exists. Defaults to False.
+        override_if_exists (bool, optional): Override dest. file if exists.
+                                             Defaults to False.
 
     Raises:
         Exception: HTTPException: An error occured during download
@@ -30,7 +33,7 @@ def download_resource_from_uri(
     Returns:
         code (int): 0 - OK, 1 - skipped, 2 - redownloaded
     """
-    #TODO verify file size before skipping already existing download!
+    # TODO verify file size before skipping already existing download!
 
     class RetrieveProgressBar(tqdm):
         # uses tqdm.update(), see docs https://github.com/tqdm/tqdm#hooks-and-callbacks
@@ -52,7 +55,8 @@ def download_resource_from_uri(
             return 1
         else:
             logger.warning(
-                f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ..."
+                f"{fi_name} filesize mismatch of local "
+                f"file '{fi_name}', redownloading ..."
             )
             return 2
 
@@ -64,15 +68,16 @@ def download_resource_from_uri(
     with RetrieveProgressBar(
         unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
     ) as u:
-        response = urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
+        _ = urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
 
     # check if the file is fully downloaded
     size = os.path.getsize(dest)
 
     if url_size != size:
         raise Exception(f"downloaded filsize mismatch ({size}/{url_size} B)")
-    
+
     return 0
+
 
 def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     """
@@ -94,7 +99,9 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     return res
 
 
-def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True, sleep429=5) -> str:
+def resolve_download_file_url(
+        doi: str, fi_name: str, validate_uri: bool = True,
+        sleep429=5) -> str:
     """
     :meta private:
     Resolve file URI from supported DOI with given filename
@@ -121,17 +128,20 @@ def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True,
         if validate_uri:
             try:
                 socket.setdefaulttimeout(10)  # seconds
-                res = urllib.request.urlopen(uri, timeout=10)
+                _ = urllib.request.urlopen(uri, timeout=10)
             except TimeoutError:
                 raise RuntimeError(f"Cannot open {uri}. Timeout error.")
             except urllib.error.HTTPError as hte:
                 if hte.code == 429:
                     if sleep429/5 > 10:
-                        raise TimeoutError("Too many iteration of increasing waiting time!")
+                        raise TimeoutError(
+                            "Too many iteration of increasing waiting time!")
                     logger.warning(f"HTTP error returned from URI: {uri}")
-                    logger.warning(f"Site returns 429 code. Try to sleep {sleep429} seconds and repeat!")
+                    logger.warning(f"Site returns 429 code."
+                                   f" Try to sleep {sleep429} seconds and repeat!")
                     time.sleep(sleep429)
-                    return resolve_download_file_url(doi, fi_name, validate_uri, sleep429 = sleep429+5)
+                    return resolve_download_file_url(doi, fi_name, validate_uri,
+                                                     sleep429=sleep429+5)
                 else:
                     raise hte
         return uri

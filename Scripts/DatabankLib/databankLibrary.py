@@ -1,37 +1,34 @@
-# Library that contains all dictionaries and functions used in building and analyzing the NMR lipids databank
-
-####################DICTIONARIES#####################################
-# Define dictionaries
-#
-# Dictionary of lipids.
-#
-# If you add a lipid which is not yet in the databank, you have to add it here
+"""
+Library contains all API functions and many functions used in building and
+analyzing the NMRlipids databank
+"""
 
 import copy
 import hashlib
-import urllib, logging
+import urllib
+import logging
 from tqdm import tqdm
 
-import json, yaml
-import os, sys
+import json
+import yaml
+import os
+import sys
 import numpy as np
 import math
 import MDAnalysis as mda
 
-logger = logging.getLogger(__name__)
-
-from . import *
-from .databank_defs import *
-from .core import *
+from . import NMLDB_SIMU_PATH, NMLDB_ROOT_PATH
+from .databank_defs import lipids_dict, software_dict, molecules_dict, molecule_ff_dict
 from .databankio import resolve_download_file_url
 
-#########################FUNCTIONS###################################################
-# functions used in building and analyzing the databank
+logger = logging.getLogger(__name__)
+
 
 def CalcAreaPerMolecule(system):
-    """ 
-    Calculates average area per lipid for a simulation defined with ``system``. 
-    It is using the ``apl.json`` file where area per lipid as a function of time calculated by the ``calcAPL.py`` is stored. 
+    """
+    Calculates average area per lipid for a simulation defined with ``system``.
+    It is using the ``apl.json`` file where area per lipid as a function of time
+    calculated by the ``calcAPL.py`` is stored.
 
     :param system: NMRlipids databank dictionary defining a simulation.
 
@@ -43,19 +40,19 @@ def CalcAreaPerMolecule(system):
             APLdata = json.load(f)
         sumAPL = 0
         sumIND = 0
-        for i,j in APLdata.items():
+        for i, j in APLdata.items():
             sumAPL += j
             sumIND += 1
         APL = sumAPL/sumIND
-        return(APL)
-    except:
+        return APL
+    except Exception:
         print('apl.json not found from' + APLpath)
-        
+
 
 def GetThickness(system):
-    """ 
-    Gets thickness for a simulation defined with ``system`` from the ``thickness.json`` file 
-    where thickness calculated by the ``calc_thickness.py`` is stored. 
+    """
+    Gets thickness for a simulation defined with ``system`` from the ``thickness.json``
+    file where thickness calculated by the ``calc_thickness.py`` is stored.
 
     :param system: NMRlipids databank dictionary defining a simulation.
 
@@ -65,33 +62,35 @@ def GetThickness(system):
     try:
         with open(ThicknessPath) as f:
             thickness = json.load(f)
-        return(thickness)
-    except:
+        return thickness
+    except Exception:
         return None
 
 
 def ShowEquilibrationTimes(system: dict):
-    """ 
-    Prints relative equilibration time for each lipid within a simulation defined by ``system``. 
-    Relative equilibration times are calculated with ``NMRPCA_timerelax.py`` and stored in ``eq_times.json`` files.
+    """
+    Prints relative equilibration time for each lipid within a simulation defined
+    by ``system``. Relative equilibration times are calculated with
+    ``NMRPCA_timerelax.py`` and stored in ``eq_times.json`` files.
 
     :param system: NMRlipids databank dictionary defining a simulation.
     """
-    
+
     EqTimesPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'eq_times.json')
-    
+
     try:
         with open(EqTimesPath) as f:
             EqTimeDict = json.load(f)
-    except:
+    except Exception:
         raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
 
     for i in EqTimeDict:
         print(i+':', EqTimeDict[i])
 
+
 def GetNlipids(system):
-    """ 
-    Returns the total number of lipids in a simulation defined by ``system``. 
+    """
+    Returns the total number of lipids in a simulation defined by ``system``.
 
     :param system: NMRlipids databank dictionary defining a simulation.
 
@@ -103,13 +102,16 @@ def GetNlipids(system):
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     return Nlipid
 
+
 def getLipids(system, molecules=lipids_dict.keys()):
     """
-    Returns a string using MDAnalysis notation that can used to select all lipids from the ``system``.
+    Returns a string using MDAnalysis notation that can used to select all lipids from
+    the ``system``.
 
     :param system: NMRlipids databank dictionary defining a simulation.
 
-    :return: a string using MDAnalysis notation that can used to select all lipids from the ``system``.
+    :return: a string using MDAnalysis notation that can used to select all lipids from
+             the ``system``.
     """
 
     resSet = set()
@@ -120,17 +122,18 @@ def getLipids(system, molecules=lipids_dict.keys()):
             try:
                 for atom in mapping_dict:
                     resSet.add(mapping_dict[atom]['RESIDUE'])
-            except:
-                resSet.add( system['COMPOSITION'][key]['NAME'] )
-    
-    lipids = 'resname ' + ' or resname '.join( sorted(list(resSet)) )
+            except (KeyError, TypeError):
+                resSet.add(system['COMPOSITION'][key]['NAME'])
+
+    lipids = 'resname ' + ' or resname '.join(sorted(list(resSet)))
 
     return lipids
 
-        
-def simulation2universal_atomnames(system,molecule,atom):
+
+def simulation2universal_atomnames(system, molecule, atom):
     """
-    Get force field specific atom name corresponding to universal atom name from the ``system``.
+    Get force field specific atom name corresponding to universal atom name from
+    the ``system``.
 
     :param mapping_file: path for the mapping file
     :param atom1: universal atom name
@@ -139,31 +142,35 @@ def simulation2universal_atomnames(system,molecule,atom):
     """
     try:
         mapping = loadMappingFile(system['COMPOSITION'][molecule]['MAPPING'])
-    except:
+    except Exception:
         sys.stderr.write('Mapping file was not found!\n')
         return None
 
     try:
         m_atom1 = mapping[atom]["ATOMNAME"]
-    except:
-        sys.stderr.write(f"{atom} was not found from {system['COMPOSITION'][molecule]['MAPPING']}!")
+    except (KeyError, TypeError):
+        sys.stderr.write(
+            f"{atom} was not found from {system['COMPOSITION'][molecule]['MAPPING']}!")
         return None
 
     return m_atom1
 
+
 def loadMappingFile(mapping_file):
-    """ 
+    """
     Load mapping file into a dictionary
 
     :param: name of the mapping file
-    
+
     :return: mapping dictionary
     """
-    mapping_file_path = os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 'mapping_files', mapping_file)
+    mapping_file_path = os.path.join(
+        NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 'mapping_files', mapping_file)
     mapping_dict = {}
     with open(mapping_file_path, "r") as yaml_file:
         mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
     return mapping_dict
+
 
 def getAtoms(system, lipid):
     """
@@ -174,18 +181,20 @@ def getAtoms(system, lipid):
 
     :return: string of system specific atom names
     """
-    
+
     atoms = ""
     path_to_mapping_file = system['COMPOSITION'][lipid]['MAPPING']
     mapping_dict = loadMappingFile(path_to_mapping_file)
     for key in mapping_dict:
         atoms = atoms + ' ' + mapping_dict[key]['ATOMNAME']
-  
+
     return atoms
+
 
 def getUniversalAtomName(system: dict, atomName: str, lipid: str):
     """
-    Returns the universal atom name corresponding the simulation specific ``atomName`` of a ``lipid`` in a simulation defined by the ``system``.
+    Returns the universal atom name corresponding the simulation specific ``atomName``
+    of a ``lipid`` in a simulation defined by the ``system``.
 
     :param system: system dictionary
     :param atomName: simulation specific atomname
@@ -195,7 +204,7 @@ def getUniversalAtomName(system: dict, atomName: str, lipid: str):
     """
     try:
         mappingFile = system['COMPOSITION'][lipid]['MAPPING']
-    except:
+    except (KeyError, TypeError):
         sys.stderr.write('Mapping file was not found!\n')
         return None
 
@@ -208,6 +217,7 @@ def getUniversalAtomName(system: dict, atomName: str, lipid: str):
 
     sys.stderr.write('Atom was not found!\n')
     return None
+
 
 def calc_angle(atoms, com):
     """
@@ -236,7 +246,7 @@ def calc_z_dim(gro):
     """
     :meta private:
     Returns the simulation box dimension in z-direction from coordinate file.
-    
+
     :param gro: coordinate in ``gro``, ``pdb`` or corresponding format.
 
     :return: size of box z-direction.
@@ -245,10 +255,12 @@ def calc_z_dim(gro):
     z = u.dimensions[2]
     return z
 
+
 def system2MDanalysisUniverse(system):
     """
-    Takes the ``system`` dictionary as an input, downloads the required files to the NMRlipids databank 
-    directory and retuns MDAnalysis universe corressponding the ``system``.
+    Takes the ``system`` dictionary as an input, downloads the required files to
+    the NMRlipids databank directory and retuns MDAnalysis universe corressponding
+    the ``system``.
 
     :param system: NMRlipids databank dictionary describing the simulation.
 
@@ -266,14 +278,16 @@ def system2MDanalysisUniverse(system):
 
     if (skipDownloading):
         if (not os.path.isfile(trj_name)):
-            raise FileNotFoundError(f"Trajectory should be downloaded [{trj_name}] by user")
+            raise FileNotFoundError(
+                f"Trajectory should be downloaded [{trj_name}] by user")
     else:
-        trj_url = resolve_download_file_url(doi, trj[0][0])                            
+        trj_url = resolve_download_file_url(doi, trj[0][0])
         if (not os.path.isfile(trj_name)):
-            print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'], ' to ', system['path'])
-            response = urllib.request.urlretrieve(trj_url, trj_name)
+            print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'],
+                  ' to ', system['path'])
+            _ = urllib.request.urlretrieve(trj_url, trj_name)
 
-    if 'gromacs' in software: 
+    if 'gromacs' in software:
         tpr_name = 'stub'
         try:
             tpr = system.get('TPR')
@@ -284,11 +298,11 @@ def system2MDanalysisUniverse(system):
             else:
                 tpr_url = resolve_download_file_url(doi, tpr[0][0])
                 if (not os.path.isfile(tpr_name)):
-                    response = urllib.request.urlretrieve(tpr_url, tpr_name)
+                    _ = urllib.request.urlretrieve(tpr_url, tpr_name)
 
             u = mda.Universe(tpr_name, trj_name)
-        except:
-            try: 
+        except Exception:
+            try:
                 gro = system.get('GRO')
                 conf = os.path.join(systemPath, gro[0][0])
 
@@ -298,15 +312,21 @@ def system2MDanalysisUniverse(system):
                 else:
                     gro_url = resolve_download_file_url(doi, gro[0][0])
                     if (not os.path.isfile(conf)):
-                        response = urllib.request.urlretrieve(gro_url, conf)
-            except:
+                        _ = urllib.request.urlretrieve(gro_url, conf)
+            except Exception:
                 conf = os.path.join(systemPath, 'conf.gro')
             if (os.path.isfile(tpr_name)):
-                print("Generating conf.gro because MDAnalysis cannot (probably!) read tpr version")
-                if 'WARNINGS' in system and 'GROMACS_VERSION' in system['WARNINGS'] and system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3':
-                    os.system('echo System | editconf -f '+ tpr_name + ' -o ' + conf)
+                print("Generating conf.gro because MDAnalysis cannot "
+                      "(probably!) read tpr version")
+                if (
+                    'WARNINGS' in system and
+                    'GROMACS_VERSION' in system['WARNINGS'] and
+                    system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'
+                ):
+                    os.system(f'echo System | editconf -f {tpr_name} -o {conf}')
                 else:
-                    os.system('echo System | gmx trjconv -s '+ tpr_name + ' -f '+ trj_name + ' -dump 0 -o ' + conf)
+                    os.system(f"echo System | gmx trjconv "
+                              f"-s {tpr_name} -f {trj_name} -dump 0 -o {conf}")
             u = mda.Universe(conf, trj_name)
 
     elif 'openMM' or 'NAMD' in software:
@@ -315,30 +335,33 @@ def system2MDanalysisUniverse(system):
         if skipDownloading:
             if (not os.path.isfile(pdb_name)):
                 raise FileNotFoundError(f"PDB should be downloaded [{pdb_name}]")
-        else:            
+        else:
             pdb_url = resolve_download_file_url(doi, pdb[0][0])
             if (not os.path.isfile(pdb_name)):
-                response = urllib.request.urlretrieve(pdb_url, pdb_name)
+                _ = urllib.request.urlretrieve(pdb_url, pdb_name)
         u = mda.Universe(pdb_name, trj_name)
 
     else:
-        raise NotImplementedError('Other than gromacs, openMM or NAMD are yet to be implemented.')
-        
+        raise NotImplementedError(
+            'Other than GROMACS, openMM or NAMD are yet to be implemented.')
+
     return u
 
 
 def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Universe):
     """
-    Calculates the P-N vector angles with respect to membrane normal from the simulation defined by the MDAnalysis universe. 
+    Calculates the P-N vector angles with respect to membrane normal from the
+    simulation defined by the MDAnalysis universe.
 
-    :param molname: residue name of the molecule for which the P-N vector angle will be calculated
+    :param molname: residue name of the molecule for which the P-N vector angle will
+                    be calculated
     :param atom1: name of the P atom in the simulation
     :param atom2: name of the N atom in the simulation
     :param MDAuniverse: MDAnalysis universe of the simulation to be analyzed
 
-    :return: tuple (angles of all molecules as a function of time, 
-                    time averages for each molecule, 
-                    the average angle over time and molecules, 
+    :return: tuple (angles of all molecules as a function of time,
+                    time averages for each molecule,
+                    the average angle over time and molecules,
                     the error of the mean calculated over molecules)
     """
     mol = MDAuniverse
@@ -373,8 +396,7 @@ def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Un
     return angles, resAverageAngles, totalAverage, totalSTDerror
 
 
-###############################################################################################################
-
+# -------------------------------------- SEPARATED PART (??) ----------------------
 
 def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
     """
@@ -445,7 +467,6 @@ def create_databank_directories(sim, sim_hashes, out) -> str:
     return directory_path
 
 
-
 class YamlBadConfigException(Exception):
     """
     :meta private:
@@ -495,19 +516,20 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
     if not all(
         (k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys
     ):
-        missing_keys = [k for k in software_required_keys if k not in list(sim.keys()) ]
+        missing_keys = [k for k in software_required_keys if k not in list(sim.keys())]
         raise YamlBadConfigException(
-            f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or not defined in conf file: {', '.join(missing_keys)}"
+            f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or "
+            f"not defined in conf file: {', '.join(missing_keys)}"
         )
 
     logger.debug(
-        f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present"
+        f"all {len(software_required_keys)} required"
+        f" '{sim['SOFTWARE'].upper()}' sim keys are present"
     )
 
     # STEP 3 - check working directory
     if "DIR_WRK" not in sim:
         raise KeyError("'DIR_WRK' Parameter missing in yaml")
-    dir_wrk = sim["DIR_WRK"]
 
     # STEP 4 - Check that all entry keys provided for each simulation are valid
     files_tbd = []
@@ -520,7 +542,8 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
             continue
 
         # STEP 4.1.
-        # Anne: check if key is in molecules_dict, molecule_numbers_dict or molecule_ff_dict too
+        # Anne: check if key is in molecules_dict, molecule_numbers_dict or
+        # molecule_ff_dict too
         if (
             (key_sim.upper() not in software_sim.keys())
             and (key_sim.upper() not in molecules_dict.keys())
@@ -528,25 +551,32 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
             and (key_sim.upper() not in molecule_ff_dict.keys())
         ):
             logger.error(
-                f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' : {key_sim.upper() in software_sim.keys()}"
+                f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' "
+                f": {key_sim.upper() in software_sim.keys()}"
             )
             logger.error(
-                f"key_sim '{key_sim}' in molecules_dict : {key_sim.upper() in molecules_dict.keys()}"
+                f"key_sim '{key_sim}' in molecules_dict "
+                f": {key_sim.upper() in molecules_dict.keys()}"
             )
             logger.error(
-                f"key_sim '{key_sim}' in lipids_dict : {key_sim.upper() in lipids_dict.keys()}"
+                f"key_sim '{key_sim}' in lipids_dict "
+                f": {key_sim.upper() in lipids_dict.keys()}"
             )
             logger.error(
-                f"key_sim '{key_sim}' in molecule_ff_dict : {key_sim.upper() in molecule_ff_dict.keys()}"
+                f"key_sim '{key_sim}' in molecule_ff_dict "
+                f": {key_sim.upper() in molecule_ff_dict.keys()}"
             )
             raise YamlBadConfigException(
-                f"'{key_sim}' not supported: Not found in '{sim['SOFTWARE'].lower()}_dict', 'molecules_dict', 'lipids_dict' and 'molecule_ff_dict'"
+                f"'{key_sim}' not supported: Not found in "
+                f"'{sim['SOFTWARE'].lower()}_dict', 'molecules_dict',"
+                f" 'lipids_dict' and 'molecule_ff_dict'"
             )
         elif (
             key_sim.upper() not in software_sim.keys()
         ):  # hotfix for unkown yaml keys. TODO improve check 4.1?
             logger.warning(
-                f"ignoring yaml entry '{key_sim}', not found in '{sim['SOFTWARE'].lower()}_dict'"
+                f"ignoring yaml entry '{key_sim}', not found "
+                f"in '{sim['SOFTWARE'].lower()}_dict'"
             )
             continue
 
@@ -569,7 +599,8 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
 
                     if len(value_sim_splitted) == 0:
                         raise YamlBadConfigException(
-                            f"found no file to download for entry '{key_sim}:{software_sim[key_sim]}'"
+                            f"found no file to download for "
+                            f"entry '{key_sim}:{software_sim[key_sim]}'"
                         )
                     # in case there are multiple files for one entry
                     elif len(value_sim_splitted) > 1:
@@ -588,12 +619,14 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
                     # print(f"sim[{key_sim}] = {sim[key_sim]}")
 
                 # STEP 4.3.
-                # Batuhan: In conf file only one psf/tpr/pdb file allowed each (can coexist), multiple TRJ files are ok
+                # Batuhan: In conf file only one psf/tpr/pdb file allowed each
+                # (can coexist), multiple TRJ files are ok
                 # TODO true for all sim software?
                 # TODO add dict entry param "unique" instead?
                 if key_sim.upper() in ["PSF", "TPR", "PDB"] and len(sim[key_sim]) > 1:
                     raise YamlBadConfigException(
-                        f"only one '{key_sim}' entry file allowed, but got {len(sim[key_sim])}: {sim[key_sim]}"
+                        f"only one '{key_sim}' entry file allowed,"
+                        f" but got {len(sim[key_sim])}: {sim[key_sim]}"
                     )
 
         else:
@@ -606,6 +639,7 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
     )
 
     return sim, files_tbd
+
 
 def calcArea(system):
     """
@@ -622,6 +656,7 @@ def calcArea(system):
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     print(Nlipid, APL)
     return Nlipid*APL/2
+
 
 def GetFormFactorMin(system):
     """
@@ -643,32 +678,34 @@ def GetFormFactorMin(system):
             minX.append(i[0])
         iprevD = i[1] - iprev
         iprev = i[1]
-        
-    return(minX)
+
+    return minX
 
 
 def averageOrderParameters(system):
     """
-    Returns average order paramaters of sn-1 and sn-2 acyl chains based on universal atom names. The names starting with M_G1C will be assigned to sn-1 and names starting M_G2C to sn-2. 
+    Returns average order paramaters of *sn*-1 and *sn*-2 acyl chains based on universal
+    atom names. The names starting with M_G1C will be assigned to sn-1 and names
+    starting M_G2C to *sn*-2.
 
     :parameters system: a system dictionary
 
-    :return: average of sn-1 and sn-2 order parameters
+    :return: average of *sn*-1 and *sn*-2 order parameters
     """
-    
+
     path = os.path.join(NMLDB_SIMU_PATH, system['path'])
-    
+
     sn1sum = 0
     sn1count = 0
     sn2sum = 0
     sn2count = 0
-    
+
     for lipid in system['COMPOSITION']:
-        if lipid in lipids_dict and not 'CHOL' in lipid:
+        if lipid in lipids_dict and 'CHOL' not in lipid:
             OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
             with open(OPpathSIM) as json_file:
                 OPsim = json.load(json_file)
-    
+
             for key in OPsim:
                 if 'M_G1C' in key:
                     sn1sum += float(OPsim[key][0][0])
@@ -676,8 +713,9 @@ def averageOrderParameters(system):
                 elif 'M_G2C' in key:
                     sn2sum += float(OPsim[key][0][0])
                     sn2count += 1
-                    
+
     return sn1sum/sn1count, sn2sum/sn2count
+
 
 def calcLipidFraction(system, lipid):
     """
@@ -692,18 +730,19 @@ def calcLipidFraction(system, lipid):
     for molecule in system['COMPOSITION']:
         if molecule in lipids_dict:
             NlipidTOT += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    
+
     Nlipid = 0
     for molecule in system['COMPOSITION']:
         if lipid in molecule:
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-            
+
     return Nlipid/NlipidTOT
 
 
 def getHydrationLevel(system):
     """
-    Returns hydration level of the system, i.e., number of water molecules divided by number of lipid molecules.
+    Returns hydration level of the system, i.e., number of water molecules divided
+    by number of lipid molecules.
 
     :param system: a system dictionary
 

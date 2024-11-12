@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 17 11:14:34 2024
+Module file with definition of different global-level dictionaries.
 
-@author: fabs
+There is a dictionary of lipids, ions, etc.
+
+If you add a lipid which is not yet in the databank, you have to add it here!
 """
 
 lipids_dict = {
@@ -192,7 +194,8 @@ lipids_dict = {
 
 # Dictionary of other than lipid molecules.
 #
-# If you add other than a lipid molecule which is not yet in the databank, you have to add it here
+# If you add other than a lipid molecule which is not yet in the databank, you have to
+# add it here
 
 molecules_dict = {
     "POT": {

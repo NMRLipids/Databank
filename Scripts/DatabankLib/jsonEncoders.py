@@ -7,7 +7,9 @@
 
 from __future__ import annotations
 
-import json, math
+import json
+import math
+
 
 class CompactJSONEncoder(json.JSONEncoder):
     """A JSON Encoder that puts small containers on single lines."""

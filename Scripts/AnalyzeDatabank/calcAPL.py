@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-import os, sys
-
 import logging
-logger = logging.getLogger(__name__)
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import DatabankLib
 from DatabankLib.core import initialize_databank
 from DatabankLib.analyze import computeAPL
 
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     systems = initialize_databank()
-    resDict = {DatabankLib.RCODE_COMPUTED: 0, 
-              DatabankLib.RCODE_SKIPPED: 0,
-              DatabankLib.RCODE_ERROR: 0}
+    resDict = {DatabankLib.RCODE_COMPUTED: 0,
+               DatabankLib.RCODE_SKIPPED: 0,
+               DatabankLib.RCODE_ERROR: 0}
 
     for system in systems:
         logger.info("System title: " + system['SYSTEM'])
