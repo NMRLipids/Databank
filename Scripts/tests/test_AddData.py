@@ -3,10 +3,12 @@
 """
 
 from unittest import mock
-import os, glob, subprocess
+import os
+import subprocess
 from tempfile import TemporaryDirectory
 import pytest
 import DatabankLib
+
 
 @pytest.fixture(scope="module")
 def tmpWorkDir():
@@ -14,13 +16,15 @@ def tmpWorkDir():
         print(f"Will use following directory for loadings: {wdir}")
         yield wdir
 
+
 @pytest.fixture(scope="module")
 def tmpOutDir():
-    with TemporaryDirectory(prefix="Simulations.", 
-                            dir=os.path.join( os.path.dirname(__file__), "Data")
+    with TemporaryDirectory(prefix="Simulations.",
+                            dir=os.path.join(os.path.dirname(__file__), "Data")
                             ) as wdir:
         print(f"Will use following directory for writting: {wdir}")
         yield wdir
+
 
 @pytest.fixture(autouse=True, scope="module")
 def header_module_scope():
@@ -31,10 +35,10 @@ def header_module_scope():
     print("DBG: Mocking completed")
 
 
-
 class TestAddData:
 
-    exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "Scripts", "BuildDatabank", "AddData.py")
+    exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "Scripts",
+                       "BuildDatabank", "AddData.py")
 
     """
     Testing `AddData.py -h` behavior
@@ -46,11 +50,12 @@ class TestAddData:
             "-h"
         ], capture_output=True, text=True)
         print("STDOUT", result.stdout)
-        print("STDERR:", result.stderr) 
+        print("STDERR:", result.stderr)
         assert result.returncode == 0
-    
+
     """
-    Testing `AddData.py -f <filename> -w <dirname> -o <dirname>` which should end correctly
+    Testing `AddData.py -f <filename> -w <dirname> -o <dirname>` which should
+    end correctly
     """
 
     @pytest.mark.parametrize("infofn", ["info566.yaml"])
@@ -60,12 +65,11 @@ class TestAddData:
             self.exe,
             "-f",
             fn,
-            "-w", 
+            "-w",
             tmpWorkDir,
             "-o",
             tmpOutDir
         ], capture_output=True, text=True)
         print("STDOUT", result.stdout)
-        print("STDERR:", result.stderr) 
+        print("STDERR:", result.stderr)
         assert result.returncode == 0
-
