@@ -9,7 +9,9 @@ Returning error codes:
     3 - network accessing errors.
 
 usage:
-``AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]``
+AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]
+
+Add a new dataset to the NMRLipids databank
 
 options:
   -h, --help            show this help message and exit
@@ -18,8 +20,10 @@ options:
   -n, --no-cache        always redownload repository files
   -w WORK_DIR, --work-dir WORK_DIR
                         set custom temporary working directory
+                        [not set = read from YAML]
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
                         set custom output directory
+                        [/path-to-databank]
 """
 
 import os
@@ -69,21 +73,29 @@ if __name__ == "__main__":
         prog="AddData.py Script",
         description="Add a new dataset to the NMRLipids databank"
     )
-    parser.add_argument("-f", "--file", help="Input config file in yaml " "format.")
     parser.add_argument(
-        "-d", "--debug", help="enable debug logging output", action="store_true"
+        "-f", "--file",
+        help="Input config file in yaml format."
     )
     parser.add_argument(
-        "-n", "--no-cache", help="always redownload repository files",
+        "-d", "--debug",
+        help="enable debug logging output",
         action="store_true"
     )
     parser.add_argument(
-        "-w", "--work-dir", help="set custom temporary working directory", default=""
+        "-n", "--no-cache",
+        help="always redownload repository files",
+        action="store_true"
+    )
+    parser.add_argument(
+        "-w", "--work-dir",
+        help="set custom temporary working directory [not set = read from YAML]",
+        default=""
     )
     parser.add_argument(
         "-o",
         "--output-dir",
-        help="set custom output directory",
+        help=f"set custom output directory [{DatabankLib.NMLDB_SIMU_PATH}]",
         default=DatabankLib.NMLDB_SIMU_PATH
     )
 
