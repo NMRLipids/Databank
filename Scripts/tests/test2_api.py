@@ -4,6 +4,13 @@ MDAnalysis Universe and recomputing something. These functions just read README
 files and precomputed JSON data.
 
 Test data is stored in `./Data/Simulations.2`
+
+-------------------------------------------------------------------------------
+TODO think to repair the following:
+Currently, we do mocking of NMLDB_SIMU_PATH and it requires to be done once
+during pytest session. That's why we name this file "test2_api.py" because
+it avoids `pytest` from executing it together with other "test_*.py" files. 
+Probably the problem can be solved using importlib and updating import specs.
 """
 
 from unittest import mock
