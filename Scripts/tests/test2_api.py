@@ -8,6 +8,7 @@ Test data is stored in `./Data/Simulations.2`
 
 from unittest import mock
 import os
+import sys
 import pytest
 
 
@@ -301,8 +302,11 @@ def wipeth(systems):
         fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, sys0['path'], 'thickness.json')
         try:
             os.remove(fn)
-        except Exception:
+        except FileNotFoundError:
             pass
+        except Exception as e:
+            print(f"An error occured during teardown: {e}", file=sys.stderr)
+            raise
 
 
 @pytest.mark.parametrize("systemid, result, thickres",
