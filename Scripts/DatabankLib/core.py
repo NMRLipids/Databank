@@ -50,8 +50,8 @@ class databank:
 
     def __init__(self):
         self.path = NMLDB_SIMU_PATH
-        _systems = self.__load_systems__()
-        self.systems = SystemsCollection(_systems)
+        __systems = self.__load_systems__()
+        self._systems = SystemsCollection(__systems)
         print('Databank initialized from the folder:', os.path.realpath(self.path))
 
     def __load_systems__(self):
@@ -70,7 +70,7 @@ class databank:
 
     def get_systems(self):
         """ Returns a list of all systems in the NMRlipids databank """
-        return self.systems
+        return self._systems
 
 
 def initialize_databank():
@@ -81,8 +81,7 @@ def initialize_databank():
              each system.
     """
     db_data = databank()
-    systems = db_data.get_systems()
-    return systems
+    return db_data.get_systems()
 
 
 # TODO: is not used at all in the project!!

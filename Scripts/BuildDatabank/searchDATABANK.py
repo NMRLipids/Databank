@@ -23,8 +23,8 @@ LIP_CONC_REL_THRESHOLD = 0.15   # relative acceptable error for determination
 
 class Simulation:
 
-    readme: dict = None
-    indexingPath: str = None
+    readme: dict
+    indexingPath: str
 
     def __init__(self, readme):
         self.readme = readme

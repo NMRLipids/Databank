@@ -2,28 +2,25 @@
 # coding: utf-8
 
 """
-``AddData.py`` script adds a simulation into the Databank based on ``info.yaml`` file.
+:program: AddData.py 
+:description: The script adds a simulation into the Databank based on ``info.yaml``
+              file.
+
+Usage:
+    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]
+
+:param: ``-h``, ``--help`` show this help message and exit
+:param: ``-f FILE``, ``--file``  Input config file in yaml format.
+:param: ``-d``, ``--debug`` enable debug logging output
+:param: ``-n``, ``--no-cache`` always redownload repository files
+:param: ``-w WORK_DIR``, ``--work-dir`` set custom temporary working directory
+        [not set = read from YAML]
+:param: ``-o OUTPUT_DIR``, ``--output-dir`` set custom output directory
+        [/path-to-databank]
 
 Returning error codes:
     2 - filesystem writting errors;
     3 - network accessing errors.
-
-usage:
-AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]
-
-Add a new dataset to the NMRLipids databank
-
-options:
-  -h, --help            show this help message and exit
-  -f FILE, --file FILE  Input config file in yaml format.
-  -d, --debug           enable debug logging output
-  -n, --no-cache        always redownload repository files
-  -w WORK_DIR, --work-dir WORK_DIR
-                        set custom temporary working directory
-                        [not set = read from YAML]
-  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        set custom output directory
-                        [/path-to-databank]
 """
 
 import os
@@ -112,7 +109,7 @@ if __name__ == "__main__":
 
     all_molecules = lipids_dict.keys()
 
-    input_path = os.path.join(".", args.file)
+    input_path = os.path.normpath(args.file)
 
     # load input yaml file into empty dictionary
     info_yaml = {}
@@ -324,7 +321,6 @@ if __name__ == "__main__":
     leaflet2 = 0  # total number of lipids in lower leaflet
 
     gro = os.path.join(dir_tmp, "frame0.gro")
-    NewTraj = os.path.join(dir_tmp, "NewTraj.xtc")
 
     try:
         logger.info(f"MDAnalysis tries to use {top} and {traj}")
@@ -342,8 +338,8 @@ if __name__ == "__main__":
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
             execStr = (
-                f"executing 'echo System | gmx trjconv -s {top} -f {traj} "
-                f"-dump 22000 -o {gro}'"
+                f"executing 'echo System | trjconv -s {top} -f {traj} "
+                f"-dump 0 -o {gro}'"
             )
         else:
             execStr = (
@@ -407,7 +403,7 @@ if __name__ == "__main__":
     # the membrane
     membrane = u0.select_atoms("")
     R_membrane_z = 0
-    if lipids != []:
+    if not lipids:
         for i in range(0, len(lipids)):
             membrane = membrane + lipids[i]
         R_membrane_z = membrane.center_of_mass()[2]
@@ -522,7 +518,7 @@ if __name__ == "__main__":
 
     # Check that the number of atoms between data and README.yaml match
 
-    number_of_atomsTRJ = len(u.atoms)
+    number_of_atomsTRJ = u.atoms.n_atoms
 
     number_of_atoms = 0
     for key_mol in sim["COMPOSITION"].keys():
