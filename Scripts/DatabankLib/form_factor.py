@@ -9,16 +9,17 @@ import MDAnalysis as mda
 import numpy as np
 import json
 import time
-import gc
 from pprint import pprint
 from tqdm import tqdm
+
+# for testing purposes to safe time for loading trajectory and creating dictonary
+# the electron.dat will be decripted in the future as the values will be used from
+# the universal mapping file
+import periodictable
 
 from DatabankLib.databankLibrary import lipids_dict, loadMappingFile, getLipids
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib import NMLDB_ROOT_PATH
-
-nav = 6.02214129e+23
-gc.collect()
 
 
 # To write data in numpy arrays into json file, we inherit compact JSON
@@ -29,19 +30,6 @@ class NumpyArrayEncoder(CompactJSONEncoder):
             return CompactJSONEncoder.encode(self, o.tolist())
         else:
             return CompactJSONEncoder.encode(self, o)
-
-
-# for testing purposes to safe time for loading trajectory and creating dictonary
-# the electron.dat will be decripted in the future as the values will be used from
-# the universal mapping file
-
-# modify ion electron numbers Na, Cl, Ca, Mg, K
-electron_dictionary = {
-    "H": 1, "He": 2, "Li": 3, "Be": 4, "B": 5, "C": 6, "N": 7, "O": 8, "F": 9, "Ne": 10,
-    "Na": 10, "Mg": 10, "Al": 13, "Si": 14, "P": 15, "S": 16, "Cl": 18, "Ar": 18,
-    "K": 18, "Ca": 18, "Sc": 21, "Ti": 22, "V": 23, "Cr": 24, "Mn": 25, "Fe": 26,
-    "Co": 27, "Ni": 28, "Cu": 29, "Zn": 30, "Ga": 31, "Ge": 32, "Vi": 0, "Cs": 54,
-    "D": 0}
 
 
 class FormFactor:
@@ -166,14 +154,26 @@ class FormFactor:
             name2 = "C"
 
         try:
-            el = electron_dictionary[name2]
-        except KeyError:
+            el = getattr(periodictable, name2).number
+        except AttributeError:
             print(
                 f"ERROR: This mapping name cannot be read by our rules: {mapping_name}",
                 file=sys.stderr,
             )
             print("Consider changing naming in your mapping file.")
             sys.exit(1)
+
+        # TODO Modify default charge modification
+        if name2 in ['K', 'Na', 'Cs']:
+            el -= 1
+        elif name2 in ['Cl']:
+            el += 1
+        #
+
+        # TODO REMOVE WEIRD HERITAGE!!!
+        if name2 == "D":
+            el = 0
+        # WEIRD HERITAGE!!!
 
         return el
 
