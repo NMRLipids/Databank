@@ -51,42 +51,35 @@ class FormFactor:
     @staticmethod
     def __listNamePairs(mapping_dict, molecule):
         pairs_dictionary = {}
-        residues = []
-
-        for mapping_name in mapping_dict.keys():
-            try:
-                residues.append(mapping_dict[mapping_name]['RESIDUE'])
-            except KeyError:
-                continue
+        residues = [mv['RESIDUE'] 
+                    for _, mv in mapping_dict.items() 
+                    if 'RESIDUE' in mv]
 
         if residues:
             pairs_dictionary = dict.fromkeys(residues)
             print(pairs_dictionary.keys())
             for res in pairs_dictionary.keys():
-                pairs = []
-                for mapping_name in mapping_dict.keys():
-                    if res == mapping_dict[mapping_name]['RESIDUE']:
-                        pairs.append([mapping_name,
-                                      mapping_dict[mapping_name]['ATOMNAME']])
-                pairs_dictionary[res] = pairs
+                pairs_dictionary[res] = [
+                    [mk, mv['ATOMNAME']]
+                    for mk, mv in mapping_dict.items()
+                    if res == mv['RESIDUE']
+                    ]
         else:
-            pairs_dictionary = dict.fromkeys([molecule])
-            pairs = []
-            for mapping_name in mapping_dict.keys():
-                pairs.append([mapping_name,
-                              mapping_dict[mapping_name]['ATOMNAME']])
-            pairs_dictionary[molecule] = pairs
+            pairs_dictionary = {
+                molecule: [[mn, mv['ATOMNAME']] for mn, mv in mapping_dict.items()]
+            }
 
         return pairs_dictionary
 
     @staticmethod
     def __filterHbonds(mapping_names):
         re_H = re.compile(r'M_([A-Z]{1,2}[0-9]{1,4})*H[0-4]{1,2}_M')
-        filtered = list(filter(re_H.match, mapping_names))
+        filtered = filter(re_H.match, mapping_names)
         return filtered
 
-    __getWater = staticmethod(
-        lambda rmf: ('resname ' + rmf['COMPOSITION']['SOL']['NAME']))
+    @staticmethod
+    def __getWater(rmf):
+        return ('resname ' + rmf['COMPOSITION']['SOL']['NAME'])
 
     # -- regular methods --
 
