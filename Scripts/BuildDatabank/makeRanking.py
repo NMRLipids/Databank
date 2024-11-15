@@ -4,8 +4,8 @@
 """
 :program: makeRanking.py
 :description: creates different types of ranking lists of simulations based on their
-              quality against experiments. The ranking lists are stored in 
-              ``Data/Ranking/`` folder in JSON format. The lists can be shown 
+              quality against experiments. The ranking lists are stored in
+              ``Data/Ranking/`` folder in JSON format. The lists can be shown
               with the ``plotQuality.ipynb``
 """
 
