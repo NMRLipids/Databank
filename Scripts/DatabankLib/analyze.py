@@ -12,16 +12,16 @@ from tqdm import tqdm
 import numpy as np
 import gc
 
-from . import (NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
+from DatabankLib import (NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
                RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
-from .databank_defs import lipids_dict
+from DatabankLib.databank_defs import lipids_dict
 # from .core import *
-from .databankLibrary import GetNlipids, loadMappingFile, system2MDanalysisUniverse
-from .jsonEncoders import CompactJSONEncoder
-from .databankio import resolve_download_file_url
-from .databankop import find_OP
-from .form_factor import FormFactor
-from . import analyze_nmrpca as nmrpca
+from DatabankLib.databankLibrary import GetNlipids, loadMappingFile, system2MDanalysisUniverse
+from DatabankLib.jsonEncoders import CompactJSONEncoder
+from DatabankLib.databankio import resolve_download_file_url
+from DatabankLib.databankop import find_OP
+from DatabankLib.form_factor import FormFactor
+from DatabankLib import analyze_nmrpca as nmrpca
 
 logger = logging.getLogger(__name__)
 

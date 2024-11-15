@@ -17,9 +17,9 @@ import numpy as np
 import math
 import MDAnalysis as mda
 
-from . import NMLDB_SIMU_PATH, NMLDB_ROOT_PATH
-from .databank_defs import lipids_dict, software_dict, molecules_dict, molecule_ff_dict
-from .databankio import resolve_download_file_url
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_ROOT_PATH
+from DatabankLib.databank_defs import lipids_dict, software_dict, molecules_dict, molecule_ff_dict
+from DatabankLib.databankio import resolve_download_file_url
 
 logger = logging.getLogger(__name__)
 
