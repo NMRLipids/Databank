@@ -1,6 +1,6 @@
 """
 :module: DatabankLib.analyze
-:description: major analysis methods calculating a property from NMRLipipds 
+:description: major analysis methods calculating a property from NMRLipipds
               `system` object
 """
 
