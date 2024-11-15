@@ -4,9 +4,9 @@ TODO: add tests
 TODO: remove code duplication and commented code
 """
 
-from . import NMLDB_SIMU_PATH
-from .core import initialize_databank
-from .databankLibrary import loadMappingFile, lipids_dict
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.core import initialize_databank
+from DatabankLib.databankLibrary import loadMappingFile, lipids_dict
 
 import re
 import decimal as dc

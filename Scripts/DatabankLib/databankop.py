@@ -20,7 +20,7 @@ import numpy as np
 import warnings  # TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
 
-from .databankLibrary import loadMappingFile
+from DatabankLib.databankLibrary import loadMappingFile
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
 bond_len_max_sq = bond_len_max**2

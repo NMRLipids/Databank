@@ -40,8 +40,8 @@ import numpy as np
 from scipy import signal
 import MDAnalysis as mda
 
-from .databankLibrary import lipids_dict, loadMappingFile
-from .databankio import resolve_download_file_url, download_resource_from_uri
+from DatabankLib.databankLibrary import lipids_dict, loadMappingFile
+from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
 from MDAnalysis.analysis.base import AnalysisFromFunction
 import warnings
