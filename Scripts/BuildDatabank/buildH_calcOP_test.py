@@ -3,7 +3,7 @@
 
 """
 :program: buildH_calcOP_test.py
-:description: This script builds hydrogens from a united-atom trajectory and 
+:description: This script builds hydrogens from a united-atom trajectory and
               calculate the order parameter for each C-H bond.
 
 Usage details
