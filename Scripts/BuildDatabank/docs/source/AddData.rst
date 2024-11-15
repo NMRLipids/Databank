@@ -1,4 +1,4 @@
-AddData.py
+AddData script
 ==============
 
 .. _AddDataPy:
