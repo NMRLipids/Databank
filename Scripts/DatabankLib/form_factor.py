@@ -51,8 +51,8 @@ class FormFactor:
     @staticmethod
     def __listNamePairs(mapping_dict, molecule):
         pairs_dictionary = {}
-        residues = [mv['RESIDUE'] 
-                    for _, mv in mapping_dict.items() 
+        residues = [mv['RESIDUE']
+                    for _, mv in mapping_dict.items()
                     if 'RESIDUE' in mv]
 
         if residues:

@@ -1,28 +1,11 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-import logging
-import DatabankLib
-from DatabankLib.core import initialize_databank
+from DatabankLib.utils import run_analysis
 from DatabankLib.analyze import computeFF
+import logging
 
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
-    systems = initialize_databank()
-    resDict = {
-        DatabankLib.RCODE_COMPUTED: 0,
-        DatabankLib.RCODE_SKIPPED: 0,
-        DatabankLib.RCODE_ERROR: 0}
-
-    for system in systems:
-        logger.info("System title: " + system['SYSTEM'])
-        logger.info("System path: " + system['path'])
-        res = computeFF(system)
-        resDict[res] += 1
-
-    print(f"""
-    COMPUTED: {resDict[DatabankLib.RCODE_COMPUTED]}
-    SKIPPED: {resDict[DatabankLib.RCODE_SKIPPED]}
-      ERROR: {resDict[DatabankLib.RCODE_ERROR]}
-    """)
+    run_analysis(computeFF, logger)
