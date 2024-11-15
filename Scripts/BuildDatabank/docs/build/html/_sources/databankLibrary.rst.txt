@@ -15,13 +15,12 @@ then clone the NMRlipids databank git into this folder
 .. code-block::
 
    git clone https://github.com/NMRLipids/Databank.git
+   cd Databank
+   pip install -e .
 
 You can then start to work with the `template <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_ or write a code from the scratch. The minimum python code to intialize NMRlipids databank is
 
 .. code-block::
-
-   import sys
-   sys.path.insert(1, '/home/joe/Databank/Scripts/')
 
    import DatabankLib
    from DatabankLib.core import initialize_databank

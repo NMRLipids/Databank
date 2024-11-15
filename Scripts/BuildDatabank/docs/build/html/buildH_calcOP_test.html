@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
@@ -6,18 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>buildH_calcOP_test module &mdash; NMRlipids databank 4.9.2023 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=10ee5b61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -57,11 +55,13 @@
 <li class="toctree-l2"><a class="reference internal" href="modules.html#databanklib">DatabankLib</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#analyzedatabank">AnalyzeDatabank</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#builddatabank">BuildDatabank</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="AddData.html">AddData.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="AddData.html">AddData script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="QualityEvaluation.html">QualityEvaluation script</a></li>
-<li class="toctree-l3"><a class="reference internal" href="searchDATABANK.html">searchDATABANK module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="searchDATABANK.html">searchDATABANK script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="makeRanking.html">makeRanking script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_mappings.html">check_mappings module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">buildH_calcOP_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#usage-details">Usage details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.buildH_calcOP_test.calc_OP"><code class="docutils literal notranslate"><span class="pre">calc_OP()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.buildH_calcOP_test.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.buildH_calcOP_test.norm"><code class="docutils literal notranslate"><span class="pre">norm()</span></code></a></li>
@@ -123,10 +123,19 @@
              
   <section id="module-BuildDatabank.buildH_calcOP_test">
 <span id="buildh-calcop-test-module"></span><h1>buildH_calcOP_test module<a class="headerlink" href="#module-BuildDatabank.buildH_calcOP_test" title="Link to this heading"></a></h1>
-<p>This script builds hydrogens from a united-atom trajectory and calculate the
-order parameter for each C-H bond.</p>
+<dl class="field-list simple">
+<dt class="field-odd">program<span class="colon">:</span></dt>
+<dd class="field-odd"><p>buildH_calcOP_test.py</p>
+</dd>
+<dt class="field-even">description<span class="colon">:</span></dt>
+<dd class="field-even"><p>This script builds hydrogens from a united-atom trajectory and
+calculate the order parameter for each C-H bond.</p>
+</dd>
+</dl>
+<section id="usage-details">
+<h2>Usage details<a class="headerlink" href="#usage-details" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>It works in two modes :</dt><dd><ol class="arabic simple">
+<dt>It works in two modes:</dt><dd><ol class="arabic simple">
 <li><p>A slow mode when an output trajectory (e.g. in xtc format) is requested by
 the user. In this case, the whole trajectory including newly built
 hydrogens are written to this trajectory.</p></li>
@@ -146,6 +155,7 @@ written in fortran :
 of 3 elements, e.g. atom_coor = np.array((x, y, z)).
 Note2: sometimes numpy is slow on small arrays, thus we wrote a few “in-house”
 functions for vectorial operations (e.g. cross product).</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="BuildDatabank.buildH_calcOP_test.calc_OP">
 <span class="sig-prename descclassname"><span class="pre">BuildDatabank.buildH_calcOP_test.</span></span><span class="sig-name descname"><span class="pre">calc_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/buildH_calcOP_test.html#calc_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.buildH_calcOP_test.calc_OP" title="Link to this definition"></a></dt>
