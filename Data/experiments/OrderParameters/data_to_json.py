@@ -5,15 +5,16 @@ Converting OP dat file into properly organized JSON format.
 - For a membrane of single molecule it's 1.
 """
 
-import os, yaml, json, re, math
-
+import json
+import re
+import math
 import sys
-sys.path.append('../../../Scripts')
+
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
 data_file = sys.argv[1]
 print("Converting from: ", data_file)
-outfile = data_file.replace(".dat",".json")
+outfile = data_file.replace(".dat", ".json")
 print("Converting to: ", outfile)
 
 data = {}
@@ -28,15 +29,14 @@ with open(data_file) as OPfile:
             continue
         lSplit = line.split()
         print(lSplit)
-        assert(len(lSplit) in [3,4])
+        assert len(lSplit) in [3, 4]
         if math.isnan(float(lSplit[2])):
             continue
         OPname = lSplit[0] + " " + lSplit[1]
         err = DEFAULT_OP_ERROR if len(lSplit) == 3 else float(lSplit[3])
-        OPvalues = [ float(lSplit[2]),  err ]
-        data[str(OPname)] = [ OPvalues ]
-        #TODO: remove this double list thing!
-        
-with open(outfile, 'w') as f:
-    json.dump(data,f, cls=CompactJSONEncoder)
+        OPvalues = [float(lSplit[2]),  err]
+        data[str(OPname)] = [OPvalues]
+        # TODO: remove this double list thing!
 
+with open(outfile, 'w') as f:
+    json.dump(data, f, cls=CompactJSONEncoder)
