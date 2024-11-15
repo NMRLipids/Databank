@@ -2,7 +2,7 @@
 # coding: utf-8
 
 """
-:program: AddData.py 
+:program: AddData.py
 :description: The script adds a simulation into the Databank based on ``info.yaml``
               file.
 
@@ -19,8 +19,9 @@ Usage:
         [/path-to-databank]
 
 Returning error codes:
-    2 - filesystem writting errors;
-    3 - network accessing errors.
+    1 - input YAML parsing errors
+    2 - filesystem writting errors
+    3 - network accessing errors
 """
 
 import os
@@ -133,14 +134,14 @@ if __name__ == "__main__":
     except KeyError as e:
         logger.error(f"missing entry key in yaml config: {e}, aborting")
         logger.error(traceback.format_exc())
-        quit()
+        quit(1)
     except Exception as e:
         logger.error(
             f"an '{type(e).__name__}' occured while processing"
             f" '{input_path}', script has been aborted"
         )
         logger.error(e)
-        quit()
+        quit(1)
     else:
         logger.info(
             "all entries in simulation are understood and will be further processed"
@@ -233,49 +234,56 @@ if __name__ == "__main__":
     )
 
     for key_sim, value_sim in sim_hashes.items():
+        # double-checking keys
         try:
             entry_type = software_sim[key_sim]["TYPE"]
-            if "file" in entry_type:
-                files_list = []
-                is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim][
-                    "REQUIRED"
-                ]
+        except KeyError:
+            if key_sim in ["SOFTWARE", "ID"]:
+                continue
+            else:
+                # That shouldn't happen! Unexpected YAML-keys were checked by 
+                # parse_valid_config_settings before
+                raise
 
-                if not is_required and value_sim is None:
-                    continue  # skip not required NoneType (empty) file entries
+        if "file" in entry_type:
+            files_list = []
+            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim][
+                "REQUIRED"
+            ]
 
-                for file_provided in value_sim:
-                    file_name = os.path.join(dir_tmp, file_provided[0])
-                    logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
-                    file_hash = calc_file_sha1_hash(file_name)
-                    file_size_mb = f"{(os.path.getsize(file_name)/1024/1024):.2f}"
+            if not is_required and value_sim is None:
+                continue  # skip not required NoneType (empty) file entries
 
-                    df_files = pd.concat(
-                        [
-                            df_files,
-                            pd.DataFrame(
-                                [
-                                    {
-                                        "NAME": file_provided[0],
-                                        "TYPE": key_sim,
-                                        "REQUIRED": is_required,
-                                        "SIZE_MB": file_size_mb,
-                                        "HASH": file_hash,
-                                    }
-                                ]
-                            ),
-                        ],
-                        ignore_index=True,
-                    )
-                    files_list.append([file_provided[0], file_hash])
+            for file_provided in value_sim:
+                file_name = os.path.join(dir_tmp, file_provided[0])
+                logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
+                file_hash = calc_file_sha1_hash(file_name)
+                file_size_mb = f"{(os.path.getsize(file_name)/1024/1024):.2f}"
 
-                    # Find the keys of the required files to calculate the master_hash
-                    if is_required:
-                        sha1_list_requied.append(file_hash)
+                df_files = pd.concat(
+                    [
+                        df_files,
+                        pd.DataFrame(
+                            [
+                                {
+                                    "NAME": file_provided[0],
+                                    "TYPE": key_sim,
+                                    "REQUIRED": is_required,
+                                    "SIZE_MB": file_size_mb,
+                                    "HASH": file_hash,
+                                }
+                            ]
+                        ),
+                    ],
+                    ignore_index=True,
+                )
+                files_list.append([file_provided[0], file_hash])
 
-                    sim_hashes[key_sim] = files_list  # TODO Problematic
-        except KeyError:  # It is notmal that fails for "ID" and "SOFTWARE"
-            continue
+                # Find the keys of the required files to calculate the master_hash
+                if is_required:
+                    sha1_list_requied.append(file_hash)
+
+                sim_hashes[key_sim] = files_list  # TODO Problematic
 
     logger.info(f"Summary of downloaded files: {os.linesep}")
     logger.info("\n" + df_files.to_string())
@@ -314,7 +322,7 @@ if __name__ == "__main__":
         logger.error(
             "SOFTWARE '%s' is not a proper option.\n"
             "Use either 'gromacs', 'openMM', or 'NAMD'.")
-        quit()
+        quit(1)
 
     leaflet1 = 0  # total number of lipids in upper leaflet
     leaflet2 = 0  # total number of lipids in lower leaflet
@@ -356,7 +364,7 @@ if __name__ == "__main__":
     finally:
         if not os.path.isfile(gro):
             logger.error(f"'{gro}' could not be found, aborting")
-            quit()
+            quit(2)
 
     # TODO refactor this
     try:
@@ -578,10 +586,10 @@ if __name__ == "__main__":
         directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
     except NotImplementedError as e:
         logger.error(e)
-        quit()
+        quit(4)
     except OSError as e:
         logger.error(f"couldn't create output directory: {e.args[1]}")
-        quit()
+        quit(2)
 
     logger.info(f"saving results to '{directory_path}'")
 

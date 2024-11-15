@@ -58,10 +58,12 @@ class TestAddData:
     end correctly
     """
 
-    @pytest.mark.parametrize("infofn", ["info566.yaml"])
-    def test_add_data_addgood(self, infofn, tmpWorkDir, tmpOutDir):
+    @pytest.mark.parametrize(
+            "infofn, debug", [("info566.yaml", False),
+                              ("info566.yaml", True)])
+    def test_add_data_addgood(self, infofn, debug, tmpWorkDir, tmpOutDir):
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
-        result = subprocess.run([
+        runList = [
             self.exe,
             "-f",
             fn,
@@ -69,13 +71,16 @@ class TestAddData:
             tmpWorkDir,
             "-o",
             tmpOutDir
-        ], capture_output=True, text=True)
+        ]
+        if debug:
+            runList.append("-d")
+        result = subprocess.run(runList, capture_output=True, text=True)
         print("STDOUT", result.stdout)
         print("STDERR:", result.stderr)
         assert result.returncode == 0
 
-    @pytest.mark.parametrize("infofn", ["info566.yaml"])
-    def test_add_data_debuglevel(self, infofn, tmpWorkDir, tmpOutDir):
+    @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
+    def test_add_data_fail(self, infofn, tmpWorkDir, tmpOutDir):
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
         result = subprocess.run([
             self.exe,
@@ -89,4 +94,4 @@ class TestAddData:
         ], capture_output=True, text=True)
         print("STDOUT", result.stdout)
         print("STDERR:", result.stderr)
-        assert result.returncode == 0
+        assert result.returncode == 1
