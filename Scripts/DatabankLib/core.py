@@ -7,7 +7,7 @@ Can be imported without additional libraries to scan Databank system file tree!
 import os
 import yaml
 import collections.abc
-from . import NMLDB_SIMU_PATH
+from DatabankLib import NMLDB_SIMU_PATH
 
 
 class SystemsCollection(collections.abc.Sequence):

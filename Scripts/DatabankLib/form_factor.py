@@ -13,9 +13,9 @@ import gc
 from pprint import pprint
 from tqdm import tqdm
 
-from .databankLibrary import lipids_dict, loadMappingFile, getLipids
-from .jsonEncoders import CompactJSONEncoder
-from . import NMLDB_ROOT_PATH
+from DatabankLib.databankLibrary import lipids_dict, loadMappingFile, getLipids
+from DatabankLib.jsonEncoders import CompactJSONEncoder
+from DatabankLib import NMLDB_ROOT_PATH
 
 nav = 6.02214129e+23
 gc.collect()

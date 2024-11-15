@@ -9,8 +9,8 @@ import yaml
 import numpy as np
 import matplotlib.pyplot as plt
 
-from . import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
-from .core import initialize_databank
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
+from DatabankLib.core import initialize_databank
 
 
 def plotFormFactor(expFormFactor, k, legend, PlotColor):
