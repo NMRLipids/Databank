@@ -1,10 +1,15 @@
+"""
+:module: DatabankLib.analyze
+:description: major analysis methods calculating a property from NMRLipipds 
+              `system` object
+"""
 
 import json
 import os
 import sys
-import logging
 import re
 import traceback
+from logging import Logger
 import buildh
 import urllib.request
 import socket
@@ -12,21 +17,19 @@ from tqdm import tqdm
 import numpy as np
 import gc
 
-from DatabankLib import (NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
-               RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
+from DatabankLib import (
+    NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
+    RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
 from DatabankLib.databank_defs import lipids_dict
-# from .core import *
-from DatabankLib.databankLibrary import GetNlipids, loadMappingFile, system2MDanalysisUniverse
+from DatabankLib.databankLibrary import (
+    GetNlipids, loadMappingFile, system2MDanalysisUniverse)
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
 from DatabankLib.form_factor import FormFactor
 from DatabankLib import analyze_nmrpca as nmrpca
 
-logger = logging.getLogger(__name__)
 
-
-# TODO: substitute in main file
 def computeNMRPCA(system: dict, recompute: bool = False) -> int:
     """Compute eq_times.json using NMR PCA analysis.
 
@@ -108,7 +111,6 @@ def computeNMRPCA(system: dict, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-# TODO: use in calcAPL.py
 def computeAPL(system: dict, recompute: bool = False) -> int:
     """Generate apl.json analysis file for a system.
 
@@ -197,8 +199,7 @@ def computeTH(system: dict, recompute: bool = False) -> int:
 
 
 # TODO: implement onlyLipid
-# TODO: use in calcOrderParameter
-def computeOP(system: dict, recompute: bool = False) -> int:
+def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     """_summary_
 
     Args:
@@ -475,8 +476,7 @@ def computeOP(system: dict, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-# TODO: use in calcFormF
-def computeFF(system: dict, recompute: bool = False) -> int:
+def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
     logger.info("System title: " + system['SYSTEM'])
     logger.info("System path: " + system['path'])
     software = system['SOFTWARE']

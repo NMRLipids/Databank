@@ -1,3 +1,5 @@
+*TODO: move to CI/CD, remove build from the repo!*
+
 To recreate documentation, install:
 
 ```
