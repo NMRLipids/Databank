@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# coding: utf-8
 """
+:program: NMRPCA_timerelax.py
+:description: Compute PCA-derived lipid relaxation times.
+
 Main runs the loop over all databank trajectories and does the following:
     1. Calls the parser to check, merge, and concatenate trajectory
     2. Calls PCA to gep PCs, projections, and ACs
@@ -12,28 +15,11 @@ whole, or GROMACS is installed and available via gmx command.
 For details on NMRPCA, see `DatabankLib/analyze_nmrpca.py`.
 """
 
-import logging
-import DatabankLib
-from DatabankLib.core import initialize_databank
+from DatabankLib.utils import run_analysis
 from DatabankLib.analyze import computeNMRPCA
+import logging
 
 logger = logging.getLogger(__name__)
 
-
 if __name__ == "__main__":
-    systems = initialize_databank()
-    resDict = {DatabankLib.RCODE_COMPUTED: 0,
-               DatabankLib.RCODE_SKIPPED: 0,
-               DatabankLib.RCODE_ERROR: 0}
-
-    for system in systems:
-        logger.info("System title: " + system['SYSTEM'])
-        logger.info("System path: " + system['path'])
-        res = computeNMRPCA(system)
-        resDict[res] += 1
-
-    print(f"""
-     COMPUTED: {resDict[DatabankLib.RCODE_COMPUTED]}
-     SKIPPED: {resDict[DatabankLib.RCODE_SKIPPED]}
-     ERROR: {resDict[DatabankLib.RCODE_ERROR]}
-     """)
+    run_analysis(computeNMRPCA, logger)

@@ -241,7 +241,7 @@ if __name__ == "__main__":
             if key_sim in ["SOFTWARE", "ID"]:
                 continue
             else:
-                # That shouldn't happen! Unexpected YAML-keys were checked by 
+                # That shouldn't happen! Unexpected YAML-keys were checked by
                 # parse_valid_config_settings before
                 raise
 

@@ -81,7 +81,8 @@ class OrderParameter:
         self.traj = []  # for storing OPs
         self.selection = []
 
-    def calc_OP(self, atoms):
+    @staticmethod
+    def calc_OP(atoms):
         """
         calculates Order Parameter according to equation
         S = 1/2 * (3*cos(theta)^2 -1)
@@ -199,7 +200,7 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
             Nres = len(op.selection)
             for i in range(0, Nres):
                 residue = op.selection[i]
-                S = op.calc_OP(residue)
+                S = OrderParameter.calc_OP(residue)
                 op.traj[i] = op.traj[i] + S / Nframes
 
 
