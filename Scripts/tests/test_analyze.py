@@ -9,6 +9,7 @@ from unittest import mock
 import os
 import glob
 import pytest
+import logging
 import DatabankLib
 
 # Global loaders
@@ -26,6 +27,25 @@ def header_module_scope():
         print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
         yield
     print("DBG: Mocking completed")
+
+
+@pytest.fixture(scope="module")
+def logger():
+    logger = logging.getLogger("test_logger")
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+
+    if not logger.handlers:  # Avoid adding multiple handlers during pytest runs
+        logger.addHandler(handler)
+
+    yield logger
+
+    # TEARDOWN: clean up handlers after use
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
 
 
 @pytest.fixture(scope="module")
@@ -119,12 +139,12 @@ def compareJSONsBtwSD(jsfn: str):
 
 
 @pytest.mark.parametrize("systemid", [86, 243, 281, 566, 787])
-def test_analyze_apl(systems, systemLoadTraj, systemid):
+def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
     from DatabankLib.analyze import computeAPL
 
     s = systems.loc(systemid)
 
-    rCode = computeAPL(s)
+    rCode = computeAPL(s, logger)
     assert rCode == DatabankLib.analyze.RCODE_COMPUTED
 
     cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
@@ -142,11 +162,11 @@ def test_analyze_apl(systems, systemLoadTraj, systemid):
                           (787, DatabankLib.RCODE_ERROR),
                           (243, DatabankLib.RCODE_COMPUTED),
                           (86,  DatabankLib.RCODE_COMPUTED)])
-def test_analyze_op(systems, systemLoadTraj, systemid, rcodex):
+def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeOP
     from DatabankLib.databank_defs import lipids_dict
     s = systems.loc(systemid)
-    rCode = computeOP(s)
+    rCode = computeOP(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
@@ -167,10 +187,10 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex):
                           (787, DatabankLib.RCODE_ERROR),
                           (243, DatabankLib.RCODE_COMPUTED),
                           (86,  DatabankLib.RCODE_COMPUTED)],)
-def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
+def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeFF
     s = systems.loc(systemid)
-    rCode = computeFF(s)
+    rCode = computeFF(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
@@ -192,10 +212,10 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex):
                           (787, DatabankLib.RCODE_ERROR),
                           (243, DatabankLib.RCODE_COMPUTED),
                           (86,  DatabankLib.RCODE_COMPUTED)])
-def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex):
+def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeNMRPCA
     s = systems.loc(systemid)
-    rCode = computeNMRPCA(s)
+    rCode = computeNMRPCA(s, logger)
     assert rCode == rcodex
 
     if rCode == DatabankLib.RCODE_ERROR:
