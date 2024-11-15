@@ -102,7 +102,7 @@ if __name__ == "__main__":
     logging_level = logging.DEBUG if args.debug else logging.INFO
     logging.basicConfig(
         format="%(asctime)s [%(levelname)s]: %(message)s",
-        datefmt="%m/%d/%Y %I:%M:%S %p",
+        datefmt="%I:%M:%S %p",
         level=logging_level,
     )
     logger = logging.getLogger()
@@ -277,9 +277,8 @@ if __name__ == "__main__":
         except KeyError:  # It is notmal that fails for "ID" and "SOFTWARE"
             continue
 
-    logger.info(f"Summary of downloaded files:{os.linesep}")
-    print(df_files)
-    print()
+    logger.info(f"Summary of downloaded files: {os.linesep}")
+    logger.info("\n" + df_files.to_string())
 
     # Calculate the hash of a file contaning the hashes of each of the required files
     # This should be always invariant as it will be used unique identifier for a
@@ -430,25 +429,29 @@ if __name__ == "__main__":
                         + " or "
                     )
                     break
-                    # print(selection)
                 else:
                     selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                     break
-        selection = selection.rstrip(" or ")
-        logger.info(selection)
-        molecules = u0.select_atoms(selection)
-        print(molecules)
-        logger.info(molecules.residues)
 
-        # print(molecules.residues)
-        if molecules.n_residues > 0:
-            for mol in molecules.residues:
-                R = mol.atoms.center_of_mass()
+        # if lipid was found then selection is not empty
+        if selection != "":
+            selection = selection.rstrip(" or ")
+            logger.debug(f"Selection: `{selection}`")
+            molecules = u0.select_atoms(selection)
+            logger.debug("Resnames: " +
+                         ", ".join(molecules.residues.resnames) +
+                         " | ResIDs: " +
+                         ", ".join(map(str, molecules.residues.resids))
+                         )
 
-                if R[2] - R_membrane_z > 0:
-                    leaflet1 = leaflet1 + 1
-                elif R[2] - R_membrane_z < 0:
-                    leaflet2 = leaflet2 + 1
+            if molecules.n_residues > 0:
+                for mol in molecules.residues:
+                    R = mol.atoms.center_of_mass()
+
+                    if R[2] - R_membrane_z > 0:
+                        leaflet1 = leaflet1 + 1
+                    elif R[2] - R_membrane_z < 0:
+                        leaflet2 = leaflet2 + 1
 
         try:
             sim["COMPOSITION"][key_mol]["COUNT"] = [leaflet1, leaflet2]
@@ -560,7 +563,6 @@ if __name__ == "__main__":
 
     # ---- DATE OF RUNNING ----
     today = date.today().strftime("%d/%m/%Y")
-    # print(today)
     sim["DATEOFRUNNING"] = today
 
     logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
