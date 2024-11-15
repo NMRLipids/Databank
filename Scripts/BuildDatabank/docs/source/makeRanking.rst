@@ -1,7 +1,7 @@
-searchDATABANK script
+makeRanking script
 =====================
 
-.. automodule:: BuildDatabank.searchDATABANK
+.. automodule:: BuildDatabank.makeRanking
    :members:
    :undoc-members:
    :show-inheritance:

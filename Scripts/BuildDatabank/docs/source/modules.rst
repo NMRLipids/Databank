@@ -22,6 +22,7 @@ BuildDatabank
    AddData
    QualityEvaluation
    searchDATABANK
+   makeRanking
    check_mappings
    buildH_calcOP_test
 

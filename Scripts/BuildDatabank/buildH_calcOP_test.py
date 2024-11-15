@@ -2,10 +2,13 @@
 # coding: utf-8
 
 """
-This script builds hydrogens from a united-atom trajectory and calculate the
-order parameter for each C-H bond.
+:program: buildH_calcOP_test.py
+:description: This script builds hydrogens from a united-atom trajectory and 
+              calculate the order parameter for each C-H bond.
 
-It works in two modes :
+Usage details
+-----------------------
+It works in two modes:
   1) A slow mode when an output trajectory (e.g. in xtc format) is requested by
      the user. In this case, the whole trajectory including newly built
      hydrogens are written to this trajectory.

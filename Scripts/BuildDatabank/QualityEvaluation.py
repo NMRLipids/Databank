@@ -2,8 +2,9 @@
 # coding: utf-8
 
 """
-``QualityEvaluation.py`` perform comparison of experiments and simulations according to
-`EXPERIMENT` field inside ``README.yaml`` file.
+:program: QualityEvaluation.py
+:description: perform comparison of experiments and simulations according to
+              **EXPERIMENT** field inside ``README.yaml`` file.
 
 In the standard protocol, it should be run *after* ``searchDATABANK.py``.
 """
@@ -17,7 +18,6 @@ from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 import DatabankLib.quality as qq
 
-#################################
 if __name__ == "__main__":
     simulations = qq.loadSimulations()
 

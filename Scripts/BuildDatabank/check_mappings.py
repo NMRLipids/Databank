@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-It checks mapping files, but going only through systems
-which have TPR in folders preloaded. That is required for
-debugging mappings code.
+:program: check_mappings.py
+:description: It checks mapping files, but going only through systems
+              which have TPR in folders preloaded. That is required for
+              debugging mappings code.
 """
 
 import os
