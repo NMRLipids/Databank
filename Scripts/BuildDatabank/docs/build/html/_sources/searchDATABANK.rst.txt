@@ -1,4 +1,4 @@
-searchDATABANK module
+searchDATABANK script
 =====================
 
 .. automodule:: BuildDatabank.searchDATABANK

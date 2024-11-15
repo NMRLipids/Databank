@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>searchDATABANK module &mdash; NMRlipids databank 4.9.2023 documentation</title>
+  <title>searchDATABANK script &mdash; NMRlipids databank 4.9.2023 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=10ee5b61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="check_mappings module" href="check_mappings.html" />
+    <link rel="next" title="makeRanking script" href="makeRanking.html" />
     <link rel="prev" title="QualityEvaluation script" href="QualityEvaluation.html" /> 
 </head>
 
@@ -57,9 +55,9 @@
 <li class="toctree-l2"><a class="reference internal" href="modules.html#databanklib">DatabankLib</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#analyzedatabank">AnalyzeDatabank</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#builddatabank">BuildDatabank</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="AddData.html">AddData.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="AddData.html">AddData script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="QualityEvaluation.html">QualityEvaluation script</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">searchDATABANK module</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">searchDATABANK script</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.searchDATABANK.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.searchDATABANK.Experiment"><code class="docutils literal notranslate"><span class="pre">Experiment</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.searchDATABANK.loadSimulations"><code class="docutils literal notranslate"><span class="pre">loadSimulations()</span></code></a></li>
@@ -69,6 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#BuildDatabank.searchDATABANK.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="makeRanking.html">makeRanking script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="check_mappings.html">check_mappings module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="buildH_calcOP_test.html">buildH_calcOP_test module</a></li>
 </ul>
@@ -94,7 +93,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">Project structure</a></li>
-      <li class="breadcrumb-item active">searchDATABANK module</li>
+      <li class="breadcrumb-item active">searchDATABANK script</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/searchDATABANK.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,19 +104,19 @@
            <div itemprop="articleBody">
              
   <section id="module-BuildDatabank.searchDATABANK">
-<span id="searchdatabank-module"></span><h1>searchDATABANK module<a class="headerlink" href="#module-BuildDatabank.searchDATABANK" title="Link to this heading"></a></h1>
+<span id="searchdatabank-script"></span><h1>searchDATABANK script<a class="headerlink" href="#module-BuildDatabank.searchDATABANK" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="BuildDatabank.searchDATABANK.Simulation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BuildDatabank.searchDATABANK.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">readme</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/BuildDatabank/searchDATABANK.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#BuildDatabank.searchDATABANK.Simulation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="BuildDatabank.searchDATABANK.Simulation.readme">
-<span class="sig-name descname"><span class="pre">readme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#BuildDatabank.searchDATABANK.Simulation.readme" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">readme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#BuildDatabank.searchDATABANK.Simulation.readme" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="BuildDatabank.searchDATABANK.Simulation.indexingPath">
-<span class="sig-name descname"><span class="pre">indexingPath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#BuildDatabank.searchDATABANK.Simulation.indexingPath" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">indexingPath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#BuildDatabank.searchDATABANK.Simulation.indexingPath" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -202,7 +201,7 @@ fd: file descriptor for writting into</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="QualityEvaluation.html" class="btn btn-neutral float-left" title="QualityEvaluation script" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="check_mappings.html" class="btn btn-neutral float-right" title="check_mappings module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="makeRanking.html" class="btn btn-neutral float-right" title="makeRanking script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
