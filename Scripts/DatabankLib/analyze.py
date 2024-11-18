@@ -30,7 +30,7 @@ from DatabankLib.form_factor import FormFactor
 from DatabankLib import analyze_nmrpca as nmrpca
 
 
-def computeNMRPCA(system: dict, recompute: bool = False) -> int:
+def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
     """Compute eq_times.json using NMR PCA analysis.
 
     Args:
@@ -111,7 +111,7 @@ def computeNMRPCA(system: dict, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-def computeAPL(system: dict, recompute: bool = False) -> int:
+def computeAPL(system: dict, logger: Logger, recompute: bool = False) -> int:
     """Generate apl.json analysis file for a system.
 
     Args:
@@ -162,7 +162,7 @@ def computeAPL(system: dict, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-def computeTH(system: dict, recompute: bool = False) -> int:
+def computeTH(system: dict, logger: Logger, recompute: bool = False) -> int:
     thickFN = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
     if (os.path.isfile(thickFN) and not recompute):
         # file exist. Skipping
