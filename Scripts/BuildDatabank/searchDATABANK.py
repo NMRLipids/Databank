@@ -281,7 +281,7 @@ def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
                         exp_doi = experiment.readme['DOI']
                         exp_path = os.path.relpath(
                             experiment.dataPath,
-                            start=os.path.join(NMLDB_EXP_PATH, experiment.exptyp))
+                            start=os.path.join(NMLDB_EXP_PATH, experiment.exptype))
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.molname
                             simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path # noqa
