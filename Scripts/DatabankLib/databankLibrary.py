@@ -7,6 +7,7 @@ import copy
 import hashlib
 import urllib
 import logging
+from DatabankLib.settings.engines import get_3major_fnames, software_dict
 from tqdm import tqdm
 
 import json
@@ -18,8 +19,8 @@ import math
 import MDAnalysis as mda
 
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_ROOT_PATH
-from DatabankLib.databank_defs import (
-    lipids_dict, software_dict, molecules_dict, molecule_ff_dict)
+from DatabankLib.settings.molecules import (
+    lipids_dict, molecules_dict, molecule_ff_dict)
 from DatabankLib.databankio import resolve_download_file_url
 
 logger = logging.getLogger(__name__)
@@ -273,50 +274,76 @@ def system2MDanalysisUniverse(system):
     if skipDownloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
-    trj = system.get('TRJ')
-    trj_name = os.path.join(systemPath, system.get('TRJ')[0][0])
-    software = system['SOFTWARE']
+    try:
+        struc, top, trj = get_3major_fnames(system)
+        trj_name = os.path.join(systemPath, trj)
+        if struc is None:
+            struc_name = None
+        else:
+            struc_name = os.path.join(systemPath, struc)
+        if top is None:
+            top_name = None
+        else:
+            top_name = os.path.join(systemPath, top)
+    except Exception as e:
+        logger.error("Error getting structure/topology/trajectory filenames.")
+        logger.error(str(e))
+        raise
 
+    # downloading trajectory (obligatory)
     if (skipDownloading):
         if (not os.path.isfile(trj_name)):
             raise FileNotFoundError(
                 f"Trajectory should be downloaded [{trj_name}] by user")
     else:
-        trj_url = resolve_download_file_url(doi, trj[0][0])
+        trj_url = resolve_download_file_url(doi, trj)
         if (not os.path.isfile(trj_name)):
             print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'],
                   ' to ', system['path'])
             _ = urllib.request.urlretrieve(trj_url, trj_name)
 
-    if 'gromacs' in software:
-        tpr_name = 'stub'
+    # downloading topology (if exists)
+    if top is not None:
+        if skipDownloading:
+            if (not os.path.isfile(top_name)):
+                raise FileNotFoundError(f"TPR should be downloaded [{top_name}]")
+        else:
+            top_url = resolve_download_file_url(doi, top)
+            if (not os.path.isfile(top_name)):
+                _ = urllib.request.urlretrieve(top_url, top_name)
+
+    # downloading structure (if exists)
+    if struc is not None:
+        if skipDownloading:
+            if (not os.path.isfile(struc_name)):
+                raise FileNotFoundError(f"GRO should be downloaded [{struc_name}]")
+        else:
+            struc_url = resolve_download_file_url(doi, struc)
+            if (not os.path.isfile(struc_name)):
+                _ = urllib.request.urlretrieve(struc_url, struc_name)
+
+    madeFromTop = False
+    try:
+        u = mda.Universe(top_name, trj_name)
+        madeFromTop = True
+    except Exception as e:
+        logger.warning(f"Couldn't make Universe from {top_name} and {trj_name}.")
+        logger.warning(str(e))
+
+    if not madeFromTop and struc is not None:
+        madeFromStruc = False
         try:
-            tpr = system.get('TPR')
-            tpr_name = os.path.join(systemPath, tpr[0][0])
-            if skipDownloading:
-                if (not os.path.isfile(tpr_name)):
-                    raise FileNotFoundError(f"TPR should be downloaded [{tpr_name}]")
-            else:
-                tpr_url = resolve_download_file_url(doi, tpr[0][0])
-                if (not os.path.isfile(tpr_name)):
-                    _ = urllib.request.urlretrieve(tpr_url, tpr_name)
+            u = mda.Universe(struc_name, trj_name)
+            madeFromStruc = True
+        except Exception as e:
+            logger.warning(f"Couldn't make Universe from {struc_name} and {trj_name}.")
+            logger.warning(str(e))
 
-            u = mda.Universe(tpr_name, trj_name)
-        except Exception:
-            try:
-                gro = system.get('GRO')
-                conf = os.path.join(systemPath, gro[0][0])
+        if not madeFromStruc:
+            if system["SOFTWARE"].upper() == "GROMACS":
+                # rewrite struc_fname!
+                struc_fname = os.path.join(systemPath, 'conf.gro')
 
-                if skipDownloading:
-                    if (not os.path.isfile(conf)):
-                        raise FileNotFoundError(f"GRO should be downloaded [{conf}]")
-                else:
-                    gro_url = resolve_download_file_url(doi, gro[0][0])
-                    if (not os.path.isfile(conf)):
-                        _ = urllib.request.urlretrieve(gro_url, conf)
-            except Exception:
-                conf = os.path.join(systemPath, 'conf.gro')
-            if (os.path.isfile(tpr_name)):
                 print("Generating conf.gro because MDAnalysis cannot "
                       "(probably!) read tpr version")
                 if (
@@ -324,27 +351,14 @@ def system2MDanalysisUniverse(system):
                     'GROMACS_VERSION' in system['WARNINGS'] and
                     system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'
                 ):
-                    os.system(f'echo System | editconf -f {tpr_name} -o {conf}')
+                    os.system(f'echo System | editconf -f {top_name} -o {struc_fname}')
                 else:
                     os.system(f"echo System | gmx trjconv "
-                              f"-s {tpr_name} -f {trj_name} -dump 0 -o {conf}")
-            u = mda.Universe(conf, trj_name)
-
-    elif 'openMM' or 'NAMD' in software:
-        pdb = system.get('PDB')
-        pdb_name = os.path.join(systemPath, pdb[0][0])
-        if skipDownloading:
-            if (not os.path.isfile(pdb_name)):
-                raise FileNotFoundError(f"PDB should be downloaded [{pdb_name}]")
-        else:
-            pdb_url = resolve_download_file_url(doi, pdb[0][0])
-            if (not os.path.isfile(pdb_name)):
-                _ = urllib.request.urlretrieve(pdb_url, pdb_name)
-        u = mda.Universe(pdb_name, trj_name)
-
-    else:
-        raise NotImplementedError(
-            'Other than GROMACS, openMM or NAMD are yet to be implemented.')
+                              f"-s {top_name} -f {trj_name} -dump 0 -o {struc_fname}")
+                # the last try!
+                u = mda.Universe(struc_fname, trj_name)
+            else:
+                raise RuntimeError("There is no way to build up your system!")
 
     return u
 

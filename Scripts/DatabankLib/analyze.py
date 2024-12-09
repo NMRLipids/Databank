@@ -10,6 +10,7 @@ import sys
 import re
 import traceback
 from logging import Logger
+from DatabankLib.settings.engines import get_3major_fnames
 import buildh
 import urllib.request
 import socket
@@ -20,7 +21,7 @@ import gc
 from DatabankLib import (
     NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
     RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
-from DatabankLib.databank_defs import lipids_dict
+from DatabankLib.settings.molecules import lipids_dict
 from DatabankLib.databankLibrary import (
     GetNlipids, loadMappingFile, system2MDanalysisUniverse)
 from DatabankLib.jsonEncoders import CompactJSONEncoder
@@ -241,9 +242,6 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     # here but this script downloads the data)
     _ = system2MDanalysisUniverse(system)
 
-    # Store the local path of the trajectory
-    trj_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TRJ')[0][0])
-
     # Software and time for equilibration period
     software = system['SOFTWARE']
     EQtime = float(system['TIMELEFTOUT'])*1000
@@ -263,20 +261,26 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     )
     trjconvCOMMAND = 'trjconv' if g3switch else 'gmx trjconv'
 
+    curPath = os.path.join(NMLDB_SIMU_PATH, path)
+
+    try:
+        struc_fname, top_fname, trj_fname = get_3major_fnames(system, joinPath=curPath)
+    except (ValueError, KeyError) as e:
+        sys.stderr.write("Error reading filenames from system dictionary.\n")
+        sys.stderr.write(str(type(e)) + " => " + str(e))
+        return RCODE_ERROR
+
     try:
         # Set topology file names and make Gromacs trajectories whole
         if 'gromacs' in software:
-            try:
-                tpr_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('TPR')[0][0])
-            except Exception as ee:
-                print("TPR is required for OP calculations!")
-                raise ee
+            if top_fname is None:
+                raise ValueError("TPR is required for OP calculations!")
 
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, 'whole.xtc')
             if (not os.path.isfile(xtcwhole)):
                 execStr = (
-                    f"echo System | {trjconvCOMMAND} -f {trj_name} "
-                    f"-s {tpr_name} -o {xtcwhole} -pbc mol -b {str(EQtime)}"
+                    f"echo System | {trjconvCOMMAND} -f {trj_fname} "
+                    f"-s {top_fname} -o {xtcwhole} -pbc mol -b {str(EQtime)}"
                 )
                 print("Make molecules whole in the trajectory")
                 if unitedAtom and system['TRAJECTORY_SIZE'] > 15e9:
@@ -287,25 +291,29 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                 if (rCode != 0):
                     raise RuntimeError("trjconv exited with error (see above)")
         elif 'openMM' in software or 'NAMD' in software:
-            pdb_name = os.path.join(NMLDB_SIMU_PATH, path, system.get('PDB')[0][0])
-            if (not os.path.isfile(pdb_name)):
-                pdb_url = resolve_download_file_url(system.get('DOI'), pdb_name)
-                _ = urllib.request.urlretrieve(pdb_url, pdb_name)
+            if (not os.path.isfile(struc_fname)):
+                pdb_url = resolve_download_file_url(system.get('DOI'), struc_fname)
+                _ = urllib.request.urlretrieve(pdb_url, struc_fname)
         else:
             print("Order parameter calculation for other than gromacs, "
                   "openMM and NAMD are yet to be implemented.")
             return RCODE_ERROR
 
         # Calculate order parameters
-        if unitedAtom and 'gromacs' in software:
-            topfile = os.path.join(NMLDB_SIMU_PATH, path, 'frame0.gro')
+        # -----------------------------------
+        # united-atom switch -> engine switch
+        if unitedAtom:
+            if 'gromacs' not in software:
+                raise ValueError("UNITED_ATOMS is supported only for GROMACS engine!")
+            frame0struc = os.path.join(NMLDB_SIMU_PATH, path, 'frame0.gro')
             if g3switch:
-                rCode = os.system(f'echo System | editconf -f {tpr_name} -o {topfile}')
+                rCode = os.system(
+                    f'echo System | editconf -f {top_fname} -o {frame0struc}')
                 if (rCode != 0):
                     raise RuntimeError("editconf exited with error (see above)")
             else:
                 rCode = os.system(f"echo System | {trjconvCOMMAND} -f {xtcwhole}"
-                                  f" -s {tpr_name} -dump 0 -o {topfile}")
+                                  f" -s {top_fname} -dump 0 -o {frame0struc}")
                 if (rCode != 0):
                     raise RuntimeError(
                         f"trjconv ({trjconvCOMMAND}) exited with error (see above)")
@@ -359,7 +367,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                     lipid_json_file = None
 
                 print(system['UNITEDATOM_DICT'][key])
-                buildh.launch(coord_file=topfile, def_file=def_fileNAME,
+                buildh.launch(coord_file=frame0struc, def_file=def_fileNAME,
                               lipid_type=system['UNITEDATOM_DICT'][key],
                               lipid_jsons=lipid_json_file, traj_file=xtcwhole,
                               out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
@@ -397,18 +405,19 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
 
                 outfile.close()
 
+        # not united-atom cases
         else:
             if 'gromacs' in software:
                 gro = os.path.join(NMLDB_SIMU_PATH, path, 'conf.gro')
 
                 print("\n Making gro file")
                 if g3switch:
-                    rCode = os.system(f'echo System | editconf -f {tpr_name} -o {gro}')
+                    rCode = os.system(f'echo System | editconf -f {top_fname} -o {gro}')
                     if (rCode != 0):
                         raise RuntimeError("editconf exited with error (see above)")
                 else:
                     rCode = os.system(f"echo System | gmx trjconv "
-                                      f"-f {trj_name} -s {tpr_name} -dump 0 -o {gro}")
+                                      f"-f {trj_fname} -s {top_fname} -dump 0 -o {gro}")
                     if (rCode != 0):
                         raise RuntimeError("trjconv exited with error (see above)")
 
@@ -436,10 +445,9 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                     if (os.path.isfile(outfilename2)):
                         print('Order parameter file already found')
                         continue
-
                     if 'gromacs' in software:
                         try:
-                            OrdParam = find_OP(mapping_file, tpr_name,
+                            OrdParam = find_OP(mapping_file, top_fname,
                                                xtcwhole, resname)
                         except Exception as e:
                             logger.warning(f"We got this exception: \n    {e}")
@@ -448,7 +456,8 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                             OrdParam = find_OP(mapping_file, gro, xtcwhole, resname)
 
                     if 'openMM' in software or 'NAMD' in software:
-                        OrdParam = find_OP(mapping_file, pdb_name, trj_name, resname)
+                        OrdParam = find_OP(mapping_file, struc_fname, trj_fname,
+                                           resname)
 
                     data = {}
 
@@ -525,7 +534,21 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
 
     output_name = ""
 
-    trj_name = os.path.join(system_path, system['TRJ'][0][0])
+    try:
+        struc, top, trj = get_3major_fnames(system)
+        trj_name = os.path.join(system_path, trj)
+        if struc is None:
+            struc_name = None
+        else:
+            struc_name = os.path.join(system_path, struc)
+        if top is None:
+            tpr_name = None
+        else:
+            top_name = os.path.join(system_path, top)
+    except Exception as e:
+        logger.error("Error getting structure/topology/trajectory filenames.")
+        logger.error(str(e))
+        return RCODE_ERROR
 
     socket.setdefaulttimeout(15)
 
@@ -535,36 +558,35 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
                 raise FileNotFoundError(
                     f"Trajectory should be downloaded [{trj_name}] by user")
         else:
-            trj_url = resolve_download_file_url(system['DOI'], system['TRJ'][0][0])
+            trj_url = resolve_download_file_url(system['DOI'], trj)
             if (not os.path.isfile(trj_name)):
                 print('Downloading trajectory with the size of ',
                       system['TRAJECTORY_SIZE'], ' to ', system['path'])
                 _ = urllib.request.urlretrieve(trj_url, trj_name)
 
         # make a function like this
+        # TODO TPR should not be obligatory for GROMACS
         if 'gromacs' in software:
-            tpr_name = os.path.join(system_path, system['TPR'][0][0])
+            tpr_name = top_name
 
             if (skipDownloading):
                 if (not os.path.isfile(tpr_name)):
                     raise FileNotFoundError(
                         f"TPR should be downloaded [{tpr_name}] by user")
             else:
-                tpr_url = resolve_download_file_url(doi, system['TPR'][0][0])
+                tpr_url = resolve_download_file_url(doi, top)
                 if (not os.path.isfile(tpr_name)):
                     _ = urllib.request.urlretrieve(tpr_url, tpr_name)
 
         if 'openMM' in software or 'NAMD' in software:
-            pdb = system.get('PDB')
-            pdb_name = os.path.join(system_path, pdb[0][0])
             if (skipDownloading):
-                if (not os.path.isfile(pdb_name)):
+                if (not os.path.isfile(struc_name)):
                     raise FileNotFoundError(
-                        f"PDB should be downloaded [{pdb_name}] by user")
+                        f"Structure file should be downloaded [{struc_name}] by user")
             else:
-                pdb_url = resolve_download_file_url(doi, pdb[0][0])
-                if (not os.path.isfile(pdb_name)):
-                    _ = urllib.request.urlretrieve(pdb_url, pdb_name)
+                pdb_url = resolve_download_file_url(doi, struc)
+                if (not os.path.isfile(struc_name)):
+                    _ = urllib.request.urlretrieve(pdb_url, struc_name)
 
         EQtime = float(system['TIMELEFTOUT'])*1000
 
@@ -671,7 +693,7 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
                     FormFactor(system_path, tpr_name, xtccentered, 200,
                                output_name, system)
                 if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
-                    FormFactor(system_path, pdb_name, trj_name, 200,
+                    FormFactor(system_path, struc_name, trj_name, 200,
                                output_name, system)
             except ValueError as e:
                 # Here it was expected to have allow_pickle-type errors.

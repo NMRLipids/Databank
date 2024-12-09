@@ -1,434 +1,34 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Module file with definition of different global-level dictionaries.
+:module: settings/engines.py
 
-There is a dictionary of lipids, ions, etc.
+:description: The module defines dictionaries describing parsing of YAML depending
+              on MD engine used.
 
-If you add a lipid which is not yet in the databank, you have to add it here!
+Engine-specific dictionaries have a fixed subfield types:
+- REQUIRED
+    Boolean field indicating if the field SHOULD be filled in `README.yaml`
+- TYPE
+    + file
+    + files
+    + string
+    + dictionary
+    + float
+    + integer
+- CATEGORY
+    For file(s) type it can be:
+    + structure
+    + topology
+    + trajectory
+    + energy
+    + None
+- EXTENSION
+    Is a tuple of possible file extensions
 """
 
-lipids_dict = {
-    "POPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PAzePCprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PAzePCdeprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DMPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DEPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DRPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DLPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DLIPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DSPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DAPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DMTAP": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SDG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SDPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI24": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI25": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SLPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CER": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CER180": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DHMDMAB": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SLiPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SM16": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SM18": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TOCL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TLCL_0H": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "GM1": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPGK": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "GB3": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-}
+import os.path
+from collections.abc import Sequence
 
-
-# Dictionary of other than lipid molecules.
-#
-# If you add other than a lipid molecule which is not yet in the databank, you have to
-# add it here
-
-molecules_dict = {
-    "POT": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOD": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CLA": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CAL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CES": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "C20": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-}
-
-
-# Dictionary containing the force fields for molecules given by the contributor
-
-molecule_ff_dict = {
-    "FFPOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPAzePCprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPAzePCdeprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDMPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDEPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDRPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDLPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDLIPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDSPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDAPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDMTAP": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSDG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSDPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSAPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSAPI24": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSLPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCER": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCER180": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDHMDMAB": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSM16": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSM18": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFTOCL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFGM1": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPGK": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFGB3": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOT": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOD": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCLA": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCAL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCES": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-}
-
-
-# Databank dictionary for simulations ran with Gromacs
-
+# GROMACS
 gromacs_dict = {
     "INI": {
         "REQUIRED": False,
@@ -446,14 +46,13 @@ gromacs_dict = {
     "TRJ": {
         "REQUIRED": True,
         "TYPE": "files",
-        "EXTENSION": (
-            "xtc",
-            "trr",
-        ),
+        "CATEGORY": "trajectory",
+        "EXTENSION": ("xtc", "trr",),
     },
     "TPR": {
         "REQUIRED": True,
         "TYPE": "file",
+        "CATEGORY": "topology",
         "EXTENSION": ("tpr",),
     },
     "CPT": {
@@ -479,11 +78,13 @@ gromacs_dict = {
     "GRO": {
         "REQUIRED": False,
         "TYPE": "file",
+        "CATEGORY": "structure",
         "EXTENSION": ("gro",),
     },
     "EDR": {
         "REQUIRED": False,
         "TYPE": "file",
+        "CATEGORY": "energy",
         "EXTENSION": ("edr",),
     },
     "FF": {
@@ -577,21 +178,14 @@ amber_dict = {
     "TRJ": {
         "REQUIRED": True,
         "TYPE": "files",
-        "EXTENSION": (
-            "nc",
-            "ncdf",
-            "trj",
-            "mdcrd",
-        ),
+        "CATEGORY": "trajectory",
+        "EXTENSION": ("nc", "ncdf", "trj", "mdcrd",),
     },
     "TOP": {
         "REQUIRED": False,
+        "CATEGORY": "topology",
         "TYPE": "file",
-        "EXTENSION": (
-            "prmtop",
-            "top",
-            "parm7",
-        ),
+        "EXTENSION": ("prmtop", "top", "parm7",),
     },
     "FF": {
         "REQUIRED": False,
@@ -607,6 +201,7 @@ amber_dict = {
     },
     "PDB": {
         "REQUIRED": True,
+        "CATEGORY": "structure",
         "TYPE": "file",
         "EXTENSION": "pdb",
     },
@@ -671,11 +266,11 @@ amber_dict = {
         "TYPE": "dictionary",
     },
 }
-
 # NAMD
 namd_dict = {
     "TRJ": {
         "REQUIRED": True,
+        "CATEGORY": "trajectory",
         "TYPE": "files",
         "EXTENSION": ("dcd"),
     },
@@ -692,6 +287,7 @@ namd_dict = {
     },
     "TOP": {
         "REQUIRED": False,
+        "CATEGORY": "topology",
         "TYPE": "file",
         "EXTENSION": ("psf"),
     },
@@ -710,6 +306,7 @@ namd_dict = {
     "PDB": {
         "REQUIRED": True,
         "TYPE": "file",
+        "CATEGORY": "structure",
         "EXTENSION": "pdb",
     },
     "DOI": {
@@ -773,24 +370,25 @@ namd_dict = {
         "TYPE": "dictionary",
     },
 }
-
 # CHARMM
 charmm_dict = {}
-
 # OPENMM
 openmm_dict = {
     "TRJ": {
         "REQUIRED": True,
         "TYPE": "files",
+        "CATEGORY": "trajectory",
         "EXTENSION": ("xtc", "trr", "nc", "ncdf", "trj", "mdcrd", "dcd"),
     },
     "PDB": {
         "REQUIRED": True,
         "TYPE": "file",
+        "CATEGORY": "structure",
         "EXTENSION": ("pdb",),
     },
     "TOP": {
         "REQUIRED": False,
+        "CATEGORY": "topology",
         "TYPE": "file",
         "EXTENSION": ("psf",),
     },
@@ -888,6 +486,7 @@ openmm_dict = {
     },
 }
 
+
 # SOFTWARE
 software_dict = {
     "GROMACS": gromacs_dict,
@@ -896,3 +495,71 @@ software_dict = {
     "CHARMM": charmm_dict,
     "OPENMM": openmm_dict,
 }
+
+
+def get_3major_fnames(system: dict, allowStructure=False, joinPath=None):
+    """Returns filenames of structure/topology/trajectory according to system's engine.
+
+    Args:
+        system (dict): Databank System
+        allowStructure (bool, optional): Allow using structure instead of topology for
+            further MDAnalysis' Universe initialization. Defaults to False.
+        joinPath (str,None): path to be joined with filenames
+
+    Returns ((string, string, string)): structure filename, topology filename,
+            trajectory filename
+
+    Raises:
+        ValueError: function
+    """
+    sft = system["SOFTWARE"]
+    sftSpec = software_dict[sft.upper()]
+    trjF = None
+    for k, v in sftSpec.items():
+        if ("CATEGORY" in v and v["CATEGORY"] == "trajectory" and
+                k in system and system[k] is not None):
+            trjF = system[k]
+            break
+    topF = None
+    for k, v in sftSpec.items():
+        if ("CATEGORY" in v and v["CATEGORY"] == "topology" and
+                k in system and system[k] is not None):
+            topF = system[k]
+            break
+    strF = None
+    for k, v in sftSpec.items():
+        if ("CATEGORY" in v and v["CATEGORY"] == "structure"
+                and k in system and system[k] is not None):
+            strF = system[k]
+            break
+
+    def is_sequence(var):
+        return isinstance(var, Sequence) and not isinstance(var, (str, bytes))
+
+    # taking first elements
+    # TODO can it be removed?
+    if is_sequence(topF):
+        topF = topF[0]
+        if is_sequence(topF):
+            topF = topF[0]
+
+    if is_sequence(trjF):
+        trjF = trjF[0]
+        if is_sequence(trjF):
+            trjF = trjF[0]
+
+    if is_sequence(strF):
+        strF = strF[0]
+        if is_sequence(strF):
+            strF = strF[0]
+
+    # applying joinPath
+    if joinPath is not None:
+        if topF is not None:
+            topF = os.path.join(joinPath, topF)
+        if trjF is not None:
+            trjF = os.path.join(joinPath, trjF)
+        if strF is not None:
+            strF = os.path.join(joinPath, strF)
+
+    return strF, topF, trjF

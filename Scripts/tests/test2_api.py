@@ -17,6 +17,26 @@ from unittest import mock
 import os
 import sys
 import pytest
+import logging
+
+
+@pytest.fixture(scope="module")
+def logger():
+    logger = logging.getLogger("test_logger")
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+
+    if not logger.handlers:  # Avoid adding multiple handlers during pytest runs
+        logger.addHandler(handler)
+
+    yield logger
+
+    # TEARDOWN: clean up handlers after use
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
 
 
 @pytest.fixture(autouse=True, scope="module")
@@ -319,11 +339,11 @@ def wipeth(systems):
 @pytest.mark.parametrize("systemid, result, thickres",
                          [(281, 1, 4.18335),
                           (243, 1, 4.27262)])
-def test_analyze_th(systems, systemid, result, wipeth, thickres):
+def test_analyze_th(systems, systemid, result, wipeth, thickres, logger):
     import DatabankLib
     from DatabankLib.analyze import computeTH
     sys0 = systems.loc(systemid)
-    rc = computeTH(sys0)
+    rc = computeTH(sys0, logger)
     assert rc == result
     fn = os.path.join(
         DatabankLib.NMLDB_SIMU_PATH,
@@ -353,7 +373,7 @@ def test_GetThickness(systems, systemid, result):
                           (566, "1.174")])
 def test_ShowEquilibrationTimes(systems, capsys, systemid, result):
     from DatabankLib.databankLibrary import ShowEquilibrationTimes
-    from DatabankLib.databank_defs import lipids_dict
+    from DatabankLib.settings.molecules import lipids_dict
     sys0 = systems.loc(systemid)
     _ = ShowEquilibrationTimes(sys0)
     captured = capsys.readouterr()
