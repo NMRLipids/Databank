@@ -164,7 +164,7 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
                           (86,  DatabankLib.RCODE_COMPUTED)])
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeOP
-    from DatabankLib.databank_defs import lipids_dict
+    from DatabankLib.settings.molecules import lipids_dict
     s = systems.loc(systemid)
     rCode = computeOP(s, logger)
     assert rCode == rcodex

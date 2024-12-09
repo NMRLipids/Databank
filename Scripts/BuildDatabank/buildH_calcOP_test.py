@@ -47,7 +47,7 @@ import pandas as pd
 import MDAnalysis as mda
 import MDAnalysis.coordinates.XTC as XTC
 
-import DatabankLib.dic_lipids as dic_lipids
+import DatabankLib.settings.dic_lipids_UA as dic_lipids_UA
 
 # Constants.
 # From https://en.wikipedia.org/wiki/Carbon%E2%80%93hydrogen_bond
@@ -1098,7 +1098,7 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
     # while `dic_lipids.py` (with an s) is a module with many different dicts
     # (of different lipids) the user can choose.
     try:
-        dic_lipid = getattr(dic_lipids, lipid)
+        dic_lipid = getattr(dic_lipids_UA, lipid)
     except Exception:
         raise UserWarning("Lipid dictionnary {} doesn't exist in dic_lipids.py"
                           .format(lipid))
