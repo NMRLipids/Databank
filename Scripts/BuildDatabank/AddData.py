@@ -26,6 +26,7 @@ Returning error codes:
 
 import os
 import argparse
+from DatabankLib.settings.engines import get_3major_fnames, software_dict
 import yaml
 import logging
 import shutil
@@ -47,7 +48,6 @@ from DatabankLib.databankLibrary import (
     create_databank_directories,
     lipids_dict,
     molecules_dict,
-    software_dict,
     loadMappingFile
 )
 # helpers
@@ -309,32 +309,44 @@ if __name__ == "__main__":
         " the headgroup is used."
     )
 
-    top = ""
-    traj = ""
-
-    if sim["SOFTWARE"] == "gromacs":
-        top = os.path.join(dir_tmp, sim["TPR"][0][0])
-        traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
-    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
-        traj = os.path.join(dir_tmp, sim["TRJ"][0][0])
-        top = os.path.join(dir_tmp, sim["PDB"][0][0])
-    else:
-        logger.error(
-            "SOFTWARE '%s' is not a proper option.\n"
-            "Use either 'gromacs', 'openMM', or 'NAMD'.")
+    try:
+        struc, top, traj = get_3major_fnames(sim, joinPath=dir_tmp)
+    except (ValueError, KeyError) as e:
+        logger.error(str(type(e)) + " => " + str(e))
         quit(1)
+    except Exception as e:
+        logger.error("Unkonwn error during `get_3major_fnames..`")
+        logger.error(str(type(e)) + " => " + str(e))
+        quit(4)
 
     leaflet1 = 0  # total number of lipids in upper leaflet
     leaflet2 = 0  # total number of lipids in lower leaflet
 
-    gro = os.path.join(dir_tmp, "frame0.gro")
-
+    # try to generate zero-frame structure from top + trajectory
+    failFromTop = False
+    gro = os.path.join(dir_tmp, "frame0.gro")  # structure regenerated from top
     try:
         logger.info(f"MDAnalysis tries to use {top} and {traj}")
         u = Universe(top, traj)
-        u.atoms.write(gro, frames=u.trajectory[[0]])  # write first frame into gro file
+        u.atoms.write(gro, frames=u.trajectory[[0]])
     except Exception as e:
-        logger.warning(e)
+        logger.warning(str(type(e)) + " => " + str(e))
+        failFromTop = True
+
+    # if previous fails then try the same from struc + trajectory
+    if (failFromTop and struc is not None):
+        try:
+            logger.info(f"MDAnalysis tries to use {struc} and {traj}")
+            u = Universe(struc, traj)
+            u.atoms.write(gro, frames=u.trajectory[[0]])
+        except Exception as e:
+            logger.error("Cannot initialize MDAnalysis using given structure file!")
+            logger.error(str(type(e)) + " => " + e)
+            quit(2)
+
+    # if there is no struc and MDAnalysis doesn't start from TOP, then
+    # GROMACS can try making struc from top!
+    if failFromTop and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
         logger.info(
             "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
             "read tpr version ..."
@@ -361,22 +373,16 @@ if __name__ == "__main__":
             u.atoms.write(gro, frames=u.trajectory[[0]])
         except Exception as e:
             logger.warning(e)
-    finally:
-        if not os.path.isfile(gro):
-            logger.error(f"'{gro}' could not be found, aborting")
-            quit(2)
+        struc = gro
 
-    # TODO refactor this
-    try:
-        groFORu0 = os.path.join(dir_tmp, sim["GRO"][0][0])
-        logger.debug(groFORu0)
-    except Exception:
-        groFORu0 = gro
+    # if there is a topology and MDAnalysis reads it, we can use zero-frame
+    # extraction as a structure!
+    if not failFromTop and struc is None:
+        struc = gro
 
-    if sim["SOFTWARE"] == "gromacs":
-        u0 = Universe(groFORu0)
-    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
-        u0 = Universe(top)
+    # At last, we create universe from just a structure!
+    logger.info(f"Making Universe from {struc}..")
+    u0 = Universe(struc)
 
     lipids = []
 
@@ -502,7 +508,7 @@ if __name__ == "__main__":
     sim["TRJLENGTH"] = trj_length
 
     # Read temperature from tpr
-    if sim["SOFTWARE"] == "gromacs":
+    if sim["SOFTWARE"].upper() == "GROMACS":
         file1 = os.path.join(dir_tmp, "tpr.txt")
 
         logger.info("Exporting information with gmx dump")
@@ -512,10 +518,10 @@ if __name__ == "__main__":
             "GROMACS_VERSION" in sim["WARNINGS"] and
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
-            os.system("echo System | gmxdump -s " + top + " > " + file1)
+            os.system(f"echo System | gmxdump -s {top} > {file1}")
             TemperatureKey = "ref_t"
         else:
-            os.system("echo System | gmx dump -s " + top + " > " + file1)
+            os.system(f"echo System | gmx dump -s {top} > {file1}")
             TemperatureKey = "ref-t"
 
         with open(file1, "rt") as tpr_info:

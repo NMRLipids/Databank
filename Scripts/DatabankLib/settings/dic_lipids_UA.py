@@ -6,6 +6,7 @@
 # NOTE If you add a new lipid, we advice the user to add all the possible carbons on
 # which we want to rebuild hydrogens. If the -opx option of buildH is used, it is
 # strictly mandatory.
+# TODO Verify if we actually need this file and in which context
 
 import copy
 
