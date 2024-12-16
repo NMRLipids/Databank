@@ -26,7 +26,7 @@ Returning error codes:
 
 import os
 import argparse
-from DatabankLib.settings.engines import get_3major_fnames, software_dict
+from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 import yaml
 import logging
 import shutil
@@ -310,7 +310,7 @@ if __name__ == "__main__":
     )
 
     try:
-        struc, top, traj = get_3major_fnames(sim, joinPath=dir_tmp)
+        struc, top, traj = get_struc_top_traj_fnames(sim, joinPath=dir_tmp)
     except (ValueError, KeyError) as e:
         logger.error(str(type(e)) + " => " + str(e))
         quit(1)
@@ -323,7 +323,7 @@ if __name__ == "__main__":
     leaflet2 = 0  # total number of lipids in lower leaflet
 
     # try to generate zero-frame structure from top + trajectory
-    failFromTop = False
+    fail_from_top = False
     gro = os.path.join(dir_tmp, "frame0.gro")  # structure regenerated from top
     try:
         logger.info(f"MDAnalysis tries to use {top} and {traj}")
@@ -331,10 +331,10 @@ if __name__ == "__main__":
         u.atoms.write(gro, frames=u.trajectory[[0]])
     except Exception as e:
         logger.warning(str(type(e)) + " => " + str(e))
-        failFromTop = True
+        fail_from_top = True
 
     # if previous fails then try the same from struc + trajectory
-    if (failFromTop and struc is not None):
+    if (fail_from_top and struc is not None):
         try:
             logger.info(f"MDAnalysis tries to use {struc} and {traj}")
             u = Universe(struc, traj)
@@ -346,7 +346,7 @@ if __name__ == "__main__":
 
     # if there is no struc and MDAnalysis doesn't start from TOP, then
     # GROMACS can try making struc from top!
-    if failFromTop and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
+    if fail_from_top and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
         logger.info(
             "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
             "read tpr version ..."
@@ -377,7 +377,7 @@ if __name__ == "__main__":
 
     # if there is a topology and MDAnalysis reads it, we can use zero-frame
     # extraction as a structure!
-    if not failFromTop and struc is None:
+    if not fail_from_top and struc is None:
         struc = gro
 
     # At last, we create universe from just a structure!
