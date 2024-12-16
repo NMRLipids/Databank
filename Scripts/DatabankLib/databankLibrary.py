@@ -7,7 +7,7 @@ import copy
 import hashlib
 import urllib
 import logging
-from DatabankLib.settings.engines import get_3major_fnames, software_dict
+from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 from tqdm import tqdm
 
 import json
@@ -268,30 +268,30 @@ def system2MDanalysisUniverse(system):
 
     :return: MDAnalysis universe
     """
-    systemPath = os.path.join(NMLDB_SIMU_PATH, system['path'])
+    system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
     doi = system.get('DOI')
-    skipDownloading: bool = (doi == 'localhost')
-    if skipDownloading:
+    skip_downloading: bool = (doi == 'localhost')
+    if skip_downloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
     try:
-        struc, top, trj = get_3major_fnames(system)
-        trj_name = os.path.join(systemPath, trj)
+        struc, top, trj = get_struc_top_traj_fnames(system)
+        trj_name = os.path.join(system_path, trj)
         if struc is None:
             struc_name = None
         else:
-            struc_name = os.path.join(systemPath, struc)
+            struc_name = os.path.join(system_path, struc)
         if top is None:
             top_name = None
         else:
-            top_name = os.path.join(systemPath, top)
+            top_name = os.path.join(system_path, top)
     except Exception as e:
         logger.error("Error getting structure/topology/trajectory filenames.")
         logger.error(str(e))
         raise
 
     # downloading trajectory (obligatory)
-    if (skipDownloading):
+    if (skip_downloading):
         if (not os.path.isfile(trj_name)):
             raise FileNotFoundError(
                 f"Trajectory should be downloaded [{trj_name}] by user")
@@ -304,7 +304,7 @@ def system2MDanalysisUniverse(system):
 
     # downloading topology (if exists)
     if top is not None:
-        if skipDownloading:
+        if skip_downloading:
             if (not os.path.isfile(top_name)):
                 raise FileNotFoundError(f"TPR should be downloaded [{top_name}]")
         else:
@@ -314,7 +314,7 @@ def system2MDanalysisUniverse(system):
 
     # downloading structure (if exists)
     if struc is not None:
-        if skipDownloading:
+        if skip_downloading:
             if (not os.path.isfile(struc_name)):
                 raise FileNotFoundError(f"GRO should be downloaded [{struc_name}]")
         else:
@@ -322,27 +322,27 @@ def system2MDanalysisUniverse(system):
             if (not os.path.isfile(struc_name)):
                 _ = urllib.request.urlretrieve(struc_url, struc_name)
 
-    madeFromTop = False
+    made_from_top = False
     try:
         u = mda.Universe(top_name, trj_name)
-        madeFromTop = True
+        made_from_top = True
     except Exception as e:
         logger.warning(f"Couldn't make Universe from {top_name} and {trj_name}.")
         logger.warning(str(e))
 
-    if not madeFromTop and struc is not None:
-        madeFromStruc = False
+    if not made_from_top and struc is not None:
+        made_from_struc = False
         try:
             u = mda.Universe(struc_name, trj_name)
-            madeFromStruc = True
+            made_from_struc = True
         except Exception as e:
             logger.warning(f"Couldn't make Universe from {struc_name} and {trj_name}.")
             logger.warning(str(e))
 
-        if not madeFromStruc:
+        if not made_from_struc:
             if system["SOFTWARE"].upper() == "GROMACS":
                 # rewrite struc_fname!
-                struc_fname = os.path.join(systemPath, 'conf.gro')
+                struc_fname = os.path.join(system_path, 'conf.gro')
 
                 print("Generating conf.gro because MDAnalysis cannot "
                       "(probably!) read tpr version")

@@ -27,6 +27,7 @@ Engine-specific dictionaries have a fixed subfield types:
 
 import os.path
 from collections.abc import Sequence
+from typing import Optional
 
 # GROMACS
 gromacs_dict = {
@@ -497,7 +498,9 @@ software_dict = {
 }
 
 
-def get_3major_fnames(system: dict, allowStructure=False, joinPath=None):
+def get_struc_top_traj_fnames(
+        system: dict, allowStructure=False,
+        joinPath=None) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """Returns filenames of structure/topology/trajectory according to system's engine.
 
     Args:

@@ -10,7 +10,7 @@ import sys
 import re
 import traceback
 from logging import Logger
-from DatabankLib.settings.engines import get_3major_fnames
+from DatabankLib.settings.engines import get_struc_top_traj_fnames
 import buildh
 import urllib.request
 import socket
@@ -264,7 +264,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     curPath = os.path.join(NMLDB_SIMU_PATH, path)
 
     try:
-        struc_fname, top_fname, trj_fname = get_3major_fnames(system, joinPath=curPath)
+        struc_fname, top_fname, trj_fname = get_struc_top_traj_fnames(system, joinPath=curPath)
     except (ValueError, KeyError) as e:
         sys.stderr.write("Error reading filenames from system dictionary.\n")
         sys.stderr.write(str(type(e)) + " => " + str(e))
@@ -535,7 +535,7 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
     output_name = ""
 
     try:
-        struc, top, trj = get_3major_fnames(system)
+        struc, top, trj = get_struc_top_traj_fnames(system)
         trj_name = os.path.join(system_path, trj)
         if struc is None:
             struc_name = None
