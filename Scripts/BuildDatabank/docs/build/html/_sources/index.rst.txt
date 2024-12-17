@@ -64,9 +64,9 @@ Setup using conda as distribution:
 
 .. code-block:: bash
 
-    conda create --name databank python==3.7.16 MDAnalysis MDAnalysisTests
+    conda create --name databank python==3.7 MDAnalysis
     conda activate databank
-    (databank) pip install tqdm pyyaml
+    (databank) pip install -e .
 
 
 .. toctree::
@@ -80,6 +80,7 @@ Setup using conda as distribution:
    moleculesAndMapping
    databankLibrary
    exampleAndTutorials
+   modules
 
 Indices and tables
 ==================

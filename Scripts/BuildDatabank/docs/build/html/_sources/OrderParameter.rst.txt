@@ -1,7 +1,7 @@
 OrderParameter module
 =====================
 
-.. automodule:: OrderParameter
+.. automodule:: DatabankLib.databankop
    :members:
    :undoc-members:
    :show-inheritance:
