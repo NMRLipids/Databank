@@ -1,1 +1,879 @@
-[{"POPS": {"sn-1": 0.6378277584214004, "sn-2": 0.6865909363391077, "headgroup": 0.161393286709249, "total": 0.495270660489919}, "TotalQuality": {"headgroup": 0.161393286709249, "tails": 0.662209347380254, "total": 0.495270660489919, "FFQuality": 0.40000000000000036}, "system": {"DOI": "10.5281/zenodo.1488094", "SOFTWARE": "gromacs", "TRJ": [["ECClipids_purePOPS_298K.xtc"]], "TPR": [["ECClipids_purePOPS_298K.tpr"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPScharmm.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3600}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Melcr, Josef", "SYSTEM": "72POPS_3600SOL_72SOD_298K_ECC-lipid", "SOFTWARE_VERSION": 2018.0, "FF": "ECC-lipids, SPC water model, ECC-ions", "FF_SOURCE": "https://github.com/jmelcr/ecc_lipids", "FF_DATE": null, "CPT": [["ECClipids_purePOPS_298K.cpt"]], "LOG": null, "TOP": [["ECClipids_purePOPS_298K.top"]], "GRO": [["ECClipids_purePOPS_298K.gro"]], "TRAJECTORY_SIZE": 3670357092, "TRJLENGTH": 1000020.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20016, "DATEOFRUNNING": "20/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 443, "path": "a33/b16/a33b16c62911e46c6cfeffc5c1cbf9eeb548da67/c8e02bee0bb725a95396e3d471060434dba329e6/"}}, {"POPS": {"sn-1": 0.5609154268290862, "sn-2": 0.5309043807527105, "headgroup": 0.15249268294406695, "total": 0.4147708301752879}, "TotalQuality": {"headgroup": 0.15249268294406695, "tails": 0.5459099037908983, "total": 0.4147708301752879, "FFQuality": 0.8000000000000007}, "system": {"DOI": "10.5281/zenodo.1129435", "SOFTWARE": "gromacs", "TRJ": [["md-GROMOS-CKP_GROMOS-HG_PME_POPS_v1_400-500ns_skip10.xtc"]], "TPR": [["for-md-GROMOS-CKP_GROMOS-HG_POPS_298K_v1.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "GROMOSCKP_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSGROMOS-CKP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v1", "SOFTWARE_VERSION": null, "FF": "GROMOS-CKP, GROMOS NH3 charges and PME", "FF_SOURCE": "starting structure from CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-GROMOS-CKP_GROMOS-HG_POPS_298K_v1.gro"]], "TRAJECTORY_SIZE": 153468580, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "20/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 425, "path": "d0a/acf/d0aacf2392a074c84c540c30058708ec75394c32/64c2fa23c30e1f8471d6686ac85846875094a9d4/"}}, {"POPS": {"sn-1": 0.611364394341274, "sn-2": 0.49437577657106274, "headgroup": 0.1251881110171467, "total": 0.4103094273098278}, "TotalQuality": {"headgroup": 0.1251881110171467, "tails": 0.5528700854561683, "total": 0.4103094273098278, "FFQuality": 0.6000000000000005}, "system": {"DOI": "10.5281/zenodo.1129435", "SOFTWARE": "gromacs", "TRJ": [["md-GROMOS-CKP_GROMOS-HG_PME_POPS_v2_400-500ns_skip10.xtc"]], "TPR": [["for-md-GROMOS-CKP_GROMOS-HG_POPS_298K_v2.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "GROMOSCKP_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSGROMOS-CKP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2", "SOFTWARE_VERSION": null, "FF": "GROMOS-CKP, GROMOS NH3 charges and PME", "FF_SOURCE": "starting structure from CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-GROMOS-CKP_GROMOS-HG_POPS_298K_v2.gro"]], "TRAJECTORY_SIZE": 153469664, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "20/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 473, "path": "351/942/3519421ff6c7df40e1da7ac6b6e9ea4d06c911ca/1419f364222a22aadc90d4ec0963e18173e1df2a/"}}, {"POPS": {"sn-1": 0.6305239950308484, "sn-2": 0.469904500573233, "headgroup": 0.21372540024398964, "total": 0.4380512986160237}, "TotalQuality": {"headgroup": 0.21372540024398964, "tails": 0.5502142478020408, "total": 0.4380512986160237, "FFQuality": 0.8000000000000007}, "system": {"DOI": "10.5281/zenodo.1129431", "SOFTWARE": "gromacs", "TRJ": [["md-GROMOS-CKP_PME_POPS_v2_400-500ns_skip10.xtc"]], "TPR": [["for-md-GROMOS-CKP_POPS_298K_v2.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "GROMOSCKP_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSGROMOS-CKP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2", "SOFTWARE_VERSION": null, "FF": "GROMOS-CKP, Berger/Chiu NH3 charges and PME", "FF_SOURCE": "starting structure from CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-GROMOS-CKP_POPS_298K_v2.gro"]], "TRAJECTORY_SIZE": 153482484, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "20/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 597, "path": "154/32a/15432a86e2fe83bbb98801da6790567ae983fe58/de431264bc7ef1a732d76af339ef2bbf06bda33c/"}}, {"POPS": {"sn-1": 0.3465197905713602, "sn-2": 0.4338799296402509, "headgroup": 0.20361152690923667, "total": 0.32800374904028257}, "TotalQuality": {"headgroup": 0.20361152690923667, "tails": 0.39019986010580554, "total": 0.32800374904028257, "FFQuality": 0.7000000000000006}, "system": {"DOI": "10.5281/zenodo.1129431", "SOFTWARE": "gromacs", "TRJ": [["md-GROMOS-CKP_PME_POPS_v1_400-500ns_skip10.xtc"]], "TPR": [["for-md-GROMOS-CKP_POPS_298K_v1.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "GROMOSCKP_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSGROMOS-CKP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2", "SOFTWARE_VERSION": null, "FF": "GROMOS-CKP, Berger/Chiu NH3 charges and PME", "FF_SOURCE": "starting structure from CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-GROMOS-CKP_POPS_298K_v1.gro"]], "TRAJECTORY_SIZE": 153544216, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "20/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 535, "path": "287/d83/287d83b5b1cc07c2f7dc5f54a8d74227fc6fc3e2/8cad21af3da1756eeb92edb2ab27873891de645d/"}}, {"POPS": {"sn-1": 0.028117999368823664, "sn-2": 0.34316309803384876, "headgroup": 0.13639764889169784, "total": 0.1692262487647901}, "TotalQuality": {"headgroup": 0.13639764889169784, "tails": 0.1856405487013362, "total": 0.1692262487647901, "FFQuality": 0.7999999999999979}, "system": {"DOI": "10.5281/zenodo.1487906", "SOFTWARE": "gromacs", "TRJ": [["lipid17_ff99-ions_298K.xtc"]], "TPR": [["lipid17_ff99-ions_298K.tpr"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSlipid17_POPSres.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 3600}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72}}, "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "PUBLICATION": null, "AUTHORS_CONTACT": "Melcr, Josef", "SYSTEM": "72POPS_3600SOL_72SOD_298K", "SOFTWARE_VERSION": 2018.0, "FF": "Lipid17 and ff99 ions", "FF_SOURCE": null, "FF_DATE": null, "CPT": [["lipid17_ff99-ions_298K.cpt"]], "LOG": null, "TOP": [["lipid17_ff99-ions_298K.top"]], "GRO": [["lipid17_ff99-ions_298K.gro"]], "TRAJECTORY_SIZE": 3652448252, "TRJLENGTH": 1000020.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20016, "DATEOFRUNNING": "10/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 521, "path": "12a/1ec/12a1ecac877f46809c4377d1e8fb72977396ad94/6149c1c887124543c661efab6619943bf59e7de5/"}}, {"POPS": {"sn-1": 0.16389999689929194, "sn-2": 0.2618907924811153, "headgroup": 0.11253787152400115, "total": 0.17944288696813615}, "TotalQuality": {"headgroup": 0.11253787152400115, "tails": 0.21289539469020363, "total": 0.17944288696813615, "FFQuality": 0.2999999999999975}, "system": {"AUTHORS_CONTACT": "Thomas Piggot", "FF_DATE": "pre-2020", "SYSTEM": "128POPS_4880SOL_128SOD_298K_v1", "TYPEOFSYSTEM": "lipid bilayer", "TEMPERATURE": 298.0, "PUBLICATION": null, "NUMBER_OF_ATOMS": 29824, "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "FF_SOURCE": "starting structure from CHARMM-GUI", "COMPOSITION": {"POPS": {"NAME": "POPS", "COUNT": [64, 64], "MAPPING": "mappingPOPSslipids.yaml"}, "SOL": {"NAME": "SOL", "COUNT": 4480, "MAPPING": "mappingSPCwater.yaml"}, "SOD": {"NAME": "NA", "COUNT": 128, "MAPPING": "mappingNA.yaml"}}, "TIMELEFTOUT": 0, "CPT": null, "TRJLENGTH": 100050.0, "TRAJECTORY_SIZE": 221912104, "SOFTWARE_VERSION": null, "FF": "Slipids", "TOP": null, "PREEQTIME": 400, "DOI": "10.5281/zenodo.1129441", "DATEOFRUNNING": "12/10/2021", "TPR": [["for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v1.tpr"]], "TRJ": [["md-Slipids_LJ-PME_POPS_v1_400-500ns_skip10.xtc"]], "LOG": null, "SOFTWARE": "gromacs", "DIR_WRK": "/usr/home/bort/Databank", "ID": 529, "path": "ce5/80e/ce580ea7b4e991122666ed4fc3c779e3783cbc95/e2c64d1a46b3571951cce2c90ab7302a8f300a9b/"}}, {"POPS": {"sn-1": 0.09987538327706348, "sn-2": 0.2435631663068184, "headgroup": 0.1444460850046401, "total": 0.16262821152950732}, "TotalQuality": {"headgroup": 0.1444460850046401, "tails": 0.17171927479194093, "total": 0.16262821152950732, "FFQuality": 0.3999999999999976}, "system": {"AUTHORS_CONTACT": "Thomas Piggot", "FF_DATE": "pre-2020", "SYSTEM": "128POPS_4880SOL_128SOD_298K_v2", "TYPEOFSYSTEM": "lipid bilayer", "TEMPERATURE": 298.0, "PUBLICATION": null, "NUMBER_OF_ATOMS": 29824, "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "FF_SOURCE": "starting structure from CHARMM-GUI", "COMPOSITION": {"POPS": {"NAME": "POPS", "COUNT": [64, 64], "MAPPING": "mappingPOPSslipids.yaml"}, "SOL": {"NAME": "SOL", "COUNT": 4480, "MAPPING": "mappingSPCwater.yaml"}, "SOD": {"NAME": "NA", "COUNT": 128, "MAPPING": "mappingNA.yaml"}}, "TIMELEFTOUT": 0, "CPT": null, "TRJLENGTH": 100050.0, "TRAJECTORY_SIZE": 221910896, "SOFTWARE_VERSION": null, "FF": "Slipids", "TOP": null, "PREEQTIME": 400, "DOI": "10.5281/zenodo.1129441", "DATEOFRUNNING": "12/10/2021", "TPR": [["for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v2.tpr"]], "TRJ": [["md-Slipids_LJ-PME_POPS_v2_400-500ns_skip10.xtc"]], "LOG": null, "SOFTWARE": "gromacs", "DIR_WRK": "/usr/home/bort/Databank", "ID": 338, "path": "02b/984/02b98418d9965749ac943ecae9627cfdd1dfbdcd/7339faa76da6c93cfee03e59f399e2eed1628b53/"}}, {"POPS": {"sn-1": 0.10949377248214291, "sn-2": 0.1388224977625784, "headgroup": 0.262116276747413, "total": 0.1701441823307114}, "TotalQuality": {"headgroup": 0.262116276747413, "tails": 0.12415813512236065, "total": 0.1701441823307114, "FFQuality": 0.7999999999999979}, "system": {"DOI": "10.5281/zenodo.1129458", "SOFTWARE": "gromacs", "TRJ": [["md-CHARMM36-UA_10A-switch_POPS_v2_400-500ns_skip10.xtc"]], "TPR": [["for-md-CHARMM36-UA_POPS_298K_v2.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "CHARMM36UA_PSUA"}, "COMPOSITION": {"POPS": {"NAME": "PSUA", "MAPPING": "mappingPOPScharmm.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 4480}, "SOD": {"NAME": "SOD", "MAPPING": "mappingSOD.yaml", "COUNT": 128}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": "10.1021/acs.jpcb.9b06091", "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_v2", "SOFTWARE_VERSION": null, "FF": "CHARMM36-UA", "FF_SOURCE": "starting structure from the CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-CHARMM36-UA_POPS_298K_v2.gro"]], "TRAJECTORY_SIZE": 164967492, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 22144, "DATEOFRUNNING": "10/06/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 263, "path": "3f8/a6e/3f8a6eeb44aaeaff5c00d157ed0938d2e0d94048/48f5c2a60215696e2234f1a33488b1215e32e2cc/"}}, {"POPS": {"sn-1": 0.06913956248435528, "sn-2": 0.10447266932006419, "headgroup": 0.22475135745320085, "total": 0.13278786308587345}, "TotalQuality": {"headgroup": 0.22475135745320085, "tails": 0.08680611590220974, "total": 0.13278786308587345, "FFQuality": 1.1999999999999984}, "system": {"DOI": "10.5281/zenodo.1129458", "SOFTWARE": "gromacs", "TRJ": [["md-CHARMM36-UA_10A-switch_POPS_v1_400-500ns_skip10.xtc"]], "TPR": [["for-md-CHARMM36-UA_POPS_298K_v1.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "CHARMM36UA_PSUA"}, "COMPOSITION": {"POPS": {"NAME": "PSUA", "MAPPING": "mappingPOPScharmm.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 4480}, "SOD": {"NAME": "SOD", "MAPPING": "mappingSOD.yaml", "COUNT": 128}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": "10.1021/acs.jpcb.9b06091", "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_v1", "SOFTWARE_VERSION": null, "FF": "CHARMM36-UA", "FF_SOURCE": "starting structure from the CHARMM-GUI", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-CHARMM36-UA_POPS_298K_v1.gro"]], "TRAJECTORY_SIZE": 164953508, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 22144, "DATEOFRUNNING": "10/06/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 367, "path": "1e2/cdc/1e2cdc704d134725e6123404faccf98a7019ff0a/48fd79496a57492cc2d7b7346e3160cae424e7b4/"}}, {"POPS": {"sn-1": 0.05666022502601603, "sn-2": 0.08125340425145425, "headgroup": 0.26179165121537296, "total": 0.13323509349761442}, "TotalQuality": {"headgroup": 0.26179165121537296, "tails": 0.06895681463873514, "total": 0.13323509349761442, "FFQuality": 1.6999999999999988}, "system": {"FF_DATE": "??", "TYPEOFSYSTEM": "lipid bilayer", "SYSTEM": "POPS_298K", "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 29824, "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "FF_SOURCE": "CHARMM-GUI", "COMPOSITION": {"POPS": {"NAME": "POPS", "COUNT": [64, 64], "MAPPING": "mappingPOPScharmm.yaml"}, "SOL": {"NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml"}, "SOD": {"NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml"}}, "TIMELEFTOUT": 0, "TRJLENGTH": 100050.0, "DATEOFRUNNING": "01/10/2021", "FF": "CHARMM36", "SOFTWARE": "gromacs", "PREEQTIME": 400, "DOI": "10.5281/zenodo.1129415", "TRAJECTORY_SIZE": 221970700, "TPR": [["for-md-CHARMM36_POPS_298K_v2.tpr"]], "TRJ": [["md-CHARMM36_10A-switch_POPS_v2_400-500ns_skip10.xtc"]], "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "ID": 5, "path": "1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732/"}}, {"POPS": {"sn-1": 0.07395889460496466, "sn-2": 0.07603625842040004, "headgroup": 0.1901771941469178, "total": 0.11339078239076084}, "TotalQuality": {"headgroup": 0.1901771941469178, "tails": 0.07499757651268235, "total": 0.11339078239076084, "FFQuality": 1.799999999999996}, "system": {"DOI": "10.5281/zenodo.1283335", "SOFTWARE": "gromacs", "TRJ": [["md-MacRog_POPS_fix_tails_298K_v1_400-500ns_skip10.xtc"]], "TPR": [["for-md-MacRog_POPS_fix_tails_298K_v1.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSmacrog.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_v1", "SOFTWARE_VERSION": null, "FF": "MacRog", "FF_SOURCE": "starting structure from CHARMM-GUI (correct PO tails and not OP tails)", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "TRAJECTORY_SIZE": 221997532, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 29824, "DATEOFRUNNING": "17/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 292, "path": "310/972/310972e588b9d3b8bb3049c5a4ee1977889c6559/a4d8e0ad017d67cfb566b576d573778c671c4cba/"}}, {"POPS": {"sn-1": 0.01376749925468692, "sn-2": 0.06400484466847896, "headgroup": 0.17704439372249758, "total": 0.0849389125485545}, "TotalQuality": {"headgroup": 0.17704439372249758, "tails": 0.038886171961582935, "total": 0.0849389125485545, "FFQuality": 2.1999999999999993}, "system": {"FF_DATE": "??", "TYPEOFSYSTEM": "lipid bilayer", "SYSTEM": "POPS_298K", "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 29824, "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "FF_SOURCE": "CHARMM-GUI", "COMPOSITION": {"POPS": {"NAME": "POPS", "COUNT": [64, 64], "MAPPING": "mappingPOPScharmm.yaml"}, "SOL": {"NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml"}, "SOD": {"NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml"}}, "TIMELEFTOUT": 0, "TRJLENGTH": 100050.0, "DATEOFRUNNING": "01/10/2021", "FF": "CHARMM36", "SOFTWARE": "gromacs", "PREEQTIME": 400, "DOI": "10.5281/zenodo.1129415", "TRAJECTORY_SIZE": 221984508, "TPR": [["for-md-CHARMM36_POPS_298K_v1.tpr"]], "TRJ": [["md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc"]], "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "ID": 106, "path": "f40/bb6/f40bb6ab5d44402be07059e8df74b5a8200f031e/6774168dfec0a5a7377c8a46341eba603f320cf7/"}}, {"POPS": {"sn-1": 0.08354137554794926, "sn-2": 0.05691879776264358, "headgroup": 0.16586168603605084, "total": 0.10210728644888123}, "TotalQuality": {"headgroup": 0.16586168603605084, "tails": 0.07023008665529643, "total": 0.10210728644888123, "FFQuality": 1.5999999999999988}, "system": {"DOI": "10.5281/zenodo.1283335", "SOFTWARE": "gromacs", "TRJ": [["md-MacRog_POPS_fix_tails_298K_v2_400-500ns_skip10.xtc"]], "TPR": [["for-md-MacRog_POPS_fix_tails_298K_v2.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSmacrog.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPS_4480SOL_128SOD_298K_v2", "SOFTWARE_VERSION": null, "FF": "MacRog", "FF_SOURCE": "starting structure from CHARMM-GUI (correct PO tails and not OP tails)", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "TRAJECTORY_SIZE": 221942672, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 29824, "DATEOFRUNNING": "17/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 26, "path": "371/d53/371d534a1bb41fd81e137717e473e6916c9bbf70/7c24007a3d9cbe605a31999850e929ebfaf530f7/"}}, {"POPS": {"sn-1": 0.010494472721375936, "sn-2": 0.043977112526548276, "headgroup": 0.1288402081536135, "total": 0.0611039311338459}, "TotalQuality": {"headgroup": 0.1288402081536135, "tails": 0.027235792623962106, "total": 0.0611039311338459, "FFQuality": 2.3999999999999995}, "system": {"DOI": "10.5281/zenodo.1129425", "SOFTWARE": "gromacs", "TRJ": [["md-berger_POPS_v1_400-500ns_skip10.xtc"]], "TPR": [["for-md-berger_POPS_298K_v1.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "Berger_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSberger.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/media/osollila/disk1/tmp/DATABANK/", "PUBLICATION": "http://dx.doi.org/10.1021/acs.jpcb.9b06091", "AUTHORS_CONTACT": "Tom Piggot", "SYSTEM": "POPS_298K_Berger", "SOFTWARE_VERSION": null, "FF": "Berger", "FF_SOURCE": "https://doi.org/10.1016/S0006-3495(04)74227-7", "FF_DATE": null, "TRAJECTORY_SIZE": 153482344, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "04/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 502, "path": "2b1/62c/2b162c80ec2f03952098021beb74ba2cdd3d16c2/d499d1361ef77c3d931995eefdc3d2dbec565ef0/"}}, {"POPS": {"sn-1": 0.005095041411063241, "sn-2": 0.04107933019433745, "headgroup": 0.0799494710858851, "total": 0.042041280897095266}, "TotalQuality": {"headgroup": 0.0799494710858851, "tails": 0.023087185802700347, "total": 0.042041280897095266, "FFQuality": 2.099999999999999}, "system": {"DOI": "10.5281/zenodo.1487761", "SOFTWARE": "gromacs", "TRJ": [["lipid17_pure-POPS_298K.xtc"]], "TPR": [["lipid17_pure-POPS_298K.tpr"]], "PREEQTIME": 50, "TIMELEFTOUT": 0, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSlipid17_POPSres.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 3600}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Melcr, Josef", "SYSTEM": "72POPS_3600SOL_72SOD_298K", "SOFTWARE_VERSION": 2018.0, "FF": "Lipid17 and Dang ions", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": [["lipid17_pure-POPS_298K.top"]], "GRO": [["lipid17_pure-POPS_298K.gro"]], "TRAJECTORY_SIZE": 3652498440, "TRJLENGTH": 1000020.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20016, "DATEOFRUNNING": "13/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 483, "path": "611/eb1/611eb1451b3406f9a07395e74c89a779da77dd0e/7dacf9299757643c2ab76db9536d80031346829f/"}}, {"POPS": {"sn-1": 0.018574918490646623, "sn-2": 0.03697969169200126, "headgroup": 0.10782837364171133, "total": 0.054460994608119734}, "TotalQuality": {"headgroup": 0.10782837364171133, "tails": 0.02777730509132394, "total": 0.054460994608119734, "FFQuality": 2.2999999999999963}, "system": {"DOI": "10.5281/zenodo.1129425", "SOFTWARE": "gromacs", "TRJ": [["md-berger_POPS_v2_400-500ns_skip10.xtc"]], "TPR": [["for-md-berger_POPS_298K_v2.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPS": "Berger_POPS"}, "COMPOSITION": {"POPS": {"NAME": "POPS", "MAPPING": "mappingPOPSberger.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480}, "SOD": {"NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128}}, "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "PUBLICATION": "http://dx.doi.org/10.1021/acs.jpcb.9b06091", "AUTHORS_CONTACT": "Tom Piggot", "SYSTEM": "POPS_298K_Berger", "SOFTWARE_VERSION": null, "FF": "Berger", "FF_SOURCE": "https://doi.org/10.1016/S0006-3495(04)74227-7", "FF_DATE": null, "TRAJECTORY_SIZE": 153497768, "TRJLENGTH": 100050.0, "TEMPERATURE": 298.0, "NUMBER_OF_ATOMS": 20608, "DATEOFRUNNING": "05/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPS": {"10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1"}}, "FORMFACTOR": "10.1039/C4SM00066H/1"}, "ID": 480, "path": "7e2/66a/7e266a6989c04c46a79a2f444b521c595053c4e1/7de7367161b8ffa3b3388f6b5f61825aacf8a360/"}}]
+[
+    {
+        "POPS": { "sn-1": 0.637828, "sn-2": 0.686591, "headgroup": 0.161393, "total": 0.495271 },
+        "TotalQuality": { "headgroup": 0.161393, "tails": 0.662209, "total": 0.495271, "FFQuality": 0.4 },
+        "system": {
+            "DOI": "10.5281/zenodo.1488094",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["ECClipids_purePOPS_298K.xtc"]
+            ],
+            "TPR": [
+                ["ECClipids_purePOPS_298K.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPScharmm.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3600 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Melcr, Josef",
+            "SYSTEM": "72POPS_3600SOL_72SOD_298K_ECC-lipid",
+            "SOFTWARE_VERSION": 2018,
+            "FF": "ECC-lipids, SPC water model, ECC-ions",
+            "FF_SOURCE": "https://github.com/jmelcr/ecc_lipids",
+            "FF_DATE": null,
+            "CPT": [
+                ["ECClipids_purePOPS_298K.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["ECClipids_purePOPS_298K.top"]
+            ],
+            "GRO": [
+                ["ECClipids_purePOPS_298K.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3670357092,
+            "TRJLENGTH": 1.00002e+06,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20016,
+            "DATEOFRUNNING": "20/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 443,
+            "path": "a33/b16/a33b16c62911e46c6cfeffc5c1cbf9eeb548da67/c8e02bee0bb725a95396e3d471060434dba329e6/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.560915, "sn-2": 0.530904, "headgroup": 0.152493, "total": 0.414771 },
+        "TotalQuality": { "headgroup": 0.152493, "tails": 0.54591, "total": 0.414771, "FFQuality": 0.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129435",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-GROMOS-CKP_GROMOS-HG_PME_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-GROMOS-CKP_GROMOS-HG_POPS_298K_v1.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "GROMOSCKP_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSGROMOS-CKP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v1",
+            "SOFTWARE_VERSION": null,
+            "FF": "GROMOS-CKP, GROMOS NH3 charges and PME",
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-GROMOS-CKP_GROMOS-HG_POPS_298K_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 153468580,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "20/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 425,
+            "path": "d0a/acf/d0aacf2392a074c84c540c30058708ec75394c32/64c2fa23c30e1f8471d6686ac85846875094a9d4/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.611364, "sn-2": 0.494376, "headgroup": 0.125188, "total": 0.410309 },
+        "TotalQuality": { "headgroup": 0.125188, "tails": 0.55287, "total": 0.410309, "FFQuality": 0.6 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129435",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-GROMOS-CKP_GROMOS-HG_PME_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-GROMOS-CKP_GROMOS-HG_POPS_298K_v2.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "GROMOSCKP_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSGROMOS-CKP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2",
+            "SOFTWARE_VERSION": null,
+            "FF": "GROMOS-CKP, GROMOS NH3 charges and PME",
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-GROMOS-CKP_GROMOS-HG_POPS_298K_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 153469664,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "20/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 473,
+            "path": "351/942/3519421ff6c7df40e1da7ac6b6e9ea4d06c911ca/1419f364222a22aadc90d4ec0963e18173e1df2a/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.630524, "sn-2": 0.469905, "headgroup": 0.213725, "total": 0.438051 },
+        "TotalQuality": { "headgroup": 0.213725, "tails": 0.550214, "total": 0.438051, "FFQuality": 0.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129431",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-GROMOS-CKP_PME_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-GROMOS-CKP_POPS_298K_v2.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "GROMOSCKP_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSGROMOS-CKP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2",
+            "SOFTWARE_VERSION": null,
+            "FF": "GROMOS-CKP, Berger/Chiu NH3 charges and PME",
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-GROMOS-CKP_POPS_298K_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 153482484,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "20/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 597,
+            "path": "154/32a/15432a86e2fe83bbb98801da6790567ae983fe58/de431264bc7ef1a732d76af339ef2bbf06bda33c/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.34652, "sn-2": 0.43388, "headgroup": 0.203612, "total": 0.328004 },
+        "TotalQuality": { "headgroup": 0.203612, "tails": 0.3902, "total": 0.328004, "FFQuality": 0.7 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129431",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-GROMOS-CKP_PME_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-GROMOS-CKP_POPS_298K_v1.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "GROMOSCKP_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSGROMOS-CKP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_GROMOS-CKP_v2",
+            "SOFTWARE_VERSION": null,
+            "FF": "GROMOS-CKP, Berger/Chiu NH3 charges and PME",
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-GROMOS-CKP_POPS_298K_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 153544216,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "20/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 535,
+            "path": "287/d83/287d83b5b1cc07c2f7dc5f54a8d74227fc6fc3e2/8cad21af3da1756eeb92edb2ab27873891de645d/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.028118, "sn-2": 0.343163, "headgroup": 0.136398, "total": 0.169226 },
+        "TotalQuality": { "headgroup": 0.136398, "tails": 0.185641, "total": 0.169226, "FFQuality": 0.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.1487906",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["lipid17_ff99-ions_298K.xtc"]
+            ],
+            "TPR": [
+                ["lipid17_ff99-ions_298K.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSlipid17_POPSres.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 3600 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72 }
+            },
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Melcr, Josef",
+            "SYSTEM": "72POPS_3600SOL_72SOD_298K",
+            "SOFTWARE_VERSION": 2018,
+            "FF": "Lipid17 and ff99 ions",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["lipid17_ff99-ions_298K.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["lipid17_ff99-ions_298K.top"]
+            ],
+            "GRO": [
+                ["lipid17_ff99-ions_298K.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3652448252,
+            "TRJLENGTH": 1.00002e+06,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20016,
+            "DATEOFRUNNING": "10/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 521,
+            "path": "12a/1ec/12a1ecac877f46809c4377d1e8fb72977396ad94/6149c1c887124543c661efab6619943bf59e7de5/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.1639, "sn-2": 0.261891, "headgroup": 0.112538, "total": 0.179443 },
+        "TotalQuality": { "headgroup": 0.112538, "tails": 0.212895, "total": 0.179443, "FFQuality": 0.3 },
+        "system": {
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "FF_DATE": "pre-2020",
+            "SYSTEM": "128POPS_4880SOL_128SOD_298K_v1",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 298,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 29824,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPSslipids.yaml"
+                },
+                "SOL": { "NAME": "SOL", "COUNT": 4480, "MAPPING": "mappingSPCwater.yaml" },
+                "SOD": { "NAME": "NA", "COUNT": 128, "MAPPING": "mappingNA.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 100050,
+            "TRAJECTORY_SIZE": 221912104,
+            "SOFTWARE_VERSION": null,
+            "FF": "Slipids",
+            "TOP": null,
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.1129441",
+            "DATEOFRUNNING": "12/10/2021",
+            "TPR": [
+                ["for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v1.tpr"]
+            ],
+            "TRJ": [
+                ["md-Slipids_LJ-PME_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "ID": 529,
+            "path": "ce5/80e/ce580ea7b4e991122666ed4fc3c779e3783cbc95/e2c64d1a46b3571951cce2c90ab7302a8f300a9b/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0998754, "sn-2": 0.243563, "headgroup": 0.144446, "total": 0.162628 },
+        "TotalQuality": { "headgroup": 0.144446, "tails": 0.171719, "total": 0.162628, "FFQuality": 0.4 },
+        "system": {
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "FF_DATE": "pre-2020",
+            "SYSTEM": "128POPS_4880SOL_128SOD_298K_v2",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 298,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 29824,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "FF_SOURCE": "starting structure from CHARMM-GUI",
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPSslipids.yaml"
+                },
+                "SOL": { "NAME": "SOL", "COUNT": 4480, "MAPPING": "mappingSPCwater.yaml" },
+                "SOD": { "NAME": "NA", "COUNT": 128, "MAPPING": "mappingNA.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 100050,
+            "TRAJECTORY_SIZE": 221910896,
+            "SOFTWARE_VERSION": null,
+            "FF": "Slipids",
+            "TOP": null,
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.1129441",
+            "DATEOFRUNNING": "12/10/2021",
+            "TPR": [
+                ["for-md-Slipids_10A_cut-off_LJ-PME_POPS_298K_v2.tpr"]
+            ],
+            "TRJ": [
+                ["md-Slipids_LJ-PME_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "ID": 338,
+            "path": "02b/984/02b98418d9965749ac943ecae9627cfdd1dfbdcd/7339faa76da6c93cfee03e59f399e2eed1628b53/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.109494, "sn-2": 0.138822, "headgroup": 0.262116, "total": 0.170144 },
+        "TotalQuality": { "headgroup": 0.262116, "tails": 0.124158, "total": 0.170144, "FFQuality": 0.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129458",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-CHARMM36-UA_10A-switch_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-CHARMM36-UA_POPS_298K_v2.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "CHARMM36UA_PSUA" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "PSUA",
+                    "MAPPING": "mappingPOPScharmm.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "SOD", "MAPPING": "mappingSOD.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": "10.1021/acs.jpcb.9b06091",
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_v2",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36-UA",
+            "FF_SOURCE": "starting structure from the CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-CHARMM36-UA_POPS_298K_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 164967492,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 22144,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 263,
+            "path": "3f8/a6e/3f8a6eeb44aaeaff5c00d157ed0938d2e0d94048/48f5c2a60215696e2234f1a33488b1215e32e2cc/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0691396, "sn-2": 0.104473, "headgroup": 0.224751, "total": 0.132788 },
+        "TotalQuality": { "headgroup": 0.224751, "tails": 0.0868061, "total": 0.132788, "FFQuality": 1.2 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129458",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-CHARMM36-UA_10A-switch_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-CHARMM36-UA_POPS_298K_v1.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "CHARMM36UA_PSUA" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "PSUA",
+                    "MAPPING": "mappingPOPScharmm.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "SOD", "MAPPING": "mappingSOD.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": "10.1021/acs.jpcb.9b06091",
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_v1",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36-UA",
+            "FF_SOURCE": "starting structure from the CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-CHARMM36-UA_POPS_298K_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 164953508,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 22144,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 367,
+            "path": "1e2/cdc/1e2cdc704d134725e6123404faccf98a7019ff0a/48fd79496a57492cc2d7b7346e3160cae424e7b4/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0566602, "sn-2": 0.0812534, "headgroup": 0.261792, "total": 0.133235 },
+        "TotalQuality": { "headgroup": 0.261792, "tails": 0.0689568, "total": 0.133235, "FFQuality": 1.7 },
+        "system": {
+            "FF_DATE": "??",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "SYSTEM": "POPS_298K",
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 29824,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "FF_SOURCE": "CHARMM-GUI",
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPScharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml" },
+                "SOD": { "NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "TRJLENGTH": 100050,
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.1129415",
+            "TRAJECTORY_SIZE": 221970700,
+            "TPR": [
+                ["for-md-CHARMM36_POPS_298K_v2.tpr"]
+            ],
+            "TRJ": [
+                ["md-CHARMM36_10A-switch_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 5,
+            "path": "1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0739589, "sn-2": 0.0760363, "headgroup": 0.190177, "total": 0.113391 },
+        "TotalQuality": { "headgroup": 0.190177, "tails": 0.0749976, "total": 0.113391, "FFQuality": 1.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.1283335",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-MacRog_POPS_fix_tails_298K_v1_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-MacRog_POPS_fix_tails_298K_v1.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSmacrog.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_v1",
+            "SOFTWARE_VERSION": null,
+            "FF": "MacRog",
+            "FF_SOURCE": "starting structure from CHARMM-GUI (correct PO tails and not OP tails)",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "TRAJECTORY_SIZE": 221997532,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 29824,
+            "DATEOFRUNNING": "17/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 292,
+            "path": "310/972/310972e588b9d3b8bb3049c5a4ee1977889c6559/a4d8e0ad017d67cfb566b576d573778c671c4cba/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0137675, "sn-2": 0.0640048, "headgroup": 0.177044, "total": 0.0849389 },
+        "TotalQuality": { "headgroup": 0.177044, "tails": 0.0388862, "total": 0.0849389, "FFQuality": 2.2 },
+        "system": {
+            "FF_DATE": "??",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "SYSTEM": "POPS_298K",
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 29824,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "FF_SOURCE": "CHARMM-GUI",
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPScharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml" },
+                "SOD": { "NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "TRJLENGTH": 100050,
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.1129415",
+            "TRAJECTORY_SIZE": 221984508,
+            "TPR": [
+                ["for-md-CHARMM36_POPS_298K_v1.tpr"]
+            ],
+            "TRJ": [
+                ["md-CHARMM36_10A-switch_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 106,
+            "path": "f40/bb6/f40bb6ab5d44402be07059e8df74b5a8200f031e/6774168dfec0a5a7377c8a46341eba603f320cf7/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0835414, "sn-2": 0.0569188, "headgroup": 0.165862, "total": 0.102107 },
+        "TotalQuality": { "headgroup": 0.165862, "tails": 0.0702301, "total": 0.102107, "FFQuality": 1.6 },
+        "system": {
+            "DOI": "10.5281/zenodo.1283335",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-MacRog_POPS_fix_tails_298K_v2_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-MacRog_POPS_fix_tails_298K_v2.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSmacrog.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPS_4480SOL_128SOD_298K_v2",
+            "SOFTWARE_VERSION": null,
+            "FF": "MacRog",
+            "FF_SOURCE": "starting structure from CHARMM-GUI (correct PO tails and not OP tails)",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "TRAJECTORY_SIZE": 221942672,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 29824,
+            "DATEOFRUNNING": "17/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 26,
+            "path": "371/d53/371d534a1bb41fd81e137717e473e6916c9bbf70/7c24007a3d9cbe605a31999850e929ebfaf530f7/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0104945, "sn-2": 0.0439771, "headgroup": 0.12884, "total": 0.0611039 },
+        "TotalQuality": { "headgroup": 0.12884, "tails": 0.0272358, "total": 0.0611039, "FFQuality": 2.4 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129425",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-berger_POPS_v1_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-berger_POPS_298K_v1.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "Berger_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSberger.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/media/osollila/disk1/tmp/DATABANK/",
+            "PUBLICATION": "http://dx.doi.org/10.1021/acs.jpcb.9b06091",
+            "AUTHORS_CONTACT": "Tom Piggot",
+            "SYSTEM": "POPS_298K_Berger",
+            "SOFTWARE_VERSION": null,
+            "FF": "Berger",
+            "FF_SOURCE": "https://doi.org/10.1016/S0006-3495(04)74227-7",
+            "FF_DATE": null,
+            "TRAJECTORY_SIZE": 153482344,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "04/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 502,
+            "path": "2b1/62c/2b162c80ec2f03952098021beb74ba2cdd3d16c2/d499d1361ef77c3d931995eefdc3d2dbec565ef0/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.00509504, "sn-2": 0.0410793, "headgroup": 0.0799495, "total": 0.0420413 },
+        "TotalQuality": { "headgroup": 0.0799495, "tails": 0.0230872, "total": 0.0420413, "FFQuality": 2.1 },
+        "system": {
+            "DOI": "10.5281/zenodo.1487761",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["lipid17_pure-POPS_298K.xtc"]
+            ],
+            "TPR": [
+                ["lipid17_pure-POPS_298K.tpr"]
+            ],
+            "PREEQTIME": 50,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSlipid17_POPSres.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 3600 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 72 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Melcr, Josef",
+            "SYSTEM": "72POPS_3600SOL_72SOD_298K",
+            "SOFTWARE_VERSION": 2018,
+            "FF": "Lipid17 and Dang ions",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["lipid17_pure-POPS_298K.top"]
+            ],
+            "GRO": [
+                ["lipid17_pure-POPS_298K.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3652498440,
+            "TRJLENGTH": 1.00002e+06,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20016,
+            "DATEOFRUNNING": "13/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 483,
+            "path": "611/eb1/611eb1451b3406f9a07395e74c89a779da77dd0e/7dacf9299757643c2ab76db9536d80031346829f/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0185749, "sn-2": 0.0369797, "headgroup": 0.107828, "total": 0.054461 },
+        "TotalQuality": { "headgroup": 0.107828, "tails": 0.0277773, "total": 0.054461, "FFQuality": 2.3 },
+        "system": {
+            "DOI": "10.5281/zenodo.1129425",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-berger_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "TPR": [
+                ["for-md-berger_POPS_298K_v2.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPS": "Berger_POPS" },
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "MAPPING": "mappingPOPSberger.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 4480 },
+                "SOD": { "NAME": "NA", "MAPPING": "mappingNA.yaml", "COUNT": 128 }
+            },
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "PUBLICATION": "http://dx.doi.org/10.1021/acs.jpcb.9b06091",
+            "AUTHORS_CONTACT": "Tom Piggot",
+            "SYSTEM": "POPS_298K_Berger",
+            "SOFTWARE_VERSION": null,
+            "FF": "Berger",
+            "FF_SOURCE": "https://doi.org/10.1016/S0006-3495(04)74227-7",
+            "FF_DATE": null,
+            "TRAJECTORY_SIZE": 153497768,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 20608,
+            "DATEOFRUNNING": "05/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "ID": 480,
+            "path": "7e2/66a/7e266a6989c04c46a79a2f444b521c595053c4e1/7de7367161b8ffa3b3388f6b5f61825aacf8a360/"
+        }
+    }
+]
