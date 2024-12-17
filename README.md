@@ -31,6 +31,22 @@ The code has been tested in Linux environment with python 3.7 or newer and recen
 
 Setup using conda as distribution:
 
-    $ conda create --name databank python==3.7.16 MDAnalysis MDAnalysisTests
-    $ conda activate databank
-    $ (databank) pip install tqdm pyyaml
+```
+ $ conda create --name databank python==3.10 MDAnalysis periodictable -c conda-forge
+ $ conda activate databank
+ $ (databank) conda install tqdm yaml -c conda-forge
+```
+
+Activating DatabankLib package:
+
+```
+ $ (databank) cd Databank
+ $ (databank) pip install -e .
+```
+
+If you want to run tests:
+```
+ $ (databank) conda install pytest -c conda-forge
+```
+
+If you want to develop, please install `flake8` for syntax check!

@@ -1,20 +1,12 @@
-import os
-import sys
-import numpy as np
-import json
-import matplotlib.pyplot as plt
-import MDAnalysis
-import urllib.request
-import yaml
+""" File demonstrating how to start using DatabankLib API.
+TODO: supplement!
+"""
+import DatabankLib.databankLibrary as dbl
 
-sys.path.insert(1, '../BuildDatabank/')
-from databankLibrary import download_link, lipids_dict, databank
+if __name__ == "__main__":
+    systems = dbl.initialize_databank()
 
-path = '../../Data/Simulations/'
-db_data = databank(path)
-systems = db_data.get_systems()
+    for system in systems:
+        print(system)
 
-for system in systems:
-    print(system)
-        
-
+        print("Fraction: ", dbl.calcLipidFraction(system))

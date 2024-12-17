@@ -1,0 +1,4 @@
+[flake8]
+ max-line-length = 88
+
+ # TODO: add flake8-naming for name checks

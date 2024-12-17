@@ -15,15 +15,16 @@ then clone the NMRlipids databank git into this folder
 .. code-block::
 
    git clone https://github.com/NMRLipids/Databank.git
+   cd Databank
+   pip install -e .
 
 You can then start to work with the `template <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_ or write a code from the scratch. The minimum python code to intialize NMRlipids databank is
 
 .. code-block::
 
-   import sys
-   databankPath =  './Databank/'   # this is the local path for the cloned Databank git
-   sys.path.insert(1, databankPath + '/Scripts/BuildDatabank/')
-   from databankLibrary import * 
+   import DatabankLib
+   from DatabankLib.core import initialize_databank
+
    systems = initialize_databank(databankPath)
 
 After running this, ``systems`` is the list of dictionaries where each dictionary is a simulation in the NMRlipids databank. A simulation dictionary contains the content of the README.yaml for that simulation. The content of README.yaml files is described in :ref:`readmecontent`. ``systems`` can be then used to loop over all simulations:
@@ -38,7 +39,7 @@ Examples on analyses over NMRlipids databank can be found from the `template <ht
 
 The functions available to analyze the simulations are listed in here:
 
-.. automodule:: databankLibrary
+.. automodule:: DatabankLib.databankLibrary
    :members:
    :undoc-members:
    :show-inheritance:
