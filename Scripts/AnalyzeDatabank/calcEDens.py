@@ -13,6 +13,7 @@ import yaml
 import functools 
 import MDAnalysis 
 import multiprocess
+import traceback
 
 import numpy as np
 
@@ -85,6 +86,7 @@ if __name__ == "__main__":
                 ### Lipids
                     # List of lipids in the system
                     lipids = list( set( system["COMPOSITION"].keys() ) & set( lipids_dict.keys() ) )
+                    print(lipids)
                     
                     # Split leaflets
                     COG = u.select_atoms( f"resname {' '.join( lipids )}" ).center_of_geometry()[2]
@@ -105,7 +107,7 @@ if __name__ == "__main__":
                 ### Water
                     # A selection with the water
                     Waters = u.select_atoms( f"resname {system['COMPOSITION']['SOL']['NAME']}" )
-                
+               	    print(translator["SOL"]) 
                     # Universal names of the water atoms
                     Water_names = [ translator["SOL"][name] for name in Waters.names  ]
                     
@@ -235,7 +237,8 @@ if __name__ == "__main__":
                     if Parallel:
                         del u
                 
-        except:
+        except Exception as e:
             print ('It was not possible to compute the electron density of the system.')
+            print(traceback.format_exc())
         
 
