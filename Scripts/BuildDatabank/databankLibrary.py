@@ -1626,7 +1626,7 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
     
     :param Dens: a list with the electon density
     
-    :param z: the coordinates of the electron density
+    :param z: the coordinates of the electron density, Å
     
     :param qz_range: the range of values of the wavevector transfer
     
@@ -1638,8 +1638,11 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
 
     :return: list of X-ray reflectometry values at qz_range
     """
+    import scipy
     
     Dens = np.array(Dens, dtype = float)
+    # thermal bluring the density
+    Dens = scipy.ndimage.gaussian_filter(Dens, sigma=3)
     Z = np.array(Z, dtype = float)
     
     # Critical value
@@ -1647,18 +1650,21 @@ def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False ):
     
     # Density in the air region is zero, so we add these points to compensate
     # the loss of points in the numerical derivative
-    Dens = np.hstack( [ [0,0], Dens, [Densw,Densw] ] )
+    # ???bicylce?? Dens = np.hstack( [ [0,0], Dens, [Densw,Densw] ] )
     
     # Gradient of the density
-    DDens = ( -Dens[4:]+8*Dens[3:-1]-8*Dens[1:-3]+Dens[:-4] ) / (12*(Z[1]-Z[0]))
+    # ???bicylce?? DDens = ( -Dens[4:]+8*Dens[3:-1]-8*Dens[1:-3]+Dens[:-4] ) / (12*(Z[1]-Z[0]))
+    DDens = np.gradient(Dens, Z)
     
     Re = np.zeros(len(qz_range))
     Im = np.zeros(len(qz_range))
     cq = np.zeros(len(qz_range))
     for i, qz in enumerate(qz_range):    
         qzp = (qz**2-qc**2)**0.5
-        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
-        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
+        # Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
+        Re[i] = np.trapz( DDens * np.cos( (qz*qzp)**0.5 * Z ), Z )
+        # Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
+        Im[i] = np.trapz( DDens * np.sin( (qz*qzp)**0.5 * Z ), Z )
         cq[i] = abs( (qz-qzp) / (qz+qzp) )
         
     Re /= Densw
