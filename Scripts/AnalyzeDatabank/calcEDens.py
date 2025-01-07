@@ -77,10 +77,17 @@ if __name__ == "__main__":
                                              path + system["TRJ"][0][0],
                                              in_memory=True if Parallel else False )
                     
-                    mapping = { mol: yaml.load( open( "../BuildDatabank/mapping_files/" + system["COMPOSITION"][mol]["MAPPING"], "r" ), 
-                                                 Loader=yaml.FullLoader ) for mol in system["COMPOSITION"] }
+                    mapping = {
+                        mol: yaml.load(open("../BuildDatabank/mapping_files/" + 
+                                            system["COMPOSITION"][mol]["MAPPING"], "r" ), 
+                                       Loader=yaml.FullLoader) 
+                             for mol in system["COMPOSITION"] 
+                    }
                     
-                    translator = { mol: { mapping[mol][j]["ATOMNAME"]: j for j in mapping[mol] } for mol in mapping.keys() }
+                    translator = {
+                        mol: {mapping[mol][j]["ATOMNAME"]: j for j in mapping[mol]} 
+                             for mol in mapping.keys() 
+                    }
                     
                     
                 ### Lipids
@@ -97,25 +104,57 @@ if __name__ == "__main__":
                     # Selection with all lipids
                     Lipids = UL + LL
                     
+                    # resname - name pair array
+                    resnm_anm_array = list(zip( Lipids.resnames, Lipids.names ))
                     # Universal names of the lipid atoms
-                    Lipid_names = [ translator[lipid][name] for lipid, name in zip( Lipids.resnames, Lipids.names ) ]
+                    Lipid_names = [ translator[lipid][name] for lipid, name in resnm_anm_array ]
                     
                     # Atomic number of the lipid atoms
                     Lipid_Z = np.vectorize( getElectrons )( Lipid_names )
                     
-                    
-                ### Water
+                    # Start United-atom processing
+                    try:
+                        uaDict = system["UNITEDATOM_DICT"]
+                    except:
+                        uaDict = None
+                    if type(uaDict) is not dict:
+                        uaDict = None
+                    # Dictionary for adding additional electrons
+                    add_el = {'CH': 1, 'CH2': 2, 'CH3': 3, 'nop': 0}
+                    if uaDict is not None:
+                        print("Processing United-Atom topology..")
+                        for lipid in lipids:
+                            if lipid not in uaDict:
+                                continue
+                            print(f"Reading {uaDict[lipid]}..", end='')
+                            UAlipidjsonNAME = './lipid_json_buildH/' + uaDict[lipid] + '.json'
+                            with open(UAlipidjsonNAME) as json_file:
+                                UAlipidjson = json.load(json_file)
+                            i = 0
+                            print("done.")
+                            for res, name in resnm_anm_array:
+                                print(res,name)
+                                if res == lipid:
+                                    if name in UAlipidjson:
+                                        ua_typ = UAlipidjson[name][0]
+                                    else:
+                                        ua_typ = 'nop'
+                                    Lipid_Z[i] += add_el[ua_typ]
+                                i += 1
+                    # debug msg
+                    print(Lipid_Z)
+                    ### Water
                     # A selection with the water
                     Waters = u.select_atoms( f"resname {system['COMPOSITION']['SOL']['NAME']}" )
-               	    print(translator["SOL"]) 
+                    print(translator["SOL"]) 
                     # Universal names of the water atoms
                     Water_names = [ translator["SOL"][name] for name in Waters.names  ]
                     
                     # Atomic number of the lipid atoms
                     Water_Z = np.vectorize( getElectrons )( Water_names * 2 )
-                
-                
-                ### Ions
+
+
+                    ### Ions
                     ions = list( set( system["COMPOSITION"].keys() ) - set( lipids + ["SOL"] ) )
                     
                     if ions:
@@ -140,7 +179,8 @@ if __name__ == "__main__":
                         # Set the current timestep
                         u.trajectory[ts]
                         
-                        ref = { lipid: dict(zip(translator[lipid].values(), translator[lipid].keys()))["M_G2_M"] for lipid in lipids if "M_G2_M" in translator[lipid].values() }
+                        ref = { lipid: dict(zip(translator[lipid].values(), translator[lipid].keys()))["M_G2_M"] 
+                                       for lipid in lipids if "M_G2_M" in translator[lipid].values() }
                         
                         # Split leaflets
                         COG = u.select_atoms( f"resname {' '.join( lipids )}" ).center_of_geometry()[2]
@@ -152,8 +192,10 @@ if __name__ == "__main__":
                         Lipids = UL + LL
                         
                         # Put the coordinates relatively to the limit of the leaflet
-                        ref_UL = np.mean( UL.select_atoms( " or ".join( [ f"( resname {resname} and name {name} )" for resname, name in ref.items() ] ) ).positions[:,2] ) # min( UL.positions[:,2] )
-                        ref_LL = np.mean( LL.select_atoms( " or ".join( [ f"( resname {resname} and name {name} )" for resname, name in ref.items() ] ) ).positions[:,2] ) # max( LL.positions[:,2] )
+                        ref_UL = np.mean( UL.select_atoms( " or ".join( [ f"( resname {resname} and name {name} )" 
+                                                           for resname, name in ref.items() ] ) ).positions[:,2] ) # min( UL.positions[:,2] )
+                        ref_LL = np.mean( LL.select_atoms( " or ".join( [ f"( resname {resname} and name {name} )" 
+                                                           for resname, name in ref.items() ] ) ).positions[:,2] ) # max( LL.positions[:,2] )
                         
                         Coords_lip = np.hstack( [  ref_UL - UL.positions[:,2],
                                                    LL.positions[:,2] - ref_LL  ] )   
