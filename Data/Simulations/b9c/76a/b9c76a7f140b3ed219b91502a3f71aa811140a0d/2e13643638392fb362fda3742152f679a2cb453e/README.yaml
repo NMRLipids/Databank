@@ -42,6 +42,6 @@ TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
     POPC:
-      unpublished/nesterenkoPOPC: unpublished/nesterenkoPOPC/2
+      10.1021/acs.jpcb.4c04719: 10.1021/acs.jpcb.4c04719/2
   FORMFACTOR: {}
 ID: 128
