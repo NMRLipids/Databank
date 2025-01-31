@@ -1,0 +1,17 @@
+DOI: unpublished/hoerstelCL
+TEMPERATURE: 300.5
+MOLAR_FRACTIONS:
+  TMCL: 0.5
+  BOG:  0.5
+ION_CONCENTRATIONS:
+  POT: 0
+  SOD: 0
+  CLA: 0
+  CAL: 0
+TOTAL_LIPID_CONCENTRATION: 2.64
+COUNTER_IONS:
+  TMA: TMCL
+# TMA (ammonium salt) neutralized by TMA hydroxide. 
+# -------------------------------------------------------------
+# Water is added up to ~21w/P which correspond to 15 water per
+# headgroup (if we consider bOG have 1 head and CL has 2 heads)

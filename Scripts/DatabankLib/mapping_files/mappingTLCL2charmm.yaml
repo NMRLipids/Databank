@@ -1,3 +1,25 @@
+#
+# Assignment map for All cardiolipins (by c1)
+# -----------------------------------------------------
+# TODO: define G02 prochirality
+#
+#                        G02O1
+#                    G01--G02--G03
+#                  /               \
+#               G23P1O1           G13P1O1
+#  G23P1O[2/3]--G23P1             G13P1--G12P1O[2/3]
+#               G23O1             G13O1
+#                 |                |
+#   G22C2O1       G23              G13         G12C2O1
+#   ||            |                |            ||
+#   G22C2--G22O1--G22              G12--G12O1--G12C2
+#  G22C3          |                |            G12C3
+# G22C4           G21              G11           G12C4
+# ..           G21O1                G11O1          ..
+#      G21C2O1==G21C2              G11C2==G11C2O1
+#                G21C3              G11C3
+#               G32C4              G11C4
+#                ..                 ..
 
 # =====================
 #      Headgroups 
@@ -72,15 +94,6 @@ M_G12C2_M:
 M_G12C2O1_M:
  ATOMNAME: OC1
  FRAGMENT: sn-2 1
-M_G12C3_M:
- ATOMNAME: CC2
- FRAGMENT: sn-2 1
-M_G12C3H1_M:
- ATOMNAME: H2R
- FRAGMENT: sn-2 1
-M_G12C3H2_M:
- ATOMNAME: H2S
- FRAGMENT: sn-2 1
 M_G11_M:
  ATOMNAME: C33
  FRAGMENT: glycerol backbone 1
@@ -98,15 +111,6 @@ M_G11C2_M:
  FRAGMENT: sn-1 1
 M_G11C2O1_M:
  ATOMNAME: OD1
- FRAGMENT: sn-1 1
-M_G11C3_M:
- ATOMNAME: CD2
- FRAGMENT: sn-1 1
-M_G11C3H1_M:
- ATOMNAME: H2X
- FRAGMENT: sn-1 1
-M_G11C3H2_M:
- ATOMNAME: H2Y
  FRAGMENT: sn-1 1
 # ------------------------------
 M_G23P1_M:
@@ -148,15 +152,6 @@ M_G22C2_M:
 M_G22C2O1_M:
  ATOMNAME: OA1
  FRAGMENT: sn-2 2
-M_G22C3_M:
- ATOMNAME: CA2
- FRAGMENT: sn-2 2
-M_G22C3H1_M:
- ATOMNAME: H2A
- FRAGMENT: sn-2 2
-M_G22C3H2_M:
- ATOMNAME: H2B
- FRAGMENT: sn-2 2
 M_G21_M:
  ATOMNAME: C13
  FRAGMENT: glycerol backbone 2
@@ -175,20 +170,19 @@ M_G21C2_M:
 M_G21C2O1_M:
  ATOMNAME: OB1
  FRAGMENT: sn-1 2
-M_G21C3_M:
- ATOMNAME: CB2
- FRAGMENT: sn-1 2
-M_G21C3H1_M:
- ATOMNAME: H2D
- FRAGMENT: sn-1 2
-M_G21C3H2_M:
- ATOMNAME: H2E
- FRAGMENT: sn-1 2
 
 # ==============================
 # starting all tail descriptions
 # ==============================
-
+M_G22C3_M:
+ ATOMNAME: CA2
+ FRAGMENT: sn-2 2
+M_G22C3H1_M:
+ ATOMNAME: H2A
+ FRAGMENT: sn-2 2
+M_G22C3H2_M:
+ ATOMNAME: H2B
+ FRAGMENT: sn-2 2
 M_G22C4_M:
  ATOMNAME: CA3
  FRAGMENT: sn-2 2
@@ -325,6 +319,15 @@ M_G22C19H3_M:
  ATOMNAME: H18C
  FRAGMENT: sn-2 2
 # ---------------------------
+M_G21C3_M:
+ ATOMNAME: CB2
+ FRAGMENT: sn-1 2
+M_G21C3H1_M:
+ ATOMNAME: H2D
+ FRAGMENT: sn-1 2
+M_G21C3H2_M:
+ ATOMNAME: H2E
+ FRAGMENT: sn-1 2
 M_G21C4_M:
  ATOMNAME: CB3
  FRAGMENT: sn-1 2
@@ -461,6 +464,15 @@ M_G21C19H3_M:
  ATOMNAME: H18F
  FRAGMENT: sn-1 2
 # ----------------------------
+M_G12C3_M:
+ ATOMNAME: CC2
+ FRAGMENT: sn-2 1
+M_G12C3H1_M:
+ ATOMNAME: H2R
+ FRAGMENT: sn-2 1
+M_G12C3H2_M:
+ ATOMNAME: H2S
+ FRAGMENT: sn-2 1
 M_G12C4_M:
  ATOMNAME: CC3
  FRAGMENT: sn-2 1
@@ -597,6 +609,15 @@ M_G12C19H3_M:
  ATOMNAME: H18T
  FRAGMENT: sn-2 1
 # -------------------------
+M_G11C3_M:
+ ATOMNAME: CD2
+ FRAGMENT: sn-1 1
+M_G11C3H1_M:
+ ATOMNAME: H2X
+ FRAGMENT: sn-1 1
+M_G11C3H2_M:
+ ATOMNAME: H2Y
+ FRAGMENT: sn-1 1
 M_G11C4_M:
  ATOMNAME: CD3
  FRAGMENT: sn-1 1

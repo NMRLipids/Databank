@@ -1,0 +1,33 @@
+# DMPC:BOG 3:2 (298K)
+# -------------------------------
+# Atom     Average OP     OP stem
+#
+M_G0C1_M M_G0C1H1_M -0.166  0.01
+M_G0C2_M M_G0C2H1_M -0.183  0.01
+M_G0C3_M M_G0C3H1_M -0.163  0.01
+M_G0C4_M M_G0C4H1_M -0.162  0.01
+M_G0C5_M M_G0C5H1_M -0.186  0.01
+# weak signal for this proton
+M_G0C6_M M_G0C6H1_M +0.307  0.01
+M_G0C6_M M_G0C6H2_M +0.056  0.02
+M_C1_M   M_C1H1_M   -0.230  0.01  
+M_C1_M   M_C1H2_M   -0.230  0.01
+M_C2_M   M_C2H1_M   -0.166  0.01
+M_C2_M   M_C2H2_M   -0.166  0.01
+# these points are indistinguishable
+M_C3_M   M_C3H1_M   -0.162  0.02
+M_C3_M   M_C3H2_M   -0.162  0.02
+M_C4_M   M_C4H1_M   -0.162  0.02
+M_C4_M   M_C4H2_M   -0.162  0.02
+M_C5_M   M_C5H1_M   -0.162  0.02
+M_C5_M   M_C5H2_M   -0.162  0.02
+# ..up to here
+M_C6_M   M_C6H1_M   -0.129  0.01
+M_C6_M   M_C6H2_M   -0.129  0.01
+M_C7_M   M_C7H1_M   -0.107  0.01
+M_C7_M   M_C7H2_M   -0.107  0.01
+# C8 points are obtained from the experiment
+# with d54-DMPC
+M_C8_M   M_C8H1_M   -0.020  0.03
+M_C8_M   M_C8H2_M   -0.020  0.03
+M_C8_M   M_C8H3_M   -0.020  0.03

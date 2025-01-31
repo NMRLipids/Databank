@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.13933145
+
+TRJ: TLCL_Na_prod500ns.trr
+TPR: TLCL_Na_prod500.tpr
+GRO: TLCL_Na_prod500ns.gro
+CPT:
+LOG:
+EDR: TLCL_Na_prod500ns.edr
+TOP: TOCL_Na.top
+
+SOFTWARE: gromacs
+PREEQTIME: 100
+TIMELEFTOUT: 0
+TEMPERATURE: 303
+
+COMPOSITION:
+ TLCL_0H:
+  NAME: TLCL2
+  MAPPING: mappingTLCL2charmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+ SOD:
+  NAME: SOD
+  MAPPING: mappingSOD.yaml
+ CLA:
+  NAME: CLA
+  MAPPING: mappingCLA.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Nesterenko Alexey
+
+SYSTEM: TLCL_66_Na_Cl_T303_45w/P
+SOFTWARE_VERSION: 2023.2
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/01/2024
+
+PUBLICATION:
+

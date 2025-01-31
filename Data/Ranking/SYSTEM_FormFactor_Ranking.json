@@ -483,6 +483,60 @@
         }
     },
     {
+        "POPC": { "sn-1": 0.847915, "sn-2": 0.804974, "headgroup": 0.736974, "total": 0.796621 },
+        "TotalQuality": { "headgroup": 0.736974, "tails": 0.826444, "total": 0.796621, "FFQuality": 0.155 },
+        "system": {
+            "DOI": "10.5281/zenodo.10958387",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["POPC_structure_fh_0-500ns_step10ps.xtc"]
+            ],
+            "TPR": [
+                ["analyze.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPC-OPLS4.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "SPC", "MAPPING": "mappingwaterlipid14.yaml", "COUNT": 9000 }
+            },
+            "DIR_WRK": "set-from-console",
+            "AUTHORS_CONTACT": "Milla Kurki",
+            "SYSTEM": "200POPC_9kSOL_300K",
+            "SOFTWARE_VERSION": "Desmond 2021-3",
+            "FF": "OPLS4",
+            "FF_SOURCE": "Shrodinger, Inc.",
+            "FF_DATE": "01/01/2024",
+            "CPT": [
+                ["POPC_desmond_md_job_fh.cpt"]
+            ],
+            "TOP": [
+                ["POPC_structure_fh.top"]
+            ],
+            "GRO": [
+                ["POPC_structure_fh.gro"]
+            ],
+            "TRAJECTORY_SIZE": 10047004124,
+            "TRJLENGTH": 499930,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 53800,
+            "DATEOFRUNNING": "05/07/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 814,
+            "path": "2f2/fd1/2f2fd1090599f0d917f14a70eb4ce89c84aa6723/52286e8550f901dd9ecae96198f9e3aa18566755/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.860231, "sn-2": 0.813007, "headgroup": 0.735416, "total": 0.802885 },
         "TotalQuality": { "headgroup": 0.735416, "tails": 0.836619, "total": 0.802885, "FFQuality": 0.155 },
         "system": {
@@ -6883,6 +6937,57 @@
             "WARNINGS": { "PBC": "z-jumps" },
             "ID": 421,
             "path": "d56/af7/d56af76f2bc3c77ecb6b255dd1e6e4a304621a22/98cde4f05842054793d2430b174329e176982042/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 1.429 },
+        "system": {
+            "DOI": "10.5281/zenodo.12698832",
+            "TRJ": [
+                ["prod_500ns.xtc"]
+            ],
+            "TPR": [
+                ["prod_500ns.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 200,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "SOPC": {
+                    "NAME": "SOPC",
+                    "MAPPING": "mappingSOPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "UNITEDATOM_DICT": null,
+            "DIR_WRK": "/Users/ferdinandhoerstel/Desktop/NMRlipids/Databank/Data/Simulations/fff/temp",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Alexey Nesterenko and Ferdinand H\u00f6rstel",
+            "SYSTEM": "SOPC",
+            "SOFTWARE_VERSION": 2022.5,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "19/06/2024",
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "TRAJECTORY_SIZE": 1694301792,
+            "TRJLENGTH": 500020,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 18560,
+            "DATEOFRUNNING": "09/07/2024",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "SOPC": {}
+                },
+                "FORMFACTOR": "10.1103.008/PhysRevE.80.021931/2"
+            },
+            "ID": 820,
+            "path": "bff/03d/bff03d4634b72a5467fa6dc5b67767a764db0931/00efd2d1108a76498201aecd69f82d12efc0368a/"
         }
     },
     {

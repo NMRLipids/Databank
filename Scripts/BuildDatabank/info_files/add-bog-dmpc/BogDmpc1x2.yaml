@@ -1,0 +1,39 @@
+DOI: 10.5281/zenodo.13881447
+
+TRJ: SMALLG_run1x2prd20ps.xtc
+TPR: run1x2znd.tpr
+GRO: SMALLG_run1x2znd.gro
+CPT: SMALLG_run1x2prd.cpt
+LOG: SMALLG_run1x2prd.log
+EDR: SMALLG_run1x2prd.edr
+TOP: topol1x2.top
+
+SOFTWARE: gromacs
+PREEQTIME: 1
+TIMELEFTOUT: 100
+TEMPERATURE: 303
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCcharmm.yaml
+ BOG:
+  NAME: BOG
+  MAPPING: mappingBOGcharmmG.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+DIR_WRK: /big/comcon1/work/Databank-work
+
+AUTHORS_CONTACT: Nesterenko Alexey
+
+SYSTEM: DMPC_BOG_1x2_fh
+SOFTWARE_VERSION: 2023.2
+
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/01/2024
+
+PUBLICATION:
+

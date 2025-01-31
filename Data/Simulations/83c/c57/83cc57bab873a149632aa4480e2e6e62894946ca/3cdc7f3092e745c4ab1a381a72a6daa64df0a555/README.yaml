@@ -1,0 +1,66 @@
+DOI: 10.5281/zenodo.13981147
+TRJ:
+- - TMCL_TMA_BOGprod.xtc
+TPR:
+- - tmclBOGprodZnd.tpr
+GRO:
+- - TMCL_TMA_BOGprod.gro
+CPT:
+- - TMCL_TMA_BOGprod.cpt
+LOG:
+- - TMCL_TMA_BOGprod.log
+EDR:
+- - TMCL_TMA_BOGprod.edr
+TOP:
+- - topol.top
+SOFTWARE: gromacs
+PREEQTIME: 500
+TIMELEFTOUT: 0
+TEMPERATURE: 303.15
+COMPOSITION:
+  TMCL:
+    NAME: TMCL2
+    MAPPING: mappingTMCLcharmm.yaml
+    COUNT:
+    - 40
+    - 40
+  BOG:
+    NAME: BOG
+    MAPPING: mappingBOGcharmmG.yaml
+    COUNT:
+    - 40
+    - 40
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 5060
+  TMA:
+    NAME: TMA
+    MAPPING: mappingTMAcharmmF.yaml
+    COUNT: 160
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 4
+  SOD:
+    NAME: SOD
+    MAPPING: mappingSOD.yaml
+    COUNT: 4
+DIR_WRK: /big/comcon1/work/Databank-work
+AUTHORS_CONTACT: Nesterenko Alexey
+SYSTEM: TMCL_BOG_TMA_NaCl_T303_21w/P
+SOFTWARE_VERSION: 2023.2
+FF: Charmm36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 01/01/2024
+PUBLICATION: null
+TRAJECTORY_SIZE: 3591550616
+TRJLENGTH: 500020.0
+NUMBER_OF_ATOMS: 38388
+DATEOFRUNNING: 23/10/2024
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    TMCL: {}
+    BOG: {}
+  FORMFACTOR: {}
