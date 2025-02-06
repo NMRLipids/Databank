@@ -37,7 +37,7 @@ COMPOSITION:
     COUNT: 9000
   CAL:
     NAME: Cal
-    MAPPING: mappingCal.yaml
+    MAPPING: mappingCAL.yaml
     COUNT: 73
   CLA:
     NAME: CL

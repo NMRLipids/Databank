@@ -1,0 +1,49 @@
+DOI: 10.5281/zenodo.10183982
+SOFTWARE: gromacs
+TRJ:
+- - popchysr44_0-500ns_step10ps.xtc
+TPR:
+- - analyze.tpr
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPC-OPLS3e.yaml
+    COUNT:
+    - 100
+    - 100
+  SOL:
+    NAME: SPC
+    MAPPING: mappingwaterlipid14.yaml
+    COUNT: 8859
+DIR_WRK: set-via-console
+PUBLICATION: null
+AUTHORS_CONTACT: Milla Kurki (Lindström)
+SYSTEM: 200POPC_8859SOL_300K_run_with_demond_convert_gromacs
+SOFTWARE_VERSION: Desmond 2019-4
+FF: OPLS3e
+FF_SOURCE: Schrodinger, Inc.
+FF_DATE: 01/12/2020
+CPT:
+- - desmond_md_popc200lip500ns.cpt
+LOG: null
+TOP:
+- - desmond_md_popc200lip500ns-in_converted.top
+GRO:
+- - desmond_md_popc200lip500ns-in_converted.gro
+TRAJECTORY_SIZE: 9968773016
+TRJLENGTH: 499870.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 53377
+DATEOFRUNNING: 08/04/2024
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+      unpublished/nesterenkoPOPC: unpublished/nesterenkoPOPC/4
+  FORMFACTOR: unpublished/NMRlipidsIII/1
+WARNINGS:
+  TIMESTEP: incorrect
+ID: 805

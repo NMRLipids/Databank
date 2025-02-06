@@ -29,12 +29,12 @@ COMPOSITION:
     COUNT: 51
 DIR_WRK: /home/lara/Databank
 PUBLICATION: null
-AUTHORS_CONTACT: "M\xE4\xE4tt\xE4, Jukka"
+AUTHORS_CONTACT: Määttä, Jukka
 SYSTEM: 72DPPC_2778SOL_51SOD_51CLA_323K
 SOFTWARE_VERSION: 5.0.4
 FF: OPLSAA-compatible Berger-DPPC-06
-FFSOD: "\xC5qvist parameters"
-FFCLA: "\xC5qvist parameters"
+FFSOD: Åqvist parameters
+FFCLA: Åqvist parameters
 FF_SOURCE: 10.1088/0953--8984/18/28/S07
 FF_DATE: null
 CPT: null

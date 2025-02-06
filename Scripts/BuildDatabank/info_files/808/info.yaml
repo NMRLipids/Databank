@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.11045073
+
+SOFTWARE: gromacs
+TRJ: DMPC_10wl_120-500ns.xtc
+TPR: analyze.tpr
+PREEQTIME: 120
+TIMELEFTOUT: 0
+
+COMPOSITION:
+ DMPC:
+  NAME: DMPC
+  MAPPING: mappingDMPCopls4.yaml
+ SOL:
+  NAME: SPC
+  MAPPING: mappingwaterlipid14.yaml
+ 
+DIR_WRK: /set-in-console
+
+PUBLICATION:
+AUTHORS_CONTACT: Milla Kurki (Lindström)
+
+SYSTEM: 200DMPC_2000SOL_300K
+SOFTWARE_VERSION: Desmond 2022-2
+
+FF: OPLS4
+FF_SOURCE: Schrodinger, Inc.
+FF_DATE: 01/01/2024
+
+CPT:
+LOG:
+TOP:
+GRO: DMPC_10wl.gro

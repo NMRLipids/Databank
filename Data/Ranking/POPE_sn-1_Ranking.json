@@ -1,1 +1,974 @@
-[{"POPE": {"sn-1": 0.8688049932836277, "sn-2": 0.5714501743469143, "headgroup": 0.10205439448148644, "total": 0.5141031873706762}, "TotalQuality": {"headgroup": 0.10205439448148644, "tails": 0.720127583815271, "total": 0.5141031873706762}, "system": {"DOI": "10.5281/zenodo.1293813", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v1_100-200ns.xtc"]], "TPR": [["for-md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v1.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "336POPE_13460SOL_310K_v1", "SOFTWARE_VERSION": "5.0.6", "FF": "Slipids", "FF_SOURCE": null, "FF_DATE": "pre-2020", "CPT": null, "LOG": null, "TOP": null, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEslipids.yaml", "COUNT": [168, 168]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 13460}}, "TRAJECTORY_SIZE": 1237168772, "TRJLENGTH": 100025.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 82380, "DATEOFRUNNING": "29/11/2021", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "WARNINGS": {"PBC": "hexagonal-box"}, "ID": 29, "path": "ca4/038/ca403878babec6f48159c1355f202089c0fd7fc0/81adbfa5c49ae97cb93b9bbe06fa673662c1a44a/"}}, {"POPE": {"sn-1": 0.8591030201428288, "sn-2": 0.5695665435757574, "headgroup": 0.10120565384340914, "total": 0.5099584058539984}, "TotalQuality": {"headgroup": 0.10120565384340914, "tails": 0.7143347818592931, "total": 0.5099584058539984}, "system": {"DOI": "10.5281/zenodo.1293813", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2_100-200ns.xtc"]], "TPR": [["for-md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "336POPE_13460SOL_310K_v2", "SOFTWARE_VERSION": "5.0.6", "FF": "Slipids", "FF_SOURCE": null, "FF_DATE": "pre-2020", "CPT": null, "LOG": null, "TOP": null, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEslipids.yaml", "COUNT": [168, 168]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 13460}}, "TRAJECTORY_SIZE": 1237208392, "TRJLENGTH": 100025.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 82380, "DATEOFRUNNING": "29/11/2021", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "WARNINGS": {"PBC": "hexagonal-box"}, "ID": 74, "path": "ba8/888/ba888896d74d078c25b29ae4c106c0096146205f/7ac0f9ece8f6b64afaefad36e542a4162bac4b33/"}}, {"POPE": {"sn-1": 0.8262972864683011, "sn-2": 0.47573271770193787, "headgroup": 0.29488290680083373, "total": 0.5323043036570243}, "TotalQuality": {"headgroup": 0.29488290680083373, "tails": 0.6510150020851195, "total": 0.5323043036570243, "FFQuality": 0.40000000000000036}, "system": {"DOI": "10.5281/zenodo.3237754", "SOFTWARE": "gromacs", "TRJ": [["total_4_500.xtc"]], "TPR": [["md_0.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "GROMOSCKPAP_POPE"}, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEGROMOS_CKP_AP.yaml", "COUNT": [250, 250]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 25000}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "ANTONIO PEON", "SYSTEM": "500POPE_25000SOL_310K_GROMOS-CKP", "SOFTWARE_VERSION": 2018.3, "FF": "GROMOS-CKP", "FFSOL": "SPC", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": [["topol.top"]], "GRO": [["conf.gro"]], "TRAJECTORY_SIZE": 3737642988, "TRJLENGTH": 100010.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 101000, "DATEOFRUNNING": "13/05/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 400, "path": "a83/e44/a83e446866beb4a5e1e267bb24e5544f97b7219c/af8a05f5ae6178825d417dfef0197fcb823796ff/"}}, {"POPE": {"sn-1": 0.7996066441060121, "sn-2": 0.5781996642804713, "headgroup": 0.29736958446748435, "total": 0.558391964284656}, "TotalQuality": {"headgroup": 0.29736958446748435, "tails": 0.6889031541932418, "total": 0.558391964284656, "FFQuality": 0.30000000000000027}, "system": {"DOI": "10.5281/zenodo.7916494", "SOFTWARE": "openMM", "TRJ": [["pope3ns.xtc"]], "PDB": [["pope72_drude.psf"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "TEMPERATURE": 308, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmmDrude2023.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304}}, "DIR_WRK": "/home/sosamuli/temp/DataBank/", "PUBLICATION": null, "AUTHORS_CONTACT": "Kav, Batuhan", "SYSTEM": "POPE_CHARMMdrude2023_308K", "SOFTWARE_VERSION": null, "FF": "Charmm-Drude polarizable2023", "FF_SOURCE": null, "FF_DATE": null, "CHK": null, "TOP": null, "CRD": null, "TRAJECTORY_SIZE": 2160856316, "TRJLENGTH": 200000.0, "NUMBER_OF_ATOMS": 24624, "DATEOFRUNNING": "11/05/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 747, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "path": "ef4/520/ef45203f9f3dec57f2dcffb6fee9b51fe9447f08/ef45203f9f3dec57f2dcffb6fee9b51fe9447f08/"}}, {"POPE": {"sn-1": 0.791393751404228, "sn-2": 0.7668437556771703, "headgroup": 0.006299431639673099, "total": 0.5215123129070238}, "TotalQuality": {"headgroup": 0.006299431639673099, "tails": 0.7791187535406991, "total": 0.5215123129070238, "FFQuality": 0.10000000000000009}, "system": {"DOI": "10.5281/zenodo.3231342", "SOFTWARE": "gromacs", "TRJ": [["pope_slipid_400_500_pbc.xtc"]], "TPR": [["topol.tpr"]], "PREEQTIME": 400, "TIMELEFTOUT": 0, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEslipids.yaml", "COUNT": [250, 250]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingTIP3PwaterSlipids.yaml", "COUNT": 25000}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Peon, Antonio", "SYSTEM": "500POPE_25000SOL_310K", "SOFTWARE_VERSION": 2018.3, "FF": "Slipids", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": [["topol.top"]], "GRO": [["pope_slipid_500ns_pbc.gro"]], "TRAJECTORY_SIZE": 5088142524, "TRJLENGTH": 100010.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 137500, "DATEOFRUNNING": "27/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 414, "path": "415/930/41593025f50adfceb2c888fed44afe0b1b7fe8da/34bafde4722aae82cc5972f9e30a54065d67159a/"}}, {"POPE": {"sn-1": 0.7653162917238853, "sn-2": 0.49045854169226166, "headgroup": 0.21904187232997024, "total": 0.4916055685820391}, "TotalQuality": {"headgroup": 0.21904187232997024, "tails": 0.6278874167080735, "total": 0.4916055685820391}, "system": {"DOI": "10.5281/zenodo.1293932", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_CKP_new_NH3_PME_verlet_v1_100-500ns.xtc"]], "TPR": [["for-md_POPE_CKP_new_NH3_PME_verlet_v1.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "GROMOSCKPTP_POPE"}, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEGROMOS_CKP_TP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPE_3552SOL_313K_GROMOS-CKP_v1", "SOFTWARE_VERSION": "5.0.6", "FF": "GROMOS-CKP", "FF_SOURCE": "https://pubs.acs.org/doi/abs/10.1021/jp207013v", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md_POPE_CKP_new_NH3_PME_verlet_v1.gro"]], "TRAJECTORY_SIZE": 5150544444, "TRJLENGTH": 400005.0, "TEMPERATURE": 313.0, "NUMBER_OF_ATOMS": 17312, "DATEOFRUNNING": "06/05/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {}}, "FORMFACTOR": {}}, "ID": 328, "path": "715/726/715726bb53690ba703a42499cdcb3d3d75a3638d/9f2ead75cff9dd55b3b747d888f19451b5f7b18d/"}}, {"POPE": {"sn-1": 0.7405242828815568, "sn-2": 0.5575849838363844, "headgroup": 0.2955910174916882, "total": 0.5312334280698765}, "TotalQuality": {"headgroup": 0.2955910174916882, "tails": 0.6490546333589706, "total": 0.5312334280698765, "FFQuality": 0.20000000000000018}, "system": {"DOI": "10.5281/zenodo.7916494", "SOFTWARE": "openMM", "TRJ": [["pope2ns.xtc"]], "PDB": [["pope72_drude.psf"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "TEMPERATURE": 308, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmmDrude2023.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304}}, "DIR_WRK": "/home/sosamuli/temp/DataBank/", "PUBLICATION": null, "AUTHORS_CONTACT": "Kav, Batuhan", "SYSTEM": "POPE_CHARMMdrude2023_308K", "SOFTWARE_VERSION": null, "FF": "Charmm-Drude polarizable2023", "FF_SOURCE": null, "FF_DATE": null, "CHK": null, "TOP": null, "CRD": null, "TRAJECTORY_SIZE": 2163713604, "TRJLENGTH": 200000.0, "NUMBER_OF_ATOMS": 24624, "DATEOFRUNNING": "11/05/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 750, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "path": "6a1/bbc/6a1bbc478e03fca6d1567f3d9451cfe5c8aadc72/6a1bbc478e03fca6d1567f3d9451cfe5c8aadc72/"}}, {"POPE": {"sn-1": 0.65878334711323, "sn-2": 0.709308331072225, "headgroup": 0.18339507008506867, "total": 0.5171622494235079}, "TotalQuality": {"headgroup": 0.18339507008506867, "tails": 0.6840458390927275, "total": 0.5171622494235079}, "system": {"DOI": "10.5281/zenodo.1293762", "SOFTWARE": "gromacs", "TRJ": [["md-pope_43A1-S3_313K_v1_100-200ns.xtc"]], "TPR": [["for-md-pope_43A1-S3_313K_v1.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "GROMOS43A1-S3_POPE"}, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEGROMOS43A1-S3.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPE_3552SOL_313K_v1", "SOFTWARE_VERSION": "4.0.7", "FF": "GROMOS 43A1-S3", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-pope_43A1-S3_313K_v1.gro"]], "TRAJECTORY_SIZE": 1272324484, "TRJLENGTH": 100005.0, "TEMPERATURE": 313.0, "NUMBER_OF_ATOMS": 17312, "DATEOFRUNNING": "24/05/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {}}, "FORMFACTOR": {}}, "ID": 86, "path": "f7d/d0c/f7dd0ccee0149dc3104b9b31f6f8966d45c2d520/8b79c7ddba192facb419ac449b28d32804d9f882/"}}, {"POPE": {"sn-1": 0.6295424173294182, "sn-2": 0.49069530595519084, "headgroup": 0.2688238324248127, "total": 0.46302051856980725}, "TotalQuality": {"headgroup": 0.2688238324248127, "tails": 0.5601188616423045, "total": 0.46302051856980725}, "system": {"DOI": "10.5281/zenodo.1293932", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_CKP_new_NH3_PME_verlet_v2_100-500ns.xtc"]], "TPR": [["for-md_POPE_CKP_new_NH3_PME_verlet_v2.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "GROMOSCKPTP_POPE"}, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEGROMOS_CKP_TP.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPE_3552SOL_313K_GROMOS-CKP_v2", "SOFTWARE_VERSION": "5.0.6", "FF": "GROMOS-CKP", "FF_SOURCE": "https://pubs.acs.org/doi/abs/10.1021/jp207013v", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md_POPE_CKP_new_NH3_PME_verlet_v2.gro"]], "TRAJECTORY_SIZE": 5150197580, "TRJLENGTH": 400005.0, "TEMPERATURE": 313.0, "NUMBER_OF_ATOMS": 17312, "DATEOFRUNNING": "06/05/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {}}, "FORMFACTOR": {}}, "ID": 482, "path": "114/cc9/114cc9ae4f4b01297f994c101dd9a51bbe31b2ac/d09e087de242ec64b3d024b8c4e087f4f8cc2022/"}}, {"POPE": {"sn-1": 0.5996732462086247, "sn-2": 0.5413438807961826, "headgroup": 0.2843558067740622, "total": 0.4751243112596231}, "TotalQuality": {"headgroup": 0.2843558067740622, "tails": 0.5705085635024036, "total": 0.4751243112596231, "FFQuality": 0.0}, "system": {"DOI": "10.5281/zenodo.7916494", "SOFTWARE": "openMM", "TRJ": [["pope1ns.xtc"]], "PDB": [["pope72_drude.psf"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "TEMPERATURE": 308, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmmDrude2023.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304}}, "DIR_WRK": "/home/sosamuli/temp/DataBank/", "PUBLICATION": null, "AUTHORS_CONTACT": "Kav, Batuhan", "SYSTEM": "POPE_CHARMMdrude2023_308K", "SOFTWARE_VERSION": null, "FF": "Charmm-Drude polarizable2023", "FF_SOURCE": null, "FF_DATE": null, "CHK": null, "TOP": null, "CRD": null, "TRAJECTORY_SIZE": 2165751444, "TRJLENGTH": 200000.0, "NUMBER_OF_ATOMS": 24624, "DATEOFRUNNING": "11/05/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 751, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "path": "7f1/f10/7f1f101895eed0e5b5344166106a5710ce18a82c/7f1f101895eed0e5b5344166106a5710ce18a82c/"}}, {"POPE": {"sn-1": 0.5703556503059356, "sn-2": 0.2800487599391111, "headgroup": 0.2727718478600254, "total": 0.37439208603502405}, "TotalQuality": {"headgroup": 0.2727718478600254, "tails": 0.4252022051225234, "total": 0.37439208603502405, "FFQuality": 0.30000000000000027}, "system": {"DOI": "10.5281/zenodo.1293774", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1_100-200ns.xtc"]], "TPR": [["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "CHARMM36UA_PEUA"}, "COMPOSITION": {"POPE": {"NAME": "PEUA", "MAPPING": "mappingPOPEcharmm.yaml", "COUNT": [168, 168]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "336POPE_15254SOL_310K_v1", "SOFTWARE_VERSION": "5.0.6", "FF": "CHARMM36-UA", "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1.gro"]], "TRAJECTORY_SIZE": 1016472324, "TRJLENGTH": 100025.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 67602, "DATEOFRUNNING": "10/06/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 233, "path": "2a9/7d1/2a97d1e94052e72834612f60a547347514d3dfbf/c94855d55d49e55b22857b00de9012c190fe5f2e/"}}, {"POPE": {"sn-1": 0.5647624254385595, "sn-2": 0.2623139978795224, "headgroup": 0.31951809271934306, "total": 0.38219817201247497}, "TotalQuality": {"headgroup": 0.31951809271934306, "tails": 0.4135382116590409, "total": 0.38219817201247497, "FFQuality": 0.30000000000000027}, "system": {"DOI": "10.5281/zenodo.1293774", "SOFTWARE": "gromacs", "TRJ": [["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2_100-200ns.xtc"]], "TPR": [["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "CHARMM36UA_PEUA"}, "COMPOSITION": {"POPE": {"NAME": "PEUA", "MAPPING": "mappingPOPEcharmm.yaml", "COUNT": [168, 168]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "336POPE_15254SOL_310K_v2", "SOFTWARE_VERSION": "5.0.6", "FF": "CHARMM36-UA", "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)", "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.gro"]], "TRAJECTORY_SIZE": 1016472968, "TRJLENGTH": 100025.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 67602, "DATEOFRUNNING": "10/06/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 352, "path": "07d/cf3/07dcf38cf72985a9535571aaa39d7ae76921838b/9633603ac288bf90cb41aeac480bd1b222658439/"}}, {"POPE": {"sn-1": 0.5293367640199336, "sn-2": 0.2679880618599914, "headgroup": 0.05932663974677594, "total": 0.2855504885422337}, "TotalQuality": {"headgroup": 0.05932663974677594, "tails": 0.3986624129399625, "total": 0.2855504885422337, "FFQuality": 0.7999999999999952}, "system": {"DOI": "10.5281/zenodo.7602770", "SOFTWARE": "openMM", "TRJ": [["traj1-2.xtc"]], "PDB": [["step3_charmm2omm.pdb"]], "PREEQTIME": 0, "TIMELEFTOUT": 10, "TEMPERATURE": 310, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmmDrude1.yaml", "COUNT": [72, 72]}, "SOL": {"NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 5040}}, "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/", "PUBLICATION": null, "AUTHORS_CONTACT": "Samuli Ollila", "SYSTEM": "POPE_303K", "SOFTWARE_VERSION": null, "FF": "Charmm-Drude", "FF_SOURCE": "initial structures from CHARMM-GUI", "FF_DATE": "Dec20222", "CHK": null, "TOP": null, "CRD": null, "TRAJECTORY_SIZE": 8179881760, "TRJLENGTH": 360000.0, "NUMBER_OF_ATOMS": 51408, "DATEOFRUNNING": "03/02/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 731, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "path": "208/241/208241f86895519f5cc67cbea2131b7b265b6ec3/208241f86895519f5cc67cbea2131b7b265b6ec3/"}}, {"POPE": {"sn-1": 0.5214772413154765, "sn-2": 0.2718539882856447, "headgroup": 0.5386091935287269, "total": 0.4439801410432827}, "TotalQuality": {"headgroup": 0.5386091935287269, "tails": 0.3966656148005606, "total": 0.4439801410432827, "FFQuality": 1.2999999999999985}, "system": {"FF_DATE": "??", "TYPEOFSYSTEM": "lipid bilayer", "SYSTEM": "POPE_310K", "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 35280, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "FF_SOURCE": "CHARMM-GUI", "COMPOSITION": {"SOL": {"NAME": "TIP3", "COUNT": 5760, "MAPPING": "mappingTIP3PCHARMMgui.yaml"}, "POPE": {"NAME": "POPE", "COUNT": [72, 72], "MAPPING": "mappingPOPEcharmm.yaml"}}, "TIMELEFTOUT": 50, "TRJLENGTH": 500100.0, "DATEOFRUNNING": "01/10/2021", "FF": "CHARMM36", "SOFTWARE": "gromacs", "PREEQTIME": 0, "DOI": "10.5281/zenodo.2641987", "TRAJECTORY_SIZE": 654088256, "TPR": [["POPE_C36_310K.tpr"]], "TRJ": [["POPE_C36_310K.xtc"]], "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "ID": 430, "path": "2d4/61b/2d461bc9d828af155146162ef42438974e4cbeaf/c8ce4cc36ef6ec7a085cf011176a92d9d746a792/"}}, {"POPE": {"sn-1": 0.520429148213163, "sn-2": 0.7211047480044103, "headgroup": 0.20072665661493358, "total": 0.48075351761083557}, "TotalQuality": {"headgroup": 0.20072665661493358, "tails": 0.6207669481087866, "total": 0.48075351761083557}, "system": {"DOI": "10.5281/zenodo.1293762", "SOFTWARE": "gromacs", "TRJ": [["md-pope_43A1-S3_313K_v2_100-200ns.xtc"]], "TPR": [["for-md-pope_43A1-S3_313K_v2.tpr"]], "PREEQTIME": 100, "TIMELEFTOUT": 0, "UNITEDATOM_DICT": {"POPE": "GROMOS43A1-S3_POPE"}, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEGROMOS43A1-S3.yaml", "COUNT": [64, 64]}, "SOL": {"NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552}}, "DIR_WRK": "/home/lara/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "Thomas Piggot", "SYSTEM": "128POPE_3552SOL_313K_v2", "SOFTWARE_VERSION": "4.0.7", "FF": "GROMOS 43A1-S3", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": null, "GRO": [["md-pope_43A1-S3_313K_v2.gro"]], "TRAJECTORY_SIZE": 1272479824, "TRJLENGTH": 100005.0, "TEMPERATURE": 313.0, "NUMBER_OF_ATOMS": 17312, "DATEOFRUNNING": "24/05/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {}}, "FORMFACTOR": {}}, "ID": 349, "path": "657/ec5/657ec589ab054232ea119adfa859e9ea685248fd/3f83910c14748e23837449d33e97da2450ba16a5/"}}, {"POPE": {"sn-1": 0.19055807920748685, "sn-2": 0.11832762516093763, "headgroup": 0.3723912361232323, "total": 0.22709231349721892}, "TotalQuality": {"headgroup": 0.3723912361232323, "tails": 0.15444285218421225, "total": 0.22709231349721892, "FFQuality": 2.0000000000000018}, "system": {"DOI": "10.5281/zenodo.8435138", "TRJ": [["SMALLG_pope-md313rfz-20ps.trr"]], "TPR": [["pope-md313rfz.tpr"]], "SOFTWARE": "gromacs", "PREEQTIME": 0, "TIMELEFTOUT": 100, "TEMPERATURE": 310, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmm.yaml", "COUNT": [72, 72]}, "SOL": {"NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 5760}}, "DIR_WRK": "/big/comcon1/work/Databank-work", "AUTHORS_CONTACT": "Alexey Nesterenko", "SYSTEM": "POPE(313K,rfz)", "SOFTWARE_VERSION": 2022.5, "FF": "Charmm36", "FF_SOURCE": "CHARMM-GUI", "FF_DATE": "01/07/2022", "CPT": [["SMALLG_pope-md313rfz.cpt"]], "LOG": [["SMALLG_pope-md313rfz.log"]], "TOP": [["POPE.top"]], "TRAJECTORY_SIZE": 21689266080, "TRJLENGTH": 512240.0, "NUMBER_OF_ATOMS": 35280, "DATEOFRUNNING": "17/10/2023", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 790, "path": "aef/442/aef4429d5c23dd3d6aea0683a552c7d8cbc787df/03c4667949377aca6116c541ee3a7a26c367d8eb/"}}, {"POPE": {"sn-1": 0.14102640501680838, "sn-2": 0.07061046879003945, "headgroup": 0.529731082390685, "total": 0.24712265206584427}, "TotalQuality": {"headgroup": 0.529731082390685, "tails": 0.10581843690342391, "total": 0.24712265206584427, "FFQuality": 1.6999999999999988}, "system": {"AUTHORS_CONTACT": "ANTONIO PEON", "FF_DATE": null, "SYSTEM": "500POPE_25000SOL_310K", "TYPEOFSYSTEM": "lipid bilayer", "TEMPERATURE": 310.0, "PUBLICATION": null, "NUMBER_OF_ATOMS": 137500, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "FF_SOURCE": "CHARMM-GUI v1.7", "COMPOSITION": {"SOL": {"NAME": "SOL", "COUNT": 25000, "MAPPING": "mappingTIP3Pwater.yaml"}, "POPE": {"NAME": "POPE", "COUNT": [250, 250], "MAPPING": "mappingPOPEcharmm.yaml"}}, "TIMELEFTOUT": 0, "CPT": null, "TRJLENGTH": 100010.0, "TRAJECTORY_SIZE": 5088535084, "SOFTWARE_VERSION": 2018.3, "FF": "CHARMM36", "TOP": [["topol.top"]], "PREEQTIME": 400, "DOI": "10.5281/zenodo.3237461", "DATEOFRUNNING": "04/10/2021", "TPR": [["md_0.tpr"]], "TRJ": [["total_4_500.xtc"]], "LOG": null, "SOFTWARE": "gromacs", "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/", "ID": 67, "path": "b7a/4c6/b7a4c62a0f6112eb07c99e3fe912bd5e55e1dca2/5e824ebda9f3c3341685c5aa5a3ff3ad7ead34f5/"}}, {"POPE": {"sn-1": 0.12493798795384692, "sn-2": 0.3522156361006782, "headgroup": 0.08503075007637345, "total": 0.18739479137696616}, "TotalQuality": {"headgroup": 0.08503075007637345, "tails": 0.23857681202726255, "total": 0.18739479137696616, "FFQuality": 1.5999999999999988}, "system": {"DOI": "10.5281/zenodo.4424292", "SOFTWARE": "gromacs", "TRJ": [["md_400_500.xtc"]], "TPR": [["md.tpr"]], "PREEQTIME": 0, "TIMELEFTOUT": 0, "COMPOSITION": {"POPE": {"NAME": "PE", "MAPPING": "mappingPOPElipid17.yaml", "COUNT": [250, 250]}, "SOL": {"NAME": "WAT", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 25000}}, "DIR_WRK": "/usr/home/bort/Databank", "PUBLICATION": null, "AUTHORS_CONTACT": "PE\u00d3N, Antonio", "SYSTEM": "500POPE_25000SOL_310K", "SOFTWARE_VERSION": 2020.1, "FF": "Lipid17", "FF_SOURCE": null, "FF_DATE": null, "CPT": null, "LOG": null, "TOP": [["topol.top"]], "TRAJECTORY_SIZE": 25700881840, "TRJLENGTH": 100002.0, "TEMPERATURE": 310.0, "NUMBER_OF_ATOMS": 137500, "DATEOFRUNNING": "03/01/2022", "TYPEOFSYSTEM": "lipid bilayer", "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "ID": 195, "path": "b58/0d1/b580d13983ed1b38cf975bc3f129c58bf05efd5a/244f4bc5e15f39de659fa2b13e30cd833084af44/"}}, {"POPE": {"sn-1": 0.09741583406380304, "sn-2": 0.23393477213993907, "headgroup": 0.20586607891700182, "total": 0.1790722283735813}, "TotalQuality": {"headgroup": 0.20586607891700182, "tails": 0.16567530310187106, "total": 0.1790722283735813, "FFQuality": 3.799999999999998}, "system": {"DOI": "10.5281/zenodo.7602924", "SOFTWARE": "openMM", "TRJ": [["traj.xtc"]], "PDB": [["last_frameT303K.pdb"]], "PREEQTIME": 0, "TIMELEFTOUT": 50, "TEMPERATURE": 310, "COMPOSITION": {"POPE": {"NAME": "POPE", "MAPPING": "mappingPOPEcharmm.yaml", "COUNT": [36, 36]}, "SOL": {"NAME": "HOH", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 2880}}, "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/", "PUBLICATION": null, "AUTHORS_CONTACT": "Samuli Ollila", "SYSTEM": "POPE_310K", "SOFTWARE_VERSION": null, "FF": "AMOEBA", "FF_SOURCE": "original parameters  https://doi.org/10.1080/00268976.2018.1436201", "FF_DATE": null, "CHK": null, "TOP": null, "CRD": null, "TRAJECTORY_SIZE": 2130422484, "TRJLENGTH": 329670.0, "NUMBER_OF_ATOMS": 17640, "DATEOFRUNNING": "03/02/2023", "TYPEOFSYSTEM": "lipid bilayer", "ID": 730, "EXPERIMENT": {"ORDERPARAMETER": {"POPE": {"10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1"}}, "FORMFACTOR": "10.1021/jp511159q/1"}, "path": "b58/f0c/b58f0ce7128b1e97e4d1a90fbffe808ee2cbcc75/b58f0ce7128b1e97e4d1a90fbffe808ee2cbcc75/"}}]
+[
+    {
+        "POPE": { "sn-1": 0.868805, "sn-2": 0.57145, "headgroup": 0.102054, "total": 0.514103 },
+        "TotalQuality": { "headgroup": 0.102054, "tails": 0.720128, "total": 0.514103 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293813",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v1_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v1.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "336POPE_13460SOL_310K_v1",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "Slipids",
+            "FF_SOURCE": null,
+            "FF_DATE": "pre-2020",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEslipids.yaml",
+                    "COUNT": [168, 168]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 13460 }
+            },
+            "TRAJECTORY_SIZE": 1237168772,
+            "TRJLENGTH": 100025,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 82380,
+            "DATEOFRUNNING": "29/11/2021",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "WARNINGS": { "PBC": "hexagonal-box" },
+            "ID": 29,
+            "path": "ca4/038/ca403878babec6f48159c1355f202089c0fd7fc0/81adbfa5c49ae97cb93b9bbe06fa673662c1a44a/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.859103, "sn-2": 0.569567, "headgroup": 0.101206, "total": 0.509958 },
+        "TotalQuality": { "headgroup": 0.101206, "tails": 0.714335, "total": 0.509958 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293813",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_hexagonal_membrane_Slipids_CORRECT_200ns_v2.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "336POPE_13460SOL_310K_v2",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "Slipids",
+            "FF_SOURCE": null,
+            "FF_DATE": "pre-2020",
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEslipids.yaml",
+                    "COUNT": [168, 168]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 13460 }
+            },
+            "TRAJECTORY_SIZE": 1237208392,
+            "TRJLENGTH": 100025,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 82380,
+            "DATEOFRUNNING": "29/11/2021",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "WARNINGS": { "PBC": "hexagonal-box" },
+            "ID": 74,
+            "path": "ba8/888/ba888896d74d078c25b29ae4c106c0096146205f/7ac0f9ece8f6b64afaefad36e542a4162bac4b33/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.826297, "sn-2": 0.475733, "headgroup": 0.294883, "total": 0.532304 },
+        "TotalQuality": { "headgroup": 0.294883, "tails": 0.651015, "total": 0.532304, "FFQuality": 0.4 },
+        "system": {
+            "DOI": "10.5281/zenodo.3237754",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["total_4_500.xtc"]
+            ],
+            "TPR": [
+                ["md_0.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "GROMOSCKPAP_POPE" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEGROMOS_CKP_AP.yaml",
+                    "COUNT": [250, 250]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 25000 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "ANTONIO PEON",
+            "SYSTEM": "500POPE_25000SOL_310K_GROMOS-CKP",
+            "SOFTWARE_VERSION": 2018.3,
+            "FF": "GROMOS-CKP",
+            "FFSOL": "SPC",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["conf.gro"]
+            ],
+            "TRAJECTORY_SIZE": 3737642988,
+            "TRJLENGTH": 100010,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 101000,
+            "DATEOFRUNNING": "13/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 400,
+            "path": "a83/e44/a83e446866beb4a5e1e267bb24e5544f97b7219c/af8a05f5ae6178825d417dfef0197fcb823796ff/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.799607, "sn-2": 0.5782, "headgroup": 0.29737, "total": 0.558392 },
+        "TotalQuality": { "headgroup": 0.29737, "tails": 0.688903, "total": 0.558392, "FFQuality": 0.3 },
+        "system": {
+            "DOI": "10.5281/zenodo.7916494",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["pope3ns.xtc"]
+            ],
+            "PDB": [
+                ["pope72_drude.psf"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "TEMPERATURE": 308,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmmDrude2023.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304 }
+            },
+            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Kav, Batuhan",
+            "SYSTEM": "POPE_CHARMMdrude2023_308K",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm-Drude polarizable2023",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 2160856316,
+            "TRJLENGTH": 200000,
+            "NUMBER_OF_ATOMS": 24624,
+            "DATEOFRUNNING": "11/05/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 747,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "path": "ef4/520/ef45203f9f3dec57f2dcffb6fee9b51fe9447f08/ef45203f9f3dec57f2dcffb6fee9b51fe9447f08/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.791394, "sn-2": 0.766844, "headgroup": 0.00629943, "total": 0.521512 },
+        "TotalQuality": { "headgroup": 0.00629943, "tails": 0.779119, "total": 0.521512, "FFQuality": 0.1 },
+        "system": {
+            "DOI": "10.5281/zenodo.3231342",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["pope_slipid_400_500_pbc.xtc"]
+            ],
+            "TPR": [
+                ["topol.tpr"]
+            ],
+            "PREEQTIME": 400,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEslipids.yaml",
+                    "COUNT": [250, 250]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3PwaterSlipids.yaml", "COUNT": 25000 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Peon, Antonio",
+            "SYSTEM": "500POPE_25000SOL_310K",
+            "SOFTWARE_VERSION": 2018.3,
+            "FF": "Slipids",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": [
+                ["pope_slipid_500ns_pbc.gro"]
+            ],
+            "TRAJECTORY_SIZE": 5088142524,
+            "TRJLENGTH": 100010,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 137500,
+            "DATEOFRUNNING": "27/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 414,
+            "path": "415/930/41593025f50adfceb2c888fed44afe0b1b7fe8da/34bafde4722aae82cc5972f9e30a54065d67159a/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.765316, "sn-2": 0.490459, "headgroup": 0.219042, "total": 0.491606 },
+        "TotalQuality": { "headgroup": 0.219042, "tails": 0.627887, "total": 0.491606 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293932",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_CKP_new_NH3_PME_verlet_v1_100-500ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_CKP_new_NH3_PME_verlet_v1.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "GROMOSCKPTP_POPE" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEGROMOS_CKP_TP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPE_3552SOL_313K_GROMOS-CKP_v1",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "GROMOS-CKP",
+            "FF_SOURCE": "https://pubs.acs.org/doi/abs/10.1021/jp207013v",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md_POPE_CKP_new_NH3_PME_verlet_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 5150544444,
+            "TRJLENGTH": 400005,
+            "TEMPERATURE": 313,
+            "NUMBER_OF_ATOMS": 17312,
+            "DATEOFRUNNING": "06/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": {}
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 328,
+            "path": "715/726/715726bb53690ba703a42499cdcb3d3d75a3638d/9f2ead75cff9dd55b3b747d888f19451b5f7b18d/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.740524, "sn-2": 0.557585, "headgroup": 0.295591, "total": 0.531233 },
+        "TotalQuality": { "headgroup": 0.295591, "tails": 0.649055, "total": 0.531233, "FFQuality": 0.2 },
+        "system": {
+            "DOI": "10.5281/zenodo.7916494",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["pope2ns.xtc"]
+            ],
+            "PDB": [
+                ["pope72_drude.psf"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "TEMPERATURE": 308,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmmDrude2023.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304 }
+            },
+            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Kav, Batuhan",
+            "SYSTEM": "POPE_CHARMMdrude2023_308K",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm-Drude polarizable2023",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 2163713604,
+            "TRJLENGTH": 200000,
+            "NUMBER_OF_ATOMS": 24624,
+            "DATEOFRUNNING": "11/05/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 750,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "path": "6a1/bbc/6a1bbc478e03fca6d1567f3d9451cfe5c8aadc72/6a1bbc478e03fca6d1567f3d9451cfe5c8aadc72/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.658783, "sn-2": 0.709308, "headgroup": 0.183395, "total": 0.517162 },
+        "TotalQuality": { "headgroup": 0.183395, "tails": 0.684046, "total": 0.517162 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293762",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-pope_43A1-S3_313K_v1_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md-pope_43A1-S3_313K_v1.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "GROMOS43A1-S3_POPE" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEGROMOS43A1-S3.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPE_3552SOL_313K_v1",
+            "SOFTWARE_VERSION": "4.0.7",
+            "FF": "GROMOS 43A1-S3",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-pope_43A1-S3_313K_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1272324484,
+            "TRJLENGTH": 100005,
+            "TEMPERATURE": 313,
+            "NUMBER_OF_ATOMS": 17312,
+            "DATEOFRUNNING": "24/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": {}
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 86,
+            "path": "f7d/d0c/f7dd0ccee0149dc3104b9b31f6f8966d45c2d520/8b79c7ddba192facb419ac449b28d32804d9f882/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.629542, "sn-2": 0.490695, "headgroup": 0.268824, "total": 0.463021 },
+        "TotalQuality": { "headgroup": 0.268824, "tails": 0.560119, "total": 0.463021 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293932",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_CKP_new_NH3_PME_verlet_v2_100-500ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_CKP_new_NH3_PME_verlet_v2.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "GROMOSCKPTP_POPE" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEGROMOS_CKP_TP.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPE_3552SOL_313K_GROMOS-CKP_v2",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "GROMOS-CKP",
+            "FF_SOURCE": "https://pubs.acs.org/doi/abs/10.1021/jp207013v",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md_POPE_CKP_new_NH3_PME_verlet_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 5150197580,
+            "TRJLENGTH": 400005,
+            "TEMPERATURE": 313,
+            "NUMBER_OF_ATOMS": 17312,
+            "DATEOFRUNNING": "06/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": {}
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 482,
+            "path": "114/cc9/114cc9ae4f4b01297f994c101dd9a51bbe31b2ac/d09e087de242ec64b3d024b8c4e087f4f8cc2022/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.599673, "sn-2": 0.541344, "headgroup": 0.284356, "total": 0.475124 },
+        "TotalQuality": { "headgroup": 0.284356, "tails": 0.570509, "total": 0.475124, "FFQuality": 0 },
+        "system": {
+            "DOI": "10.5281/zenodo.7916494",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["pope1ns.xtc"]
+            ],
+            "PDB": [
+                ["pope72_drude.psf"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "TEMPERATURE": 308,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmmDrude2023.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2304 }
+            },
+            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Kav, Batuhan",
+            "SYSTEM": "POPE_CHARMMdrude2023_308K",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm-Drude polarizable2023",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 2165751444,
+            "TRJLENGTH": 200000,
+            "NUMBER_OF_ATOMS": 24624,
+            "DATEOFRUNNING": "11/05/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 751,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "path": "7f1/f10/7f1f101895eed0e5b5344166106a5710ce18a82c/7f1f101895eed0e5b5344166106a5710ce18a82c/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.570356, "sn-2": 0.280049, "headgroup": 0.272772, "total": 0.374392 },
+        "TotalQuality": { "headgroup": 0.272772, "tails": 0.425202, "total": 0.374392, "FFQuality": 0.3 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293774",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "CHARMM36UA_PEUA" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "PEUA",
+                    "MAPPING": "mappingPOPEcharmm.yaml",
+                    "COUNT": [168, 168]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "336POPE_15254SOL_310K_v1",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36-UA",
+            "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v1.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1016472324,
+            "TRJLENGTH": 100025,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 67602,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 233,
+            "path": "2a9/7d1/2a97d1e94052e72834612f60a547347514d3dfbf/c94855d55d49e55b22857b00de9012c190fe5f2e/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.564762, "sn-2": 0.262314, "headgroup": 0.319518, "total": 0.382198 },
+        "TotalQuality": { "headgroup": 0.319518, "tails": 0.413538, "total": 0.382198, "FFQuality": 0.3 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293774",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "CHARMM36UA_PEUA" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "PEUA",
+                    "MAPPING": "mappingPOPEcharmm.yaml",
+                    "COUNT": [168, 168]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "336POPE_15254SOL_310K_v2",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36-UA",
+            "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1016472968,
+            "TRJLENGTH": 100025,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 67602,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 352,
+            "path": "07d/cf3/07dcf38cf72985a9535571aaa39d7ae76921838b/9633603ac288bf90cb41aeac480bd1b222658439/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.529337, "sn-2": 0.267988, "headgroup": 0.0593266, "total": 0.28555 },
+        "TotalQuality": { "headgroup": 0.0593266, "tails": 0.398662, "total": 0.28555, "FFQuality": 0.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.7602770",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["traj1-2.xtc"]
+            ],
+            "PDB": [
+                ["step3_charmm2omm.pdb"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 10,
+            "TEMPERATURE": 310,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmmDrude1.yaml",
+                    "COUNT": [72, 72]
+                },
+                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 5040 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Samuli Ollila",
+            "SYSTEM": "POPE_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm-Drude",
+            "FF_SOURCE": "initial structures from CHARMM-GUI",
+            "FF_DATE": "Dec20222",
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 8179881760,
+            "TRJLENGTH": 360000,
+            "NUMBER_OF_ATOMS": 51408,
+            "DATEOFRUNNING": "03/02/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 731,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "path": "208/241/208241f86895519f5cc67cbea2131b7b265b6ec3/208241f86895519f5cc67cbea2131b7b265b6ec3/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.521477, "sn-2": 0.271854, "headgroup": 0.538609, "total": 0.44398 },
+        "TotalQuality": { "headgroup": 0.538609, "tails": 0.396666, "total": 0.44398, "FFQuality": 1.3 },
+        "system": {
+            "FF_DATE": "??",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "SYSTEM": "POPE_310K",
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 35280,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "FF_SOURCE": "CHARMM-GUI",
+            "COMPOSITION": {
+                "SOL": { "NAME": "TIP3", "COUNT": 5760, "MAPPING": "mappingTIP3PCHARMMgui.yaml" },
+                "POPE": {
+                    "NAME": "POPE",
+                    "COUNT": [72, 72],
+                    "MAPPING": "mappingPOPEcharmm.yaml"
+                }
+            },
+            "TIMELEFTOUT": 50,
+            "TRJLENGTH": 500100,
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.2641987",
+            "TRAJECTORY_SIZE": 654088256,
+            "TPR": [
+                ["POPE_C36_310K.tpr"]
+            ],
+            "TRJ": [
+                ["POPE_C36_310K.xtc"]
+            ],
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 430,
+            "path": "2d4/61b/2d461bc9d828af155146162ef42438974e4cbeaf/c8ce4cc36ef6ec7a085cf011176a92d9d746a792/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.520429, "sn-2": 0.721105, "headgroup": 0.200727, "total": 0.480754 },
+        "TotalQuality": { "headgroup": 0.200727, "tails": 0.620767, "total": 0.480754 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293762",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md-pope_43A1-S3_313K_v2_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md-pope_43A1-S3_313K_v2.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "GROMOS43A1-S3_POPE" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEGROMOS43A1-S3.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 3552 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "128POPE_3552SOL_313K_v2",
+            "SOFTWARE_VERSION": "4.0.7",
+            "FF": "GROMOS 43A1-S3",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md-pope_43A1-S3_313K_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1272479824,
+            "TRJLENGTH": 100005,
+            "TEMPERATURE": 313,
+            "NUMBER_OF_ATOMS": 17312,
+            "DATEOFRUNNING": "24/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": {}
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 349,
+            "path": "657/ec5/657ec589ab054232ea119adfa859e9ea685248fd/3f83910c14748e23837449d33e97da2450ba16a5/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.190558, "sn-2": 0.118328, "headgroup": 0.372391, "total": 0.227092 },
+        "TotalQuality": { "headgroup": 0.372391, "tails": 0.154443, "total": 0.227092, "FFQuality": 2 },
+        "system": {
+            "DOI": "10.5281/zenodo.8435138",
+            "TRJ": [
+                ["SMALLG_pope-md313rfz-20ps.trr"]
+            ],
+            "TPR": [
+                ["pope-md313rfz.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "TEMPERATURE": 310,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmm.yaml",
+                    "COUNT": [72, 72]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 5760 }
+            },
+            "DIR_WRK": "/big/comcon1/work/Databank-work",
+            "AUTHORS_CONTACT": "Alexey Nesterenko",
+            "SYSTEM": "POPE(313K,rfz)",
+            "SOFTWARE_VERSION": 2022.5,
+            "FF": "Charmm36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "01/07/2022",
+            "CPT": [
+                ["SMALLG_pope-md313rfz.cpt"]
+            ],
+            "LOG": [
+                ["SMALLG_pope-md313rfz.log"]
+            ],
+            "TOP": [
+                ["POPE.top"]
+            ],
+            "TRAJECTORY_SIZE": 21689266080,
+            "TRJLENGTH": 512240,
+            "NUMBER_OF_ATOMS": 35280,
+            "DATEOFRUNNING": "17/10/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 790,
+            "path": "aef/442/aef4429d5c23dd3d6aea0683a552c7d8cbc787df/03c4667949377aca6116c541ee3a7a26c367d8eb/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.141026, "sn-2": 0.0706105, "headgroup": 0.529731, "total": 0.247123 },
+        "TotalQuality": { "headgroup": 0.529731, "tails": 0.105818, "total": 0.247123, "FFQuality": 1.7 },
+        "system": {
+            "AUTHORS_CONTACT": "ANTONIO PEON",
+            "FF_DATE": null,
+            "SYSTEM": "500POPE_25000SOL_310K",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 310,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 137500,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "FF_SOURCE": "CHARMM-GUI v1.7",
+            "COMPOSITION": {
+                "SOL": { "NAME": "SOL", "COUNT": 25000, "MAPPING": "mappingTIP3Pwater.yaml" },
+                "POPE": {
+                    "NAME": "POPE",
+                    "COUNT": [250, 250],
+                    "MAPPING": "mappingPOPEcharmm.yaml"
+                }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 100010,
+            "TRAJECTORY_SIZE": 5088535084,
+            "SOFTWARE_VERSION": 2018.3,
+            "FF": "CHARMM36",
+            "TOP": [
+                ["topol.top"]
+            ],
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.3237461",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["md_0.tpr"]
+            ],
+            "TRJ": [
+                ["total_4_500.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 67,
+            "path": "b7a/4c6/b7a4c62a0f6112eb07c99e3fe912bd5e55e1dca2/5e824ebda9f3c3341685c5aa5a3ff3ad7ead34f5/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.124938, "sn-2": 0.352216, "headgroup": 0.0850308, "total": 0.187395 },
+        "TotalQuality": { "headgroup": 0.0850308, "tails": 0.238577, "total": 0.187395, "FFQuality": 1.6 },
+        "system": {
+            "DOI": "10.5281/zenodo.4424292",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_400_500.xtc"]
+            ],
+            "TPR": [
+                ["md.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "PE",
+                    "MAPPING": "mappingPOPElipid17.yaml",
+                    "COUNT": [250, 250]
+                },
+                "SOL": { "NAME": "WAT", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 25000 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "PE\u00d3N, Antonio",
+            "SYSTEM": "500POPE_25000SOL_310K",
+            "SOFTWARE_VERSION": 2020.1,
+            "FF": "Lipid17",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "TRAJECTORY_SIZE": 25700881840,
+            "TRJLENGTH": 100002,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 137500,
+            "DATEOFRUNNING": "03/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 195,
+            "path": "b58/0d1/b580d13983ed1b38cf975bc3f129c58bf05efd5a/244f4bc5e15f39de659fa2b13e30cd833084af44/"
+        }
+    },
+    {
+        "POPE": { "sn-1": 0.0974158, "sn-2": 0.233935, "headgroup": 0.205866, "total": 0.179072 },
+        "TotalQuality": { "headgroup": 0.205866, "tails": 0.165675, "total": 0.179072, "FFQuality": 3.8 },
+        "system": {
+            "DOI": "10.5281/zenodo.7602924",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["traj.xtc"]
+            ],
+            "PDB": [
+                ["last_frameT303K.pdb"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 50,
+            "TEMPERATURE": 310,
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "POPE",
+                    "MAPPING": "mappingPOPEcharmm.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "HOH", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 2880 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Samuli Ollila",
+            "SYSTEM": "POPE_310K",
+            "SOFTWARE_VERSION": null,
+            "FF": "AMOEBA",
+            "FF_SOURCE": "original parameters  https://doi.org/10.1080/00268976.2018.1436201",
+            "FF_DATE": null,
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 2130422484,
+            "TRJLENGTH": 329670,
+            "NUMBER_OF_ATOMS": 17640,
+            "DATEOFRUNNING": "03/02/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 730,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "path": "b58/f0c/b58f0ce7128b1e97e4d1a90fbffe808ee2cbcc75/b58f0ce7128b1e97e4d1a90fbffe808ee2cbcc75/"
+        }
+    }
+]

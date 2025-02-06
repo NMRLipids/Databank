@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QualityEvaluation module &mdash; NMRlipids databank 4.9.2023 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>QualityEvaluation script &mdash; NMRlipids databank 4.9.2023 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=10ee5b61"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=10ee5b61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="searchDATABANK script" href="searchDATABANK.html" />
+    <link rel="prev" title="AddData script" href="AddData.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,14 +43,30 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="listOfFiles.html">List and descriptions of NMRlipids databank files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="READMEcontent.html">User input and content of README.yaml files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="addingData.html">Adding simulations into the NMRlipids databank</a></li>
-<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data in the NMRlipids databank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="addingExpData.html">Adding experimental data into the NMRlipids databank</a></li>
 <li class="toctree-l1"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="databankLibrary.html">NMRlipids databank API functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exampleAndTutorials.html">Examples and tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project structure</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="modules.html#databanklib">DatabankLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#analyzedatabank">AnalyzeDatabank</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#builddatabank">BuildDatabank</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="AddData.html">AddData script</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">QualityEvaluation script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="searchDATABANK.html">searchDATABANK script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="makeRanking.html">makeRanking script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="check_mappings.html">check_mappings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="buildH_calcOP_test.html">buildH_calcOP_test module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#updategui">updateGUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#tests">tests</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -65,7 +83,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">QualityEvaluation module</li>
+          <li class="breadcrumb-item"><a href="modules.html">Project structure</a></li>
+      <li class="breadcrumb-item active">QualityEvaluation script</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/QualityEvaluation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -75,114 +94,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-QualityEvaluation">
-<span id="qualityevaluation-module"></span><h1>QualityEvaluation module<a class="headerlink" href="#module-QualityEvaluation" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="QualityEvaluation.Simulation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">readme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OPdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FFdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexingPath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.Simulation" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="QualityEvaluation.Simulation.getLipids">
-<span class="sig-name descname"><span class="pre">getLipids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">dict_keys(['POPC',</span> <span class="pre">'POPG',</span> <span class="pre">'POPS',</span> <span class="pre">'POPE',</span> <span class="pre">'PYPC',</span> <span class="pre">'PAzePCprot',</span> <span class="pre">'PAzePCdeprot',</span> <span class="pre">'DMPC',</span> <span class="pre">'DPPC',</span> <span class="pre">'DPPE',</span> <span class="pre">'DPPG',</span> <span class="pre">'DEPC',</span> <span class="pre">'DRPC',</span> <span class="pre">'DYPC',</span> <span class="pre">'DLPC',</span> <span class="pre">'DLIPC',</span> <span class="pre">'DOG',</span> <span class="pre">'DOPC',</span> <span class="pre">'DOPE',</span> <span class="pre">'DDOPC',</span> <span class="pre">'DOPS',</span> <span class="pre">'DSPC',</span> <span class="pre">'DAPC',</span> <span class="pre">'DMTAP',</span> <span class="pre">'SDG',</span> <span class="pre">'SDPE',</span> <span class="pre">'SOPC',</span> <span class="pre">'POPI',</span> <span class="pre">'SAPI',</span> <span class="pre">'SLPI',</span> <span class="pre">'CER',</span> <span class="pre">'CHOL',</span> <span class="pre">'DCHOL',</span> <span class="pre">'DHMDMAB',</span> <span class="pre">'SLiPC',</span> <span class="pre">'SM16',</span> <span class="pre">'SM18',</span> <span class="pre">'TOCL',</span> <span class="pre">'GM1'])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#Simulation.getLipids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.Simulation.getLipids" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="QualityEvaluation.Simulation.molarFraction">
-<span class="sig-name descname"><span class="pre">molarFraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">dict_keys(['POPC',</span> <span class="pre">'POPG',</span> <span class="pre">'POPS',</span> <span class="pre">'POPE',</span> <span class="pre">'PYPC',</span> <span class="pre">'PAzePCprot',</span> <span class="pre">'PAzePCdeprot',</span> <span class="pre">'DMPC',</span> <span class="pre">'DPPC',</span> <span class="pre">'DPPE',</span> <span class="pre">'DPPG',</span> <span class="pre">'DEPC',</span> <span class="pre">'DRPC',</span> <span class="pre">'DYPC',</span> <span class="pre">'DLPC',</span> <span class="pre">'DLIPC',</span> <span class="pre">'DOG',</span> <span class="pre">'DOPC',</span> <span class="pre">'DOPE',</span> <span class="pre">'DDOPC',</span> <span class="pre">'DOPS',</span> <span class="pre">'DSPC',</span> <span class="pre">'DAPC',</span> <span class="pre">'DMTAP',</span> <span class="pre">'SDG',</span> <span class="pre">'SDPE',</span> <span class="pre">'SOPC',</span> <span class="pre">'POPI',</span> <span class="pre">'SAPI',</span> <span class="pre">'SLPI',</span> <span class="pre">'CER',</span> <span class="pre">'CHOL',</span> <span class="pre">'DCHOL',</span> <span class="pre">'DHMDMAB',</span> <span class="pre">'SLiPC',</span> <span class="pre">'SM16',</span> <span class="pre">'SM18',</span> <span class="pre">'TOCL',</span> <span class="pre">'GM1'])</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#Simulation.molarFraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.Simulation.molarFraction" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="QualityEvaluation.Experiment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">Experiment</span></span><a class="reference internal" href="_modules/QualityEvaluation.html#Experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.Experiment" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.loadMappingFile">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">loadMappingFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#loadMappingFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.loadMappingFile" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.prob_S_in_g">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">prob_S_in_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">OP_exp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OP_sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_sim_sd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#prob_S_in_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.prob_S_in_g" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.getFragments">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">getFragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#getFragments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.getFragments" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.filterCH">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">filterCH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragment_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#filterCH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.filterCH" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.checkForCH">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">checkForCH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragment_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#checkForCH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.checkForCH" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.evaluated_percentage">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">evaluated_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_op_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#evaluated_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.evaluated_percentage" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.fragmentQuality">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">fragmentQuality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_op_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_op_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#fragmentQuality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.fragmentQuality" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.fragmentQualityAvg">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">fragmentQualityAvg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lipid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_qual_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#fragmentQualityAvg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.fragmentQualityAvg" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.systemQuality">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">systemQuality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_fragment_qualities</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#systemQuality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.systemQuality" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.calc_k_e">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">calc_k_e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SimExpData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#calc_k_e"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.calc_k_e" title="Link to this definition"></a></dt>
-<dd><p>Scaling factor as defined by Kučerka et al. 2008b, doi:10.1529/biophysj.107.122465</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.FormFactorMinFromData">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">FormFactorMinFromData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FormFactor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#FormFactorMinFromData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.FormFactorMinFromData" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.formfactorQuality">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">formfactorQuality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simFFdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expFFdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#formfactorQuality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.formfactorQuality" title="Link to this definition"></a></dt>
-<dd><p>Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.formfactorQualitySIMtoEXP">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">formfactorQualitySIMtoEXP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simFFdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expFFdata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#formfactorQualitySIMtoEXP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.formfactorQualitySIMtoEXP" title="Link to this definition"></a></dt>
-<dd><p>Calculate form factor quality for a simulation as defined by Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="QualityEvaluation.loadSimulations">
-<span class="sig-prename descclassname"><span class="pre">QualityEvaluation.</span></span><span class="sig-name descname"><span class="pre">loadSimulations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/QualityEvaluation.html#loadSimulations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#QualityEvaluation.loadSimulations" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+  <section id="module-BuildDatabank.QualityEvaluation">
+<span id="qualityevaluation-script"></span><h1>QualityEvaluation script<a class="headerlink" href="#module-BuildDatabank.QualityEvaluation" title="Link to this heading"></a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">program<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QualityEvaluation.py</p>
+</dd>
+<dt class="field-even">description<span class="colon">:</span></dt>
+<dd class="field-even"><p>perform comparison of experiments and simulations according to
+<strong>EXPERIMENT</strong> field inside <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> file.</p>
+</dd>
+</dl>
+<p>In the standard protocol, it should be run <em>after</em> <code class="docutils literal notranslate"><span class="pre">searchDATABANK.py</span></code>.</p>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="AddData.html" class="btn btn-neutral float-left" title="AddData script" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="searchDATABANK.html" class="btn btn-neutral float-right" title="searchDATABANK script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Samuli Ollila.</p>
+    <p>&#169; Copyright 2024, Samuli Ollila.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

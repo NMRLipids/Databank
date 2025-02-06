@@ -1,0 +1,43 @@
+AUTHORS_CONTACT: Piggot, Thomas
+FF_DATE: null
+SYSTEM: 128POPC_4040SOL_8A-switch_v1
+TYPEOFSYSTEM: lipid bilayer
+TEMPERATURE: 303.0
+PUBLICATION: null
+NUMBER_OF_ATOMS: 29272
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC: {}
+  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2
+FF_SOURCE: http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    COUNT:
+    - 64
+    - 64
+    MAPPING: mappingPOPCcharmm.yaml
+  SOL:
+    NAME: SOL
+    COUNT: 4040
+    MAPPING: mappingSPCwater.yaml
+TIMELEFTOUT: 0
+CPT: null
+TRJLENGTH: 500050.0
+TRAJECTORY_SIZE: 114609357
+SOFTWARE_VERSION: 5.0.6
+FF: CHARMM36
+TOP: null
+PREEQTIME: 0
+DOI: 10.5281/zenodo.11614468
+DATEOFRUNNING: 04/10/2021
+TPR:
+- - 281.tpr
+TRJ:
+- - 281.xtc
+GRO:
+- - 281.gro
+LOG: null
+SOFTWARE: gromacs
+DIR_WRK: /set-locally
+ID: 281

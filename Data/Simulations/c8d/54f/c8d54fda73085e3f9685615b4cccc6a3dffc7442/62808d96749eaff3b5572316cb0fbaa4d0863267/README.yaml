@@ -31,7 +31,7 @@ PUBLICATION: 10.1039/c2cp42738a
 AUTHORS_CONTACT: Ollila O. H. Samuli; Ferreira Tiago; Topgaard Daniel
 SYSTEM: 18CHOL_110POPC_8481SOL_298K_Berger
 SOFTWARE_VERSION: 4.5
-FF: "Berger and Modified H\xF6ltje model for cholesterol"
+FF: Berger and Modified Höltje model for cholesterol
 FF_SOURCE: http://wcm.ucalgary.ca/tieleman/downloads; http://dx.doi.org/10.1016/S0005-2736(01)00270-X
   for cholesterol
 FF_DATE: null

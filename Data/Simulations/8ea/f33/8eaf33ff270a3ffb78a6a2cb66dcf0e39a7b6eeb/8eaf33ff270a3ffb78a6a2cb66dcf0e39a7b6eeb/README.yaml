@@ -24,7 +24,7 @@ COMPOSITION:
     COUNT: 36
   CLA:
     NAME: Cl
-    MAPPING: mappingCl.yaml
+    MAPPING: mappingCL.yaml
     COUNT: 72
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 PUBLICATION: null

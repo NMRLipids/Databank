@@ -19,10 +19,10 @@ COMPOSITION:
   MAPPING: mappingDMTAPberger.yaml
  SOD:
   NAME: Na
-  MAPPING: mappingNa.yaml
+  MAPPING: mappingNA.yaml
  CLA:
   NAME: Cl
-  MAPPING: mappingCl.yaml
+  MAPPING: mappingCL.yaml
  SOL:
   NAME: SOL 
   MAPPING: mappingSPCwater.yaml 

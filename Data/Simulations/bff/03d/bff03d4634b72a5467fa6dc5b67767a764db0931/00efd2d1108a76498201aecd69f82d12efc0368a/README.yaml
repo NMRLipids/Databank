@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.12698832
+TRJ:
+- - prod_500ns.xtc
+TPR:
+- - prod_500ns.tpr
+SOFTWARE: gromacs
+PREEQTIME: 200
+TIMELEFTOUT: 0
+COMPOSITION:
+  SOPC:
+    NAME: SOPC
+    MAPPING: mappingSOPCcharmm.yaml
+    COUNT:
+    - 32
+    - 32
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 3200
+UNITEDATOM_DICT: null
+DIR_WRK: /Users/ferdinandhoerstel/Desktop/NMRlipids/Databank/Data/Simulations/fff/temp
+PUBLICATION: null
+AUTHORS_CONTACT: "Alexey Nesterenko and Ferdinand H\xF6rstel"
+SYSTEM: SOPC
+SOFTWARE_VERSION: 2022.5
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 19/06/2024
+CPT: null
+LOG: null
+TOP:
+- - topol.top
+TRAJECTORY_SIZE: 1694301792
+TRJLENGTH: 500020.0
+TEMPERATURE: 303.15
+NUMBER_OF_ATOMS: 18560
+DATEOFRUNNING: 09/07/2024
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    SOPC: {}
+  FORMFACTOR: 10.1103.008/PhysRevE.80.021931/2
+ID: 820

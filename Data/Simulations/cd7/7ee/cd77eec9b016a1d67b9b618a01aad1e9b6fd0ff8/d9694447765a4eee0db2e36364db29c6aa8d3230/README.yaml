@@ -23,11 +23,11 @@ COMPOSITION:
     - 63
   SOD:
     NAME: Na+
-    MAPPING: mappingNa+.yaml
+    MAPPING: mappingNA+.yaml
     COUNT: 423
   CLA:
     NAME: Cl-
-    MAPPING: mappingCl-.yaml
+    MAPPING: mappingCL-.yaml
     COUNT: 49
   SOL:
     NAME: WAT
@@ -35,7 +35,7 @@ COMPOSITION:
     COUNT: 25000
 DIR_WRK: /usr/home/bort/Databank
 PUBLICATION: null
-AUTHORS_CONTACT: "PE\xD3N, Antonio"
+AUTHORS_CONTACT: PEÓN, Antonio
 SYSTEM: POPG_POPE_25000SOL_423SOD_49CLA_310K
 SOFTWARE_VERSION: 2018.3
 FF: Lipid17

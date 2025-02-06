@@ -19,7 +19,7 @@ COMPOSITION:
     COUNT: 8880
 DIR_WRK: /media/osollila/Data1/tmp/DATABANK/
 PUBLICATION: null
-AUTHORS_CONTACT: "Milla Lindstr\xF6m"
+AUTHORS_CONTACT: Milla Lindström
 SYSTEM: 200POPC_8880SOL_300K
 SOFTWARE_VERSION: 2019.5
 FF: CHARMM36
@@ -40,5 +40,6 @@ EXPERIMENT:
   ORDERPARAMETER:
     POPC:
       10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+      unpublished/nesterenkoPOPC: unpublished/nesterenkoPOPC/4
   FORMFACTOR: unpublished/NMRlipidsIII/1
 ID: 164
