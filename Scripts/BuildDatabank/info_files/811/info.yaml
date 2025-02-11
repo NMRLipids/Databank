@@ -7,7 +7,7 @@ TIMELEFTOUT: 50
 COMPOSITION:
   POPC:     # universal name
     NAME: POPC         # simulation specific name
-    MAPPING: mappingPOPCsage.yaml     # name of mapping file
+    MAPPING: mappingPOPCsage_smiles.yaml     # name of mapping file
   SOL:
     NAME: TIP3P
     MAPPING: mappingTIP3Psage_smiles.yaml
