@@ -94,7 +94,7 @@ def systemLoadTraj(systems):
 # ----------------------------------------------------------------
 # Every test function is parametrized with system ID to make clear reporting
 # about which system actually fails on a test function.
-
+MAXRELERR_COMPARE_THRESHOLD = 2e-6
 
 def compareJSONsBtwSD(jsfn: str):
     """Function to call from the test to compare JSON to the precomputed one.
@@ -122,15 +122,19 @@ def compareJSONsBtwSD(jsfn: str):
         assert len(j1) == len(j2), \
             f"Problem in {jsfn} comparison: lists has different lengths!"
         for k1 in range(len(j1)):
-            _a = (np.array(j1[k1]) - np.array(j2[k1])).ravel()
-            assert (_a**2).sum() < 1e-7, (
+            _a = np.abs(np.array(j1[k1]) - np.array(j2[k1])).ravel()
+            _b = np.abs((np.array(j1[k1]) + np.array(j2[k1])).ravel())/2
+            _b[_b == 0] = MAXRELERR_COMPARE_THRESHOLD
+            assert np.max(_a/_b) < MAXRELERR_COMPARE_THRESHOLD, (
                f"Problem in {jsfn} comparison: {k1} line.\n" +
                f"Computed: {str(j1[k1])} \n" +
                f"Pre-computed: {str(j2[k1])}")
     elif type(j1) is dict:
         for k1 in j1:
-            _a = (np.array(j1[k1]) - np.array(j2[k1])).ravel()
-            assert (_a**2).sum() < 1e-7, (
+            _a = np.abs(np.array(j1[k1]) - np.array(j2[k1])).ravel()
+            _b = np.abs((np.array(j1[k1]) + np.array(j2[k1])).ravel())/2
+            _b[_b == 0] = MAXRELERR_COMPARE_THRESHOLD
+            assert np.max(_a/_b) < MAXRELERR_COMPARE_THRESHOLD, (
                f"Problem in {jsfn} comparison: {k1} field.\n" +
                f"Computed: {str(j1[k1])} \n" +
                f"Pre-computed: {str(j2[k1])}")
