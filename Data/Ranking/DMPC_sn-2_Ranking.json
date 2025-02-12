@@ -48,6 +48,7 @@
                 "FORMFACTOR": {}
             },
             "ID": 810,
+            "WARNINGS": { "PBC": "z-jumps" },
             "path": "0bd/8bd/0bd8bd58f66c8ef8c6c5b5ba78eefcc3589775cd/2a5c22606ac14be5ab7d31bcdde4b90f04796988/"
         }
     },
@@ -104,8 +105,8 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.779124, "sn-2": 0.558427, "headgroup": 0.658454, "total": 0.665335 },
-        "TotalQuality": { "headgroup": 0.658454, "tails": 0.668775, "total": 0.665335 },
+        "DMPC": { "sn-1": 0.743111, "sn-2": 0.449476, "headgroup": 0.65829, "total": 0.616959 },
+        "TotalQuality": { "headgroup": 0.65829, "tails": 0.596293, "total": 0.616959 },
         "system": {
             "DOI": "10.5281/zenodo.11044615",
             "SOFTWARE": "gromacs",
@@ -147,11 +148,12 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
             "ID": 813,
+            "WARNINGS": { "PBC": "z-jumps" },
             "path": "c3f/028/c3f028c4e9ea5847cc395d4f40ce6acf68efda32/496930b1c06fc484c4103b90e8302534f85f9372/"
         }
     },
@@ -268,8 +270,8 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.177339, "sn-2": 0.207541, "headgroup": 0.599453, "total": 0.328111 },
-        "TotalQuality": { "headgroup": 0.599453, "tails": 0.19244, "total": 0.328111 },
+        "DMPC": { "sn-1": 0.12579, "sn-2": 0.147045, "headgroup": 0.597418, "total": 0.290084 },
+        "TotalQuality": { "headgroup": 0.597418, "tails": 0.136417, "total": 0.290084 },
         "system": {
             "DOI": "10.5281/zenodo.8431710",
             "TRJ": [
@@ -314,7 +316,7 @@
             "ID": 788,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
@@ -322,8 +324,62 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.195691, "sn-2": 0.176456, "headgroup": 0.657282, "total": 0.343143 },
-        "TotalQuality": { "headgroup": 0.657282, "tails": 0.186073, "total": 0.343143 },
+        "DMPC": { "sn-1": 0.1268, "sn-2": 0.132235, "headgroup": 0.63177, "total": 0.296935 },
+        "TotalQuality": { "headgroup": 0.63177, "tails": 0.129517, "total": 0.296935 },
+        "system": {
+            "DOI": "10.5281/zenodo.8431710",
+            "TRJ": [
+                ["DMPC-md313-pme.trr"]
+            ],
+            "TPR": [
+                ["dmpc-md313-pme.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "TEMPERATURE": 313.15,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/big/comcon1/work/Databank-work",
+            "AUTHORS_CONTACT": "Alexey Nesterenko",
+            "SYSTEM": "DMPC(313K,pme)",
+            "SOFTWARE_VERSION": 2022.5,
+            "FF": "Charmm36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": "01/07/2022",
+            "CPT": [
+                ["DMPC-md313-pme.cpt"]
+            ],
+            "LOG": [
+                ["DMPC-md313-pme.log"]
+            ],
+            "TOP": [
+                ["DMPC_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 22175353872,
+            "TRJLENGTH": 538540,
+            "NUMBER_OF_ATOMS": 17152,
+            "DATEOFRUNNING": "16/10/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 789,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "path": "363/f08/363f08e91a530262e31f644cb4cbae005e81d780/56713ad1f468d3999034adbaa151a942f371ca2f/"
+        }
+    },
+    {
+        "DMPC": { "sn-1": 0.139985, "sn-2": 0.0992562, "headgroup": 0.656117, "total": 0.298453 },
+        "TotalQuality": { "headgroup": 0.656117, "tails": 0.11962, "total": 0.298453 },
         "system": {
             "DOI": "10.5281/zenodo.10949663",
             "SOFTWARE": "gromacs",
@@ -369,66 +425,12 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
             "ID": 808,
             "path": "f8a/f16/f8af169dd74cbbb67247869c50483ba94767b62c/6780b9a6f2f5bd0ac45772065f9b022fa67bfbff/"
-        }
-    },
-    {
-        "DMPC": { "sn-1": 0.187373, "sn-2": 0.174559, "headgroup": 0.623982, "total": 0.328638 },
-        "TotalQuality": { "headgroup": 0.623982, "tails": 0.180966, "total": 0.328638 },
-        "system": {
-            "DOI": "10.5281/zenodo.8431710",
-            "TRJ": [
-                ["DMPC-md313-pme.trr"]
-            ],
-            "TPR": [
-                ["dmpc-md313-pme.tpr"]
-            ],
-            "SOFTWARE": "gromacs",
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "TEMPERATURE": 313.15,
-            "COMPOSITION": {
-                "DMPC": {
-                    "NAME": "DMPC",
-                    "MAPPING": "mappingDMPCcharmm.yaml",
-                    "COUNT": [32, 32]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
-            },
-            "DIR_WRK": "/big/comcon1/work/Databank-work",
-            "AUTHORS_CONTACT": "Alexey Nesterenko",
-            "SYSTEM": "DMPC(313K,pme)",
-            "SOFTWARE_VERSION": 2022.5,
-            "FF": "Charmm36",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": "01/07/2022",
-            "CPT": [
-                ["DMPC-md313-pme.cpt"]
-            ],
-            "LOG": [
-                ["DMPC-md313-pme.log"]
-            ],
-            "TOP": [
-                ["DMPC_small.top"]
-            ],
-            "TRAJECTORY_SIZE": 22175353872,
-            "TRJLENGTH": 538540,
-            "NUMBER_OF_ATOMS": 17152,
-            "DATEOFRUNNING": "16/10/2023",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "ID": 789,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
-                },
-                "FORMFACTOR": {}
-            },
-            "path": "363/f08/363f08e91a530262e31f644cb4cbae005e81d780/56713ad1f468d3999034adbaa151a942f371ca2f/"
         }
     }
 ]

@@ -48,6 +48,7 @@
                 "FORMFACTOR": {}
             },
             "ID": 810,
+            "WARNINGS": { "PBC": "z-jumps" },
             "path": "0bd/8bd/0bd8bd58f66c8ef8c6c5b5ba78eefcc3589775cd/2a5c22606ac14be5ab7d31bcdde4b90f04796988/"
         }
     },
@@ -160,8 +161,8 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.779124, "sn-2": 0.558427, "headgroup": 0.658454, "total": 0.665335 },
-        "TotalQuality": { "headgroup": 0.658454, "tails": 0.668775, "total": 0.665335 },
+        "DMPC": { "sn-1": 0.743111, "sn-2": 0.449476, "headgroup": 0.65829, "total": 0.616959 },
+        "TotalQuality": { "headgroup": 0.65829, "tails": 0.596293, "total": 0.616959 },
         "system": {
             "DOI": "10.5281/zenodo.11044615",
             "SOFTWARE": "gromacs",
@@ -203,17 +204,18 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
             "ID": 813,
+            "WARNINGS": { "PBC": "z-jumps" },
             "path": "c3f/028/c3f028c4e9ea5847cc395d4f40ce6acf68efda32/496930b1c06fc484c4103b90e8302534f85f9372/"
         }
     },
     {
-        "DMPC": { "sn-1": 0.195691, "sn-2": 0.176456, "headgroup": 0.657282, "total": 0.343143 },
-        "TotalQuality": { "headgroup": 0.657282, "tails": 0.186073, "total": 0.343143 },
+        "DMPC": { "sn-1": 0.139985, "sn-2": 0.0992562, "headgroup": 0.656117, "total": 0.298453 },
+        "TotalQuality": { "headgroup": 0.656117, "tails": 0.11962, "total": 0.298453 },
         "system": {
             "DOI": "10.5281/zenodo.10949663",
             "SOFTWARE": "gromacs",
@@ -259,7 +261,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
@@ -324,8 +326,8 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.187373, "sn-2": 0.174559, "headgroup": 0.623982, "total": 0.328638 },
-        "TotalQuality": { "headgroup": 0.623982, "tails": 0.180966, "total": 0.328638 },
+        "DMPC": { "sn-1": 0.1268, "sn-2": 0.132235, "headgroup": 0.63177, "total": 0.296935 },
+        "TotalQuality": { "headgroup": 0.63177, "tails": 0.129517, "total": 0.296935 },
         "system": {
             "DOI": "10.5281/zenodo.8431710",
             "TRJ": [
@@ -370,7 +372,7 @@
             "ID": 789,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },
@@ -378,8 +380,8 @@
         }
     },
     {
-        "DMPC": { "sn-1": 0.177339, "sn-2": 0.207541, "headgroup": 0.599453, "total": 0.328111 },
-        "TotalQuality": { "headgroup": 0.599453, "tails": 0.19244, "total": 0.328111 },
+        "DMPC": { "sn-1": 0.12579, "sn-2": 0.147045, "headgroup": 0.597418, "total": 0.290084 },
+        "TotalQuality": { "headgroup": 0.597418, "tails": 0.136417, "total": 0.290084 },
         "system": {
             "DOI": "10.5281/zenodo.8431710",
             "TRJ": [
@@ -424,7 +426,7 @@
             "ID": 788,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3" }
+                    "DMPC": { "10.1039/B508190D": "10.1039/B508190D/3", "unpublished/nesterenkoDMPCbOG": "unpublished/nesterenkoDMPCbOG/1" }
                 },
                 "FORMFACTOR": {}
             },

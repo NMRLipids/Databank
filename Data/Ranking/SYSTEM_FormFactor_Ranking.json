@@ -214,60 +214,6 @@
     {
         "TotalQuality": { "FFQuality": 0.098 },
         "system": {
-            "DOI": "10.5281/zenodo.14595",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["md.xtc"]
-            ],
-            "TPR": [
-                ["md.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 50,
-            "UNITEDATOM_DICT": { "DPPC": "GROMOS53A6L_DPPC" },
-            "COMPOSITION": {
-                "DPPC": {
-                    "NAME": "DPPC",
-                    "MAPPING": "mappingDPPCGROMOS53A6L.yaml",
-                    "COUNT": [40, 88]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 5841 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": "10.1021/acs.jpcb.5b04878",
-            "AUTHORS_CONTACT": "Fuchs, Patrick F.J.",
-            "SYSTEM": "128DPPC_5841SOL_323K",
-            "SOFTWARE_VERSION": "4.0.7",
-            "FF": "Poger GROMOS 53A6_L",
-            "FF_SOURCE": "dx.doi.org/10.1002/jcc.21396",
-            "FF_DATE": null,
-            "CPT": null,
-            "LOG": null,
-            "TOP": [
-                ["example_lipids.top"]
-            ],
-            "GRO": [
-                ["em.gro"]
-            ],
-            "TRAJECTORY_SIZE": 174413576,
-            "TRJLENGTH": 100050,
-            "TEMPERATURE": 323,
-            "NUMBER_OF_ATOMS": 23923,
-            "DATEOFRUNNING": "24/05/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "DPPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/4"
-            },
-            "ID": 593,
-            "path": "ab4/a4c/ab4a4cd981f07a5634e982ee57e3534e413a8946/704f4f55c4c4ca03a355d1a640101442f088d0b7/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 0.098 },
-        "system": {
             "DOI": "10.5281/zenodo.14594",
             "SOFTWARE": "gromacs",
             "TRJ": [
@@ -317,6 +263,60 @@
             },
             "ID": 365,
             "path": "db2/939/db2939198ddcea670cd6d6e5b5966951166e21df/cd84678e155b178c67f08373ad8533dae296fafd/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 0.098 },
+        "system": {
+            "DOI": "10.5281/zenodo.14595",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md.xtc"]
+            ],
+            "TPR": [
+                ["md.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 50,
+            "UNITEDATOM_DICT": { "DPPC": "GROMOS53A6L_DPPC" },
+            "COMPOSITION": {
+                "DPPC": {
+                    "NAME": "DPPC",
+                    "MAPPING": "mappingDPPCGROMOS53A6L.yaml",
+                    "COUNT": [40, 88]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 5841 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": "10.1021/acs.jpcb.5b04878",
+            "AUTHORS_CONTACT": "Fuchs, Patrick F.J.",
+            "SYSTEM": "128DPPC_5841SOL_323K",
+            "SOFTWARE_VERSION": "4.0.7",
+            "FF": "Poger GROMOS 53A6_L",
+            "FF_SOURCE": "dx.doi.org/10.1002/jcc.21396",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["example_lipids.top"]
+            ],
+            "GRO": [
+                ["em.gro"]
+            ],
+            "TRAJECTORY_SIZE": 174413576,
+            "TRJLENGTH": 100050,
+            "TEMPERATURE": 323,
+            "NUMBER_OF_ATOMS": 23923,
+            "DATEOFRUNNING": "24/05/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DPPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/4"
+            },
+            "ID": 593,
+            "path": "ab4/a4c/ab4a4cd981f07a5634e982ee57e3534e413a8946/704f4f55c4c4ca03a355d1a640101442f088d0b7/"
         }
     },
     {
@@ -430,8 +430,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.796294, "sn-2": 0.663184, "headgroup": 0.478505, "total": 0.645994 },
-        "TotalQuality": { "headgroup": 0.478505, "tails": 0.729739, "total": 0.645994, "FFQuality": 0.145 },
+        "POPC": { "sn-1": 0.794628, "sn-2": 0.667998, "headgroup": 0.490536, "total": 0.651054 },
+        "TotalQuality": { "headgroup": 0.490536, "tails": 0.731313, "total": 0.651054, "FFQuality": 0.145 },
         "system": {
             "DOI": "10.5281/zenodo.6992065",
             "SOFTWARE": "gromacs",
@@ -474,7 +474,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -483,8 +483,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.847915, "sn-2": 0.804974, "headgroup": 0.736974, "total": 0.796621 },
-        "TotalQuality": { "headgroup": 0.736974, "tails": 0.826444, "total": 0.796621, "FFQuality": 0.155 },
+        "POPC": { "sn-1": 0.851871, "sn-2": 0.820342, "headgroup": 0.727839, "total": 0.800017 },
+        "TotalQuality": { "headgroup": 0.727839, "tails": 0.836106, "total": 0.800017, "FFQuality": 0.155 },
         "system": {
             "DOI": "10.5281/zenodo.10958387",
             "SOFTWARE": "gromacs",
@@ -528,7 +528,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -537,8 +537,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.860231, "sn-2": 0.813007, "headgroup": 0.735416, "total": 0.802885 },
-        "TotalQuality": { "headgroup": 0.735416, "tails": 0.836619, "total": 0.802885, "FFQuality": 0.155 },
+        "POPC": { "sn-1": 0.855435, "sn-2": 0.828945, "headgroup": 0.730902, "total": 0.805094 },
+        "TotalQuality": { "headgroup": 0.730902, "tails": 0.84219, "total": 0.805094, "FFQuality": 0.155 },
         "system": {
             "DOI": "10.5281/zenodo.10183982",
             "SOFTWARE": "gromacs",
@@ -584,7 +584,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -869,64 +869,6 @@
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL8_large.xtc"]
-            ],
-            "TPR": [
-                ["CHOL8_large.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
-                    "COUNT": [512, 512]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 64000 },
-                "CHOL": {
-                    "NAME": "CHOL",
-                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
-                    "COUNT": [128, 128]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "MacRog_POPC_CHOL20_L",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "MacRog",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL8_large.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL8_large.top"]
-            ],
-            "TRAJECTORY_SIZE": 1311552472,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 348160,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/5"
-            },
-            "ID": 677,
-            "path": "227/3c2/2273c29e99c9127312973631bf7650a9b6b7f445/9109e7863d6a11a7efd594b86ce12e2c2935e4f9/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 0.2258 },
-        "system": {
-            "DOI": "10.5281/zenodo.7061800",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL8_medium.xtc"]
             ],
             "TPR": [
@@ -980,61 +922,66 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.78897, "sn-2": 0.644363, "headgroup": 0.552673, "total": 0.662002 },
-        "TotalQuality": { "headgroup": 0.552673, "tails": 0.716667, "total": 0.662002, "FFQuality": 0.245 },
+        "TotalQuality": { "FFQuality": 0.2258 },
         "system": {
-            "DOI": "10.5281/zenodo.6992065",
+            "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL0_medium.xtc"]
+                ["CHOL8_large.xtc"]
             ],
             "TPR": [
-                ["CHOL0_medium.tpr"]
+                ["CHOL8_large.tpr"]
             ],
             "PREEQTIME": 0,
             "TIMELEFTOUT": 100,
             "COMPOSITION": {
                 "POPC": {
-                    "NAME": "PC",
-                    "MAPPING": "mappingPOPClipid17.yaml",
-                    "COUNT": [128, 128]
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
+                    "COUNT": [512, 512]
                 },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 12800 }
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 64000 },
+                "CHOL": {
+                    "NAME": "CHOL",
+                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
+                    "COUNT": [128, 128]
+                }
             },
             "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
             "PUBLICATION": null,
             "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Lipid17_POPC_M",
+            "SYSTEM": "MacRog_POPC_CHOL20_L",
             "SOFTWARE_VERSION": 2021,
-            "FF": "Lipid17",
+            "FF": "MacRog",
             "FF_SOURCE": null,
             "FF_DATE": null,
             "CPT": [
-                ["CHOL0_medium.cpt"]
+                ["CHOL8_large.cpt"]
             ],
             "LOG": null,
             "TOP": [
-                ["CHOL0_medium.top"]
+                ["CHOL8_large.top"]
             ],
-            "TRAJECTORY_SIZE": 267549644,
+            "TRAJECTORY_SIZE": 1311552472,
             "TRJLENGTH": 1.001e+06,
             "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 72704,
+            "NUMBER_OF_ATOMS": 348160,
             "DATEOFRUNNING": "17/10/2022",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": {},
+                    "CHOL": {}
                 },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+                "FORMFACTOR": "unpublished/NMRlipidsIII/5"
             },
-            "ID": 657,
-            "path": "7d1/181/7d1181a267a9a015e74f3f24594c0dc0ba0fce6a/09813ab2ccb777e53961f11f35c5f8398981bc98/"
+            "ID": 677,
+            "path": "227/3c2/2273c29e99c9127312973631bf7650a9b6b7f445/9109e7863d6a11a7efd594b86ce12e2c2935e4f9/"
         }
     },
     {
-        "POPC": { "sn-1": 0.784448, "sn-2": 0.655052, "headgroup": 0.568183, "total": 0.669228 },
-        "TotalQuality": { "headgroup": 0.568183, "tails": 0.71975, "total": 0.669228, "FFQuality": 0.245 },
+        "POPC": { "sn-1": 0.784, "sn-2": 0.66385, "headgroup": 0.569704, "total": 0.672518 },
+        "TotalQuality": { "headgroup": 0.569704, "tails": 0.723925, "total": 0.672518, "FFQuality": 0.245 },
         "system": {
             "DOI": "10.5281/zenodo.6992065",
             "SOFTWARE": "gromacs",
@@ -1077,7 +1024,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -1086,8 +1033,61 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.255242, "sn-2": 0.550586, "headgroup": 0.0602338, "total": 0.288688 },
-        "TotalQuality": { "headgroup": 0.0602338, "tails": 0.402914, "total": 0.288688, "FFQuality": 0.255 },
+        "POPC": { "sn-1": 0.787988, "sn-2": 0.654211, "headgroup": 0.555395, "total": 0.665864 },
+        "TotalQuality": { "headgroup": 0.555395, "tails": 0.721099, "total": 0.665864, "FFQuality": 0.245 },
+        "system": {
+            "DOI": "10.5281/zenodo.6992065",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL0_medium.xtc"]
+            ],
+            "TPR": [
+                ["CHOL0_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "PC",
+                    "MAPPING": "mappingPOPClipid17.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 12800 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Lipid17_POPC_M",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Lipid17",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL0_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL0_medium.top"]
+            ],
+            "TRAJECTORY_SIZE": 267549644,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 72704,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 657,
+            "path": "7d1/181/7d1181a267a9a015e74f3f24594c0dc0ba0fce6a/09813ab2ccb777e53961f11f35c5f8398981bc98/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.255286, "sn-2": 0.558437, "headgroup": 0.0574101, "total": 0.290378 },
+        "TotalQuality": { "headgroup": 0.0574101, "tails": 0.406861, "total": 0.290378, "FFQuality": 0.255 },
         "system": {
             "DOI": "10.5281/zenodo.34488",
             "SOFTWARE": "gromacs",
@@ -1128,7 +1128,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -1420,59 +1420,6 @@
         }
     },
     {
-        "POPE": { "sn-1": 0.564762, "sn-2": 0.262314, "headgroup": 0.319518, "total": 0.382198 },
-        "TotalQuality": { "headgroup": 0.319518, "tails": 0.413538, "total": 0.382198, "FFQuality": 0.3 },
-        "system": {
-            "DOI": "10.5281/zenodo.1293774",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2_100-200ns.xtc"]
-            ],
-            "TPR": [
-                ["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.tpr"]
-            ],
-            "PREEQTIME": 100,
-            "TIMELEFTOUT": 0,
-            "UNITEDATOM_DICT": { "POPE": "CHARMM36UA_PEUA" },
-            "COMPOSITION": {
-                "POPE": {
-                    "NAME": "PEUA",
-                    "MAPPING": "mappingPOPEcharmm.yaml",
-                    "COUNT": [168, 168]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Thomas Piggot",
-            "SYSTEM": "336POPE_15254SOL_310K_v2",
-            "SOFTWARE_VERSION": "5.0.6",
-            "FF": "CHARMM36-UA",
-            "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)",
-            "FF_DATE": null,
-            "CPT": null,
-            "LOG": null,
-            "TOP": null,
-            "GRO": [
-                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.gro"]
-            ],
-            "TRAJECTORY_SIZE": 1016472968,
-            "TRJLENGTH": 100025,
-            "TEMPERATURE": 310,
-            "NUMBER_OF_ATOMS": 67602,
-            "DATEOFRUNNING": "10/06/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
-                },
-                "FORMFACTOR": "10.1021/jp511159q/1"
-            },
-            "ID": 352,
-            "path": "07d/cf3/07dcf38cf72985a9535571aaa39d7ae76921838b/9633603ac288bf90cb41aeac480bd1b222658439/"
-        }
-    },
-    {
         "POPE": { "sn-1": 0.570356, "sn-2": 0.280049, "headgroup": 0.272772, "total": 0.374392 },
         "TotalQuality": { "headgroup": 0.272772, "tails": 0.425202, "total": 0.374392, "FFQuality": 0.3 },
         "system": {
@@ -1575,6 +1522,59 @@
         }
     },
     {
+        "POPE": { "sn-1": 0.564762, "sn-2": 0.262314, "headgroup": 0.319518, "total": 0.382198 },
+        "TotalQuality": { "headgroup": 0.319518, "tails": 0.413538, "total": 0.382198, "FFQuality": 0.3 },
+        "system": {
+            "DOI": "10.5281/zenodo.1293774",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2_100-200ns.xtc"]
+            ],
+            "TPR": [
+                ["for-md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.tpr"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 0,
+            "UNITEDATOM_DICT": { "POPE": "CHARMM36UA_PEUA" },
+            "COMPOSITION": {
+                "POPE": {
+                    "NAME": "PEUA",
+                    "MAPPING": "mappingPOPEcharmm.yaml",
+                    "COUNT": [168, 168]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 15254 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Thomas Piggot",
+            "SYSTEM": "336POPE_15254SOL_310K_v2",
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36-UA",
+            "FF_SOURCE": "starting structure was made by reverse mapping an equilibrated MARTINI POPE bilayer (constructed with the INSANE script)",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "GRO": [
+                ["md_POPE_hexagonal_membrane_CHARMM36_UA_200ns_v2.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1016472968,
+            "TRJLENGTH": 100025,
+            "TEMPERATURE": 310,
+            "NUMBER_OF_ATOMS": 67602,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPE": { "10.1021/jacs.1c05549": "10.1021/jacs.1c05549/2", "unpublished/ferreiraPOPE": "unpublished/ferreiraPOPE/1" }
+                },
+                "FORMFACTOR": "10.1021/jp511159q/1"
+            },
+            "ID": 352,
+            "path": "07d/cf3/07dcf38cf72985a9535571aaa39d7ae76921838b/9633603ac288bf90cb41aeac480bd1b222658439/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.0834586, "sn-2": 0.255378, "headgroup": 0.0977942, "total": 0.145544 },
         "TotalQuality": { "headgroup": 0.0421164, "tails": 0.0729624, "total": 0.0626804, "FFQuality": 0.329 },
         "system": {
@@ -1641,64 +1641,6 @@
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL4_medium.xtc"]
-            ],
-            "TPR": [
-                ["CHOL4_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 14400 },
-                "CHOL": {
-                    "NAME": "CHOL",
-                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
-                    "COUNT": [16, 16]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "MacRog_POPC_CHOL11_M",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "MacRog",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL4_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL4_medium.top"]
-            ],
-            "TRAJECTORY_SIZE": 297290712,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 79872,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/3"
-            },
-            "ID": 695,
-            "path": "75b/d62/75bd625d0c29f45c4b3a1bc107df9122abc270be/a6ac2c52a4fe03bc145c34c7d9c759840702e6b1/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 0.3645 },
-        "system": {
-            "DOI": "10.5281/zenodo.7061800",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL4_large.xtc"]
             ],
             "TPR": [
@@ -1749,6 +1691,64 @@
             },
             "ID": 660,
             "path": "7f6/73c/7f673c119523044d7e2d5986e8db7ab5c5a18e64/545850139a3d54a3d727c323db0355e40bb6d032/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 0.3645 },
+        "system": {
+            "DOI": "10.5281/zenodo.7061800",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL4_medium.xtc"]
+            ],
+            "TPR": [
+                ["CHOL4_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 14400 },
+                "CHOL": {
+                    "NAME": "CHOL",
+                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
+                    "COUNT": [16, 16]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "MacRog_POPC_CHOL11_M",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "MacRog",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL4_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL4_medium.top"]
+            ],
+            "TRAJECTORY_SIZE": 297290712,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 79872,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/3"
+            },
+            "ID": 695,
+            "path": "75b/d62/75bd625d0c29f45c4b3a1bc107df9122abc270be/a6ac2c52a4fe03bc145c34c7d9c759840702e6b1/"
         }
     },
     {
@@ -2135,8 +2135,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.700592, "sn-2": 0.737772, "headgroup": 0.612412, "total": 0.683592 },
-        "TotalQuality": { "headgroup": 0.612412, "tails": 0.719182, "total": 0.683592, "FFQuality": 0.455 },
+        "POPC": { "sn-1": 0.695229, "sn-2": 0.7609, "headgroup": 0.620293, "total": 0.69214 },
+        "TotalQuality": { "headgroup": 0.620293, "tails": 0.728064, "total": 0.69214, "FFQuality": 0.455 },
         "system": {
             "DOI": "10.5281/zenodo.166034",
             "SYSTEM": "POPC_T298K",
@@ -2169,7 +2169,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -2178,8 +2178,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.517673, "sn-2": 0.816413, "headgroup": 0.588904, "total": 0.640997 },
-        "TotalQuality": { "headgroup": 0.588904, "tails": 0.667043, "total": 0.640997, "FFQuality": 0.455 },
+        "POPC": { "sn-1": 0.529449, "sn-2": 0.808589, "headgroup": 0.589745, "total": 0.642594 },
+        "TotalQuality": { "headgroup": 0.589745, "tails": 0.669019, "total": 0.642594, "FFQuality": 0.455 },
         "system": {
             "DOI": "10.5281/zenodo.7022749",
             "SOFTWARE": "gromacs",
@@ -2222,70 +2222,12 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "ID": 696,
             "path": "a7f/b85/a7fb85d6b732ed89d397a399a6e48394643c615e/58cb99b06261921c135b2cdc21b7da242943819b/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 0.4645 },
-        "system": {
-            "DOI": "10.5281/zenodo.6992065",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["CHOL4_large.xtc"]
-            ],
-            "TPR": [
-                ["CHOL4_large.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "PC",
-                    "MAPPING": "mappingPOPClipid17.yaml",
-                    "COUNT": [512, 512]
-                },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 57600 },
-                "CHOL": {
-                    "NAME": "CHL",
-                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
-                    "COUNT": [64, 64]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Lipid17_POPC_CHOL11_L",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Lipid17",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL4_large.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL4_large.top"]
-            ],
-            "TRAJECTORY_SIZE": 1193608880,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 319488,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/3"
-            },
-            "ID": 663,
-            "path": "c6a/82c/c6a82c8fe511a96186297ea337b3cea003752a62/5e952b8e3ed5724a96ce3b3c3a6515a926e2b124/"
         }
     },
     {
@@ -2344,6 +2286,64 @@
             },
             "ID": 689,
             "path": "f4e/86b/f4e86b908e89c8cb17a42762c4a145f9d9aeb84d/2ef5622f8b68ac698206dd818d27e4b12e2d2afd/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 0.4645 },
+        "system": {
+            "DOI": "10.5281/zenodo.6992065",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL4_large.xtc"]
+            ],
+            "TPR": [
+                ["CHOL4_large.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "PC",
+                    "MAPPING": "mappingPOPClipid17.yaml",
+                    "COUNT": [512, 512]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 57600 },
+                "CHOL": {
+                    "NAME": "CHL",
+                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
+                    "COUNT": [64, 64]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Lipid17_POPC_CHOL11_L",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Lipid17",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL4_large.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL4_large.top"]
+            ],
+            "TRAJECTORY_SIZE": 1193608880,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 319488,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/3"
+            },
+            "ID": 663,
+            "path": "c6a/82c/c6a82c8fe511a96186297ea337b3cea003752a62/5e952b8e3ed5724a96ce3b3c3a6515a926e2b124/"
         }
     },
     {
@@ -2681,8 +2681,108 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.587068, "sn-2": 0.724056, "headgroup": 0.670238, "total": 0.660454 },
-        "TotalQuality": { "headgroup": 0.670238, "tails": 0.655562, "total": 0.660454, "FFQuality": 0.545 },
+        "POPC": { "sn-1": 0.620504, "sn-2": 0.751014, "headgroup": 0.631222, "total": 0.66758 },
+        "TotalQuality": { "headgroup": 0.631222, "tails": 0.685759, "total": 0.66758, "FFQuality": 0.545 },
+        "system": {
+            "DOI": "10.5281/zenodo.3741793",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["md_OK_100.xtc"]
+            ],
+            "TPR": [
+                ["md.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 5120 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milan Rodriguez, Paula; Fuchs, Patrick F.J.",
+            "SYSTEM": "128POPC_5120SOL_300K",
+            "SOFTWARE_VERSION": null,
+            "FF": "MacRog",
+            "FF_SOURCE": "starting structure from CHARMM-GUI, the initial PDB file was modified to match MacRog nomenclature and atom order",
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "TRAJECTORY_SIZE": 594600152,
+            "TRJLENGTH": 500100,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 32512,
+            "DATEOFRUNNING": "17/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 457,
+            "path": "63a/479/63a47940524010d5a2ff46f0d4c89b4b69e0ad4f/9d9ca60b644e801ec759177e4b1cbe5bf413fe25/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.444111, "sn-2": 0.726575, "headgroup": 0.621614, "total": 0.597433 },
+        "TotalQuality": { "headgroup": 0.621614, "tails": 0.585343, "total": 0.597433, "FFQuality": 0.545 },
+        "system": {
+            "DOI": "10.5281/zenodo.13498",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["50WperL_40ns.xtc"]
+            ],
+            "TPR": [
+                ["50.tpr"]
+            ],
+            "PREEQTIME": 50,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCMaciejewskiRog1.yaml",
+                    "COUNT": [144, 144]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 14400 }
+            },
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": "10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878",
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "288POPC_14400SOL_298K",
+            "SOFTWARE_VERSION": "4.5.5",
+            "FF": "MacRog",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": null,
+            "TRAJECTORY_SIZE": 1204937780,
+            "TRJLENGTH": 40010,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 81792,
+            "DATEOFRUNNING": "17/01/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 63,
+            "path": "6a7/ee8/6a7ee8ec651f41dbaa4460d095ad2e30b27de20b/9b33210b33f94f175df15b16f5064d9464900b05/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.571425, "sn-2": 0.749651, "headgroup": 0.655781, "total": 0.658952 },
+        "TotalQuality": { "headgroup": 0.655781, "tails": 0.660538, "total": 0.658952, "FFQuality": 0.545 },
         "system": {
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
@@ -2725,7 +2825,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -2734,108 +2834,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.633376, "sn-2": 0.730542, "headgroup": 0.639766, "total": 0.667895 },
-        "TotalQuality": { "headgroup": 0.639766, "tails": 0.681959, "total": 0.667895, "FFQuality": 0.545 },
-        "system": {
-            "DOI": "10.5281/zenodo.3741793",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["md_OK_100.xtc"]
-            ],
-            "TPR": [
-                ["md.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
-                    "COUNT": [64, 64]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 5120 }
-            },
-            "DIR_WRK": "/usr/home/bort/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Milan Rodriguez, Paula; Fuchs, Patrick F.J.",
-            "SYSTEM": "128POPC_5120SOL_300K",
-            "SOFTWARE_VERSION": null,
-            "FF": "MacRog",
-            "FF_SOURCE": "starting structure from CHARMM-GUI, the initial PDB file was modified to match MacRog nomenclature and atom order",
-            "FF_DATE": null,
-            "CPT": null,
-            "LOG": null,
-            "TOP": [
-                ["topol.top"]
-            ],
-            "TRAJECTORY_SIZE": 594600152,
-            "TRJLENGTH": 500100,
-            "TEMPERATURE": 300,
-            "NUMBER_OF_ATOMS": 32512,
-            "DATEOFRUNNING": "17/01/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
-            },
-            "ID": 457,
-            "path": "63a/479/63a47940524010d5a2ff46f0d4c89b4b69e0ad4f/9d9ca60b644e801ec759177e4b1cbe5bf413fe25/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.463061, "sn-2": 0.713451, "headgroup": 0.628235, "total": 0.601582 },
-        "TotalQuality": { "headgroup": 0.628235, "tails": 0.588256, "total": 0.601582, "FFQuality": 0.545 },
-        "system": {
-            "DOI": "10.5281/zenodo.13498",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["50WperL_40ns.xtc"]
-            ],
-            "TPR": [
-                ["50.tpr"]
-            ],
-            "PREEQTIME": 50,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCMaciejewskiRog1.yaml",
-                    "COUNT": [144, 144]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 14400 }
-            },
-            "DIR_WRK": "/usr/home/bort/Databank",
-            "PUBLICATION": "10.1101/2020.11.09.374850; 10.1021/acs.jpcb.5b04878",
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "288POPC_14400SOL_298K",
-            "SOFTWARE_VERSION": "4.5.5",
-            "FF": "MacRog",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": null,
-            "LOG": null,
-            "TOP": null,
-            "TRAJECTORY_SIZE": 1204937780,
-            "TRJLENGTH": 40010,
-            "TEMPERATURE": 298,
-            "NUMBER_OF_ATOMS": 81792,
-            "DATEOFRUNNING": "17/01/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
-            },
-            "ID": 63,
-            "path": "6a7/ee8/6a7ee8ec651f41dbaa4460d095ad2e30b27de20b/9b33210b33f94f175df15b16f5064d9464900b05/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.654064, "sn-2": 0.723573, "headgroup": 0.606666, "total": 0.661434 },
-        "TotalQuality": { "headgroup": 0.606666, "tails": 0.688818, "total": 0.661434, "FFQuality": 0.545 },
+        "POPC": { "sn-1": 0.652572, "sn-2": 0.741006, "headgroup": 0.601293, "total": 0.664957 },
+        "TotalQuality": { "headgroup": 0.601293, "tails": 0.696789, "total": 0.664957, "FFQuality": 0.545 },
         "system": {
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
@@ -2878,7 +2878,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -2887,8 +2887,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.449123, "sn-2": 0.771285, "headgroup": 0.560955, "total": 0.593788 },
-        "TotalQuality": { "headgroup": 0.560955, "tails": 0.610204, "total": 0.593788, "FFQuality": 0.555 },
+        "POPC": { "sn-1": 0.453258, "sn-2": 0.782174, "headgroup": 0.5637, "total": 0.599711 },
+        "TotalQuality": { "headgroup": 0.5637, "tails": 0.617716, "total": 0.599711, "FFQuality": 0.555 },
         "system": {
             "DOI": "10.5281/zenodo.7022749",
             "SOFTWARE": "gromacs",
@@ -2931,7 +2931,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -2940,8 +2940,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.602438, "sn-2": 0.35208, "headgroup": 0.637846, "total": 0.530788 },
-        "TotalQuality": { "headgroup": 0.637846, "tails": 0.477259, "total": 0.530788, "FFQuality": 0.555 },
+        "POPC": { "sn-1": 0.623476, "sn-2": 0.371949, "headgroup": 0.656477, "total": 0.550634 },
+        "TotalQuality": { "headgroup": 0.656477, "tails": 0.497712, "total": 0.550634, "FFQuality": 0.555 },
         "system": {
             "DOI": "10.5281/zenodo.3335503",
             "SOFTWARE": "gromacs",
@@ -2988,7 +2988,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -2999,13 +2999,13 @@
     {
         "TotalQuality": { "FFQuality": 0.573 },
         "system": {
-            "DOI": "10.5281/zenodo.3335503",
+            "DOI": "10.5281/zenodo.1118980",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["sim_ECC-POPC_SPCE_noIons-ref.xtc"]
+                ["sim_ECC-POPC_OPC3_noIons-ref.xtc"]
             ],
             "TPR": [
-                ["sim_ECC-POPC_SPCE_noIons-ref.tpr"]
+                ["sim_ECC-POPC_OPC3_noIons-ref.tpr"]
             ],
             "PREEQTIME": 0,
             "TIMELEFTOUT": 0,
@@ -3015,32 +3015,32 @@
                     "MAPPING": "mappingPOPClipid14_POPCres.yaml",
                     "COUNT": [64, 64]
                 },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 6400 }
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 6400 }
             },
-            "DIR_WRK": "/usr/home/bort/Databank",
-            "PUBLICATION": "10.1101/2020.11.09.374850",
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
             "AUTHORS_CONTACT": "Melcr, Josef",
-            "SYSTEM": "128POPC_6400SOL_313K",
+            "SYSTEM": "128POPC_6400SOL_313K_OPC3model",
             "SOFTWARE_VERSION": "5.1.4",
             "FF": "ECC-lipids",
-            "FFSOL": "SPCE",
+            "FFSOL": "OPC3",
             "FF_SOURCE": null,
             "FF_DATE": null,
             "CPT": [
-                ["sim_ECC-POPC_SPCE_noIons-ref.cpt"]
+                ["sim_ECC-POPC_OPC3_noIons-ref.cpt"]
             ],
             "LOG": null,
             "TOP": [
-                ["sim_ECC-POPC_SPCE_noIons-ref.top"]
+                ["sim_ECC-POPC_OPC3_noIons-ref.top"]
             ],
             "GRO": [
-                ["sim_ECC-POPC_SPCE_noIons-ref.gro"]
+                ["sim_ECC-POPC_OPC3_noIons-ref.gro"]
             ],
-            "TRAJECTORY_SIZE": 674250236,
-            "TRJLENGTH": 100020,
+            "TRAJECTORY_SIZE": 1345435480,
+            "TRJLENGTH": 200020,
             "TEMPERATURE": 313,
             "NUMBER_OF_ATOMS": 36352,
-            "DATEOFRUNNING": "02/02/2022",
+            "DATEOFRUNNING": "10/03/2022",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
@@ -3048,8 +3048,8 @@
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/11"
             },
-            "ID": 405,
-            "path": "4e4/d45/4e4d45f15fc334edfa725ef670c7ec1f86589d3e/247e995fe4c17b8643ee8c9fb6760a383f65f024/"
+            "ID": 204,
+            "path": "d82/264/d8226460aca0364206b6167d9785260d71e1c98c/69a1d139b81c429400906f515200e4940d811721/"
         }
     },
     {
@@ -3109,13 +3109,13 @@
     {
         "TotalQuality": { "FFQuality": 0.573 },
         "system": {
-            "DOI": "10.5281/zenodo.1118980",
+            "DOI": "10.5281/zenodo.3335503",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["sim_ECC-POPC_OPC3_noIons-ref.xtc"]
+                ["sim_ECC-POPC_SPCE_noIons-ref.xtc"]
             ],
             "TPR": [
-                ["sim_ECC-POPC_OPC3_noIons-ref.tpr"]
+                ["sim_ECC-POPC_SPCE_noIons-ref.tpr"]
             ],
             "PREEQTIME": 0,
             "TIMELEFTOUT": 0,
@@ -3125,32 +3125,32 @@
                     "MAPPING": "mappingPOPClipid14_POPCres.yaml",
                     "COUNT": [64, 64]
                 },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 6400 }
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingSPCwater.yaml", "COUNT": 6400 }
             },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "PUBLICATION": "10.1101/2020.11.09.374850",
             "AUTHORS_CONTACT": "Melcr, Josef",
-            "SYSTEM": "128POPC_6400SOL_313K_OPC3model",
+            "SYSTEM": "128POPC_6400SOL_313K",
             "SOFTWARE_VERSION": "5.1.4",
             "FF": "ECC-lipids",
-            "FFSOL": "OPC3",
+            "FFSOL": "SPCE",
             "FF_SOURCE": null,
             "FF_DATE": null,
             "CPT": [
-                ["sim_ECC-POPC_OPC3_noIons-ref.cpt"]
+                ["sim_ECC-POPC_SPCE_noIons-ref.cpt"]
             ],
             "LOG": null,
             "TOP": [
-                ["sim_ECC-POPC_OPC3_noIons-ref.top"]
+                ["sim_ECC-POPC_SPCE_noIons-ref.top"]
             ],
             "GRO": [
-                ["sim_ECC-POPC_OPC3_noIons-ref.gro"]
+                ["sim_ECC-POPC_SPCE_noIons-ref.gro"]
             ],
-            "TRAJECTORY_SIZE": 1345435480,
-            "TRJLENGTH": 200020,
+            "TRAJECTORY_SIZE": 674250236,
+            "TRJLENGTH": 100020,
             "TEMPERATURE": 313,
             "NUMBER_OF_ATOMS": 36352,
-            "DATEOFRUNNING": "10/03/2022",
+            "DATEOFRUNNING": "02/02/2022",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
@@ -3158,8 +3158,8 @@
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/11"
             },
-            "ID": 204,
-            "path": "d82/264/d8226460aca0364206b6167d9785260d71e1c98c/69a1d139b81c429400906f515200e4940d811721/"
+            "ID": 405,
+            "path": "4e4/d45/4e4d45f15fc334edfa725ef670c7ec1f86589d3e/247e995fe4c17b8643ee8c9fb6760a383f65f024/"
         }
     },
     {
@@ -3275,8 +3275,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.638436, "sn-2": 0.761091, "headgroup": 0.6947, "total": 0.698076 },
-        "TotalQuality": { "headgroup": 0.6947, "tails": 0.699763, "total": 0.698076, "FFQuality": 0.645 },
+        "POPC": { "sn-1": 0.636529, "sn-2": 0.777392, "headgroup": 0.674861, "total": 0.696261 },
+        "TotalQuality": { "headgroup": 0.674861, "tails": 0.706961, "total": 0.696261, "FFQuality": 0.645 },
         "system": {
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
@@ -3319,7 +3319,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -3499,64 +3499,6 @@
             "DOI": "10.5281/zenodo.7022749",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL8_large.xtc"]
-            ],
-            "TPR": [
-                ["CHOL8_large.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCslipids.yaml",
-                    "COUNT": [512, 512]
-                },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 64000 },
-                "CHOL": {
-                    "NAME": "CHL1",
-                    "MAPPING": "mappingCHOLESTEROLslipid.yaml",
-                    "COUNT": [128, 128]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Slipids_POPC_CHOL20_L",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Slipids",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL8_large.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL8_large.top"]
-            ],
-            "TRAJECTORY_SIZE": 1311023880,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 348160,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/5"
-            },
-            "ID": 691,
-            "path": "492/100/492100cdfee39e4b427f1f4563c635839b40c2a4/b14f6e506122f9754896c3edb69f0fa9075272fb/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 0.7258 },
-        "system": {
-            "DOI": "10.5281/zenodo.7022749",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL8_medium.xtc"]
             ],
             "TPR": [
@@ -3607,6 +3549,64 @@
             },
             "ID": 687,
             "path": "f22/76d/f2276d44a27ada33b2326df41b2efb2c11eb8858/0b38528bf0ba9219523d4b17babddb3f28129873/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 0.7258 },
+        "system": {
+            "DOI": "10.5281/zenodo.7022749",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL8_large.xtc"]
+            ],
+            "TPR": [
+                ["CHOL8_large.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCslipids.yaml",
+                    "COUNT": [512, 512]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 64000 },
+                "CHOL": {
+                    "NAME": "CHL1",
+                    "MAPPING": "mappingCHOLESTEROLslipid.yaml",
+                    "COUNT": [128, 128]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Slipids_POPC_CHOL20_L",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Slipids",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL8_large.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL8_large.top"]
+            ],
+            "TRAJECTORY_SIZE": 1311023880,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 348160,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/5"
+            },
+            "ID": 691,
+            "path": "492/100/492100cdfee39e4b427f1f4563c635839b40c2a4/b14f6e506122f9754896c3edb69f0fa9075272fb/"
         }
     },
     {
@@ -3671,61 +3671,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.40165, "sn-2": 0.710797, "headgroup": 0.546749, "total": 0.553066 },
-        "TotalQuality": { "headgroup": 0.546749, "tails": 0.556224, "total": 0.553066, "FFQuality": 0.755 },
-        "system": {
-            "DOI": "10.5281/zenodo.7022749",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["CHOL0_small.xtc"]
-            ],
-            "TPR": [
-                ["CHOL0_small.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCslipids.yaml",
-                    "COUNT": [32, 32]
-                },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 3200 }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Slipids_POPC_S",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Slipids",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL0_small.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL0_small.top"]
-            ],
-            "TRAJECTORY_SIZE": 67093756,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 18176,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
-            },
-            "ID": 664,
-            "path": "3ae/2ad/3ae2ad254c7748843eebd62365d21cdc7712b519/0a3d4c6d2fceb62705ed272b2f4aa607477b4337/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.396443, "sn-2": 0.352255, "headgroup": 0.634239, "total": 0.460979 },
-        "TotalQuality": { "headgroup": 0.634239, "tails": 0.374349, "total": 0.460979, "FFQuality": 0.755 },
+        "POPC": { "sn-1": 0.4011, "sn-2": 0.352362, "headgroup": 0.649025, "total": 0.467496 },
+        "TotalQuality": { "headgroup": 0.649025, "tails": 0.376731, "total": 0.467496, "FFQuality": 0.755 },
         "system": {
             "DOI": "10.5281/zenodo.1118980",
             "SOFTWARE": "gromacs",
@@ -3772,7 +3719,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -3781,8 +3728,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.190042, "sn-2": 0.331073, "headgroup": 0.154988, "total": 0.225368 },
-        "TotalQuality": { "headgroup": 0.154988, "tails": 0.260558, "total": 0.225368, "FFQuality": 0.755 },
+        "POPC": { "sn-1": 0.187211, "sn-2": 0.340844, "headgroup": 0.146672, "total": 0.224909 },
+        "TotalQuality": { "headgroup": 0.146672, "tails": 0.264027, "total": 0.224909, "FFQuality": 0.755 },
         "system": {
             "DOI": "10.5281/zenodo.6656031",
             "SOFTWARE": "gromacs",
@@ -3827,12 +3774,65 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "ID": 422,
             "path": "ac4/242/ac4242b5de6414ba1746a497c552dd92472a1ce3/5e793f635d83d27ec6aff19ad4eb688a872a9d76/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.396183, "sn-2": 0.72404, "headgroup": 0.549184, "total": 0.556469 },
+        "TotalQuality": { "headgroup": 0.549184, "tails": 0.560111, "total": 0.556469, "FFQuality": 0.755 },
+        "system": {
+            "DOI": "10.5281/zenodo.7022749",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL0_small.xtc"]
+            ],
+            "TPR": [
+                ["CHOL0_small.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCslipids.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Slipids_POPC_S",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Slipids",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL0_small.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL0_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 67093756,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 18176,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 664,
+            "path": "3ae/2ad/3ae2ad254c7748843eebd62365d21cdc7712b519/0a3d4c6d2fceb62705ed272b2f4aa607477b4337/"
         }
     },
     {
@@ -4208,55 +4208,6 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.600824, "sn-2": 0.573315, "headgroup": 0.628955, "total": 0.601031 },
-        "TotalQuality": { "headgroup": 0.628955, "tails": 0.587069, "total": 0.601031, "FFQuality": 0.822 },
-        "system": {
-            "DOI": "10.5281/zenodo.7916287",
-            "SOFTWARE": "openMM",
-            "TRJ": [
-                ["popc3ns.xtc"]
-            ],
-            "PDB": [
-                ["popc72_drude.psf"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "TEMPERATURE": 303,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCcharmmPolarizable2023.yaml",
-                    "COUNT": [36, 36]
-                },
-                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2239 }
-            },
-            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Kav, Batuhan",
-            "SYSTEM": "POPC_CHARMMdrude2023_303K",
-            "SOFTWARE_VERSION": null,
-            "FF": "Charmm-Drude polarizable2023",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CHK": null,
-            "TOP": null,
-            "CRD": null,
-            "TRAJECTORY_SIZE": 2217463352,
-            "TRJLENGTH": 200000,
-            "NUMBER_OF_ATOMS": 25163,
-            "DATEOFRUNNING": "11/05/2023",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "ID": 752,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "path": "780/d37/780d3763c456a6837a6d65f48cc7e7b14e4a3a6e/780d3763c456a6837a6d65f48cc7e7b14e4a3a6e/"
-        }
-    },
-    {
         "POPC": { "sn-1": 0.489538, "sn-2": 0.532072, "headgroup": 0.502697, "total": 0.508102 },
         "TotalQuality": { "headgroup": 0.502697, "tails": 0.510805, "total": 0.508102, "FFQuality": 0.822 },
         "system": {
@@ -4306,8 +4257,57 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.278396, "sn-2": 0.249617, "headgroup": 0.579755, "total": 0.369256 },
-        "TotalQuality": { "headgroup": 0.579755, "tails": 0.264006, "total": 0.369256, "FFQuality": 0.855 },
+        "POPC": { "sn-1": 0.600824, "sn-2": 0.573315, "headgroup": 0.628955, "total": 0.601031 },
+        "TotalQuality": { "headgroup": 0.628955, "tails": 0.587069, "total": 0.601031, "FFQuality": 0.822 },
+        "system": {
+            "DOI": "10.5281/zenodo.7916287",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["popc3ns.xtc"]
+            ],
+            "PDB": [
+                ["popc72_drude.psf"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "TEMPERATURE": 303,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmmPolarizable2023.yaml",
+                    "COUNT": [36, 36]
+                },
+                "SOL": { "NAME": "SWM4", "MAPPING": "mappingSWM4water.yaml", "COUNT": 2239 }
+            },
+            "DIR_WRK": "/home/sosamuli/temp/DataBank/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Kav, Batuhan",
+            "SYSTEM": "POPC_CHARMMdrude2023_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "Charmm-Drude polarizable2023",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CHK": null,
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 2217463352,
+            "TRJLENGTH": 200000,
+            "NUMBER_OF_ATOMS": 25163,
+            "DATEOFRUNNING": "11/05/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "ID": 752,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "path": "780/d37/780d3763c456a6837a6d65f48cc7e7b14e4a3a6e/780d3763c456a6837a6d65f48cc7e7b14e4a3a6e/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.273781, "sn-2": 0.246271, "headgroup": 0.579868, "total": 0.36664 },
+        "TotalQuality": { "headgroup": 0.579868, "tails": 0.260026, "total": 0.36664, "FFQuality": 0.855 },
         "system": {
             "DOI": "10.5281/zenodo.30898",
             "SOFTWARE": "gromacs",
@@ -4348,7 +4348,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -4405,61 +4405,6 @@
         }
     },
     {
-        "TotalQuality": { "FFQuality": 0.922 },
-        "system": {
-            "DOI": "10.5281/zenodo.6943086",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["DOPC_303_medium.xtc"]
-            ],
-            "TPR": [
-                ["DOPC_303_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "DOPC",
-                    "MAPPING": "mappingDOPCcharmm.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "256DOPC_12800SOL_303K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["DOPC_303_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["DOPC_medium.top"]
-            ],
-            "GRO": [
-                ["DOPC_303_medium.gro"]
-            ],
-            "TRAJECTORY_SIZE": 271793404,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 303.15,
-            "NUMBER_OF_ATOMS": 73728,
-            "DATEOFRUNNING": "16/08/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "ID": 551,
-            "path": "1ef/206/1ef20600128744e801bca89047de22964acd3e9d/edbe8c7309de6bdb695c6fc59615b8c5488ab91b/"
-        }
-    },
-    {
         "POPC": { "sn-1": 0.133871, "sn-2": 0.526845, "headgroup": 0.642008, "total": 0.434241 },
         "TotalQuality": { "headgroup": 0.642008, "tails": 0.330358, "total": 0.434241, "FFQuality": 0.922 },
         "system": {
@@ -4508,6 +4453,57 @@
             },
             "ID": 602,
             "path": "752/7ec/7527ecdcca76b1db5593639e4e84069b65570f68/5fe5e17ca65737161140a6149290095af1f7056f/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.291549, "sn-2": 0.528513, "headgroup": 0.52035, "total": 0.446804 },
+        "TotalQuality": { "headgroup": 0.52035, "tails": 0.410031, "total": 0.446804, "FFQuality": 0.922 },
+        "system": {
+            "DOI": "10.5281/zenodo.7607436",
+            "SOFTWARE": "openMM",
+            "TRJ": [
+                ["wrapped_full.xtc"]
+            ],
+            "PDB": [
+                ["step5.pdb"]
+            ],
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 100,
+            "TEMPERATURE": 303,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POP",
+                    "MAPPING": "mappingPOPCcharmmPolarizable.yaml",
+                    "COUNT": [64, 64]
+                },
+                "SOL": { "NAME": "SWM", "MAPPING": "mappingSWM4water.yaml", "COUNT": 6400 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Kav, Batuhan",
+            "SYSTEM": "64POPC_6400SOL_303K",
+            "SOFTWARE_VERSION": "7.5.0",
+            "FF": "Charmm-Drude",
+            "FF_SOURCE": null,
+            "FF_DATE": "2021-02-23",
+            "CHK": [
+                ["step5.chk"]
+            ],
+            "TOP": null,
+            "CRD": null,
+            "TRAJECTORY_SIZE": 12748843028,
+            "TRJLENGTH": 500000,
+            "NUMBER_OF_ATOMS": 56832,
+            "DATEOFRUNNING": "08/02/2023",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "ID": 734,
+            "path": "e97/2fb/e972fb7afc0ab78c7004c0971d5055b2a0cdc51f/e972fb7afc0ab78c7004c0971d5055b2a0cdc51f/"
         }
     },
     {
@@ -4566,45 +4562,49 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.291549, "sn-2": 0.528513, "headgroup": 0.52035, "total": 0.446804 },
-        "TotalQuality": { "headgroup": 0.52035, "tails": 0.410031, "total": 0.446804, "FFQuality": 0.922 },
+        "TotalQuality": { "FFQuality": 0.922 },
         "system": {
-            "DOI": "10.5281/zenodo.7607436",
-            "SOFTWARE": "openMM",
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
             "TRJ": [
-                ["wrapped_full.xtc"]
+                ["DOPC_303_medium.xtc"]
             ],
-            "PDB": [
-                ["step5.pdb"]
+            "TPR": [
+                ["DOPC_303_medium.tpr"]
             ],
-            "PREEQTIME": 100,
-            "TIMELEFTOUT": 100,
-            "TEMPERATURE": 303,
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
             "COMPOSITION": {
                 "POPC": {
-                    "NAME": "POP",
-                    "MAPPING": "mappingPOPCcharmmPolarizable.yaml",
-                    "COUNT": [64, 64]
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [128, 128]
                 },
-                "SOL": { "NAME": "SWM", "MAPPING": "mappingSWM4water.yaml", "COUNT": 6400 }
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
             },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "DIR_WRK": "/home/lara/Databank",
             "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Kav, Batuhan",
-            "SYSTEM": "64POPC_6400SOL_303K",
-            "SOFTWARE_VERSION": "7.5.0",
-            "FF": "Charmm-Drude",
-            "FF_SOURCE": null,
-            "FF_DATE": "2021-02-23",
-            "CHK": [
-                ["step5.chk"]
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "256DOPC_12800SOL_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_303_medium.cpt"]
             ],
-            "TOP": null,
-            "CRD": null,
-            "TRAJECTORY_SIZE": 12748843028,
-            "TRJLENGTH": 500000,
-            "NUMBER_OF_ATOMS": 56832,
-            "DATEOFRUNNING": "08/02/2023",
+            "LOG": null,
+            "TOP": [
+                ["DOPC_medium.top"]
+            ],
+            "GRO": [
+                ["DOPC_303_medium.gro"]
+            ],
+            "TRAJECTORY_SIZE": 271793404,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 73728,
+            "DATEOFRUNNING": "16/08/2022",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
@@ -4612,8 +4612,8 @@
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
             },
-            "ID": 734,
-            "path": "e97/2fb/e972fb7afc0ab78c7004c0971d5055b2a0cdc51f/e972fb7afc0ab78c7004c0971d5055b2a0cdc51f/"
+            "ID": 551,
+            "path": "1ef/206/1ef20600128744e801bca89047de22964acd3e9d/edbe8c7309de6bdb695c6fc59615b8c5488ab91b/"
         }
     },
     {
@@ -4675,8 +4675,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.668458, "sn-2": 0.827443, "headgroup": 0.00974395, "total": 0.501882 },
-        "TotalQuality": { "headgroup": 0.00974395, "tails": 0.747951, "total": 0.501882, "FFQuality": 0.945 },
+        "POPC": { "sn-1": 0.625969, "sn-2": 0.839935, "headgroup": 0.00952338, "total": 0.491809 },
+        "TotalQuality": { "headgroup": 0.00952338, "tails": 0.732952, "total": 0.491809, "FFQuality": 0.945 },
         "system": {
             "DOI": "10.5281/zenodo.1402417",
             "SOFTWARE": "gromacs",
@@ -4719,61 +4719,12 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "ID": 115,
             "path": "b26/a77/b26a77bb464996d420103059fbfc792f35f000d8/508b09dc91e254f859051b74040b1dc8e1342919/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.466931, "sn-2": 0.651902, "headgroup": 0.686139, "total": 0.601657 },
-        "TotalQuality": { "headgroup": 0.686139, "tails": 0.559416, "total": 0.601657, "FFQuality": 1.022 },
-        "system": {
-            "AUTHORS_CONTACT": "Piggot, Thomas",
-            "FF_DATE": null,
-            "SYSTEM": "128POPC_4040SOL_8A-switch_v1",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
-            "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 29272,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": "http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs",
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "SOL", "COUNT": 4040, "MAPPING": "mappingSPCwater.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": null,
-            "TRJLENGTH": 500050,
-            "TRAJECTORY_SIZE": 1091855732,
-            "SOFTWARE_VERSION": "5.0.6",
-            "FF": "CHARMM36",
-            "TOP": null,
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.164203",
-            "DATEOFRUNNING": "04/10/2021",
-            "TPR": [
-                ["for-md_CHARMM36_GMX506_POPC_8A-switch_v1.tpr"]
-            ],
-            "TRJ": [
-                ["md_CHARMM36_GMX506_POPC_8A-switch_v1_skip10.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 281,
-            "path": "225/02e/22502e7ac9fc0c6b000bbaf11c853b15aea4da61/71e868c8cfd294df5b3678d9ce7401621825d218/"
         }
     },
     {
@@ -4826,58 +4777,101 @@
         }
     },
     {
-        "TotalQuality": { "FFQuality": 1.022 },
+        "POPC": { "sn-1": 0.482345, "sn-2": 0.673313, "headgroup": 0.683192, "total": 0.61295 },
+        "TotalQuality": { "headgroup": 0.683192, "tails": 0.577829, "total": 0.61295, "FFQuality": 1.022 },
         "system": {
-            "DOI": "10.5281/zenodo.6943086",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["DOPC_303_small.xtc"]
-            ],
-            "TPR": [
-                ["DOPC_303_small.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "DOPC",
-                    "MAPPING": "mappingDOPCcharmm.yaml",
-                    "COUNT": [32, 32]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "64DOPC_3200SOL_303K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": "CHARMM-GUI",
+            "AUTHORS_CONTACT": "Piggot, Thomas",
             "FF_DATE": null,
-            "CPT": [
-                ["DOPC_303_small.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["DOPC_small.top"]
-            ],
-            "GRO": [
-                ["DOPC_303_small.gro"]
-            ],
-            "TRAJECTORY_SIZE": 66993928,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 303.15,
-            "NUMBER_OF_ATOMS": 18432,
-            "DATEOFRUNNING": "16/08/2022",
+            "SYSTEM": "128POPC_5120SOL_8A-switch_v2",
             "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 32512,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
                     "POPC": {}
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
             },
-            "ID": 316,
-            "path": "25a/fb6/25afb68fd3cf91b95e9a62fb71909d688c5e430c/d6ae10a7d8827f65c7c10330d525deb73feff3d0/"
+            "FF_SOURCE": null,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 500050,
+            "TRAJECTORY_SIZE": 1207232304,
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36",
+            "TOP": null,
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.164206",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["for-md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v2.tpr"]
+            ],
+            "TRJ": [
+                ["md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v2_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 98,
+            "path": "74f/eeb/74feeb08b7b5b2dcf54639ef1c51b9d2c4731c81/17067c369e136d719304061da5b010059645e3bf/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.466931, "sn-2": 0.651902, "headgroup": 0.686139, "total": 0.601657 },
+        "TotalQuality": { "headgroup": 0.686139, "tails": 0.559416, "total": 0.601657, "FFQuality": 1.022 },
+        "system": {
+            "AUTHORS_CONTACT": "Piggot, Thomas",
+            "FF_DATE": null,
+            "SYSTEM": "128POPC_4040SOL_8A-switch_v1",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 29272,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": "http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs",
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "SOL", "COUNT": 4040, "MAPPING": "mappingSPCwater.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 500050,
+            "TRAJECTORY_SIZE": 1091855732,
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36",
+            "TOP": null,
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.164203",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["for-md_CHARMM36_GMX506_POPC_8A-switch_v1.tpr"]
+            ],
+            "TRJ": [
+                ["md_CHARMM36_GMX506_POPC_8A-switch_v1_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 281,
+            "path": "225/02e/22502e7ac9fc0c6b000bbaf11c853b15aea4da61/71e868c8cfd294df5b3678d9ce7401621825d218/"
         }
     },
     {
@@ -4927,6 +4921,55 @@
             "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
             "ID": 462,
             "path": "417/57f/41757fcae2788b4acce2e9b601bfa7c768e8e7b0/fbeaaf46fef02433daa4c430bec6db90de985429/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.422041, "sn-2": 0.573043, "headgroup": 0.677566, "total": 0.55755 },
+        "TotalQuality": { "headgroup": 0.677566, "tails": 0.497542, "total": 0.55755, "FFQuality": 1.022 },
+        "system": {
+            "AUTHORS_CONTACT": "Piggot, Thomas",
+            "FF_DATE": null,
+            "SYSTEM": "128POPC_5120SOL_10A-switch_v2",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 32512,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": null,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 500050,
+            "TRAJECTORY_SIZE": 1207241656,
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36",
+            "TOP": null,
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.164206",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["for-md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v2.tpr"]
+            ],
+            "TRJ": [
+                ["md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v2_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 99,
+            "path": "bd9/801/bd98012f8548b7c22429790489240ca0e79aeb83/0fd7285aeef1d21f45deec3262aa06cd18f50df5/"
         }
     },
     {
@@ -5028,52 +5071,58 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.482345, "sn-2": 0.673313, "headgroup": 0.683192, "total": 0.61295 },
-        "TotalQuality": { "headgroup": 0.683192, "tails": 0.577829, "total": 0.61295, "FFQuality": 1.022 },
+        "TotalQuality": { "FFQuality": 1.022 },
         "system": {
-            "AUTHORS_CONTACT": "Piggot, Thomas",
-            "FF_DATE": null,
-            "SYSTEM": "128POPC_5120SOL_8A-switch_v2",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DOPC_303_small.xtc"]
+            ],
+            "TPR": [
+                ["DOPC_303_small.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
             "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 32512,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "64DOPC_3200SOL_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_303_small.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DOPC_small.top"]
+            ],
+            "GRO": [
+                ["DOPC_303_small.gro"]
+            ],
+            "TRAJECTORY_SIZE": 66993928,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 18432,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
                     "POPC": {}
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
             },
-            "FF_SOURCE": null,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": null,
-            "TRJLENGTH": 500050,
-            "TRAJECTORY_SIZE": 1207232304,
-            "SOFTWARE_VERSION": "5.0.6",
-            "FF": "CHARMM36",
-            "TOP": null,
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.164206",
-            "DATEOFRUNNING": "04/10/2021",
-            "TPR": [
-                ["for-md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v2.tpr"]
-            ],
-            "TRJ": [
-                ["md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v2_skip10.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 98,
-            "path": "74f/eeb/74feeb08b7b5b2dcf54639ef1c51b9d2c4731c81/17067c369e136d719304061da5b010059645e3bf/"
+            "ID": 316,
+            "path": "25a/fb6/25afb68fd3cf91b95e9a62fb71909d688c5e430c/d6ae10a7d8827f65c7c10330d525deb73feff3d0/"
         }
     },
     {
@@ -5126,57 +5175,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.422041, "sn-2": 0.573043, "headgroup": 0.677566, "total": 0.55755 },
-        "TotalQuality": { "headgroup": 0.677566, "tails": 0.497542, "total": 0.55755, "FFQuality": 1.022 },
-        "system": {
-            "AUTHORS_CONTACT": "Piggot, Thomas",
-            "FF_DATE": null,
-            "SYSTEM": "128POPC_5120SOL_10A-switch_v2",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
-            "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 32512,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": null,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": null,
-            "TRJLENGTH": 500050,
-            "TRAJECTORY_SIZE": 1207241656,
-            "SOFTWARE_VERSION": "5.0.6",
-            "FF": "CHARMM36",
-            "TOP": null,
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.164206",
-            "DATEOFRUNNING": "04/10/2021",
-            "TPR": [
-                ["for-md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v2.tpr"]
-            ],
-            "TRJ": [
-                ["md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v2_skip10.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 99,
-            "path": "bd9/801/bd98012f8548b7c22429790489240ca0e79aeb83/0fd7285aeef1d21f45deec3262aa06cd18f50df5/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.714685, "sn-2": 0.773991, "headgroup": 0.0283372, "total": 0.505671 },
-        "TotalQuality": { "headgroup": 0.0283372, "tails": 0.744338, "total": 0.505671, "FFQuality": 1.045 },
+        "POPC": { "sn-1": 0.681692, "sn-2": 0.783762, "headgroup": 0.027664, "total": 0.497706 },
+        "TotalQuality": { "headgroup": 0.027664, "tails": 0.732727, "total": 0.497706, "FFQuality": 1.045 },
         "system": {
             "AUTHORS_CONTACT": "Samuli Ollila (samuli.ollila@helsinki.fi)",
             "FF_DATE": "?/?/????",
@@ -5189,7 +5189,7 @@
             "NUMBER_OF_ATOMS": 28526,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -5226,8 +5226,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.62552, "sn-2": 0.5132, "headgroup": 0.617383, "total": 0.585368 },
-        "TotalQuality": { "headgroup": 0.617383, "tails": 0.56936, "total": 0.585368, "FFQuality": 1.055 },
+        "POPC": { "sn-1": 0.624598, "sn-2": 0.516277, "headgroup": 0.625197, "total": 0.588691 },
+        "TotalQuality": { "headgroup": 0.625197, "tails": 0.570437, "total": 0.588691, "FFQuality": 1.055 },
         "system": {
             "DOI": "10.5281/zenodo.10783846",
             "TRJ": [
@@ -5261,61 +5261,12 @@
             "FF": "OpenFF",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "ID": 797,
             "path": "4f5/fb4/4f5fb4c911390b50b56d06364c85910c10191c57/ea16a8b51b9d71838d911eb3cebbc69ad05600d8/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.409251, "sn-2": 0.603935, "headgroup": 0.67189, "total": 0.561692 },
-        "TotalQuality": { "headgroup": 0.67189, "tails": 0.506593, "total": 0.561692, "FFQuality": 1.122 },
-        "system": {
-            "AUTHORS_CONTACT": "Antila, Hanne",
-            "FF_DATE": null,
-            "SYSTEM": "122POPC_4880SOL_303K",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
-            "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 30988,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": "CHARMM-GUI",
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [61, 61],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 4880, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": null,
-            "TRJLENGTH": 840010,
-            "TRAJECTORY_SIZE": 9516947148,
-            "SOFTWARE_VERSION": 2020.1,
-            "FF": "CHARMM36",
-            "TOP": null,
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.4071264",
-            "DATEOFRUNNING": "05/10/2021",
-            "TPR": [
-                ["popc.tpr"]
-            ],
-            "TRJ": [
-                ["popc.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 433,
-            "path": "5fc/43a/5fc43ad145381cb3771e74353a36856ff8e65d2f/a17d97babec638e6f00c218e2582afa04e6ae5d4/"
         }
     },
     {
@@ -5368,57 +5319,6 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.39601, "sn-2": 0.481996, "headgroup": 0.665442, "total": 0.514482 },
-        "TotalQuality": { "headgroup": 0.665442, "tails": 0.439003, "total": 0.514482, "FFQuality": 1.122 },
-        "system": {
-            "FF_DATE": "??",
-            "POPG": "POPG",
-            "SYSTEM": "POPC_T303K",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "POPS": "POPS",
-            "FFSOL": "TIP3P",
-            "NUMBER_OF_ATOMS": 32512,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": "??",
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TRJ": [
-                ["traj_comp.xtc"]
-            ],
-            "TIMELEFTOUT": 20,
-            "POPE": "POPE",
-            "CLA": "CL",
-            "DATEOFRUNNING": "01/10/2021",
-            "FF": "CHARMM36",
-            "SOFTWARE": "gromacs",
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.3474863",
-            "TRAJECTORY_SIZE": 6035770840,
-            "TPR": [
-                ["mdrun.tpr"]
-            ],
-            "POT": "K",
-            "TEMPERATURE": 303,
-            "CAL": "CA",
-            "SOD": "NA",
-            "TRJLENGTH": 500010,
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 428,
-            "path": "b4f/866/b4f866c0dabffa6cd891e91841591d46590f34aa/a231c358dd8c0b7bb4cf558ccdbf022373354a9a/"
-        }
-    },
-    {
         "POPC": { "sn-1": 0.430809, "sn-2": 0.551656, "headgroup": 0.692226, "total": 0.55823 },
         "TotalQuality": { "headgroup": 0.692226, "tails": 0.491232, "total": 0.55823, "FFQuality": 1.122 },
         "system": {
@@ -5468,101 +5368,52 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.399074, "sn-2": 0.533612, "headgroup": 0.682019, "total": 0.538235 },
-        "TotalQuality": { "headgroup": 0.682019, "tails": 0.466343, "total": 0.538235, "FFQuality": 1.122 },
+        "POPC": { "sn-1": 0.409251, "sn-2": 0.603935, "headgroup": 0.67189, "total": 0.561692 },
+        "TotalQuality": { "headgroup": 0.67189, "tails": 0.506593, "total": 0.561692, "FFQuality": 1.122 },
         "system": {
-            "AUTHORS_CONTACT": "Piggot, Thomas",
+            "AUTHORS_CONTACT": "Antila, Hanne",
             "FF_DATE": null,
-            "SYSTEM": "128POPC_5120SOL_8A-switch_v4",
+            "SYSTEM": "122POPC_4880SOL_303K",
             "TYPEOFSYSTEM": "lipid bilayer",
             "TEMPERATURE": 303,
             "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 32512,
+            "NUMBER_OF_ATOMS": 30988,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
                     "POPC": {}
                 },
                 "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
             },
-            "FF_SOURCE": null,
+            "FF_SOURCE": "CHARMM-GUI",
             "COMPOSITION": {
                 "POPC": {
                     "NAME": "POPC",
-                    "COUNT": [64, 64],
+                    "COUNT": [61, 61],
                     "MAPPING": "mappingPOPCcharmm.yaml"
                 },
-                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+                "SOL": { "NAME": "TIP3", "COUNT": 4880, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
             },
             "TIMELEFTOUT": 0,
             "CPT": null,
-            "TRJLENGTH": 500050,
-            "TRAJECTORY_SIZE": 1207242644,
-            "SOFTWARE_VERSION": "5.0.6",
+            "TRJLENGTH": 840010,
+            "TRAJECTORY_SIZE": 9516947148,
+            "SOFTWARE_VERSION": 2020.1,
             "FF": "CHARMM36",
             "TOP": null,
             "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.164206",
-            "DATEOFRUNNING": "04/10/2021",
+            "DOI": "10.5281/zenodo.4071264",
+            "DATEOFRUNNING": "05/10/2021",
             "TPR": [
-                ["for-md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v4.tpr"]
+                ["popc.tpr"]
             ],
             "TRJ": [
-                ["md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v4_skip10.xtc"]
+                ["popc.xtc"]
             ],
             "LOG": null,
             "SOFTWARE": "gromacs",
             "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 301,
-            "path": "bfa/add/bfaadd3db34555a7cb9c66667493f5b534350c7d/3932a021491cd526f760fe7b872b92c780a4cddc/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.411747, "sn-2": 0.566489, "headgroup": 0.664902, "total": 0.547713 },
-        "TotalQuality": { "headgroup": 0.664902, "tails": 0.489118, "total": 0.547713, "FFQuality": 1.122 },
-        "system": {
-            "AUTHORS_CONTACT": "Piggot, Thomas",
-            "FF_DATE": null,
-            "SYSTEM": "128POPC_5120SOL_10A-switch_v1",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
-            "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 32512,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": null,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": null,
-            "TRJLENGTH": 500050,
-            "TRAJECTORY_SIZE": 1207254544,
-            "SOFTWARE_VERSION": "5.0.6",
-            "FF": "CHARMM36",
-            "TOP": null,
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.164206",
-            "DATEOFRUNNING": "04/10/2021",
-            "TPR": [
-                ["for-md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v1.tpr"]
-            ],
-            "TRJ": [
-                ["md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v1_skip10.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 70,
-            "path": "d87/a78/d87a78ec32678473762aebb21acac182b28dd9dc/f03ec6ba87add363b18d0fff9c03213bcafa3753/"
+            "ID": 433,
+            "path": "5fc/43a/5fc43ad145381cb3771e74353a36856ff8e65d2f/a17d97babec638e6f00c218e2582afa04e6ae5d4/"
         }
     },
     {
@@ -5618,6 +5469,155 @@
             },
             "ID": 90,
             "path": "f31/0bd/f310bd1589844f2402c3096357d1ba41b57d8829/07ade0eade753c9826df16a5e5707e5db67f44d8/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.39601, "sn-2": 0.481996, "headgroup": 0.665442, "total": 0.514482 },
+        "TotalQuality": { "headgroup": 0.665442, "tails": 0.439003, "total": 0.514482, "FFQuality": 1.122 },
+        "system": {
+            "FF_DATE": "??",
+            "POPG": "POPG",
+            "SYSTEM": "POPC_T303K",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "POPS": "POPS",
+            "FFSOL": "TIP3P",
+            "NUMBER_OF_ATOMS": 32512,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": "??",
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TRJ": [
+                ["traj_comp.xtc"]
+            ],
+            "TIMELEFTOUT": 20,
+            "POPE": "POPE",
+            "CLA": "CL",
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.3474863",
+            "TRAJECTORY_SIZE": 6035770840,
+            "TPR": [
+                ["mdrun.tpr"]
+            ],
+            "POT": "K",
+            "TEMPERATURE": 303,
+            "CAL": "CA",
+            "SOD": "NA",
+            "TRJLENGTH": 500010,
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 428,
+            "path": "b4f/866/b4f866c0dabffa6cd891e91841591d46590f34aa/a231c358dd8c0b7bb4cf558ccdbf022373354a9a/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.411747, "sn-2": 0.566489, "headgroup": 0.664902, "total": 0.547713 },
+        "TotalQuality": { "headgroup": 0.664902, "tails": 0.489118, "total": 0.547713, "FFQuality": 1.122 },
+        "system": {
+            "AUTHORS_CONTACT": "Piggot, Thomas",
+            "FF_DATE": null,
+            "SYSTEM": "128POPC_5120SOL_10A-switch_v1",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 32512,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": null,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 500050,
+            "TRAJECTORY_SIZE": 1207254544,
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36",
+            "TOP": null,
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.164206",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["for-md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v1.tpr"]
+            ],
+            "TRJ": [
+                ["md_CHARMM36_GMX506_POPC_10A-switch_from_JM_v1_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 70,
+            "path": "d87/a78/d87a78ec32678473762aebb21acac182b28dd9dc/f03ec6ba87add363b18d0fff9c03213bcafa3753/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.399074, "sn-2": 0.533612, "headgroup": 0.682019, "total": 0.538235 },
+        "TotalQuality": { "headgroup": 0.682019, "tails": 0.466343, "total": 0.538235, "FFQuality": 1.122 },
+        "system": {
+            "AUTHORS_CONTACT": "Piggot, Thomas",
+            "FF_DATE": null,
+            "SYSTEM": "128POPC_5120SOL_8A-switch_v4",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 32512,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": null,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 5120, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": null,
+            "TRJLENGTH": 500050,
+            "TRAJECTORY_SIZE": 1207242644,
+            "SOFTWARE_VERSION": "5.0.6",
+            "FF": "CHARMM36",
+            "TOP": null,
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.164206",
+            "DATEOFRUNNING": "04/10/2021",
+            "TPR": [
+                ["for-md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v4.tpr"]
+            ],
+            "TRJ": [
+                ["md_CHARMM36_GMX506_POPC_8A-switch_from_JM_v4_skip10.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 301,
+            "path": "bfa/add/bfaadd3db34555a7cb9c66667493f5b534350c7d/3932a021491cd526f760fe7b872b92c780a4cddc/"
         }
     },
     {
@@ -6015,59 +6015,6 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.354144, "sn-2": 0.479333, "headgroup": 0.647379, "total": 0.493619 },
-        "TotalQuality": { "headgroup": 0.647379, "tails": 0.416738, "total": 0.493619, "FFQuality": 1.222 },
-        "system": {
-            "AUTHORS_CONTACT": "Martinez-Seara, Hector",
-            "FF_DATE": null,
-            "SYSTEM": "72POPC_2239SOL_303K_rmcomm_leaflets",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "TEMPERATURE": 303,
-            "PUBLICATION": null,
-            "NUMBER_OF_ATOMS": 16365,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
-            },
-            "FF_SOURCE": "CHARMM-GUI v1.6",
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [36, 36],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "SOL", "COUNT": 2239, "MAPPING": "mappingTIP3Pwater.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "CPT": [
-                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.cpt"]
-            ],
-            "TRJLENGTH": 500100,
-            "TRAJECTORY_SIZE": 303543904,
-            "SOFTWARE_VERSION": "5.0.4",
-            "FF": "CHARMM36 (center of mass removed independently for upper leaflet, lower leaflet and water+ions)",
-            "TOP": [
-                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.top"]
-            ],
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.1009607",
-            "DATEOFRUNNING": "12/10/2021",
-            "TPR": [
-                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.tpr"]
-            ],
-            "TRJ": [
-                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.xtc"]
-            ],
-            "LOG": null,
-            "SOFTWARE": "gromacs",
-            "DIR_WRK": "/usr/home/bort/Databank",
-            "ID": 144,
-            "path": "7cf/9df/7cf9df0cc6fe319d93e3f5635b2c6b517513cbf5/b1e8bdfc572caaf640f503bff2726ed0a1a793a3/"
-        }
-    },
-    {
         "TotalQuality": { "FFQuality": 1.222 },
         "system": {
             "AUTHORS_CONTACT": "Melcr, Josef",
@@ -6119,6 +6066,59 @@
             "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
             "ID": 563,
             "path": "cf4/038/cf4038c468bcdc08de31d430c456422fe5e7e0bc/6677606cb33c86fe79b9b9ba19e481f2d5388e1c/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.354144, "sn-2": 0.479333, "headgroup": 0.647379, "total": 0.493619 },
+        "TotalQuality": { "headgroup": 0.647379, "tails": 0.416738, "total": 0.493619, "FFQuality": 1.222 },
+        "system": {
+            "AUTHORS_CONTACT": "Martinez-Seara, Hector",
+            "FF_DATE": null,
+            "SYSTEM": "72POPC_2239SOL_303K_rmcomm_leaflets",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "TEMPERATURE": 303,
+            "PUBLICATION": null,
+            "NUMBER_OF_ATOMS": 16365,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/2"
+            },
+            "FF_SOURCE": "CHARMM-GUI v1.6",
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [36, 36],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "SOL", "COUNT": 2239, "MAPPING": "mappingTIP3Pwater.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "CPT": [
+                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.cpt"]
+            ],
+            "TRJLENGTH": 500100,
+            "TRAJECTORY_SIZE": 303543904,
+            "SOFTWARE_VERSION": "5.0.4",
+            "FF": "CHARMM36 (center of mass removed independently for upper leaflet, lower leaflet and water+ions)",
+            "TOP": [
+                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.top"]
+            ],
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.1009607",
+            "DATEOFRUNNING": "12/10/2021",
+            "TPR": [
+                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.tpr"]
+            ],
+            "TRJ": [
+                ["POPC_72_303K_rmcomm_leaflets_low_hydration_md.xtc"]
+            ],
+            "LOG": null,
+            "SOFTWARE": "gromacs",
+            "DIR_WRK": "/usr/home/bort/Databank",
+            "ID": 144,
+            "path": "7cf/9df/7cf9df0cc6fe319d93e3f5635b2c6b517513cbf5/b1e8bdfc572caaf640f503bff2726ed0a1a793a3/"
         }
     },
     {
@@ -6183,8 +6183,111 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.28303, "sn-2": 0.298384, "headgroup": 0.684499, "total": 0.421971 },
-        "TotalQuality": { "headgroup": 0.684499, "tails": 0.290707, "total": 0.421971, "FFQuality": 1.255 },
+        "POPC": { "sn-1": 0.280101, "sn-2": 0.309495, "headgroup": 0.679546, "total": 0.423047 },
+        "TotalQuality": { "headgroup": 0.679546, "tails": 0.294798, "total": 0.423047, "FFQuality": 1.255 },
+        "system": {
+            "FF_DATE": "??",
+            "POPG": "POPG",
+            "SYSTEM": "POPC_T300K",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "POPS": "POPS",
+            "FFSOL": "TIP3P",
+            "NUMBER_OF_ATOMS": 63605,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "FF_SOURCE": "??",
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [128, 128],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 9767, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
+            },
+            "TRJ": [
+                ["md_dt100_OK_centered.xtc"]
+            ],
+            "TIMELEFTOUT": 50,
+            "POPE": "POPE",
+            "CLA": "CL",
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.1306800",
+            "TRAJECTORY_SIZE": 702797300,
+            "TPR": [
+                ["md.tpr"]
+            ],
+            "POT": "K",
+            "TEMPERATURE": 300,
+            "CAL": "CA",
+            "SOD": "NA",
+            "TRJLENGTH": 300100,
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 558,
+            "path": "a63/ca7/a63ca7001cbd5cfc328da122668d1aebc00f2c91/220540156a6ac7813942fd01d998a491b6ff9b8b/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.272474, "sn-2": 0.306649, "headgroup": 0.673837, "total": 0.417654 },
+        "TotalQuality": { "headgroup": 0.673837, "tails": 0.289562, "total": 0.417654, "FFQuality": 1.255 },
+        "system": {
+            "DOI": "10.5281/zenodo.6336691",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["centered-40-500ns.xtc"]
+            ],
+            "TPR": [
+                ["production.tpr"]
+            ],
+            "PREEQTIME": 40,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [100, 100]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 8880 }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Milla Lindstr\u00f6m",
+            "SYSTEM": "200POPC_8880SOL_300K",
+            "SOFTWARE_VERSION": 2019.5,
+            "FF": "CHARMM36",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": null,
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "GRO": null,
+            "TRAJECTORY_SIZE": 9042621000,
+            "TRJLENGTH": 460010,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 53440,
+            "DATEOFRUNNING": "10/06/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "ID": 164,
+            "path": "ddb/cf1/ddbcf15f3eb1a20b40db561c09e0947e8fbb0569/e20b9624c784350d8ed0942f4e9422f754583ab7/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.280837, "sn-2": 0.297494, "headgroup": 0.685593, "total": 0.421308 },
+        "TotalQuality": { "headgroup": 0.685593, "tails": 0.289165, "total": 0.421308, "FFQuality": 1.255 },
         "system": {
             "DOI": "10.5281/zenodo.7103807",
             "SOFTWARE": "gromacs",
@@ -6227,7 +6330,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -6236,111 +6339,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.279084, "sn-2": 0.310121, "headgroup": 0.678883, "total": 0.422696 },
-        "TotalQuality": { "headgroup": 0.678883, "tails": 0.294602, "total": 0.422696, "FFQuality": 1.255 },
-        "system": {
-            "FF_DATE": "??",
-            "POPG": "POPG",
-            "SYSTEM": "POPC_T300K",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "POPS": "POPS",
-            "FFSOL": "TIP3P",
-            "NUMBER_OF_ATOMS": 63605,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
-            },
-            "FF_SOURCE": "??",
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [128, 128],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 9767, "MAPPING": "mappingTIP3PCHARMMgui.yaml" }
-            },
-            "TRJ": [
-                ["md_dt100_OK_centered.xtc"]
-            ],
-            "TIMELEFTOUT": 50,
-            "POPE": "POPE",
-            "CLA": "CL",
-            "DATEOFRUNNING": "01/10/2021",
-            "FF": "CHARMM36",
-            "SOFTWARE": "gromacs",
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.1306800",
-            "TRAJECTORY_SIZE": 702797300,
-            "TPR": [
-                ["md.tpr"]
-            ],
-            "POT": "K",
-            "TEMPERATURE": 300,
-            "CAL": "CA",
-            "SOD": "NA",
-            "TRJLENGTH": 300100,
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 558,
-            "path": "a63/ca7/a63ca7001cbd5cfc328da122668d1aebc00f2c91/220540156a6ac7813942fd01d998a491b6ff9b8b/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.271904, "sn-2": 0.306567, "headgroup": 0.682177, "total": 0.420216 },
-        "TotalQuality": { "headgroup": 0.682177, "tails": 0.289236, "total": 0.420216, "FFQuality": 1.255 },
-        "system": {
-            "DOI": "10.5281/zenodo.6336691",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["centered-40-500ns.xtc"]
-            ],
-            "TPR": [
-                ["production.tpr"]
-            ],
-            "PREEQTIME": 40,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCcharmm.yaml",
-                    "COUNT": [100, 100]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 8880 }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Milla Lindstr\u00f6m",
-            "SYSTEM": "200POPC_8880SOL_300K",
-            "SOFTWARE_VERSION": 2019.5,
-            "FF": "CHARMM36",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": null,
-            "LOG": null,
-            "TOP": [
-                ["topol.top"]
-            ],
-            "GRO": null,
-            "TRAJECTORY_SIZE": 9042621000,
-            "TRJLENGTH": 460010,
-            "TEMPERATURE": 300,
-            "NUMBER_OF_ATOMS": 53440,
-            "DATEOFRUNNING": "10/06/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
-            },
-            "ID": 164,
-            "path": "ddb/cf1/ddbcf15f3eb1a20b40db561c09e0947e8fbb0569/e20b9624c784350d8ed0942f4e9422f754583ab7/"
-        }
-    },
-    {
-        "POPC": { "sn-1": 0.262867, "sn-2": 0.285511, "headgroup": 0.668964, "total": 0.405781 },
-        "TotalQuality": { "headgroup": 0.668964, "tails": 0.274189, "total": 0.405781, "FFQuality": 1.255 },
+        "POPC": { "sn-1": 0.256627, "sn-2": 0.282486, "headgroup": 0.665866, "total": 0.40166 },
+        "TotalQuality": { "headgroup": 0.665866, "tails": 0.269557, "total": 0.40166, "FFQuality": 1.255 },
         "system": {
             "DOI": "10.5281/zenodo.7103807",
             "SOFTWARE": "gromacs",
@@ -6383,7 +6383,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -6659,61 +6659,6 @@
             "DOI": "10.5281/zenodo.6943086",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["DOPC_323_medium.xtc"]
-            ],
-            "TPR": [
-                ["DOPC_323_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "DOPC",
-                    "MAPPING": "mappingDOPCcharmm.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "256DOPC_12800SOL_323K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["DOPC_323_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["DOPC_medium.top"]
-            ],
-            "GRO": [
-                ["DOPC_323_medium.gro"]
-            ],
-            "TRAJECTORY_SIZE": 271787648,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 323.15,
-            "NUMBER_OF_ATOMS": 73728,
-            "DATEOFRUNNING": "16/08/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/12"
-            },
-            "ID": 325,
-            "path": "bde/036/bde036f1f732e8a257ce442f950948d34dd9497a/60ca3ae5ec8ac67a49f3bcba6cc37d12409489a0/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 1.336 },
-        "system": {
-            "DOI": "10.5281/zenodo.6943086",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["DOPC_323_large.xtc"]
             ],
             "TPR": [
@@ -6764,8 +6709,63 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.0478486, "sn-2": 0.304451, "headgroup": 0.0725858, "total": 0.141628 },
-        "TotalQuality": { "headgroup": 0.0725858, "tails": 0.17615, "total": 0.141628, "FFQuality": 1.355 },
+        "TotalQuality": { "FFQuality": 1.336 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DOPC_323_medium.xtc"]
+            ],
+            "TPR": [
+                ["DOPC_323_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "256DOPC_12800SOL_323K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_323_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DOPC_medium.top"]
+            ],
+            "GRO": [
+                ["DOPC_323_medium.gro"]
+            ],
+            "TRAJECTORY_SIZE": 271787648,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 323.15,
+            "NUMBER_OF_ATOMS": 73728,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/12"
+            },
+            "ID": 325,
+            "path": "bde/036/bde036f1f732e8a257ce442f950948d34dd9497a/60ca3ae5ec8ac67a49f3bcba6cc37d12409489a0/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.0566579, "sn-2": 0.327038, "headgroup": 0.0724164, "total": 0.152037 },
+        "TotalQuality": { "headgroup": 0.0724164, "tails": 0.191848, "total": 0.152037, "FFQuality": 1.355 },
         "system": {
             "DOI": "10.5281/zenodo.5997385",
             "SOFTWARE": "gromacs",
@@ -6812,7 +6812,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -7046,8 +7046,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.262961, "sn-2": 0.27734, "headgroup": 0.633627, "total": 0.391309 },
-        "TotalQuality": { "headgroup": 0.633627, "tails": 0.27015, "total": 0.391309, "FFQuality": 1.455 },
+        "POPC": { "sn-1": 0.26358, "sn-2": 0.274967, "headgroup": 0.635074, "total": 0.391207 },
+        "TotalQuality": { "headgroup": 0.635074, "tails": 0.269273, "total": 0.391207, "FFQuality": 1.455 },
         "system": {
             "DOI": "10.5281/zenodo.7103807",
             "SOFTWARE": "gromacs",
@@ -7090,7 +7090,7 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -7261,6 +7261,62 @@
     {
         "TotalQuality": { "FFQuality": 1.5258 },
         "system": {
+            "FF_DATE": "??",
+            "POPG": "POPG",
+            "SYSTEM": "POPC20%chol_T303K",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "POPS": "POPS",
+            "FFSOL": "TIP3P",
+            "NUMBER_OF_ATOMS": 30056,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "CHOL": {},
+                    "POPC": {}
+                },
+                "FORMFACTOR": {}
+            },
+            "FF_SOURCE": "??",
+            "COMPOSITION": {
+                "CHOL": {
+                    "NAME": "CHL1",
+                    "COUNT": [12, 12],
+                    "MAPPING": "mappingCHOLESTEROLcharmm.yaml"
+                },
+                "POPC": {
+                    "NAME": "POPC",
+                    "COUNT": [50, 50],
+                    "MAPPING": "mappingPOPCcharmm.yaml"
+                },
+                "SOL": { "NAME": "SOL", "COUNT": 4960, "MAPPING": "mappingTIP3Pwater.yaml" }
+            },
+            "TRJ": [
+                ["POPC_20CHL.xtc"]
+            ],
+            "TIMELEFTOUT": 100,
+            "POPE": "POPE",
+            "CLA": "CL",
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "DOI": "10.5281/zenodo.14067",
+            "TRAJECTORY_SIZE": 1106631508,
+            "TPR": [
+                ["POPC_20CHL.tpr"]
+            ],
+            "POT": "K",
+            "TEMPERATURE": 303,
+            "CAL": "CA",
+            "SOD": "NA",
+            "TRJLENGTH": 200020,
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 610,
+            "path": "6e8/031/6e803117ac69d06705e1f024f63ae7e324a0677b/788e5d78db0bd8aafdf3f1d1c0acc33cd7ad0a71/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 1.5258 },
+        "system": {
             "DOI": "10.5281/zenodo.5767451",
             "SOFTWARE": "gromacs",
             "TRJ": [
@@ -7317,62 +7373,6 @@
             },
             "ID": 525,
             "path": "618/168/6181681b59d71d00209c1e86fbb17a78ec0888dc/4864b319f81a2778a8068d475ad2dbf9687c2d27/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 1.5258 },
-        "system": {
-            "FF_DATE": "??",
-            "POPG": "POPG",
-            "SYSTEM": "POPC20%chol_T303K",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "POPS": "POPS",
-            "FFSOL": "TIP3P",
-            "NUMBER_OF_ATOMS": 30056,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "CHOL": {},
-                    "POPC": {}
-                },
-                "FORMFACTOR": {}
-            },
-            "FF_SOURCE": "??",
-            "COMPOSITION": {
-                "CHOL": {
-                    "NAME": "CHL1",
-                    "COUNT": [12, 12],
-                    "MAPPING": "mappingCHOLESTEROLcharmm.yaml"
-                },
-                "POPC": {
-                    "NAME": "POPC",
-                    "COUNT": [50, 50],
-                    "MAPPING": "mappingPOPCcharmm.yaml"
-                },
-                "SOL": { "NAME": "SOL", "COUNT": 4960, "MAPPING": "mappingTIP3Pwater.yaml" }
-            },
-            "TRJ": [
-                ["POPC_20CHL.xtc"]
-            ],
-            "TIMELEFTOUT": 100,
-            "POPE": "POPE",
-            "CLA": "CL",
-            "DATEOFRUNNING": "01/10/2021",
-            "FF": "CHARMM36",
-            "SOFTWARE": "gromacs",
-            "PREEQTIME": 0,
-            "DOI": "10.5281/zenodo.14067",
-            "TRAJECTORY_SIZE": 1106631508,
-            "TPR": [
-                ["POPC_20CHL.tpr"]
-            ],
-            "POT": "K",
-            "TEMPERATURE": 303,
-            "CAL": "CA",
-            "SOD": "NA",
-            "TRJLENGTH": 200020,
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 610,
-            "path": "6e8/031/6e803117ac69d06705e1f024f63ae7e324a0677b/788e5d78db0bd8aafdf3f1d1c0acc33cd7ad0a71/"
         }
     },
     {
@@ -7442,64 +7442,6 @@
             "DOI": "10.5281/zenodo.6992065",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL20_medium.xtc"]
-            ],
-            "TPR": [
-                ["CHOL20_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "PC",
-                    "MAPPING": "mappingPOPClipid17.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 20800 },
-                "CHOL": {
-                    "NAME": "CHL",
-                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
-                    "COUNT": [80, 80]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Lipid17_POPC_CHOL38_M",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Lipid17",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL20_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL20_medium.top"]
-            ],
-            "TRAJECTORY_SIZE": 399074308,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 108544,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/8"
-            },
-            "ID": 694,
-            "path": "510/12c/51012c474bca21c273cf9f98a616e17fdd5d6a70/a782edd245a4182888ec0357eac37570fd7f1a4a/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 1.5339 },
-        "system": {
-            "DOI": "10.5281/zenodo.6992065",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL20_large.xtc"]
             ],
             "TPR": [
@@ -7553,8 +7495,66 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.247227, "sn-2": 0.291839, "headgroup": 0.563783, "total": 0.367616 },
-        "TotalQuality": { "headgroup": 0.563783, "tails": 0.269533, "total": 0.367616, "FFQuality": 1.555 },
+        "TotalQuality": { "FFQuality": 1.5339 },
+        "system": {
+            "DOI": "10.5281/zenodo.6992065",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL20_medium.xtc"]
+            ],
+            "TPR": [
+                ["CHOL20_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "PC",
+                    "MAPPING": "mappingPOPClipid17.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 20800 },
+                "CHOL": {
+                    "NAME": "CHL",
+                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
+                    "COUNT": [80, 80]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Lipid17_POPC_CHOL38_M",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Lipid17",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL20_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL20_medium.top"]
+            ],
+            "TRAJECTORY_SIZE": 399074308,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 108544,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/8"
+            },
+            "ID": 694,
+            "path": "510/12c/51012c474bca21c273cf9f98a616e17fdd5d6a70/a782edd245a4182888ec0357eac37570fd7f1a4a/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.243487, "sn-2": 0.289722, "headgroup": 0.567489, "total": 0.366899 },
+        "TotalQuality": { "headgroup": 0.567489, "tails": 0.266604, "total": 0.366899, "FFQuality": 1.555 },
         "system": {
             "DOI": "10.5281/zenodo.5767451",
             "SOFTWARE": "gromacs",
@@ -7600,12 +7600,54 @@
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "ID": 546,
             "path": "229/866/2298665351fa0bcf1b3399e4df47eb8832b77eab/e74101bfc21ebb8c489d18e1e0b729e2c034fea5/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.771751, "sn-2": 0.646381, "headgroup": 0.11395, "total": 0.510694 },
+        "TotalQuality": { "headgroup": 0.11395, "tails": 0.709066, "total": 0.510694, "FFQuality": 1.555 },
+        "system": {
+            "DOI": "10.5281/zenodo.14713793",
+            "TRJ": [
+                ["md_every_100_ps.xtc"]
+            ],
+            "TPR": [
+                ["md.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 50,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCsage_smiles.yaml",
+                    "COUNT": [128, 0]
+                },
+                "SOL": { "NAME": "TIP3P", "MAPPING": "mappingTIP3Psage_smiles.yaml", "COUNT": 5120 }
+            },
+            "SYSTEM": "POPCandTIP3P",
+            "TOP": [
+                ["bilayer.top"]
+            ],
+            "DIR_WRK": "/media/julianne/DATA/Lipids/NMRLipids/temp/",
+            "TRAJECTORY_SIZE": 612503984,
+            "TRJLENGTH": 500100,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 32512,
+            "DATEOFRUNNING": "11/02/2025",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "path": "c04/cdb/c04cdb61143bb72ba2ddee11599e6bbfaf6cb211/a31f42800216d84d2242eae2af8ac2cbd6b033ee/"
         }
     },
     {
@@ -8082,50 +8124,6 @@
         }
     },
     {
-        "POPS": { "sn-1": 0.0566602, "sn-2": 0.0812534, "headgroup": 0.261792, "total": 0.133235 },
-        "TotalQuality": { "headgroup": 0.261792, "tails": 0.0689568, "total": 0.133235, "FFQuality": 1.7 },
-        "system": {
-            "FF_DATE": "??",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "SYSTEM": "POPS_298K",
-            "TEMPERATURE": 298,
-            "NUMBER_OF_ATOMS": 29824,
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
-                },
-                "FORMFACTOR": "10.1039/C4SM00066H/1"
-            },
-            "FF_SOURCE": "CHARMM-GUI",
-            "COMPOSITION": {
-                "POPS": {
-                    "NAME": "POPS",
-                    "COUNT": [64, 64],
-                    "MAPPING": "mappingPOPScharmm.yaml"
-                },
-                "SOL": { "NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml" },
-                "SOD": { "NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml" }
-            },
-            "TIMELEFTOUT": 0,
-            "TRJLENGTH": 100050,
-            "DATEOFRUNNING": "01/10/2021",
-            "FF": "CHARMM36",
-            "SOFTWARE": "gromacs",
-            "PREEQTIME": 400,
-            "DOI": "10.5281/zenodo.1129415",
-            "TRAJECTORY_SIZE": 221970700,
-            "TPR": [
-                ["for-md-CHARMM36_POPS_298K_v2.tpr"]
-            ],
-            "TRJ": [
-                ["md-CHARMM36_10A-switch_POPS_v2_400-500ns_skip10.xtc"]
-            ],
-            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
-            "ID": 5,
-            "path": "1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732/"
-        }
-    },
-    {
         "POPE": { "sn-1": 0.141026, "sn-2": 0.0706105, "headgroup": 0.529731, "total": 0.247123 },
         "TotalQuality": { "headgroup": 0.529731, "tails": 0.105818, "total": 0.247123, "FFQuality": 1.7 },
         "system": {
@@ -8174,6 +8172,50 @@
             "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
             "ID": 67,
             "path": "b7a/4c6/b7a4c62a0f6112eb07c99e3fe912bd5e55e1dca2/5e824ebda9f3c3341685c5aa5a3ff3ad7ead34f5/"
+        }
+    },
+    {
+        "POPS": { "sn-1": 0.0566602, "sn-2": 0.0812534, "headgroup": 0.261792, "total": 0.133235 },
+        "TotalQuality": { "headgroup": 0.261792, "tails": 0.0689568, "total": 0.133235, "FFQuality": 1.7 },
+        "system": {
+            "FF_DATE": "??",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "SYSTEM": "POPS_298K",
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 29824,
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPS": { "10.1021/acs.jctc.9b00824": "10.1021/acs.jctc.9b00824/1", "10.1021/acs.jpcb.9b06091": "10.1021/acs.jpcb.9b06091/1" }
+                },
+                "FORMFACTOR": "10.1039/C4SM00066H/1"
+            },
+            "FF_SOURCE": "CHARMM-GUI",
+            "COMPOSITION": {
+                "POPS": {
+                    "NAME": "POPS",
+                    "COUNT": [64, 64],
+                    "MAPPING": "mappingPOPScharmm.yaml"
+                },
+                "SOL": { "NAME": "TIP3", "COUNT": 4480, "MAPPING": "mappingTIP3PCHARMMgui.yaml" },
+                "SOD": { "NAME": "SOD", "COUNT": 128, "MAPPING": "mappingSOD.yaml" }
+            },
+            "TIMELEFTOUT": 0,
+            "TRJLENGTH": 100050,
+            "DATEOFRUNNING": "01/10/2021",
+            "FF": "CHARMM36",
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 400,
+            "DOI": "10.5281/zenodo.1129415",
+            "TRAJECTORY_SIZE": 221970700,
+            "TPR": [
+                ["for-md-CHARMM36_POPS_298K_v2.tpr"]
+            ],
+            "TRJ": [
+                ["md-CHARMM36_10A-switch_POPS_v2_400-500ns_skip10.xtc"]
+            ],
+            "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
+            "ID": 5,
+            "path": "1b2/6e6/1b26e6c750b4f39c37770422cd4d3c40240cf111/995bc873b811ca09c916b47784fa33bb9d793732/"
         }
     },
     {
@@ -8467,8 +8509,8 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.701369, "sn-2": 0.426877, "headgroup": 0.573252, "total": 0.567166 },
-        "TotalQuality": { "headgroup": 0.573252, "tails": 0.564123, "total": 0.567166, "FFQuality": 1.755 },
+        "POPC": { "sn-1": 0.688961, "sn-2": 0.427821, "headgroup": 0.587234, "total": 0.568005 },
+        "TotalQuality": { "headgroup": 0.587234, "tails": 0.558391, "total": 0.568005, "FFQuality": 1.755 },
         "system": {
             "DOI": "10.5281/zenodo.8299506",
             "SOFTWARE": "gromacs",
@@ -8507,7 +8549,7 @@
             "ID": 761,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
@@ -8836,64 +8878,6 @@
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL20_small.xtc"]
-            ],
-            "TPR": [
-                ["CHOL20_small.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
-                    "COUNT": [32, 32]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 5200 },
-                "CHOL": {
-                    "NAME": "CHOL",
-                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
-                    "COUNT": [20, 20]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "MacRog_POPC_CHOL38_S",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "MacRog",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL20_small.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL20_small.top"]
-            ],
-            "TRAJECTORY_SIZE": 99844408,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 27136,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/8"
-            },
-            "ID": 716,
-            "path": "568/efe/568efe83b7ac0fa45bd7b3cd683f43b571d13115/b766113b1bec2f3668be2c82812c23164c42eeea/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 2.0339 },
-        "system": {
-            "DOI": "10.5281/zenodo.7061800",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL20_large.xtc"]
             ],
             "TPR": [
@@ -8944,6 +8928,64 @@
             },
             "ID": 698,
             "path": "af2/1da/af21da6438fb2e1305dec6ef0a69e6148f11edfd/fdcab103936e99ce9736c2edca9650d783f466bc/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 2.0339 },
+        "system": {
+            "DOI": "10.5281/zenodo.7061800",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL20_small.xtc"]
+            ],
+            "TPR": [
+                ["CHOL20_small.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 5200 },
+                "CHOL": {
+                    "NAME": "CHOL",
+                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
+                    "COUNT": [20, 20]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "MacRog_POPC_CHOL38_S",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "MacRog",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL20_small.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL20_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 99844408,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 27136,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/8"
+            },
+            "ID": 716,
+            "path": "568/efe/568efe83b7ac0fa45bd7b3cd683f43b571d13115/b766113b1bec2f3668be2c82812c23164c42eeea/"
         }
     },
     {
@@ -9010,64 +9052,6 @@
             "DOI": "10.5281/zenodo.7061800",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL28_medium.xtc"]
-            ],
-            "TPR": [
-                ["CHOL28_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 24000 },
-                "CHOL": {
-                    "NAME": "CHOL",
-                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
-                    "COUNT": [112, 112]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "MacRog_POPC_CHOL47_M",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "MacRog",
-            "FF_SOURCE": null,
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL28_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL28_medium.top"]
-            ],
-            "TRAJECTORY_SIZE": 460241260,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 122880,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
-            },
-            "ID": 699,
-            "path": "b23/d28/b23d28fa4a500716f0af641a7b274ed74c0ed4af/e04e3b99e8e7fbce0a119c88df424c02eb6f2874/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 2.0517 },
-        "system": {
-            "DOI": "10.5281/zenodo.7061800",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["CHOL28_large.xtc"]
             ],
             "TPR": [
@@ -9121,8 +9105,66 @@
         }
     },
     {
-        "POPC": { "sn-1": 0.633812, "sn-2": 0.459035, "headgroup": 0.568959, "total": 0.553935 },
-        "TotalQuality": { "headgroup": 0.568959, "tails": 0.546423, "total": 0.553935, "FFQuality": 2.055 },
+        "TotalQuality": { "FFQuality": 2.0517 },
+        "system": {
+            "DOI": "10.5281/zenodo.7061800",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL28_medium.xtc"]
+            ],
+            "TPR": [
+                ["CHOL28_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCmacrogFUCHS.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 24000 },
+                "CHOL": {
+                    "NAME": "CHOL",
+                    "MAPPING": "mappingCHOLESTEROLmacrog.yaml",
+                    "COUNT": [112, 112]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "MacRog_POPC_CHOL47_M",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "MacRog",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL28_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL28_medium.top"]
+            ],
+            "TRAJECTORY_SIZE": 460241260,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 122880,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
+            },
+            "ID": 699,
+            "path": "b23/d28/b23d28fa4a500716f0af641a7b274ed74c0ed4af/e04e3b99e8e7fbce0a119c88df424c02eb6f2874/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.625922, "sn-2": 0.471011, "headgroup": 0.59352, "total": 0.563484 },
+        "TotalQuality": { "headgroup": 0.59352, "tails": 0.548466, "total": 0.563484, "FFQuality": 2.055 },
         "system": {
             "DOI": "10.5281/zenodo.8411425",
             "SOFTWARE": "gromacs",
@@ -9161,66 +9203,11 @@
             "ID": 792,
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": { "10.1039/c2cp42738a": "10.1039/c2cp42738a/1", "unpublished/nesterenkoPOPC": "unpublished/nesterenkoPOPC/4" }
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
             "path": "d17/7fd/d177fd5fedadcdcdef9e0250f72a0ef6a7136373/b727eb1330fc16c256ca4b528be9cad809322259/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 2.094 },
-        "system": {
-            "DOI": "10.5281/zenodo.6943413",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["DMPC_medium.xtc"]
-            ],
-            "TPR": [
-                ["DMPC_medium.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "DMPC": {
-                    "NAME": "DMPC",
-                    "MAPPING": "mappingDMPCcharmm.yaml",
-                    "COUNT": [128, 128]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "256DMPC_12800SOL_333K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["DMPC_medium.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["DMPC_medium.top"]
-            ],
-            "GRO": [
-                ["DMPC_medium.gro"]
-            ],
-            "TRAJECTORY_SIZE": 252761692,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 333.15,
-            "NUMBER_OF_ATOMS": 68608,
-            "DATEOFRUNNING": "16/08/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "DMPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/20"
-            },
-            "ID": 42,
-            "path": "bc2/420/bc242096f452160a6e7f744e3892142c984dabd9/a66cb1920a2e35920730dcf1418628186140b583/"
         }
     },
     {
@@ -9276,6 +9263,61 @@
             },
             "ID": 510,
             "path": "c43/6f4/c436f42cfbf0bb88f186b19e35d4e8d19e1812f1/b8719385a1f6d3e6b60785ac2548f154b55ba296/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 2.094 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943413",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DMPC_medium.xtc"]
+            ],
+            "TPR": [
+                ["DMPC_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DMPC": {
+                    "NAME": "DMPC",
+                    "MAPPING": "mappingDMPCcharmm.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "256DMPC_12800SOL_333K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DMPC_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DMPC_medium.top"]
+            ],
+            "GRO": [
+                ["DMPC_medium.gro"]
+            ],
+            "TRAJECTORY_SIZE": 252761692,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 333.15,
+            "NUMBER_OF_ATOMS": 68608,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DMPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/20"
+            },
+            "ID": 42,
+            "path": "bc2/420/bc242096f452160a6e7f744e3892142c984dabd9/a66cb1920a2e35920730dcf1418628186140b583/"
         }
     },
     {
@@ -9400,61 +9442,6 @@
             "DOI": "10.5281/zenodo.6943413",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["DPPC_large.xtc"]
-            ],
-            "TPR": [
-                ["DPPC_large.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 0,
-            "COMPOSITION": {
-                "DPPC": {
-                    "NAME": "DPPC",
-                    "MAPPING": "mappingDPPCcharmm.yaml",
-                    "COUNT": [512, 512]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 51200 }
-            },
-            "DIR_WRK": "/home/lara/Databank",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "1024DPPC_51200SOL_333K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["DPPC_large.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["DPPC_large.top"]
-            ],
-            "GRO": [
-                ["DPPC_large.gro"]
-            ],
-            "TRAJECTORY_SIZE": 1069380372,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 333.15,
-            "NUMBER_OF_ATOMS": 286720,
-            "DATEOFRUNNING": "16/08/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "DPPC": {}
-                },
-                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/10"
-            },
-            "ID": 254,
-            "path": "1d0/c13/1d0c13e8ed39cf959867c137b7f20aa08060885c/c639c6a4ea07e111c9c21446c45fb0282798550f/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 2.162 },
-        "system": {
-            "DOI": "10.5281/zenodo.6943413",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
                 ["DPPC_medium.xtc"]
             ],
             "TPR": [
@@ -9502,6 +9489,61 @@
             },
             "ID": 309,
             "path": "2f2/953/2f2953d129ebe9b5086b7ea4bf1a42b2cff273e0/dada612a7104f7a56155224ec5c5f95662feea6b/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 2.162 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943413",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DPPC_large.xtc"]
+            ],
+            "TPR": [
+                ["DPPC_large.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DPPC": {
+                    "NAME": "DPPC",
+                    "MAPPING": "mappingDPPCcharmm.yaml",
+                    "COUNT": [512, 512]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 51200 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "1024DPPC_51200SOL_333K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DPPC_large.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DPPC_large.top"]
+            ],
+            "GRO": [
+                ["DPPC_large.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1069380372,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 333.15,
+            "NUMBER_OF_ATOMS": 286720,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DPPC": {}
+                },
+                "FORMFACTOR": "10.1016/j.bbamem.2011.07.022/10"
+            },
+            "ID": 254,
+            "path": "1d0/c13/1d0c13e8ed39cf959867c137b7f20aa08060885c/c639c6a4ea07e111c9c21446c45fb0282798550f/"
         }
     },
     {
@@ -9731,52 +9773,49 @@
     {
         "TotalQuality": { "FFQuality": 2.2517 },
         "system": {
-            "DOI": "10.5281/zenodo.5767451",
+            "DOI": "10.5281/zenodo.6992065",
             "SOFTWARE": "gromacs",
             "TRJ": [
-                ["CHOL28_medium.xtc"]
+                ["CHOL28_large.xtc"]
             ],
             "TPR": [
-                ["CHOL28_medium.tpr"]
+                ["CHOL28_large.tpr"]
             ],
             "PREEQTIME": 0,
-            "TIMELEFTOUT": 200,
+            "TIMELEFTOUT": 100,
             "COMPOSITION": {
                 "POPC": {
-                    "NAME": "POPC",
-                    "MAPPING": "mappingPOPCcharmm.yaml",
-                    "COUNT": [128, 128]
+                    "NAME": "PC",
+                    "MAPPING": "mappingPOPClipid17.yaml",
+                    "COUNT": [512, 512]
                 },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 96000 },
                 "CHOL": {
-                    "NAME": "CHL1",
-                    "MAPPING": "mappingCHOLESTEROLcharmm.yaml",
-                    "COUNT": [113, 111]
-                },
-                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 24000 }
+                    "NAME": "CHL",
+                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
+                    "COUNT": [448, 448]
+                }
             },
-            "DIR_WRK": "/home/lara/Databank",
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
             "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Javanainen, Matti",
-            "SYSTEM": "256POPC_224CHOL_24000SOL_298K",
-            "SOFTWARE_VERSION": null,
-            "FF": "CHARMM36",
-            "FF_SOURCE": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Lipid17_POPC_CHOL47_L",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Lipid17",
+            "FF_SOURCE": "CHARMM-GUI",
             "FF_DATE": null,
             "CPT": [
-                ["CHOL28_medium.cpt"]
+                ["CHOL28_large.cpt"]
             ],
             "LOG": null,
             "TOP": [
-                ["CHOL28_medium.top"]
+                ["CHOL28_large.top"]
             ],
-            "GRO": [
-                ["CHOL28_medium.gro"]
-            ],
-            "TRAJECTORY_SIZE": 455682596,
+            "TRAJECTORY_SIZE": 1851977288,
             "TRJLENGTH": 1.001e+06,
             "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 122880,
-            "DATEOFRUNNING": "11/03/2022",
+            "NUMBER_OF_ATOMS": 491520,
+            "DATEOFRUNNING": "17/10/2022",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
@@ -9785,8 +9824,8 @@
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/9"
             },
-            "ID": 166,
-            "path": "1f7/166/1f7166e33d5c171678fb15f378425a760bbb612d/da1488d8469d58f547603ed75e699e798458aa83/"
+            "ID": 717,
+            "path": "e9e/979/e9e979c6542306cf52a071c3a7efc2f78818e6d8/694b39c9ad5c9eb43485ea0a2148f0aae3eea22c/"
         }
     },
     {
@@ -9853,64 +9892,6 @@
     {
         "TotalQuality": { "FFQuality": 2.2517 },
         "system": {
-            "DOI": "10.5281/zenodo.6992065",
-            "SOFTWARE": "gromacs",
-            "TRJ": [
-                ["CHOL28_large.xtc"]
-            ],
-            "TPR": [
-                ["CHOL28_large.tpr"]
-            ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
-            "COMPOSITION": {
-                "POPC": {
-                    "NAME": "PC",
-                    "MAPPING": "mappingPOPClipid17.yaml",
-                    "COUNT": [512, 512]
-                },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 96000 },
-                "CHOL": {
-                    "NAME": "CHL",
-                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
-                    "COUNT": [448, 448]
-                }
-            },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Lipid17_POPC_CHOL47_L",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Lipid17",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL28_large.cpt"]
-            ],
-            "LOG": null,
-            "TOP": [
-                ["CHOL28_large.top"]
-            ],
-            "TRAJECTORY_SIZE": 1851977288,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 491520,
-            "DATEOFRUNNING": "17/10/2022",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "EXPERIMENT": {
-                "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
-                },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
-            },
-            "ID": 717,
-            "path": "e9e/979/e9e979c6542306cf52a071c3a7efc2f78818e6d8/694b39c9ad5c9eb43485ea0a2148f0aae3eea22c/"
-        }
-    },
-    {
-        "TotalQuality": { "FFQuality": 2.2517 },
-        "system": {
             "DOI": "10.5281/zenodo.5767451",
             "SOFTWARE": "gromacs",
             "TRJ": [
@@ -9967,6 +9948,67 @@
             },
             "ID": 91,
             "path": "fd8/18f/fd818f1fa1b32dcd80ac3a124e76bd2d73705abe/fd9cef87eca7bfbaac8581358f2d8f13d8d43cd1/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 2.2517 },
+        "system": {
+            "DOI": "10.5281/zenodo.5767451",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["CHOL28_medium.xtc"]
+            ],
+            "TPR": [
+                ["CHOL28_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 200,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [128, 128]
+                },
+                "CHOL": {
+                    "NAME": "CHL1",
+                    "MAPPING": "mappingCHOLESTEROLcharmm.yaml",
+                    "COUNT": [113, 111]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 24000 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "256POPC_224CHOL_24000SOL_298K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": null,
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL28_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL28_medium.top"]
+            ],
+            "GRO": [
+                ["CHOL28_medium.gro"]
+            ],
+            "TRAJECTORY_SIZE": 455682596,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 122880,
+            "DATEOFRUNNING": "11/03/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
+            },
+            "ID": 166,
+            "path": "1f7/166/1f7166e33d5c171678fb15f378425a760bbb612d/da1488d8469d58f547603ed75e699e798458aa83/"
         }
     },
     {
@@ -10078,6 +10120,64 @@
             "DOI": "10.5281/zenodo.6992065",
             "SOFTWARE": "gromacs",
             "TRJ": [
+                ["CHOL28_small.xtc"]
+            ],
+            "TPR": [
+                ["CHOL28_small.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "PC",
+                    "MAPPING": "mappingPOPClipid17.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 6000 },
+                "CHOL": {
+                    "NAME": "CHL",
+                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
+                    "COUNT": [28, 28]
+                }
+            },
+            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Matti Javanainen",
+            "SYSTEM": "Lipid17_POPC_CHOL47_S",
+            "SOFTWARE_VERSION": 2021,
+            "FF": "Lipid17",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["CHOL28_small.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["CHOL28_small.top"]
+            ],
+            "TRAJECTORY_SIZE": 112127708,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 298.15,
+            "NUMBER_OF_ATOMS": 30720,
+            "DATEOFRUNNING": "17/10/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": {},
+                    "CHOL": {}
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
+            },
+            "ID": 707,
+            "path": "8e6/368/8e63681c396736ae1c0cba23100edfe9ae506bbb/92f8bf2f1cdcc3b9c791a2b78cbef9a6b1916c15/"
+        }
+    },
+    {
+        "TotalQuality": { "FFQuality": 2.3517 },
+        "system": {
+            "DOI": "10.5281/zenodo.6992065",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
                 ["CHOL28_medium.xtc"]
             ],
             "TPR": [
@@ -10131,61 +10231,45 @@
         }
     },
     {
-        "TotalQuality": { "FFQuality": 2.3517 },
+        "POPC": { "sn-1": 0.257337, "sn-2": 0.362932, "headgroup": 0.549462, "total": 0.389911 },
+        "TotalQuality": { "headgroup": 0.549462, "tails": 0.310135, "total": 0.389911, "FFQuality": 2.355 },
         "system": {
-            "DOI": "10.5281/zenodo.6992065",
-            "SOFTWARE": "gromacs",
+            "DOI": "10.5281/zenodo.14713771",
             "TRJ": [
-                ["CHOL28_small.xtc"]
+                ["md_every_100_ps.xtc"]
             ],
             "TPR": [
-                ["CHOL28_small.tpr"]
+                ["md.tpr"]
             ],
-            "PREEQTIME": 0,
-            "TIMELEFTOUT": 100,
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 100,
+            "TIMELEFTOUT": 50,
             "COMPOSITION": {
                 "POPC": {
-                    "NAME": "PC",
-                    "MAPPING": "mappingPOPClipid17.yaml",
-                    "COUNT": [32, 32]
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCsage_smiles.yaml",
+                    "COUNT": [128, 0]
                 },
-                "SOL": { "NAME": "TP3", "MAPPING": "mappingTIP3Plipid17.yaml", "COUNT": 6000 },
-                "CHOL": {
-                    "NAME": "CHL",
-                    "MAPPING": "mappingCHOLESTEROLlipid14.yaml",
-                    "COUNT": [28, 28]
-                }
+                "SOL": { "NAME": "TIP3P", "MAPPING": "mappingTIP3Psage_smiles.yaml", "COUNT": 5120 }
             },
-            "DIR_WRK": "/media/osollila/Data1/tmp/DATABANK/",
-            "PUBLICATION": null,
-            "AUTHORS_CONTACT": "Matti Javanainen",
-            "SYSTEM": "Lipid17_POPC_CHOL47_S",
-            "SOFTWARE_VERSION": 2021,
-            "FF": "Lipid17",
-            "FF_SOURCE": "CHARMM-GUI",
-            "FF_DATE": null,
-            "CPT": [
-                ["CHOL28_small.cpt"]
-            ],
-            "LOG": null,
+            "SYSTEM": "POPCandTIP3P",
             "TOP": [
-                ["CHOL28_small.top"]
+                ["bilayer.top"]
             ],
-            "TRAJECTORY_SIZE": 112127708,
-            "TRJLENGTH": 1.001e+06,
-            "TEMPERATURE": 298.15,
-            "NUMBER_OF_ATOMS": 30720,
-            "DATEOFRUNNING": "17/10/2022",
+            "DIR_WRK": "/media/julianne/DATA/Lipids/NMRLipids/temp/",
+            "TRAJECTORY_SIZE": 612650848,
+            "TRJLENGTH": 500100,
+            "TEMPERATURE": 300,
+            "NUMBER_OF_ATOMS": 32512,
+            "DATEOFRUNNING": "11/02/2025",
             "TYPEOFSYSTEM": "lipid bilayer",
             "EXPERIMENT": {
                 "ORDERPARAMETER": {
-                    "POPC": {},
-                    "CHOL": {}
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
                 },
-                "FORMFACTOR": "unpublished/NMRlipidsIII/9"
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
-            "ID": 707,
-            "path": "8e6/368/8e63681c396736ae1c0cba23100edfe9ae506bbb/92f8bf2f1cdcc3b9c791a2b78cbef9a6b1916c15/"
+            "path": "a7f/9f3/a7f9f36feaa77791483dadb0157f86a6a519f2c3/a30f01e8771c44dc59b78753d1dd27ca67920e38/"
         }
     },
     {
