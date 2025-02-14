@@ -32,7 +32,7 @@ The code has been tested in Linux environment with python 3.7 or newer and recen
 Setup using conda as distribution:
 
 ```
- $ conda create --name databank python==3.10 MDAnalysis periodictable -c conda-forge
+ $ conda create --name databank python==3.10 'numpy<2.0' MDAnalysis periodictable -c conda-forge
  $ conda activate databank
  $ (databank) conda install tqdm yaml -c conda-forge
 ```
