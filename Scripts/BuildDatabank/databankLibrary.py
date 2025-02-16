@@ -1619,108 +1619,94 @@ def getpA_isotherm(batch):
         
     return isotherm
 
-
-def calcXRR( Dens, Z, qz_range, Densw = 0.333, wl = 1.5, Norm=False, blur_sigma=0 ):
+def _numgradient(dens, z, w_dens, gradient_order):
     """
-    Compute the X-ray reflectometry for a system given its electron density
-    
-    :param Dens: a list with the electon density
-    
-    :param z: the coordinates of the electron density, Å
-    
-    :param qz_range: the range of values of the wavevector transfer
-    
-    :param Densw: value of the electron density for the water, in  Å^-1. Default is 0.333
-    
-    :param wl: wavelenght of the X-ray source, in Å. Default is 1.5
-    
-    :param Norm: divide by the Fresnel reflectivity. Default is False
-
-    :param blur_sigma: Gaussian bluring of electron density before computing XRR. 
-                       Imitates additional real fluctuation of the ML surface.
-
-    :return: list of X-ray reflectometry values at qz_range
+    :meta private:
+    Calculate numerical gradient of density profile.
     """
-    import scipy
-    
-    Dens = np.array(Dens, dtype = float)
-    # thermal bluring the density
-    Dens = scipy.ndimage.gaussian_filter(Dens, sigma=blur_sigma)
-    Z = np.array(Z, dtype = float)
-    
-    # Critical value
-    qc = 4*np.pi/wl*np.sin(wl*(Densw*2.818e-5/np.pi)**0.5)
-    
-    # Gradient of the density
-    DDens = np.gradient(Dens, Z)
-    
+    if gradient_order == 2:
+        dens_gradient = np.gradient(dens, z)
+    elif gradient_order == 4:
+        # Density in the air region is zero, so we add these points to compensate
+        # the loss of points in the numerical derivative
+        dens = np.hstack([[0, 0], dens, [w_dens, w_dens]])
+        dens_gradient = (-dens[4:] + 8 * dens[3:-1] - 8 * dens[1:-3] + dens[:-4]) / (12 * (z[1] - z[0]))
+    else:
+        raise ValueError("gradient_order must be 2 or 4")
+    return dens_gradient
+
+def _calc_reflectivity(dens, z, qz_range, w_dens, gradient_order, norm, qc):
+    # Density gradient
+    DDens = _numgradient(dens, z, w_dens, gradient_order)
+
     Re = np.zeros(len(qz_range))
     Im = np.zeros(len(qz_range))
     cq = np.zeros(len(qz_range))
     for i, qz in enumerate(qz_range):
-        if (qz**2 < qc**2): # suppress warning on sqrt(-1)
+        if qz ** 2 < qc ** 2:  # suppress warning on sqrt(-1)
             Re[i] = np.nan
             continue
-        qzp = (qz**2-qc**2)**0.5
-        Re[i] = np.trapz( DDens * np.cos( (qz*qzp)**0.5 * Z ), Z )
-        Im[i] = np.trapz( DDens * np.sin( (qz*qzp)**0.5 * Z ), Z )
-        cq[i] = abs( (qz-qzp) / (qz+qzp) )
-        
-    Re /= Densw
-    Im /= Densw
-    
-    if Norm:
-        return  Re**2 + Im**2
-    else:
-        return  cq**2 * ( Re**2 + Im**2 )
-    
+        qzp = (qz ** 2 - qc ** 2) ** 0.5
+        Re[i] = np.trapz(DDens * np.cos((qz * qzp) ** 0.5 * z), z)
+        Im[i] = np.trapz(DDens * np.sin((qz * qzp) ** 0.5 * z), z)
+        cq[i] = abs((qz - qzp) / (qz + qzp))
 
-def calcNR( Dens, Z, qz_range, Densw, wl = 2, Norm=False ):
+    Re /= w_dens
+    Im /= w_dens
+
+    if norm:
+        return Re ** 2 + Im ** 2
+    else:
+        return cq ** 2 * (Re ** 2 + Im ** 2)
+
+def calcXRR(dens, z, qz_range, w_dens=0.333, wl=1.5, norm=False, blur_sigma=0, gradient_order=4):
+    """
+    Compute the X-ray reflectometry for a system given its electron density
+    
+    :param dens: a list with the electon density
+    :param z: the coordinates of the electron density, Å
+    :param qz_range: the range of values of the wavevector transfer
+    :param w_dens: value of the electron density for the water, in  Å^-1. Default is 0.333
+    :param wl: wavelenght of the X-ray source, in Å. Default is 1.5
+    :param norm: divide by the Fresnel reflectivity. Default is False
+    :param blur_sigma: Gaussian bluring of electron density before computing XRR.
+                       Imitates additional real fluctuation of the ML surface.
+    :param gradient_order: order of the gradient used to derivate ED profile. Default is 4.
+
+    :return: list of X-ray reflectometry values at qz_range
+    """
+    from scipy.ndimage import gaussian_filter
+    
+    dens = np.array(dens, dtype = float)
+    # thermal bluring the density
+    dens = gaussian_filter(dens, sigma=blur_sigma)
+    z = np.array(z, dtype = float)
+    
+    # Critical value
+    qc = 4*np.pi/wl*np.sin(wl * (w_dens * 2.818e-5 / np.pi) ** 0.5)
+
+    return _calc_reflectivity(dens, z, qz_range, w_dens, gradient_order, norm, qc)
+
+
+def calcNR(dens, z, qz_range, w_dens, wl=2, norm=False, gradient_order=4):
     """
     Compute the neutron reflectometry for a system given its neutron scattering density
     
-    :param Dens: a list with the neutron scattering density
-    
+    :param dens: a list with the neutron scattering density
     :param z: the coordinates of the neutron scattering density
-    
     :param qz_range: the range of values of the wavevector transfer
-    
-    :param Densw: value of the neutron scattering density for the water, in  Å^-2. Default is XXX
-    
+    :param w_dens: value of the neutron scattering density for the water, in  Å^-2. Default is XXX
     :param wl: wavelenght of the neutron source, in Å. Default is 2
-    
-    :param Norm: divide by the Fresnel reflectivity. Default is False
+    :param norm: divide by the Fresnel reflectivity. Default is False
+    :param gradient_order: order of the gradient used to derivate ED profile. Default is 4.
 
     :return: list of neutron reflectometry values at qz_range
     """
     
-    Dens = np.array(Dens, dtype = float)
-    Z = np.array(Z, dtype = float)
+    dens = np.array(dens, dtype = float)
+    z = np.array(z, dtype = float)
     
     # Critical value
-    qc = 4*np.pi/wl*np.sin(wl*(Densw/np.pi)**0.5)
+    qc = 4*np.pi/wl*np.sin(wl * (w_dens / np.pi) ** 0.5)
     
-    # Density in the air region is zero, so we add these points to compensate
-    # the loss of points in the numerical derivative
-    Dens = np.hstack( [ [0,0], Dens, [Densw,Densw] ] )
-    
-    # Gradient of the density
-    DDens = ( -Dens[4:]+8*Dens[3:-1]-8*Dens[1:-3]+Dens[:-4] ) / (12*(Z[1]-Z[0]))
-    
-    
-    Re = np.zeros(len(qz_range))
-    Im = np.zeros(len(qz_range))
-    cq = np.zeros(len(qz_range))
-    for i, qz in enumerate(qz_range):  
-        qzp = (qz**2-qc**2)**0.5
-        Re[i] = sum( DDens * np.cos( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
-        Im[i] = sum( DDens * np.sin( (qz*qzp)**0.5 * Z ) ) * (Z[1]-Z[0])
-        cq[i] = abs( (qz-qzp) / (qz+qzp) )
-    
-    Re /= Densw
-    Im /= Densw
-    
-    if Norm:
-        return  Re**2 + Im**2
-    else:
-        return  cq**2 * ( Re**2 + Im**2 )
+    return _calc_reflectivity(dens, z, qz_range, w_dens, gradient_order, norm, qc)
