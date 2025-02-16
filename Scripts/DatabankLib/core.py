@@ -93,7 +93,8 @@ def print_README(system):
 
     """
     if system == 'example':
-        readmePath = '../data/simulations/READMEexplanations.yaml'  # TODO: CORRECT!
+        current_folder = os.path.dirname(os.path.realpath(__file__))
+        readmePath = os.path.join(current_folder, 'settings', 'READMEexplanations.yaml')
         with open(readmePath, 'r') as file:
             readmeFile = yaml.safe_load(file)
     else:
