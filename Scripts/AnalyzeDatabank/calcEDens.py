@@ -141,12 +141,11 @@ if __name__ == "__main__":
                                         ua_typ = 'nop'
                                     Lipid_Z[i] += add_el[ua_typ]
                                 i += 1
-                    # debug msg
-                    print(Lipid_Z)
                     ### Water
                     # A selection with the water
                     Waters = u.select_atoms( f"resname {system['COMPOSITION']['SOL']['NAME']}" )
-                    print(translator["SOL"]) 
+                    print("Water dictionary: ")
+                    print(translator["SOL"])
                     # Universal names of the water atoms
                     Water_names = [ translator["SOL"][name] for name in Waters.names  ]
                     
