@@ -231,36 +231,29 @@ def plotOrderParameters(OPsim, OPexp):
     plt.show()
 
 
-def plotSimulation(ID, lipid):
+def plotSimulation(system, lipid: str):
     """
     Creates plots of form factor and C-H bond order parameters for the selected
-    ``lipid`` from a simulation with the given ``ID`` number.
-    Note! It initializes the databank inside (TODO: remove!)
+    ``lipid`` from a simulation given by system.
 
-    :param ID: NMRlipids databank ID number of the simulation
+    :param system: NMRlipids databank ID number of the simulation
     :param lipid: universal molecul name of the lipid
 
     """
-    systems = initialize_databank()
-    for system in systems:
-        if system['ID'] == ID:
-            path = os.path.join(NMLDB_SIMU_PATH, system['path'])
+    path = os.path.join(NMLDB_SIMU_PATH, system['path'])
     FFpathSIM = os.path.join(path, 'FormFactor.json')
     OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
     READMEfilepath = os.path.join(path, 'README.yaml')
     FFQualityFilePath = os.path.join(path, 'FormFactorQuality.json')
 
-    with open(READMEfilepath) as yaml_file:
-        readme = yaml.load(yaml_file, Loader=yaml.FullLoader)
-
-    print('DOI: ', readme['DOI'])
+    print('DOI: ', system['DOI'])
 
     try:
         with open(FFQualityFilePath) as json_file:
             FFq = json.load(json_file)
         print('Form factor quality: ', FFq[0])
         ffdir = os.path.join(NMLDB_EXP_PATH, 'FormFactors',
-                             readme['EXPERIMENT']['FORMFACTOR'])
+                             system['EXPERIMENT']['FORMFACTOR'])
         for subdir, dirs, files in os.walk(ffdir):
             for filename in files:
                 if filename.endswith('_FormFactor.json'):
@@ -274,7 +267,7 @@ def plotSimulation(ID, lipid):
         OPsim = json.load(json_file)
 
     OPexp = {}
-    for expOPfolder in list(readme['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
+    for expOPfolder in list(system['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
         OPpathEXP = os.path.join(NMLDB_EXP_PATH, 'OrderParameters',
                                  expOPfolder, lipid + '_Order_Parameters.json')
         with open(OPpathEXP) as json_file:
