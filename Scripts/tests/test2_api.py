@@ -183,7 +183,7 @@ def test_raises_averageOrderParameters(systems, systemid):
         "systemid, lipid, result",
         [(281, ['POPC/P'], ['M_G3P2_M']),
          (566, ['POPC/P31', 'CHOL/C1'], ['M_G3P2_M', 'M_C1_M']),
-         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P2_M', 'M_G3P2_M', 'M_G3P2_M']),
+         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P1_M', 'M_G3P2_M', 'M_G3P2_M']),
          (243, ['DPPC/P8'], ['M_G3P2_M']),
          (86,  ['POPE/P8'], ['M_G3P2_M'])])
 def test_getUniversalAtomName(systems, systemid, lipid, result):
@@ -256,7 +256,7 @@ def test_raise_loadMappingFile():
         "systemid, lipid, result",
         [(281, ['POPC/P'], ['M_G3P2_M']),
          (566, ['POPC/P31', 'CHOL/C1'], ['M_G3P2_M', 'M_C1_M']),
-         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P2_M', 'M_G3P2_M', 'M_G3P2_M']),
+         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P1_M', 'M_G3P2_M', 'M_G3P2_M']),
          (243, ['DPPC/P8'], ['M_G3P2_M']),
          (86,  ['POPE/P8'], ['M_G3P2_M'])])
 def test_simulation2universal_atomnames(systems, systemid, lipid, result):

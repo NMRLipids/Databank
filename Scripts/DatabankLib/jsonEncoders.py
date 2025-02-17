@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+import numpy as np
 
 
 class CompactJSONEncoder(json.JSONEncoder):
@@ -36,7 +37,7 @@ class CompactJSONEncoder(json.JSONEncoder):
             return self._encode_list(o)
         if isinstance(o, dict):
             return self._encode_object(o)
-        if isinstance(o, float):  # Use scientific notation for floats
+        if isinstance(o, (float, np.floating)):  # Use scientific notation for floats
             if math.isnan(o):
                 # !very important. Otherwise it will put "nan" with lowercase,
                 # which is not recognized by standard json DEcoder
