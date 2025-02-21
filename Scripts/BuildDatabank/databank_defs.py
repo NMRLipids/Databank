@@ -91,6 +91,10 @@ lipids_dict = {
         "REQUIRED": False,
         "TYPE": "string",
     },
+    "DOPSP": {
+        "REQUIRED": False,
+        "TYPE": "string",
+    },
     "DMPS": {
         "REQUIRED": False,
         "TYPE": "string",

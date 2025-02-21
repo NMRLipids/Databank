@@ -1,0 +1,43 @@
+DOI: 10.5281/zenodo.1212
+SOFTWARE: gromacs
+TRJ:
+- - NVT.xtc
+TPR:
+- - NVT.tpr
+EDR:
+- - NVT.edr
+PREEQTIME: 0
+TIMELEFTOUT: 50
+UNITEDATOM_DICT:
+  DPPC: BergerOPLSAA-compatible_DPPC
+COMPOSITION:
+  DPPC:
+    NAME: DPPC
+    MAPPING: mappingDPPCbergerOPLSAA-compatible.yaml
+    COUNT:
+    - 50
+    - 50
+  SOL:
+    NAME: SOL
+    MAPPING: mappingSPCwater.yaml
+    COUNT: 14305
+DIR_WRK: /home/lara/Databank
+PUBLICATION: null
+AUTHORS_CONTACT: comcon1
+SYSTEM: 100DPPC_2772SOL_300K_Berger
+SOFTWARE_VERSION: 5.1-beta
+FF: OPLSAA-compatible Berger-DPPC-06
+FF_SOURCE: 10.1088/0953--8984/18/28/S07
+FF_DATE: null
+CPT:
+LOG:
+TOP:
+- - topol.top
+GRO:
+- - NVT.gro
+TRAJECTORY_SIZE: 266359552
+TRJLENGTH: 200000.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 13316
+DATEOFRUNNING: 01/01/2025
+TYPEOFSYSTEM: lipid monolayer

@@ -33,4 +33,4 @@ Setup using conda as distribution:
 
     $ conda create --name databank python==3.7.16 MDAnalysis MDAnalysisTests
     $ conda activate databank
-    $ (databank) pip install tqdm pyyaml
+    $ (databank) pip install tqdm pyyaml multiprocess

@@ -1,0 +1,33 @@
+DOI: 10.124/zenodo.234238
+TRJ:
+- - NVT.xtc
+TPR:
+- - NVT.tpr
+EDR:
+- - NVT.edr
+TOP:
+- - topol.top
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 20
+COMPOSITION:
+  DOPS:
+    NAME: DOPS
+    MAPPING: mappingDOPScharmm.yaml
+    COUNT:
+    - 50
+    - 50
+  SOL:
+    NAME: SOL
+    MAPPING: mappingOPC4water.yaml
+    COUNT: 8000
+TYPEOFSYSTEM: lipid monolayer
+SYSTEM: DOPS monolayers at 100 Å^2
+DIR_WRK: /Users/fabs/temp_nmr
+AUTHORS_CONTACT: Alexey Nesterenko
+BATCHID: DOPSn_localhost
+TRAJECTORY_SIZE: ?? bytes
+TRJLENGTH: 100000.0
+TEMPERATURE: 298
+NUMBER_OF_ATOMS: 45100
+DATEOFRUNNING: 13/06/2024
