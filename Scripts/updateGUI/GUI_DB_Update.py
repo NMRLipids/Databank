@@ -27,7 +27,7 @@ from importlib import import_module
 # It DOES NOT require the package to be pre-installed
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 dbl = import_module("DatabankLib")
-NMRDict = import_module("DatabankLib.databank_defs")
+NMRDict = import_module("DatabankLib.settings.molecules")
 core = import_module("DatabankLib.core")
 sys.path.pop(0)
 
