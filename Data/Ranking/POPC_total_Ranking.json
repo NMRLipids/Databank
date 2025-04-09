@@ -437,6 +437,60 @@
         }
     },
     {
+        "POPC": { "sn-1": 0.888771, "sn-2": 0.600687, "headgroup": 0.661539, "total": 0.716999 },
+        "TotalQuality": { "headgroup": 0.661539, "tails": 0.744729, "total": 0.716999, "FFQuality": 0.755 },
+        "system": {
+            "DOI": "10.5281/zenodo.15172176",
+            "TRJ": [
+                ["popc_hybrid_c36mdp.xtc"]
+            ],
+            "TPR": [
+                ["popc_hybrid_c36mdp.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [128, 0]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 6400 }
+            },
+            "UNITEDATOM_DICT": null,
+            "DIR_WRK": "/home/sosamuli/temp/tmpData/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Eerika Jokinen, Maisa Vuorte, Matti Javanainen",
+            "SYSTEM": "POPC_hybrid_c36mdp",
+            "SOFTWARE_VERSION": 2024.3,
+            "FF": "C36_Slipids_Hybrid",
+            "FF_SOURCE": "Self-generated",
+            "FF_DATE": 2025,
+            "CPT": [
+                ["popc_hybrid_c36mdp.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "WARNINGS": { "FF": "Hybrid force field test for fun, not production-ready. Simulated with C36 mdp." },
+            "TRAJECTORY_SIZE": 673291444,
+            "TRJLENGTH": 500100,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 36352,
+            "DATEOFRUNNING": "08/04/2025",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "path": "509/c36/509c361e11083ae342e56bf9ab505fff8baca832/dddadda65a74e26313a75581d2e2c5326ca4f428/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.7741, "sn-2": 0.669804, "headgroup": 0.683552, "total": 0.709152 },
         "TotalQuality": { "headgroup": 0.683552, "tails": 0.721952, "total": 0.709152 },
         "system": {
@@ -1330,6 +1384,60 @@
             "DIR_WRK": "/media/osollila/Data/tmp/DATABANK/",
             "ID": 462,
             "path": "417/57f/41757fcae2788b4acce2e9b601bfa7c768e8e7b0/fbeaaf46fef02433daa4c430bec6db90de985429/"
+        }
+    },
+    {
+        "POPC": { "sn-1": 0.691547, "sn-2": 0.565584, "headgroup": 0.659501, "total": 0.638877 },
+        "TotalQuality": { "headgroup": 0.659501, "tails": 0.628565, "total": 0.638877, "FFQuality": 0.955 },
+        "system": {
+            "DOI": "10.5281/zenodo.15172176",
+            "TRJ": [
+                ["popc_hybrid_slmdp.xtc"]
+            ],
+            "TPR": [
+                ["popc_hybrid_slmdp.tpr"]
+            ],
+            "SOFTWARE": "gromacs",
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 100,
+            "COMPOSITION": {
+                "POPC": {
+                    "NAME": "POPC",
+                    "MAPPING": "mappingPOPCcharmm.yaml",
+                    "COUNT": [128, 0]
+                },
+                "SOL": { "NAME": "SOL", "MAPPING": "mappingTIP3Pwater.yaml", "COUNT": 6400 }
+            },
+            "UNITEDATOM_DICT": null,
+            "DIR_WRK": "/home/sosamuli/temp/tmpData/",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Eerika Jokinen, Maisa Vuorte, Matti Javanainen",
+            "SYSTEM": "POPC_hybrid_slmdp",
+            "SOFTWARE_VERSION": 2024.3,
+            "FF": "C36_Slipids_Hybrid",
+            "FF_SOURCE": "Self-generated",
+            "FF_DATE": 2025,
+            "CPT": [
+                ["popc_hybrid_slmdp.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["topol.top"]
+            ],
+            "WARNINGS": { "FF": "Hybrid force field test for fun, not production-ready. Simulated with Slipids mdp." },
+            "TRAJECTORY_SIZE": 673355092,
+            "TRJLENGTH": 500100,
+            "TEMPERATURE": 298,
+            "NUMBER_OF_ATOMS": 36352,
+            "DATEOFRUNNING": "08/04/2025",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "POPC": { "10.1021/acs.jpcb.4c04719": "10.1021/acs.jpcb.4c04719/4", "10.1039/c2cp42738a": "10.1039/c2cp42738a/1" }
+                },
+                "FORMFACTOR": "unpublished/NMRlipidsIII/1"
+            },
+            "path": "541/330/5413300b630cb69d17ee32f37bd904621cc091ec/3ef4a4a56814d7c1d1ed6dedb78cfb21d63e98f1/"
         }
     },
     {
@@ -2959,6 +3067,7 @@
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
+            "ID": 829,
             "path": "c04/cdb/c04cdb61143bb72ba2ddee11599e6bbfaf6cb211/a31f42800216d84d2242eae2af8ac2cbd6b033ee/"
         }
     },
@@ -3803,6 +3912,7 @@
                 },
                 "FORMFACTOR": "unpublished/NMRlipidsIII/1"
             },
+            "ID": 828,
             "path": "a7f/9f3/a7f9f36feaa77791483dadb0157f86a6a519f2c3/a30f01e8771c44dc59b78753d1dd27ca67920e38/"
         }
     },

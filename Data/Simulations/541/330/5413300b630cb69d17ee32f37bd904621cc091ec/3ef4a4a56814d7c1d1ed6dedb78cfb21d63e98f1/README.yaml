@@ -1,0 +1,48 @@
+DOI: 10.5281/zenodo.15172176
+TRJ:
+- - popc_hybrid_slmdp.xtc
+TPR:
+- - popc_hybrid_slmdp.tpr
+SOFTWARE: gromacs
+PREEQTIME: 0
+TIMELEFTOUT: 100
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCcharmm.yaml
+    COUNT:
+    - 128
+    - 0
+  SOL:
+    NAME: SOL
+    MAPPING: mappingTIP3Pwater.yaml
+    COUNT: 6400
+UNITEDATOM_DICT: null
+DIR_WRK: /home/sosamuli/temp/tmpData/
+PUBLICATION: null
+AUTHORS_CONTACT: Eerika Jokinen, Maisa Vuorte, Matti Javanainen
+SYSTEM: POPC_hybrid_slmdp
+SOFTWARE_VERSION: 2024.3
+FF: C36_Slipids_Hybrid
+FF_SOURCE: Self-generated
+FF_DATE: 2025
+CPT:
+- - popc_hybrid_slmdp.cpt
+LOG: null
+TOP:
+- - topol.top
+WARNINGS:
+  FF: Hybrid force field test for fun, not production-ready. Simulated with Slipids
+    mdp.
+TRAJECTORY_SIZE: 673355092
+TRJLENGTH: 500100.0
+TEMPERATURE: 298.0
+NUMBER_OF_ATOMS: 36352
+DATEOFRUNNING: 08/04/2025
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1021/acs.jpcb.4c04719: 10.1021/acs.jpcb.4c04719/4
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
