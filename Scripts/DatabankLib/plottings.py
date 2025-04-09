@@ -257,7 +257,7 @@ def plotSimulation(system, lipid: str):
         for subdir, dirs, files in os.walk(ffdir):
             for filename in files:
                 if filename.endswith('_FormFactor.json'):
-                    FFpathEXP = subdir + filename
+                    FFpathEXP = subdir + '/' + filename
         with open(FFpathEXP) as json_file:
             FFexp = json.load(json_file)
     except Exception:
