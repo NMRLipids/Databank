@@ -8,12 +8,21 @@ TODO: organize proper package structure
 
 import os
 
-NMLDB_ROOT_PATH = os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))))
+NMLDB_ROOT_PATH = os.environ.get(
+    "NMLDB_ROOT_PATH",
+    os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
+    )
 
 NMLDB_DATA_PATH = os.path.join(NMLDB_ROOT_PATH, 'Data')
 NMLDB_SIMU_PATH = os.path.join(NMLDB_ROOT_PATH, 'Data', 'Simulations')
 NMLDB_EXP_PATH = os.path.join(NMLDB_ROOT_PATH, 'Data', 'experiments')
+
+if not os.path.isdir(NMLDB_DATA_PATH):
+    raise RuntimeError(
+            "Seems that you installed package in a non-debug mode. "
+            "In this case you *must* set NMLDB_ROOT_PATH explicitly "
+            "to git-clonned `Databank` folder.")
 
 # Universal success codes
 
