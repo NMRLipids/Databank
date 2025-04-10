@@ -44,6 +44,8 @@ Activating DatabankLib package:
  $ (databank) pip install -e .
 ```
 
+You can install the package in non-development mode, without `-e` (it's obligatory in Colab runtime environment); however, in this case, the package will be installed to the folder with other pip-packages and it will not know about the path to the `Data` folder. Then you should provide the path to the *repository root* by setting the environment variable `NMLDB_ROOT_PATH`.
+
 If you want to run tests:
 ```
  $ (databank) conda install pytest -c conda-forge
