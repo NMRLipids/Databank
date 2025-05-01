@@ -1,0 +1,35 @@
+DOI: 10.5281/zenodo.15002801
+TRJ:
+- - md_every_100_ps.xtc
+TPR:
+- - md.tpr
+SOFTWARE: gromacs
+PREEQTIME: 100
+TIMELEFTOUT: 50
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCsage_smiles.yaml
+    COUNT:
+    - 128
+    - 0
+  SOL:
+    NAME: TIP3P
+    MAPPING: mappingTIP3Psage_smiles.yaml
+    COUNT: 5120
+SYSTEM: POPCandTIP3P
+TOP:
+- - bilayer5.top
+DIR_WRK: /media/julianne/DATA/Lipids/NMRLipids/temp/
+TRAJECTORY_SIZE: 414960964
+TRJLENGTH: 338800.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 32512
+DATEOFRUNNING: 29/04/2025
+TYPEOFSYSTEM: lipid bilayer
+EXPERIMENT:
+  ORDERPARAMETER:
+    POPC:
+      10.1021/acs.jpcb.4c04719: 10.1021/acs.jpcb.4c04719/4
+      10.1039/c2cp42738a: 10.1039/c2cp42738a/1
+  FORMFACTOR: unpublished/NMRlipidsIII/1
