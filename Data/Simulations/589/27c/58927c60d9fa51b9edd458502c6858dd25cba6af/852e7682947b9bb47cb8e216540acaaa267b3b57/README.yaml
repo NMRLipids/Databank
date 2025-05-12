@@ -4,6 +4,9 @@ TRJ:
 TPR:
 - - md.tpr
 SOFTWARE: gromacs
+FF: FF-development
+FF_SOURCE: null
+FF_DATE: 2025
 PREEQTIME: 100
 TIMELEFTOUT: 50
 COMPOSITION:
