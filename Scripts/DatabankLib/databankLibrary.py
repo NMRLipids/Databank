@@ -7,21 +7,22 @@ import copy
 import hashlib
 import urllib
 import logging
-from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 from tqdm import tqdm
 
 import json
-import yaml
+from deprecated import deprecated
 import os
 import sys
 import numpy as np
 import math
 import MDAnalysis as mda
 
-from DatabankLib import NMLDB_SIMU_PATH, NMLDB_ROOT_PATH
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.core import (System, SystemsCollection)
 from DatabankLib.settings.molecules import (
-    lipids_dict, molecules_dict, molecule_ff_dict)
+    lipids_set, molecules_set, molecule_ff_set)
 from DatabankLib.databankio import resolve_download_file_url
+from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 
 logger = logging.getLogger(__name__)
 
@@ -100,12 +101,12 @@ def GetNlipids(system):
     """
     Nlipid = 0
     for molecule in system['COMPOSITION']:
-        if molecule in lipids_dict:
+        if molecule in lipids_set:
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     return Nlipid
 
 
-def getLipids(system, molecules=lipids_dict.keys()):
+def getLipids(system: System, molecules=lipids_set):
     """
     Returns a string using MDAnalysis notation that can used to select all lipids from
     the ``system``.
@@ -116,106 +117,95 @@ def getLipids(system, molecules=lipids_dict.keys()):
              the ``system``.
     """
 
-    resSet = set()
-    for key in system['COMPOSITION'].keys():
+    res_set = set()
+    for key, mol in system.content.items():
         if key in molecules:
-            m_file = system['COMPOSITION'][key]['MAPPING']
-            mapping_dict = loadMappingFile(m_file)
             try:
-                for atom in mapping_dict:
-                    resSet.add(mapping_dict[atom]['RESIDUE'])
+                for atom in mol.mapping_dict:
+                    res_set.add(mol.mapping_dict[atom]['RESIDUE'])
             except (KeyError, TypeError):
-                resSet.add(system['COMPOSITION'][key]['NAME'])
+                res_set.add(system['COMPOSITION'][key]['NAME'])
 
-    lipids = 'resname ' + ' or resname '.join(sorted(list(resSet)))
+    lipids = 'resname ' + ' or resname '.join(sorted(list(res_set)))
 
     return lipids
 
 
-def simulation2universal_atomnames(system, molecule, atom):
+def simulation2universal_atomnames(system: System, molname: str, atom: str):
     """
-    Get force field specific atom name corresponding to universal atom name from
-    the ``system``.
+    Maps an atomic name from the simulation system to the corresponding universal
+    atomic name based on the provided molecule and atom. This function attempts to
+    retrieve the atomic name using the mapping dictionary or None.
 
-    :param mapping_file: path for the mapping file
-    :param atom1: universal atom name
-
-    :return: force field specific atom name
+    :param system: The simulation system object
+    :param molname: The name of the molecule
+    :param atom: The specific atom name
+    :return: The universal atomic name or None (if not found)
     """
     try:
-        mapping = loadMappingFile(system['COMPOSITION'][molecule]['MAPPING'])
-    except Exception:
-        sys.stderr.write('Mapping file was not found!\n')
+        mdict = system.content[molname].mapping_dict
+    except KeyError:
+        sys.stderr.write(
+            f"Molecule '{molname}' was not found in the system!")
         return None
-
     try:
-        m_atom1 = mapping[atom]["ATOMNAME"]
+        m_atom1 = mdict[atom]["ATOMNAME"]
     except (KeyError, TypeError):
         sys.stderr.write(
-            f"{atom} was not found from {system['COMPOSITION'][molecule]['MAPPING']}!")
+            f"{atom} was not found from {system['COMPOSITION'][molname]['MAPPING']}!")
         return None
 
     return m_atom1
 
-
+@deprecated(reason="Mapping handling is completely refactored.")
 def loadMappingFile(mapping_file):
     """
-    Load mapping file into a dictionary
-
-    :param: name of the mapping file
-
-    :return: mapping dictionary
+    This function is deprecated. Use Molecule.register_mapping() from
+    DatbankLib.settings.molecules instead.
     """
-    mapping_file_path = os.path.join(
-        NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib', 'mapping_files', mapping_file)
-    mapping_dict = {}
-    with open(mapping_file_path, "r") as yaml_file:
-        mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    return mapping_dict
+    raise NotImplementedError("This function is deprecated. Use Molecule.register_mapping() instead.")
 
 
-def getAtoms(system, lipid):
+def getAtoms(system: System, lipid: str):
     """
     Return system specific atom names of a lipid
 
-    :param system: system dictionary
+    :param system: System simulation object
     :param lipid: universal lipid name
 
     :return: string of system specific atom names
     """
 
     atoms = ""
-    path_to_mapping_file = system['COMPOSITION'][lipid]['MAPPING']
-    mapping_dict = loadMappingFile(path_to_mapping_file)
-    for key in mapping_dict:
-        atoms = atoms + ' ' + mapping_dict[key]['ATOMNAME']
+    mdict = system.content[lipid].mapping_dict
+    for key in mdict:
+        atoms = atoms + ' ' + mdict[key]['ATOMNAME']
 
     return atoms
 
 
-def getUniversalAtomName(system: dict, atomName: str, lipid: str):
+def getUniversalAtomName(system: System, atom_name: str, molname: str):
     """
     Returns the universal atom name corresponding the simulation specific ``atomName``
     of a ``lipid`` in a simulation defined by the ``system``.
 
     :param system: system dictionary
-    :param atomName: simulation specific atomname
-    :param lipid: universal lipid name
+    :param atom_name: simulation specific atomname
+    :param molname: universal lipid name
 
     :return: universal atomname (string) or None
     """
     try:
-        mappingFile = system['COMPOSITION'][lipid]['MAPPING']
-    except (KeyError, TypeError):
-        sys.stderr.write('Mapping file was not found!\n')
+        mdict = system.content[molname].mapping_dict
+    except KeyError:
+        sys.stderr.write(
+            f"Molecule '{molname}' was not found in the system!")
         return None
 
-    mappingDict = loadMappingFile(mappingFile)
-
-    for universalName in mappingDict:
-        simName = mappingDict[universalName]['ATOMNAME']
-        if simName == atomName:
-            return universalName
+    for universal_name in mdict:
+        sim_name = mdict[universal_name]['ATOMNAME']
+        if sim_name == atom_name:
+            return universal_name
 
     sys.stderr.write('Atom was not found!\n')
     return None
@@ -561,9 +551,9 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
         # molecule_ff_dict too
         if (
             (key_sim.upper() not in software_sim.keys())
-            and (key_sim.upper() not in molecules_dict.keys())
-            and (key_sim.upper() not in lipids_dict.keys())
-            and (key_sim.upper() not in molecule_ff_dict.keys())
+            and (key_sim.upper() not in molecules_set)
+            and (key_sim.upper() not in lipids_set)
+            and (key_sim.upper() not in molecule_ff_set)
         ):
             logger.error(
                 f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' "
@@ -571,15 +561,15 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
             )
             logger.error(
                 f"key_sim '{key_sim}' in molecules_dict "
-                f": {key_sim.upper() in molecules_dict.keys()}"
+                f": {key_sim.upper() in molecules_set}"
             )
             logger.error(
                 f"key_sim '{key_sim}' in lipids_dict "
-                f": {key_sim.upper() in lipids_dict.keys()}"
+                f": {key_sim.upper() in lipids_set}"
             )
             logger.error(
                 f"key_sim '{key_sim}' in molecule_ff_dict "
-                f": {key_sim.upper() in molecule_ff_dict.keys()}"
+                f": {key_sim.upper() in molecule_ff_set}"
             )
             raise YamlBadConfigException(
                 f"'{key_sim}' not supported: Not found in "
@@ -667,7 +657,7 @@ def calcArea(system):
     APL = CalcAreaPerMolecule(system)
     Nlipid = 0
     for molecule in system['COMPOSITION']:
-        if molecule in lipids_dict:
+        if molecule in lipids_set:
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     print(Nlipid, APL)
     return Nlipid*APL/2
@@ -716,7 +706,7 @@ def averageOrderParameters(system):
     sn2count = 0
 
     for lipid in system['COMPOSITION']:
-        if lipid in lipids_dict and 'CHOL' not in lipid:
+        if lipid in lipids_set and 'CHOL' not in lipid:
             OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
             with open(OPpathSIM) as json_file:
                 OPsim = json.load(json_file)
@@ -743,7 +733,7 @@ def calcLipidFraction(system, lipid):
     """
     NlipidTOT = 0
     for molecule in system['COMPOSITION']:
-        if molecule in lipids_dict:
+        if molecule in lipids_set:
             NlipidTOT += np.sum(system['COMPOSITION'][molecule]['COUNT'])
 
     Nlipid = 0
@@ -765,7 +755,7 @@ def getHydrationLevel(system):
     """
     Nlipid = 0
     for molecule in system['COMPOSITION']:
-        if molecule in lipids_dict:
+        if molecule in lipids_set:
             Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
     Nwater = system['COMPOSITION']['SOL']['COUNT']
     return Nwater/Nlipid

@@ -9,12 +9,12 @@ from typing import List, IO
 
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
 from DatabankLib.core import initialize_databank
-from DatabankLib.databankLibrary import lipids_dict
+from DatabankLib.databankLibrary import lipids_set
 
 import logging
 logger = logging.getLogger("__name__")
 
-lipid_numbers_list = lipids_dict.keys()   # should contain all lipid names
+lipid_numbers_list = lipids_set.names     # should contain all lipid names
 ions_list = ['POT', 'SOD', 'CLA', 'CAL']  # should contain names of all ions
 
 LIP_CONC_REL_THRESHOLD = 0.15   # relative acceptable error for determination

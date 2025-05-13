@@ -26,7 +26,6 @@ Returning error codes:
 
 import os
 import argparse
-from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 import yaml
 import logging
 import shutil
@@ -46,9 +45,8 @@ import DatabankLib
 from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,
     create_databank_directories,
-    lipids_dict,
-    molecules_dict,
-    loadMappingFile
+    lipids_set,
+    molecules_set
 )
 # helpers
 from DatabankLib.databankio import (
@@ -58,6 +56,8 @@ from DatabankLib.databankio import (
 from DatabankLib.databankLibrary import (
     parse_valid_config_settings
 )
+from DatabankLib.settings.molecules import Lipid, NonLipid
+from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -107,8 +107,6 @@ if __name__ == "__main__":
         level=logging_level,
     )
     logger = logging.getLogger()
-
-    all_molecules = lipids_dict.keys()
 
     input_path = os.path.normpath(args.file)
 
@@ -387,20 +385,21 @@ if __name__ == "__main__":
     lipids = []
 
     # select lipids
-    for key_mol in lipids_dict:
+    for key_mol in lipids_set:
         logger.info(f"Calculating number of '{key_mol}' lipids")
         selection = ""
-        if key_mol in sim["COMPOSITION"].keys():
+        if key_mol in sim["COMPOSITION"]:
+            lip = Lipid(key_mol)
             m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
-            mapping_dict = loadMappingFile(m_file)
-            for key in mapping_dict.keys():
-                if "RESIDUE" in mapping_dict[key].keys():
+            lip.register_mapping(m_file)
+            for key in lip.mapping_dict:
+                if "RESIDUE" in lip.mapping_dict[key]:
                     selection = (
                         selection
                         + "(resname "
-                        + mapping_dict[key]["RESIDUE"]
+                        + lip.mapping_dict[key]["RESIDUE"]
                         + " and name "
-                        + mapping_dict[key]["ATOMNAME"]
+                        + lip.mapping_dict[key]["ATOMNAME"]
                         + ") or "
                     )
                 else:
@@ -424,22 +423,23 @@ if __name__ == "__main__":
 
     # ---- number of each lipid per leaflet
 
-    for key_mol in lipids_dict:
+    for key_mol in lipids_set:
         leaflet1 = 0
         leaflet2 = 0
 
         selection = ""
-        if key_mol in sim["COMPOSITION"].keys():
+        if key_mol in sim["COMPOSITION"]:
+            lip = Lipid(key_mol)
             m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
-            mapping_dict = loadMappingFile(m_file)
-            for key in mapping_dict.keys():
-                if "RESIDUE" in sim["COMPOSITION"].keys():
+            lip.register_mapping(m_file)
+            for key in lip.mapping_dict:
+                if "RESIDUE" in lip.mapping_dict[key]:
                     selection = (
                         selection
                         + "resname "
-                        + mapping_dict[key]["RESIDUE"]
+                        + lip.mapping_dict[key]["RESIDUE"]
                         + " and name "
-                        + mapping_dict[key]["ATOMNAME"]
+                        + lip.mapping_dict[key]["ATOMNAME"]
                         + " or "
                     )
                     break
@@ -477,7 +477,7 @@ if __name__ == "__main__":
 
     # ----- numbers of other molecules
 
-    for key_mol in molecules_dict:
+    for key_mol in molecules_set:
         try:
             mol_name = sim["COMPOSITION"][key_mol]["NAME"]
         except KeyError:
@@ -538,20 +538,21 @@ if __name__ == "__main__":
     number_of_atomsTRJ = u.atoms.n_atoms
 
     number_of_atoms = 0
-    for key_mol in sim["COMPOSITION"].keys():
-        mapping_dict = loadMappingFile(sim["COMPOSITION"][key_mol]["MAPPING"])
+    for key_mol in sim["COMPOSITION"]:
+        mol = Lipid(key_mol) if key_mol in lipids_set else NonLipid(key_mol)
+        mol.register_mapping(sim["COMPOSITION"][key_mol]["MAPPING"])
 
         if sim.get("UNITEDATOM_DICT") and "SOL" not in key_mol:
             mapping_file_length = 0
 
-            for key in mapping_dict.keys():
+            for key in mol.mapping_dict:
                 if "H" in key:
                     continue
                 else:
                     mapping_file_length += 1
 
         else:
-            mapping_file_length = len(mapping_dict.keys())
+            mapping_file_length = len(mol.mapping_dict)
 
         number_of_atoms += (
                 np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length

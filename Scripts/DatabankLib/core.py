@@ -7,7 +7,11 @@ Can be imported without additional libraries to scan Databank system file tree!
 import os
 import yaml
 import collections.abc
+from typing import Dict
+from DatabankLib.settings.molecules import Molecule
+
 from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.settings.molecules import Lipid, lipids_set, lipids_dict, molecules_set, NonLipid
 
 
 class SystemsCollection(collections.abc.Sequence):
@@ -33,7 +37,53 @@ class SystemsCollection(collections.abc.Sequence):
         return self.data[self._idx[id]]
 
 
-class databank:
+class System(collections.abc.MutableMapping):
+    """
+    Main Databank single object, which is an extension of a
+    dictionary with additional functionality.
+    """
+
+    def __init__(self, data=None):
+        self._store = {}
+        if isinstance(data, dict):
+            self._store.update(data)
+        elif isinstance(data, collections.abc.MutableMapping):
+            self._store.update(dict(data))
+        else:
+            raise TypeError("Expected dict or Mapping")
+
+        self._content = {}
+        for k,v in self["COMPOSITION"].items():
+            mol = None
+            if k in lipids_set:
+                mol = Lipid(k)
+            elif k in molecules_set:
+                mol = NonLipid(k)
+            mol.register_mapping(v["MAPPING"])
+            self._content[k] = mol
+
+    def __getitem__(self, key):
+        return self._store[key]
+
+    def __setitem__(self, key, value):
+        self._store[key] = value
+
+    def __delitem__(self, key):
+        del self._store[key]
+
+    def __iter__(self):
+        return iter(self._store)
+
+    def __len__(self):
+        return len(self._store)
+
+    @property
+    def content(self) -> Dict[str, Molecule]:
+        """ Returns dictionary of molecule objects. """
+        return self._content
+
+
+class Databank:
     """ :meta private:
     Representation of all simulation in the NMR lipids databank.
 
@@ -62,7 +112,7 @@ class databank:
                 filepath = os.path.join(subdir, filename)
                 if filename == "README.yaml":
                     with open(filepath) as yaml_file:
-                        content = yaml.load(yaml_file, Loader=yaml.FullLoader)
+                        content = System(yaml.load(yaml_file, Loader=yaml.FullLoader))
                         relpath = os.path.relpath(filepath, rpath)
                         content["path"] = relpath[:-11]
                         systems.append(content)
@@ -80,7 +130,7 @@ def initialize_databank():
     :return: list of dictionaries that contain the content of README.yaml files for
              each system.
     """
-    db_data = databank()
+    db_data = Databank()
     return db_data.get_systems()
 
 

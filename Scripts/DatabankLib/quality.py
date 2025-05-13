@@ -6,7 +6,7 @@ TODO: remove code duplication and commented code
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import initialize_databank
-from DatabankLib.databankLibrary import loadMappingFile, lipids_dict
+from DatabankLib.databankLibrary import loadMappingFile, lipids_set
 
 import re
 import decimal as dc
@@ -16,7 +16,7 @@ import scipy.signal
 import json
 import os
 
-lipid_numbers_list = lipids_dict.keys()  # should contain all lipid names
+lipid_numbers_list = lipids_set.names  # should contain all lipid names
 
 
 class Simulation:
@@ -515,7 +515,7 @@ def loadSimulations():
 
                 simOPdata = {}  # order parameter files for each type of lipid
                 for lipMol in system["COMPOSITION"]:
-                    if lipMol not in lipids_dict:
+                    if lipMol not in lipids_set:
                         continue
                     filename2 = os.path.join(
                         NMLDB_SIMU_PATH, system["path"], lipMol + "OrderParameters.json"
