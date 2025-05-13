@@ -10,7 +10,6 @@ import sys
 import re
 import traceback
 from logging import Logger
-from DatabankLib.settings.engines import get_struc_top_traj_fnames
 import buildh
 import urllib.request
 import socket
@@ -21,9 +20,11 @@ import gc
 from DatabankLib import (
     NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
     RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
-from DatabankLib.settings.molecules import lipids_dict
+from DatabankLib.core import System, SystemsCollection
+from DatabankLib.settings.molecules import Lipid, LipidSet, lipids_set
+from DatabankLib.settings.engines import get_struc_top_traj_fnames
 from DatabankLib.databankLibrary import (
-    GetNlipids, loadMappingFile, system2MDanalysisUniverse)
+    GetNlipids, system2MDanalysisUniverse)
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
@@ -200,7 +201,7 @@ def computeTH(system: dict, logger: Logger, recompute: bool = False) -> int:
 
 
 # TODO: implement onlyLipid
-def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeOP(system: System, logger: Logger, recompute: bool = False) -> int:
     """_summary_
 
     Args:
@@ -227,7 +228,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
             )
         ):
             FileFound = True
-        elif key in lipids_dict:
+        elif key in lipids_set:
             FileFound = False
             break
 
@@ -321,8 +322,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
             for key in system['UNITEDATOM_DICT']:
                 # construct order parameter definition file for CH bonds from
                 # mapping file
-                mapping_file = system['COMPOSITION'][key]['MAPPING']
-                mapping_dict = loadMappingFile(mapping_file)
+                mapping_dict = system.content[key].mapping_dict
 
                 def_fileNAME = os.path.join(NMLDB_SIMU_PATH, path, key + '.def')
                 def_file = open(def_fileNAME, 'w')
@@ -434,7 +434,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                           "names are ambiguous.")
                     continue
 
-                if key in lipids_dict.keys():
+                if key in lipids_set.keys():
                     print('Calculating ', key, ' order parameters')
                     mapping_file = system['COMPOSITION'][key]['MAPPING']
                     resname = system['COMPOSITION'][key]['NAME']
@@ -485,7 +485,7 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeFF(system: System, logger: Logger, recompute: bool = False) -> int:
     logger.info("System title: " + system['SYSTEM'])
     logger.info("System path: " + system['path'])
     software = system['SOFTWARE']
@@ -592,9 +592,8 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
 
         # FIND LAST CARBON OF SN-1 TAIL AND G3 CARBON
         for molecule in system['COMPOSITION']:
-            if molecule in lipids_dict:
-                mapping_file = system['COMPOSITION'][molecule]['MAPPING']
-                mapping = loadMappingFile(mapping_file)
+            if molecule in lipids_set:
+                mapping = system.content[molecule].mapping_dict
 
                 # TODO: rewrite via lipid dictionary!
                 for nm in ["M_G3_M", "M_G13_M", "M_C32_M"]:

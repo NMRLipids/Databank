@@ -17,7 +17,7 @@ from tqdm import tqdm
 # the universal mapping file
 import periodictable
 
-from DatabankLib.databankLibrary import lipids_dict, loadMappingFile, getLipids
+from DatabankLib.databankLibrary import lipids_set, loadMappingFile, getLipids
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib import NMLDB_ROOT_PATH
 
@@ -241,7 +241,7 @@ class FormFactor:
             for molecule1 in self.readme['COMPOSITION'].keys():
                 print(molecule1)
 
-                if molecule1 in lipids_dict:
+                if molecule1 in lipids_set:
                     molecule2 = self.readme['COMPOSITION'][molecule1]['NAME']
                     electrons = []
 
@@ -286,7 +286,7 @@ class FormFactor:
             for molecule in self.readme['COMPOSITION'].keys():
                 w = self.residueElectronsAll(molecule)
                 weights.extend(w)
-                if molecule in lipids_dict:
+                if molecule in lipids_set:
                     l_weights.extend(w)
                 elif molecule == 'SOL':
                     w_weights.extend(w)
@@ -387,7 +387,7 @@ class FormFactor:
                 if ResName not in ElectronNumbers.keys():
                     ElectronNumbers[ResName] = {}
 
-                if UA and key1 in lipids_dict:
+                if UA and key1 in lipids_set:
                     UAlipidjsonNAME = os.path.join(
                         NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
                         'lipid_json_buildH',
