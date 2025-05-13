@@ -167,14 +167,14 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
                           (86,  DatabankLib.RCODE_COMPUTED)])
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeOP
-    from DatabankLib.settings.molecules import lipids_dict
+    from DatabankLib.settings.molecules import lipids_set
     s = systems.loc(systemid)
     rCode = computeOP(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_dict.keys())):
+    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_set.keys())):
         cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
                              s['path'], lip + 'OrderParameters.json')
         assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
