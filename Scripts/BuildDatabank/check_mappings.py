@@ -14,7 +14,7 @@ import traceback
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import initialize_databank
-from DatabankLib.databankLibrary import lipids_dict, loadMappingFile
+from DatabankLib.databankLibrary import lipids_set, loadMappingFile
 
 if __name__ == "__main__":
     systems = initialize_databank()
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                     NatomsFromMapping = len(u.select_atoms(selection))
                     NatomsFromREADME = system['COMPOSITION'][molecule]['COUNT']
                     if NatomsFromMapping != NatomsFromREADME and \
-                            molecule not in lipids_dict:
+                            molecule not in lipids_set:
                         print(f"""
         Found problematic system: {system['SYSTEM']}
         Molecule named {system['COMPOSITION'][molecule]['NAME']}

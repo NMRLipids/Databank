@@ -41,11 +41,12 @@ def logger():
 
 @pytest.fixture(autouse=True, scope="module")
 def header_module_scope():
+    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
+    os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
     import DatabankLib
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
-    with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
-        print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
-        yield
+    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
+    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
+    yield
     print("DBG: Mocking completed")
 
 
@@ -202,7 +203,7 @@ def test_getUniversalAtomName(systems, systemid, lipid, result):
 @pytest.mark.parametrize(
         "systemid, lipat, result",
         [(243, 'DPPC/nonExisting', "Atom was not found"),
-         (243, 'nonExisting/P8', "Mapping file was not found")])
+         (243, 'nonExisting/P8', "was not found in the system")])
 def test_bad_getUniversalAtomName(systems, systemid, lipat, result, capsys):
     from DatabankLib.databankLibrary import getUniversalAtomName
     sys0 = systems.loc(systemid)
@@ -228,13 +229,11 @@ def test_getAtoms(systems, systemid, lipid, result):
     assert hx == result
 
 
+@pytest.mark.xfail(reason="Completely deprecated function", run=True,
+                   raises=NotImplementedError, strict=True)
 @pytest.mark.parametrize("systemid, lipid, result",
-                         [(281, ['POPC'], [134]),
-                          (566, ['POPC', 'CHOL'], [134, 74]),
-                          (787, ['TOCL', 'POPC', 'POPE'], [248, 134, 125]),
-                          (243, ['DPPC'], [130]),
-                          (86,  ['POPE'], [125])])
-def test_loadMappingFile(systems, systemid, lipid, result):
+                         [(281, ['POPC'], [134])])
+def test_raise_loadMappingFile(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import loadMappingFile
     sys0 = systems.loc(systemid)
     i = 0
@@ -242,14 +241,6 @@ def test_loadMappingFile(systems, systemid, lipid, result):
         mpf = loadMappingFile(sys0['COMPOSITION'][lip]['MAPPING'])
         assert len(mpf) == result[i]
         i += 1
-
-
-@pytest.mark.xfail(reason="Improper file name", run=True,
-                   raises=FileNotFoundError, strict=True)
-def test_raise_loadMappingFile():
-    from DatabankLib.databankLibrary import loadMappingFile
-    mpf = loadMappingFile('file-doesnot-exist')
-    print(mpf)
 
 
 @pytest.mark.parametrize(
@@ -273,7 +264,7 @@ def test_simulation2universal_atomnames(systems, systemid, lipid, result):
 @pytest.mark.parametrize(
         "systemid, lipat, result",
         [(243, 'DPPC/nonExisting', "was not found from mappingDPPCberger.yaml"),
-         (243, 'nonExisting/M_G1_M', "Mapping file was not found")])
+         (243, 'nonExisting/M_G1_M', "was not found in the system!")])
 def test_bad_simulation2universal_atomnames(systems, systemid, lipat, result, capsys):
     from DatabankLib.databankLibrary import simulation2universal_atomnames
     sys0 = systems.loc(systemid)
@@ -373,12 +364,12 @@ def test_GetThickness(systems, systemid, result):
                           (566, "1.174")])
 def test_ShowEquilibrationTimes(systems, capsys, systemid, result):
     from DatabankLib.databankLibrary import ShowEquilibrationTimes
-    from DatabankLib.settings.molecules import lipids_dict
+    from DatabankLib.settings.molecules import lipids_set
     sys0 = systems.loc(systemid)
     _ = ShowEquilibrationTimes(sys0)
     captured = capsys.readouterr()
     print("\n========\n", captured, "\n=========\n")
-    lips = list(set(sys0['COMPOSITION'].keys()).intersection(lipids_dict.keys()))
+    lips = list(set(sys0['COMPOSITION'].keys()).intersection(lipids_set.names))
     for lip in lips:
         if lip in ["CHOL", "DCHOL"]:
             continue  # for them eq_times are not computed

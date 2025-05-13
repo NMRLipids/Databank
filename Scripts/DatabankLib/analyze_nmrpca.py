@@ -40,7 +40,7 @@ import numpy as np
 from scipy import signal
 import MDAnalysis as mda
 
-from DatabankLib.databankLibrary import lipids_dict, loadMappingFile
+from DatabankLib.databankLibrary import lipids_set, loadMappingFile
 from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
 from MDAnalysis.analysis.base import AnalysisFromFunction
@@ -132,7 +132,7 @@ class Parser:
         self.size = readme["TRAJECTORY_SIZE"]
 
         self.composition = readme["COMPOSITION"]
-        lipids_list = list(lipids_dict.keys())
+        lipids_list = list(lipids_set.names)
         self.lipids = []
         # TODO: add to the lipids those lipids that are indicated in .yaml
         for lipid in lipids_list:
