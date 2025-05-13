@@ -13,7 +13,7 @@ import os
 import json
 
 from DatabankLib import NMLDB_DATA_PATH, NMLDB_SIMU_PATH
-from DatabankLib.databankLibrary import lipids_dict
+from DatabankLib.databankLibrary import lipids_set
 from DatabankLib.core import initialize_databank
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     fragments = ['total', 'sn-1', 'sn-2', 'headgroup']
 
     for sort_based_on in fragments:
-        for lipid in lipids_dict:
+        for lipid in lipids_set:
             new_qualities = []
             for i in qualities:
                 try:
