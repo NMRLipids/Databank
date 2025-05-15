@@ -39,12 +39,18 @@ import json
 import numpy as np
 from scipy import signal
 import MDAnalysis as mda
+from deprecated import deprecated
 
-from DatabankLib.databankLibrary import lipids_set, loadMappingFile
+from DatabankLib import NMLDB_DATA_PATH, NMLDB_SIMU_PATH
+from DatabankLib.core import System
+from DatabankLib.databankLibrary import lipids_set
 from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
 
 from MDAnalysis.analysis.base import AnalysisFromFunction
 import warnings
+
+from DatabankLib.settings.molecules import Lipid
+
 # suppress some MDAnalysis warnings issued from mda.analysis.align
 warnings.filterwarnings('ignore')
 from MDAnalysis.analysis import align  # noqa
@@ -82,12 +88,11 @@ class Parser:
     """
 
     def __init__(
-            self, root, readme, eq_time_fname="eq_times.json",
+            self, system: System, eq_time_fname="eq_times.json",
             path=None, v=True):
         """
         Constructor for Parser:
-            root          - path to the directory with trajectories
-            readme        - simulation data
+            system        - simulation data
             eq_time_fname - name of the output file
             path          - name of a particular trajectory
             v             - verbosity for testing
@@ -98,27 +103,27 @@ class Parser:
         self.error = 0
 
         # Path
-        self.root = root
+        self.root = NMLDB_SIMU_PATH
         self.eq_time_fname = eq_time_fname
 
         # Extracting data from readme
-        self.indexingPath = os.path.join(root, readme["path"])
-        print('INdexing path:', self.indexingPath)
+        self.indexingPath = os.path.join(self.root, system["path"])
+        print('Indexing path:', self.indexingPath)
         if self.verbose:
             print(f"Parser: Processing trajectory {self.indexingPath}")
-        self.doi = readme["DOI"]
-        self.soft = readme["SOFTWARE"]
+        self.doi = system["DOI"]
+        self.soft = system["SOFTWARE"]
         if self.soft == "openMM" or self.soft == "NAMD":
             try:
-                self.trj = readme["TRJ"][0][0]
-                self.tpr = readme["PDB"][0][0]
+                self.trj = system["TRJ"][0][0]
+                self.tpr = system["PDB"][0][0]
             except Exception:
                 print("Parser: Did not find trajectory or pdb for openMM or NAMD")
                 self.error = 1
         else:
             try:
-                self.trj = readme["TRJ"][0][0]
-                self.tpr = readme["TPR"][0][0]
+                self.trj = system["TRJ"][0][0]
+                self.tpr = system["TPR"][0][0]
             except Exception:
                 print("Parser: Did not find trajectory or tpr for GROMACS")
                 self.trj = ""
@@ -126,24 +131,15 @@ class Parser:
                 self.error = 1
         self.trj_name = os.path.join(self.indexingPath, self.trj)
         self.tpr_name = os.path.join(self.indexingPath, self.tpr)
-        self.trjLen = readme["TRJLENGTH"] / 1000  # ns
-        self.FF = readme.get("FF")
+        self.trjLen = system["TRJLENGTH"] / 1000  # ns
 
-        self.size = readme["TRAJECTORY_SIZE"]
+        self.size = system["TRAJECTORY_SIZE"]
 
-        self.composition = readme["COMPOSITION"]
-        lipids_list = list(lipids_set.names)
-        self.lipids = []
-        # TODO: add to the lipids those lipids that are indicated in .yaml
-        for lipid in lipids_list:
-            try:
-                if self.composition[lipid] != 0:
-                    self.lipids.append(lipid)
-            except KeyError:
-                continue
-
+        self.composition = system["COMPOSITION"]
+        self.lipids: dict[str,Lipid] = { k:v for k,v in system.content.items() if k in lipids_set }
         self.path = path
 
+    @deprecated(reason="Downloading should happen somewhere else. Not in the analysis classes.")
     def validatePath(self):
         """
         Path validation. Behaviour depends on the input.
@@ -153,6 +149,7 @@ class Parser:
         2. If path is not provided, parser is iterating over all trajectories.
         3. If path is provided and current path is equal to the provided one,
         parser reports that it finds the trajectory for the analysis.
+        TODO: must be removed. Substitute path-validation part.
         """
         if self.error > 0:
             # This is an error message. Printing even in silent mode
@@ -175,8 +172,10 @@ class Parser:
             print(f"Parser: Found trajectory {self.indexingPath}")
         return 0
 
+    @deprecated(reason="Downloading should happen somewhere else. Not in the analysis classes.")
     def downloadTraj(self):
         """
+        TODO: must be removed. We don't download trajectory in the analysis part
         Basic trajectory and TPR download.
         """
         print("Downloading")
@@ -273,22 +272,20 @@ class Parser:
         all lipids available for the trajectory.
         """
 
-        self.concatenated_trajs = []
-        for lipid in self.lipids:
-            if lipid not in ALLOWLIPIDS:
+        self.concatenated_trajs = {}
+        for lipid_name, lipid in self.lipids.items():
+            if lipid_name not in ALLOWLIPIDS:
                 # We do not treat cholesterols
                 continue
             topology = Topology(
-                self.FF,
                 self.traj,
-                self.composition[lipid]["NAME"],
-                self.composition[lipid]["MAPPING"]
+                self.composition[lipid_name]["NAME"],
+                lipid.mapping_dict
             )
             concatenator = Concatenator(topology,
                                         self.traj,
-                                        lipid,
-                                        self.composition[lipid]["NAME"])
-            self.concatenated_trajs.append(concatenator.concatenate())
+                                        self.composition[lipid_name]["NAME"])
+            self.concatenated_trajs[lipid_name] = concatenator.concatenate()
 
     def dumpData(self, data):
         """
@@ -315,19 +312,17 @@ class Topology:
     Currently defunct
     """
 
-    def __init__(self, ff, traj, lipid_resname, mapping_file):
+    def __init__(self, traj, lipid_resname: str, mapping_dict: dict):
         """
         Constructor for Topology:
-            ff            - force field name
             traj          - MDAnalysis trajectory
-            lipid_resname - name of lipid
-            mapping_file  - path to maping file
+            lipid_resname - resname of the lipid
+            mapping_dict  - preloaded mapping_dict
         """
 
-        self.ff = ff
         self.lipid_resname = lipid_resname
         self.traj = traj
-        self.mapping = loadMappingFile(mapping_file)
+        self.mapping = mapping_dict
 
     def atomNames(self):
         """
@@ -460,17 +455,15 @@ class Concatenator:
     4. The enveloping concatenate method
     """
 
-    def __init__(self, topology, traj, lipid_name, lipid_resname):
+    def __init__(self, topology: Topology, traj, lipid_resname: str):
         """
         Constructor for Concatenator:
             topology      - topology for lipid
             traj          - MDAnalysis trajectory
-            lipid_name    - lipid name in the databank
             lipid_resname - lipid resname in the trajectory
         """
         self.topology = topology
         self.traj = traj
-        self.lipid_name = lipid_name
         self.lipid_resname = lipid_resname
 
         if self.topology.isMergeNeeded():
@@ -607,7 +600,7 @@ class Concatenator:
     Simple enveloping function to perform concatenation
     """
     def concatenate(self):
-        print(f"Concatenator: Concatenating lipid {self.lipid_name}")
+        print(f"Concatenator: Concatenating lipid with resname {self.lipid_resname}")
         if not self.topology.isMergeNeeded():
             # Merging is not needed
             concatenated_traj, n_lipid, n_frames = self.concatenateTraj()
@@ -616,7 +609,7 @@ class Concatenator:
                 self.concatenateTrajWithMerging()
         aligned_traj, av_pos = self.alignTraj(concatenated_traj)
 
-        return aligned_traj, av_pos, n_lipid, n_frames, self.lipid_name
+        return aligned_traj, av_pos, n_lipid, n_frames
 
 
 class PCA:
