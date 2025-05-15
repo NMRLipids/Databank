@@ -253,7 +253,7 @@ def systemQuality(system_fragment_qualities, simulation):
     w_nan = []
 
     for lipid in system_fragment_qualities.keys():
-        _ = getFragments(simulation.readme['COMPOSITION'][lipid]['MAPPING'])
+        _ = getFragments(simulation.system['COMPOSITION'][lipid]['MAPPING'])
         # copy keys to new dictionary
         lipid_dict = dict.fromkeys(system_fragment_qualities[lipid].keys(), 0)
 

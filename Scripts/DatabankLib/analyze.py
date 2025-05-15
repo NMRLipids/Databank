@@ -32,11 +32,11 @@ from DatabankLib.form_factor import FormFactor
 from DatabankLib import analyze_nmrpca as nmrpca
 
 
-def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeNMRPCA(system: System, logger: Logger, recompute: bool = False) -> int:
     """Compute eq_times.json using NMR PCA analysis.
 
     Args:
-        system (dict): one of systems of the Databank
+        system (System): one of systems of the Databank
         recompute (bool, optional): Delete previous apl.json and recompute it if True.
         Defaults to False.
     Returns:
@@ -47,7 +47,7 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
     # getting data from databank and preprocessing them
     # Start Parser
     # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
-    parser = nmrpca.Parser(NMLDB_SIMU_PATH, system, 'eq_times.json')
+    parser = nmrpca.Parser(system, 'eq_times.json')
     # Check trajectory
     print(parser.indexingPath)
     vPcode = parser.validatePath()
@@ -88,8 +88,8 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
     parser.concatenateTraj()
     equilibration_times = {}
     # Iterate over trajectories for different lipids
-    for traj in parser.concatenated_trajs:
-        print(f"Main: parsing lipid {traj[4]}")
+    for lip,traj in parser.concatenated_trajs.items():
+        print(f"Main: parsing lipid {lip}")
         # Creat PCA for trajectory
         pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trjLen)
         # Run PCA
@@ -103,7 +103,7 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
         print("Main: Autocorrelations: done")
         # Estimate equilibration time
         te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
-        equilibration_times[traj[4]] = te2 / parser.trjLen
+        equilibration_times[lip] = te2 / parser.trjLen
         print("Main: EQ time: done")
 
         print(te2 / parser.trjLen)
@@ -434,7 +434,7 @@ def computeOP(system: System, logger: Logger, recompute: bool = False) -> int:
                           "names are ambiguous.")
                     continue
 
-                if key in lipids_set.keys():
+                if key in lipids_set:
                     print('Calculating ', key, ' order parameters')
                     mapping_file = system['COMPOSITION'][key]['MAPPING']
                     resname = system['COMPOSITION'][key]['NAME']
@@ -447,17 +447,18 @@ def computeOP(system: System, logger: Logger, recompute: bool = False) -> int:
                         continue
                     if 'gromacs' in software:
                         try:
-                            OrdParam = find_OP(mapping_file, top_fname,
-                                               xtcwhole, resname)
+                            OrdParam = find_OP(system.content[key].mapping_dict,
+                                               top_fname, xtcwhole, resname)
                         except Exception as e:
                             logger.warning(f"We got this exception: \n    {e}")
                             logger.warning("But we will try rebuild the Universe "
                                            "from GROM if using tpr did not work!")
-                            OrdParam = find_OP(mapping_file, gro, xtcwhole, resname)
+                            OrdParam = find_OP(system.content[key].mapping_dict,
+                                               gro, xtcwhole, resname)
 
                     if 'openMM' in software or 'NAMD' in software:
-                        OrdParam = find_OP(mapping_file, struc_fname, trj_fname,
-                                           resname)
+                        OrdParam = find_OP(system.content[key].mapping_dict,
+                                           struc_fname, trj_fname, resname)
 
                     data = {}
 
@@ -686,13 +687,13 @@ def computeFF(system: System, logger: Logger, recompute: bool = False) -> int:
             print("Centering for other than Gromacs may not work if there are"
                   " jumps over periodic boundary conditions in z-direction.")
 
-        if (not os.path.isfile(system_path + os.sep + "FormFactor.json")):
+        if not os.path.isfile(system_path + os.sep + "FormFactor.json"):
             try:
                 if 'gromacs' in system['SOFTWARE']:
-                    FormFactor(system_path, tpr_name, xtccentered, 200,
+                    FormFactor(tpr_name, xtccentered, 200,
                                output_name, system)
                 if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
-                    FormFactor(system_path, struc_name, trj_name, 200,
+                    FormFactor(struc_name, trj_name, 200,
                                output_name, system)
             except ValueError as e:
                 # Here it was expected to have allow_pickle-type errors.

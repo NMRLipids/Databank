@@ -17,9 +17,10 @@ from tqdm import tqdm
 # the universal mapping file
 import periodictable
 
+from DatabankLib.core import System
 from DatabankLib.databankLibrary import lipids_set, loadMappingFile, getLipids
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib import NMLDB_ROOT_PATH
+from DatabankLib import NMLDB_ROOT_PATH, NMLDB_SIMU_PATH
 
 
 # To write data in numpy arrays into json file, we inherit compact JSON
@@ -83,11 +84,12 @@ class FormFactor:
 
     # -- regular methods --
 
-    def __init__(self, path, conf, traj, nbin, output, readme, density_type="electron"):
-        self.path = path
+    def __init__(self, conf, traj, nbin, output,
+                 system: System, density_type="electron"):
         self.conf = conf
         self.traj = traj
-        self.readme = readme
+        self.system = system
+        self.__path = os.path.join(NMLDB_SIMU_PATH, system['path'])
         start_time = time.time()
         try:
             self.u = mda.Universe(self.conf, self.traj)
@@ -96,7 +98,7 @@ class FormFactor:
             if (self.conf[-3:] == 'gro'):
                 raise e
             # assume conf was TPR
-            gro = self.path + os.sep + 'conf.gro'
+            gro = self.__path + os.sep + 'conf.gro'
             print("Generating conf.gro because MDAnalysis cannot read tpr version")
             os.system(f"echo System | gmx trjconv "
                       f"-s {self.conf} -f {self.traj} -dump 0 -o {gro}")
@@ -110,32 +112,17 @@ class FormFactor:
         # the totatl box size in [nm] - will be probably removed and tpr box size or
         # transform of final FF will be used instead
 
-        self.output = path + output
-        self.lipids = getLipids(readme)
-        self.waters = FormFactor.__getWater(readme)
+        self.output = os.path.join(self.__path, output)
+        self.lipids = getLipids(self.system)
+        self.waters = FormFactor.__getWater(self.system)
 
         self.density_type = density_type
-
-        self.system_mapping = self.temporary_mapping_dictionary()
 
         self.calculate_weight()
         self.calculate_density()
 
-    def temporary_mapping_dictionary(self):
-        mapping_dictionary = {}
-        for key1 in self.readme["COMPOSITION"].keys():  #
-
-            key2 = self.readme["COMPOSITION"][key1]["NAME"]
-            mapping_file = self.readme["COMPOSITION"][key1]["MAPPING"]
-            mapping_dict = loadMappingFile(mapping_file)
-
-            # put mapping files into a larger dictionary where molecule name is key and
-            # the dictionary in the correponding mapping file is the value
-            mapping_dictionary[key2] = mapping_dict  # try if this works
-
-        return mapping_dictionary
-
-    def getElectrons(self, mapping_name):
+    @staticmethod
+    def get_electrons(mapping_name):
         # removes numbers and '_M' from the end of string
         name1 = re.sub(r"[0-9]*_M$", "", mapping_name)
         # removes M_X12Y23... sequence from the beginning
@@ -170,17 +157,17 @@ class FormFactor:
 
         return el
 
-    def residueElectronsAll(self, molecule):
+    def residue_electrons_all(self, molecule):
         """
         Return list of electrons
         """
         print(f"Gathering electron list for {molecule}")
         electrons = []
         # get the name of molecule used in simulation files
-        molname = self.readme['COMPOSITION'][molecule]['NAME']
+        molname = self.system['COMPOSITION'][molecule]['NAME']
 
         pairs_residue = FormFactor.__listNamePairs(
-            self.system_mapping[molname], molname)
+            self.system.content[molecule].mapping_dict, molname)
 
         # if lipid is split to multiple residues
         selection_txt = ""
@@ -188,7 +175,7 @@ class FormFactor:
         try:
             selection_txt = (
                 "moltype " +
-                self.readme['COMPOSITION'][molecule]['MOLTYPE'] +
+                self.system['COMPOSITION'][molecule]['MOLTYPE'] +
                 " and ")
         except KeyError:
             pass
@@ -219,7 +206,7 @@ class FormFactor:
 
                 mapping_name = pairs_residue[res][atom_i1][0]
                 # get number of electrons in an atom i of residue
-                e_atom_i = self.getElectrons(mapping_name)
+                e_atom_i = FormFactor.get_electrons(mapping_name)
                 electrons.append(e_atom_i)
 
         return electrons
@@ -227,7 +214,7 @@ class FormFactor:
     def assignElectrons(self):
         # check if simulation is united atom or all atom
         try:
-            UA = self.readme['UNITEDATOM_DICT']
+            UA = self.system['UNITEDATOM_DICT']
         except KeyError:
             UA = False
         else:
@@ -238,17 +225,17 @@ class FormFactor:
         w_weights = []  # separate list for water electrons
 
         if UA:  # UNITED ATOM SIMULATIONS
-            for molecule1 in self.readme['COMPOSITION'].keys():
+            for molecule1 in self.system['COMPOSITION'].keys():
                 print(molecule1)
 
                 if molecule1 in lipids_set:
-                    molecule2 = self.readme['COMPOSITION'][molecule1]['NAME']
+                    molecule2 = self.system['COMPOSITION'][molecule1]['NAME']
                     electrons = []
 
                     pairs_residue = FormFactor.__listNamePairs(
-                        self.system_mapping[molecule2], molecule2)
+                        self.system.content[molecule2].mapping_dict, molecule2)
                     atomsH = FormFactor.__filterHbonds(
-                        self.system_mapping[molecule2].keys())  # list of hydrogen atoms
+                        self.system.content[molecule2].mapping_dict.keys())  # list of hydrogen atoms
 
                     # extract explicit atoms and get the mapping names
                     for res in pairs_residue.keys():
@@ -270,21 +257,21 @@ class FormFactor:
                                 1 for atomH in atomsH
                                 if name1 == re.sub(r'H[1-4]_M', '', atomH[::1])
                                 )
-                            number_e = self.getElectrons(mapping_name)
+                            number_e = FormFactor.get_electrons(mapping_name)
                             e_atom_i = number_e + numberH
                             electrons.append(e_atom_i)
 
                     weights.extend(electrons)
                     l_weights.extend(electrons)
                 else:
-                    w = self.residueElectronsAll(molecule1)
+                    w = self.residue_electrons_all(molecule1)
                     weights.extend(w)
                     if molecule1 == 'SOL':
                         w_weights.extend(w)
 
         else:  # ALL ATOM SIMULATIONS
-            for molecule in self.readme['COMPOSITION'].keys():
-                w = self.residueElectronsAll(molecule)
+            for molecule in self.system['COMPOSITION'].keys():
+                w = self.residue_electrons_all(molecule)
                 weights.extend(w)
                 if molecule in lipids_set:
                     l_weights.extend(w)
@@ -365,24 +352,24 @@ class FormFactor:
         ElectronNumbers = {}
 
         try:
-            UA = self.readme['UNITEDATOM_DICT']
+            UA = self.system['UNITEDATOM_DICT']
         except KeyError:
             UA = False
         else:
-            if self.readme['UNITEDATOM_DICT'] is None:
+            if self.system['UNITEDATOM_DICT'] is None:
                 UA = False
             else:
                 UA = True
 
-        for key1 in self.readme['COMPOSITION'].keys():
-            mol = self.readme['COMPOSITION'][key1]['NAME']
-            print(mol)
-            for universalAN in self.system_mapping[mol]:
-                AtomName = self.system_mapping[mol][universalAN]['ATOMNAME']
+        for key1 in self.system['COMPOSITION'].keys():
+            pdbname = self.system['COMPOSITION'][key1]['NAME']
+            print(pdbname)
+            for universalAN in self.system.content[key1].mapping_dict:
+                AtomName = self.system.content[key1].mapping_dict[universalAN]['ATOMNAME']
                 try:
-                    ResName = self.system_mapping[mol][universalAN]['RESIDUE']
+                    ResName = self.system.content[key1].mapping_dict[universalAN]['RESIDUE']
                 except (KeyError, TypeError):
-                    ResName = mol
+                    ResName = pdbname
 
                 if ResName not in ElectronNumbers.keys():
                     ElectronNumbers[ResName] = {}
@@ -391,7 +378,7 @@ class FormFactor:
                     UAlipidjsonNAME = os.path.join(
                         NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
                         'lipid_json_buildH',
-                        self.readme['UNITEDATOM_DICT'][key1] + '.json')
+                        self.system['UNITEDATOM_DICT'][key1] + '.json')
 
                     with open(UAlipidjsonNAME) as json_file:
                         UAlipidjson = json.load(json_file)
@@ -408,10 +395,10 @@ class FormFactor:
                         pass
 
                     ElectronNumbers[ResName][AtomName] = \
-                        self.getElectrons(universalAN) + numberH
+                        FormFactor.get_electrons(universalAN) + numberH
 
                 else:
-                    ElectronNumbers[ResName][AtomName] = self.getElectrons(universalAN)
+                    ElectronNumbers[ResName][AtomName] = FormFactor.get_electrons(universalAN)
 
         print("ElectronNumbers dictionary: ")
         pprint(ElectronNumbers)

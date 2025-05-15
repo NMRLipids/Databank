@@ -635,12 +635,12 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
                     )
 
         else:
-            logger.warn(
+            logger.warning(
                 f"skipping key '{key_sim}': Not defined in software_sim library"
             )
 
     logger.info(
-        f"found {len(files_tbd)} ressources to download: {', '.join(files_tbd)}"
+        f"found {len(files_tbd)} resources to download: {', '.join(files_tbd)}"
     )
 
     return sim, files_tbd
