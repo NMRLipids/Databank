@@ -385,7 +385,7 @@ if __name__ == "__main__":
     lipids = []
 
     # select lipids
-    for key_mol in lipids_set:
+    for key_mol in lipids_set.names:
         logger.info(f"Calculating number of '{key_mol}' lipids")
         selection = ""
         if key_mol in sim["COMPOSITION"]:
@@ -422,8 +422,8 @@ if __name__ == "__main__":
     logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
 
     # ---- number of each lipid per leaflet
-
-    for key_mol in lipids_set:
+    # TODO: remove code duplication block!
+    for key_mol in lipids_set.names:
         leaflet1 = 0
         leaflet2 = 0
 
@@ -477,7 +477,7 @@ if __name__ == "__main__":
 
     # ----- numbers of other molecules
 
-    for key_mol in molecules_set:
+    for key_mol in molecules_set.names:
         try:
             mol_name = sim["COMPOSITION"][key_mol]["NAME"]
         except KeyError:
