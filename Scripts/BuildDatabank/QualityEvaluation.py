@@ -50,12 +50,12 @@ if __name__ == "__main__":
             data_dict = {}
 
             for doi, path in \
-                    simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid1].items():
+                    simulation.system['EXPERIMENT']['ORDERPARAMETER'][lipid1].items():
                 print(f"Evaluating {lipid1} lipid using experimental data from"
                       f"{doi} in {NMLDB_EXP_PATH}/OrderParameters/{path}")
 
                 # load mapping file
-                mapping_file = simulation.readme['COMPOSITION'][lipid1]['MAPPING']
+                mapping_file = simulation.system['COMPOSITION'][lipid1]['MAPPING']
 
                 print(doi)
                 OP_qual_data = {}
@@ -165,7 +165,7 @@ if __name__ == "__main__":
         ###############################################################################
         # Form factor quality
 
-        expFFpath = simulation.readme['EXPERIMENT']['FORMFACTOR']
+        expFFpath = simulation.system['EXPERIMENT']['FORMFACTOR']
         expFFdata = {}
         if len(expFFpath) > 0:
             expFFpath_full = os.path.join(NMLDB_EXP_PATH, "FormFactors", expFFpath)
