@@ -21,6 +21,7 @@ import warnings  # TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
 
 from DatabankLib.databankLibrary import loadMappingFile
+from DatabankLib.settings.molecules import Lipid
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
 bond_len_max_sq = bond_len_max**2
@@ -204,12 +205,12 @@ def read_trajs_calc_OPs(ordPars, top, trajs):
                 op.traj[i] = op.traj[i] + S / Nframes
 
 
-def parse_op_input(mapping_file: str, lipid_name: str):
+def parse_op_input(mapping_dict: dict, lipid_resname: str):
     """Form pair-list of all OPs which should be calculated
 
     Args:
-        mapping_file (str): mapping file name
-        lipid_name (str): lipid name (residue name)
+        mapping_dict (dict): mapping dictionary
+        lipid_resname (str): lipid name (residue name)
 
     Returns:
         array: List of OrderParameter instances
@@ -217,8 +218,7 @@ def parse_op_input(mapping_file: str, lipid_name: str):
     ordPars = []
     atomC = []
     atomH = []
-    resname = lipid_name
-    mapping_dict = loadMappingFile(mapping_file)
+    resname = lipid_resname
 
     regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")
     regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")
@@ -227,7 +227,7 @@ def parse_op_input(mapping_file: str, lipid_name: str):
     regexp2_C = re.compile(r"M_G[0-9]{1,2}_M")
     regexp3_C = re.compile(r"M_C[0-9]{1,2}_M")
 
-    for mapping_key in mapping_dict.keys():
+    for mapping_key in mapping_dict:
         if (
             regexp1_C.search(mapping_key)
             or regexp2_C.search(mapping_key)
@@ -261,11 +261,11 @@ def parse_op_input(mapping_file: str, lipid_name: str):
     return ordPars
 
 
-def find_OP(inp_fname: str, top_fname: str, traj_fname: str, lipid_name: str):
+def find_OP(mdict: dict, top_fname: str, traj_fname: str, lipid_name: str):
     """Externally used funcion for computing OP values.
 
     Args:
-        inp_fname (_type_): mapping file
+        mdict (_type_): mapping dict
         top_fname (_type_): TPR file
         traj_fname (_type_): TRAJ file
         lipid_name (_type_): lipid name (residue name)
@@ -273,6 +273,6 @@ def find_OP(inp_fname: str, top_fname: str, traj_fname: str, lipid_name: str):
     Returns:
         ordPars: list of OrderParameter instances
     """
-    ordPars = parse_op_input(inp_fname, lipid_name)
+    ordPars = parse_op_input(mdict, lipid_name)
     read_trajs_calc_OPs(ordPars, top_fname, traj_fname)
     return ordPars

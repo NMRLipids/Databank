@@ -19,11 +19,12 @@ import pytest
 
 @pytest.fixture(autouse=True, scope="module")
 def header_module_scope():
+    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
+    os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
     import DatabankLib
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp) as _:
-        print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
-        yield
+    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
+    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
+    yield
     print("DBG: Mocking completed")
 
 
