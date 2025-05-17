@@ -18,7 +18,7 @@ import math
 import MDAnalysis as mda
 
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.core import (System, SystemsCollection)
+from DatabankLib.core import (System)
 from DatabankLib.settings.molecules import (
     lipids_set, molecules_set, molecule_ff_set)
 from DatabankLib.databankio import resolve_download_file_url
@@ -27,7 +27,7 @@ from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dic
 logger = logging.getLogger(__name__)
 
 
-def CalcAreaPerMolecule(system):
+def CalcAreaPerMolecule(system):  # noqa: N802 (API name)
     """
     Calculates average area per lipid for a simulation defined with ``system``.
     It is using the ``apl.json`` file where area per lipid as a function of time
@@ -37,22 +37,21 @@ def CalcAreaPerMolecule(system):
 
     :return: area per lipid (Å^2)
     """
-    APLpath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'apl.json')
+    path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'apl.json')
     try:
-        with open(APLpath) as f:
-            APLdata = json.load(f)
-        sumAPL = 0
-        sumIND = 0
-        for i, j in APLdata.items():
-            sumAPL += j
-            sumIND += 1
-        APL = sumAPL/sumIND
-        return APL
+        with open(path) as f:
+            data = json.load(f)
+        sum_APL = 0  # noqa: N806
+        sum_ind = 0
+        for i, j in data.items():
+            sum_APL += j
+            sum_ind += 1
+        return sum_APL/sum_ind
     except Exception:
-        print('apl.json not found from' + APLpath)
+        print('apl.json not found from' + path)
 
 
-def GetThickness(system):
+def GetThickness(system):  # noqa: N802 (API name)
     """
     Gets thickness for a simulation defined with ``system`` from the ``thickness.json``
     file where thickness calculated by the ``calc_thickness.py`` is stored.
@@ -61,16 +60,16 @@ def GetThickness(system):
 
     :return: membrane thickess (nm) or None
     """
-    ThicknessPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
+    thickness_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
     try:
-        with open(ThicknessPath) as f:
+        with open(thickness_path) as f:
             thickness = json.load(f)
         return thickness
     except Exception:
         return None
 
 
-def ShowEquilibrationTimes(system: dict):
+def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
     """
     Prints relative equilibration time for each lipid within a simulation defined
     by ``system``. Relative equilibration times are calculated with
@@ -79,19 +78,19 @@ def ShowEquilibrationTimes(system: dict):
     :param system: NMRlipids databank dictionary defining a simulation.
     """
 
-    EqTimesPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'eq_times.json')
+    eq_times_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'eq_times.json')
 
     try:
-        with open(EqTimesPath) as f:
-            EqTimeDict = json.load(f)
+        with open(eq_times_path) as f:
+            eq_time_dict = json.load(f)
     except Exception:
         raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
 
-    for i in EqTimeDict:
-        print(i+':', EqTimeDict[i])
+    for i in eq_time_dict:
+        print(i+':', eq_time_dict[i])
 
 
-def GetNlipids(system):
+def GetNlipids(system: System):  # noqa: N802 (API name)
     """
     Returns the total number of lipids in a simulation defined by ``system``.
 
@@ -99,14 +98,14 @@ def GetNlipids(system):
 
     :return: the total number of lipids in the ``system``.
     """
-    Nlipid = 0
+    n_lipid = 0
     for molecule in system['COMPOSITION']:
         if molecule in lipids_set:
-            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    return Nlipid
+            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    return n_lipid
 
 
-def getLipids(system: System, molecules=lipids_set):
+def getLipids(system: System, molecules=lipids_set):  # noqa: N802 (API name)
     """
     Returns a string using MDAnalysis notation that can used to select all lipids from
     the ``system``.
@@ -157,16 +156,18 @@ def simulation2universal_atomnames(system: System, molname: str, atom: str):
 
     return m_atom1
 
+
 @deprecated(reason="Mapping handling is completely refactored.")
-def loadMappingFile(mapping_file):
+def loadMappingFile(mapping_file):  # noqa: N802 (API name)
     """
     This function is deprecated. Use Molecule.register_mapping() from
     DatbankLib.settings.molecules instead.
     """
-    raise NotImplementedError("This function is deprecated. Use Molecule.register_mapping() instead.")
+    raise NotImplementedError("This function is deprecated. "
+                              "Use Molecule.register_mapping() instead.")
 
 
-def getAtoms(system: System, lipid: str):
+def getAtoms(system: System, lipid: str):  # noqa: N802 (API name)
     """
     Return system specific atom names of a lipid
 
@@ -184,7 +185,8 @@ def getAtoms(system: System, lipid: str):
     return atoms
 
 
-def getUniversalAtomName(system: System, atom_name: str, molname: str):
+def getUniversalAtomName(  # noqa: N802 (API name)
+        system: System, atom_name: str, molname: str):
     """
     Returns the universal atom name corresponding the simulation specific ``atomName``
     of a ``lipid`` in a simulation defined by the ``system``.
@@ -248,7 +250,7 @@ def calc_z_dim(gro):
     return z
 
 
-def system2MDanalysisUniverse(system):
+def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
     """
     Takes the ``system`` dictionary as an input, downloads the required files to
     the NMRlipids databank directory and retuns MDAnalysis universe corressponding
@@ -353,7 +355,8 @@ def system2MDanalysisUniverse(system):
     return u
 
 
-def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Universe):
+def read_trj_PN_angles(  # noqa: N802 (API name)
+        molname: str, atom1: str, atom2: str, mda_universe: mda.Universe):
     """
     Calculates the P-N vector angles with respect to membrane normal from the
     simulation defined by the MDAnalysis universe.
@@ -369,7 +372,7 @@ def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Un
                     the average angle over time and molecules,
                     the error of the mean calculated over molecules)
     """
-    mol = MDAuniverse
+    mol = mda_universe
     selection = mol.select_atoms(
         "resname " + molname + " and (name " + atom1 + ")",
         "resname " + molname + " and (name " + atom2 + ")",
@@ -378,27 +381,27 @@ def read_trj_PN_angles(molname: str, atom1: str, atom2: str, MDAuniverse: mda.Un
         "resname " + molname + " and (name " + atom1 + " or name " + atom2 + ")"
     ).center_of_mass()
 
-    Nres = len(selection)
-    Nframes = len(mol.trajectory)
-    angles = np.zeros((Nres, Nframes))
+    n_res = len(selection)
+    n_frames = len(mol.trajectory)
+    angles = np.zeros((n_res, n_frames))
 
-    resAverageAngles = [0] * Nres
-    resSTDerror = [0] * Nres
+    res_aver_angles = [0] * n_res
+    res_std_error = [0] * n_res
     j = 0
 
     for frame in mol.trajectory:
-        for i in range(0, Nres):
+        for i in range(0, n_res):
             residue = selection[i]
             angles[i, j] = calc_angle(residue, com[2])
         j = j + 1
-    for i in range(0, Nres):
-        resAverageAngles[i] = sum(angles[i, :]) / Nframes
-        resSTDerror[i] = np.std(angles[i, :])
+    for i in range(0, n_res):
+        res_aver_angles[i] = sum(angles[i, :]) / n_frames
+        res_std_error[i] = np.std(angles[i, :])
 
-    totalAverage = sum(resAverageAngles) / Nres
-    totalSTDerror = np.std(resAverageAngles) / np.sqrt(Nres)
+    total_average = sum(res_aver_angles) / n_res
+    total_std_error = np.std(res_aver_angles) / np.sqrt(n_res)
 
-    return angles, resAverageAngles, totalAverage, totalSTDerror
+    return angles, res_aver_angles, total_average, total_std_error
 
 
 # -------------------------------------- SEPARATED PART (??) ----------------------
@@ -646,7 +649,7 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
     return sim, files_tbd
 
 
-def calcArea(system):
+def calcArea(system):  # noqa: N802 (API name)
     """
     Returns area of the calculated based on the area per lipid stored in the databank.
 
@@ -654,16 +657,16 @@ def calcArea(system):
 
     :return: area of the system (Å^2)
     """
-    APL = CalcAreaPerMolecule(system)
-    Nlipid = 0
+    APL = CalcAreaPerMolecule(system)  # noqa: N806
+    n_lipid = 0
     for molecule in system['COMPOSITION']:
         if molecule in lipids_set:
-            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    print(Nlipid, APL)
-    return Nlipid*APL/2
+            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    print(n_lipid, APL)
+    return n_lipid*APL/2
 
 
-def GetFormFactorMin(system):
+def GetFormFactorMin(system):  # noqa: N802 (API name)
     """
     Return list of minima of form factor of ``system``.
 
@@ -671,23 +674,23 @@ def GetFormFactorMin(system):
 
     :return: list of form factor minima
     """
-    formFactorPath = os.path.join(NMLDB_SIMU_PATH, system['path'], 'FormFactor.json')
-    with open(formFactorPath) as f:
-        formFactor = json.load(f)
-    iprev = formFactor[0][1]
-    iprevD = 0
-    minX = []
-    for i in formFactor:
-        iD = i[1]-iprev
-        if iD > 0 and iprevD < 0 and i[0] > 0.1:
-            minX.append(i[0])
-        iprevD = i[1] - iprev
+    form_factor_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'FormFactor.json')
+    with open(form_factor_path) as f:
+        form_factor = json.load(f)
+    iprev = form_factor[0][1]
+    iprev_d = 0
+    min_x = []
+    for i in form_factor:
+        i_d = i[1]-iprev
+        if i_d > 0 and iprev_d < 0 and i[0] > 0.1:
+            min_x.append(i[0])
+        iprev_d = i[1] - iprev
         iprev = i[1]
 
-    return minX
+    return min_x
 
 
-def averageOrderParameters(system):
+def averageOrderParameters(system):  # noqa: N802 (API name)
     """
     Returns average order paramaters of *sn*-1 and *sn*-2 acyl chains based on universal
     atom names. The names starting with M_G1C will be assigned to sn-1 and names
@@ -707,22 +710,23 @@ def averageOrderParameters(system):
 
     for lipid in system['COMPOSITION']:
         if lipid in lipids_set and 'CHOL' not in lipid:
-            OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
-            with open(OPpathSIM) as json_file:
-                OPsim = json.load(json_file)
+            OP_path_sim = os.path.join(  # noqa: N806
+                path, lipid + 'OrderParameters.json')
+            with open(OP_path_sim) as json_file:
+                OP_sim = json.load(json_file)  # noqa: N806
 
-            for key in OPsim:
+            for key in OP_sim:
                 if 'M_G1C' in key:
-                    sn1sum += float(OPsim[key][0][0])
+                    sn1sum += float(OP_sim[key][0][0])
                     sn1count += 1
                 elif 'M_G2C' in key:
-                    sn2sum += float(OPsim[key][0][0])
+                    sn2sum += float(OP_sim[key][0][0])
                     sn2count += 1
 
     return sn1sum/sn1count, sn2sum/sn2count
 
 
-def calcLipidFraction(system, lipid):
+def calcLipidFraction(system, lipid):  # noqa: N802 (API name)
     """
     Returns the number fraction of ``lipid`` with respect to total number of lipids.
 
@@ -731,20 +735,20 @@ def calcLipidFraction(system, lipid):
 
     :return: number fraction of ``lipid`` with respect total number of lipids
     """
-    NlipidTOT = 0
+    n_lipid_tot = 0
     for molecule in system['COMPOSITION']:
         if molecule in lipids_set:
-            NlipidTOT += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid_tot += np.sum(system['COMPOSITION'][molecule]['COUNT'])
 
-    Nlipid = 0
+    n_lipid = 0
     for molecule in system['COMPOSITION']:
         if lipid in molecule:
-            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
 
-    return Nlipid/NlipidTOT
+    return n_lipid/n_lipid_tot
 
 
-def getHydrationLevel(system):
+def getHydrationLevel(system):  # noqa: N802 (API name)
     """
     Returns hydration level of the system, i.e., number of water molecules divided
     by number of lipid molecules.
@@ -753,9 +757,9 @@ def getHydrationLevel(system):
 
     :return: number of water molecules divided by number of lipid molecules
     """
-    Nlipid = 0
+    n_lipid = 0
     for molecule in system['COMPOSITION']:
         if molecule in lipids_set:
-            Nlipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    Nwater = system['COMPOSITION']['SOL']['COUNT']
-    return Nwater/Nlipid
+            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+    n_water = system['COMPOSITION']['SOL']['COUNT']
+    return n_water/n_lipid

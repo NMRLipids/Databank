@@ -7,7 +7,6 @@ TODO: organize proper package structure
 # from . import some_module
 
 import os
-from typing import Any
 
 NMLDB_ROOT_PATH: str = os.environ.get(
     "NMLDB_ROOT_PATH",
