@@ -3,9 +3,11 @@
 downloading everything from testing repository.
 
 Test data is stored in `./Data/Simulations.1`
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import glob
 import pytest
