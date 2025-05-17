@@ -18,7 +18,7 @@ from tqdm import tqdm
 import periodictable
 
 from DatabankLib.core import System
-from DatabankLib.databankLibrary import lipids_set, loadMappingFile, getLipids
+from DatabankLib.databankLibrary import lipids_set, getLipids
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib import NMLDB_ROOT_PATH, NMLDB_SIMU_PATH
 
@@ -50,7 +50,7 @@ class FormFactor:
     # Group of static private helper methods
 
     @staticmethod
-    def __listNamePairs(mapping_dict, molecule):
+    def __list_name_pairs(mapping_dict, molecule):
         pairs_dictionary = {}
         residues = [mv['RESIDUE']
                     for _, mv in mapping_dict.items()
@@ -73,13 +73,13 @@ class FormFactor:
         return pairs_dictionary
 
     @staticmethod
-    def __filterHbonds(mapping_names):
-        re_H = re.compile(r'M_([A-Z]{1,2}[0-9]{1,4})*H[0-4]{1,2}_M')
-        filtered = filter(re_H.match, mapping_names)
+    def __filter_hbonds(mapping_names):
+        re_h = re.compile(r'M_([A-Z]{1,2}[0-9]{1,4})*H[0-4]{1,2}_M')
+        filtered = filter(re_h.match, mapping_names)
         return filtered
 
     @staticmethod
-    def __getWater(rmf):
+    def __get_water(rmf):
         return ('resname ' + rmf['COMPOSITION']['SOL']['NAME'])
 
     # -- regular methods --
@@ -114,7 +114,7 @@ class FormFactor:
 
         self.output = os.path.join(self.__path, output)
         self.lipids = getLipids(self.system)
-        self.waters = FormFactor.__getWater(self.system)
+        self.waters = FormFactor.__get_water(self.system)
 
         self.density_type = density_type
 
@@ -166,7 +166,7 @@ class FormFactor:
         # get the name of molecule used in simulation files
         molname = self.system['COMPOSITION'][molecule]['NAME']
 
-        pairs_residue = FormFactor.__listNamePairs(
+        pairs_residue = FormFactor.__list_name_pairs(
             self.system.content[molecule].mapping_dict, molname)
 
         # if lipid is split to multiple residues
@@ -211,20 +211,20 @@ class FormFactor:
 
         return electrons
 
-    def assignElectrons(self):
+    def assign_electrons(self):
         # check if simulation is united atom or all atom
         try:
-            UA = self.system['UNITEDATOM_DICT']
+            ua_flag = self.system['UNITEDATOM_DICT']
         except KeyError:
-            UA = False
+            ua_flag = False
         else:
-            UA = True
+            ua_flag = True
 
         weights = []
         l_weights = []  # separate list for lipid electrons
         w_weights = []  # separate list for water electrons
 
-        if UA:  # UNITED ATOM SIMULATIONS
+        if ua_flag:  # UNITED ATOM SIMULATIONS
             for molecule1 in self.system['COMPOSITION'].keys():
                 print(molecule1)
 
@@ -232,10 +232,11 @@ class FormFactor:
                     molecule2 = self.system['COMPOSITION'][molecule1]['NAME']
                     electrons = []
 
-                    pairs_residue = FormFactor.__listNamePairs(
+                    pairs_residue = FormFactor.__list_name_pairs(
                         self.system.content[molecule2].mapping_dict, molecule2)
-                    atomsH = FormFactor.__filterHbonds(
-                        self.system.content[molecule2].mapping_dict.keys())  # list of hydrogen atoms
+                    h_atoms = FormFactor.__filter_hbonds(
+                        self.system.content[molecule2].mapping_dict.keys())
+                    # list of hydrogen atoms
 
                     # extract explicit atoms and get the mapping names
                     for res in pairs_residue.keys():
@@ -253,12 +254,12 @@ class FormFactor:
 
                             # count how many times name1 occurs in atomsH i.e. how
                             # many H are bound to it
-                            numberH = sum(
-                                1 for atomH in atomsH
-                                if name1 == re.sub(r'H[1-4]_M', '', atomH[::1])
+                            h_num = sum(
+                                1 for h_atm in h_atoms
+                                if name1 == re.sub(r'H[1-4]_M', '', h_atm[::1])
                                 )
                             number_e = FormFactor.get_electrons(mapping_name)
-                            e_atom_i = number_e + numberH
+                            e_atom_i = number_e + h_num
                             electrons.append(e_atom_i)
 
                     weights.extend(electrons)
@@ -301,7 +302,7 @@ class FormFactor:
         if self.density_type == "electron":
             # calc weights to calculate the electron density
             # with the function that maps the electrons to atoms
-            self.wght, self.lipid_wght, self.water_wght = self.assignElectrons()
+            self.wght, self.lipid_wght, self.water_wght = self.assign_electrons()
             print("lenght of wght: " + str(len(self.wght)))
             print("lenght of lipid_wght: " + str(len(self.lipid_wght)))
             print("atoms in system: " + str(len(self.u.atoms.names)))
@@ -336,9 +337,9 @@ class FormFactor:
         box_z = self.u.dimensions[2]  # + 10 if fails
         print(box_z)
         d = box_z/10 / self.nbin  # bin width
-        boxH = box_z/10
-        print(boxH)
-        x = np.linspace(-boxH/2, boxH/2, self.nbin+1)[:-1] + d/2
+        box_h = box_z/10
+        print(box_h)
+        x = np.linspace(-box_h/2, box_h/2, self.nbin+1)[:-1] + d/2
         density_z_centered = np.zeros(self.nbin)
         density_z_no_center = np.zeros(self.nbin)
         density_lipids_center = np.zeros(self.nbin)
@@ -349,75 +350,76 @@ class FormFactor:
         min_z = 10000000
         frame = 0
 
-        ElectronNumbers = {}
+        elnum_dict = {}
 
         try:
-            UA = self.system['UNITEDATOM_DICT']
+            ua_flag = self.system['UNITEDATOM_DICT']
         except KeyError:
-            UA = False
+            ua_flag = False
         else:
             if self.system['UNITEDATOM_DICT'] is None:
-                UA = False
+                ua_flag = False
             else:
-                UA = True
+                ua_flag = True
 
         for key1 in self.system['COMPOSITION'].keys():
             pdbname = self.system['COMPOSITION'][key1]['NAME']
             print(pdbname)
-            for universalAN in self.system.content[key1].mapping_dict:
-                AtomName = self.system.content[key1].mapping_dict[universalAN]['ATOMNAME']
+            mdict = self.system.content[key1].mapping_dict
+            for univ_aname in mdict:
+                aname = mdict[univ_aname]['ATOMNAME']
                 try:
-                    ResName = self.system.content[key1].mapping_dict[universalAN]['RESIDUE']
+                    resname = mdict[univ_aname]['RESIDUE']
                 except (KeyError, TypeError):
-                    ResName = pdbname
+                    resname = pdbname
 
-                if ResName not in ElectronNumbers.keys():
-                    ElectronNumbers[ResName] = {}
+                if resname not in elnum_dict.keys():
+                    elnum_dict[resname] = {}
 
-                if UA and key1 in lipids_set:
-                    UAlipidjsonNAME = os.path.join(
+                if ua_flag and key1 in lipids_set:
+                    ua_lip_json_name = os.path.join(
                         NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
                         'lipid_json_buildH',
                         self.system['UNITEDATOM_DICT'][key1] + '.json')
 
-                    with open(UAlipidjsonNAME) as json_file:
-                        UAlipidjson = json.load(json_file)
+                    with open(ua_lip_json_name) as json_file:
+                        ua_lip_json = json.load(json_file)
 
-                    numberH = 0
+                    h_num = 0
                     try:
-                        if UAlipidjson[AtomName][0] == "CH":
-                            numberH = 1
-                        if UAlipidjson[AtomName][0] == "CH2":
-                            numberH = 2
-                        if UAlipidjson[AtomName][0] == "CH3":
-                            numberH = 3
+                        if ua_lip_json[aname][0] == "CH":
+                            h_num = 1
+                        if ua_lip_json[aname][0] == "CH2":
+                            h_num = 2
+                        if ua_lip_json[aname][0] == "CH3":
+                            h_num = 3
                     except (KeyError, TypeError):
                         pass
 
-                    ElectronNumbers[ResName][AtomName] = \
-                        FormFactor.get_electrons(universalAN) + numberH
+                    elnum_dict[resname][aname] = \
+                        FormFactor.get_electrons(univ_aname) + h_num
 
                 else:
-                    ElectronNumbers[ResName][AtomName] = FormFactor.get_electrons(universalAN)
+                    elnum_dict[resname][aname] = FormFactor.get_electrons(univ_aname)
 
         print("ElectronNumbers dictionary: ")
-        pprint(ElectronNumbers)
+        pprint(elnum_dict)
 
         # define selections and dictionaries for profile calculations
         clipids = self.u.select_atoms(self.lipids)
         cwaters = self.u.select_atoms(self.waters)
 
         print("Generating final electron arrays from frame #1..", end='')
-        weightsALL = np.zeros(self.u.atoms.n_atoms)
+        weights_all = np.zeros(self.u.atoms.n_atoms)
 
-        for rname, AName2Enum in ElectronNumbers.items():
-            for aname, enum in AName2Enum.items():
+        for rname, aname2enum in elnum_dict.items():
+            for aname, enum in aname2enum.items():
                 # all
-                cSel = self.u.select_atoms(f"resname {rname} and name {aname}")
-                weightsALL[[_a.index for _a in cSel]] = enum
+                csel = self.u.select_atoms(f"resname {rname} and name {aname}")
+                weights_all[[_a.index for _a in csel]] = enum
 
-        weightsLIPIDS = weightsALL[[_a.index for _a in clipids]]
-        weightsWATERS = weightsALL[[_a.index for _a in cwaters]]
+        weights_lipids = weights_all[[_a.index for _a in clipids]]
+        weights_waters = weights_all[[_a.index for _a in cwaters]]
         print("done.")
 
         for ts in tqdm(self.u.trajectory, desc="Iterating over trajectory"):
@@ -467,22 +469,22 @@ class FormFactor:
 
             # calculates the total density profile; keep for now
             density_z_centered += np.histogram(
-                crds, bins=self.nbin, range=(-boxH/2, boxH/2),
-                weights=weightsALL / vbin,
+                crds, bins=self.nbin, range=(-box_h/2, box_h/2),
+                weights=weights_all / vbin,
             )[0]
             density_z_no_center += np.histogram(
-                crds_no_center, bins=self.nbin, range=(0, boxH),
-                weights=weightsLIPIDS / vbin,
+                crds_no_center, bins=self.nbin, range=(0, box_h),
+                weights=weights_lipids / vbin,
             )[0]
             # ELECTRON WEIGHTS
             density_lipids_center += np.histogram(
-                clipids_center, bins=self.nbin, range=(-boxH/2, boxH/2),
-                weights=weightsLIPIDS / vbin,
+                clipids_center, bins=self.nbin, range=(-box_h/2, box_h/2),
+                weights=weights_lipids / vbin,
             )[0]
             # ELECTRON WEIGHTS
             density_waters_center += np.histogram(
-                cwaters_center, bins=self.nbin, range=(-boxH/2, boxH/2),
-                weights=weightsWATERS / vbin,
+                cwaters_center, bins=self.nbin, range=(-box_h/2, box_h/2),
+                weights=weights_waters / vbin,
             )[
                 0
             ]
@@ -503,38 +505,38 @@ class FormFactor:
 
         # Get the indexes of the final density data where all the time steps contribute
         # In other words, take the coordinates of the smalest box from the simulation
-        final_FF_start = int(np.round(self.nbin/2 - min_z/d/2)) + 1
-        final_FF_end = int(np.round(self.nbin/2 + min_z/d/2)) - 1
+        final_ff_start = int(np.round(self.nbin/2 - min_z/d/2)) + 1
+        final_ff_end = int(np.round(self.nbin/2 + min_z/d/2)) - 1
 
-        FF_range = np.linspace(0, 999, 1000)
+        ff_range = np.linspace(0, 999, 1000)
         fa_aver, fb_aver = self.fourier(
-            density_data[final_FF_start:final_FF_end, 1],
-            density_data[final_FF_end, 0] - density_data[final_FF_start, 0],
-            FF_range,
+            density_data[final_ff_start:final_ff_end, 1],
+            density_data[final_ff_end, 0] - density_data[final_ff_start, 0],
+            ff_range,
             density_data[1, 0] - density_data[0, 0],
         )
 
         # Plot density profiles from the average density with minimal box
         fourrier_result2 = np.sqrt(np.multiply(fa_aver, fa_aver) +
                                    np.multiply(fb_aver, fb_aver))
-        fourrier_data2 = np.vstack((FF_range*0.1*0.01, fourrier_result2)).transpose()
+        fourrier_data2 = np.vstack((ff_range*0.1*0.01, fourrier_result2)).transpose()
 
         # Save data into files
         # minimum box size density
         with open(str(self.output)+"TotalDensity.dat", 'wb') as f:
-            np.savetxt(f, density_data[final_FF_start+1:final_FF_end-1, :],
+            np.savetxt(f, density_data[final_ff_start+1:final_ff_end-1, :],
                        fmt='%8.4f  %.8f')
 
         with open(str(self.output)+"LipidDensity_no_center.dat", 'wb') as f:
-            np.savetxt(f, density_data_no_center[final_FF_start+1:final_FF_end-1, :],
+            np.savetxt(f, density_data_no_center[final_ff_start+1:final_ff_end-1, :],
                        fmt='%8.4f  %.8f')
 
         with open(str(self.output)+"LipidDensity.dat", 'wb') as f:
-            np.savetxt(f, density_lipids_center[final_FF_start+1:final_FF_end-1, :],
+            np.savetxt(f, density_lipids_center[final_ff_start+1:final_ff_end-1, :],
                        fmt='%8.4f  %.8f')
 
         with open(str(self.output)+"WaterDensity.dat", 'wb') as f:
-            np.savetxt(f, density_waters_center[final_FF_start+1:final_FF_end-1, :],
+            np.savetxt(f, density_waters_center[final_ff_start+1:final_ff_end-1, :],
                        fmt='%8.4f  %.8f')
 
         # this is the important file form factors
@@ -544,22 +546,22 @@ class FormFactor:
         # write outputs in JSON
 
         with open(str(self.output)+"TotalDensity.json", 'w') as f:
-            json.dump(density_data[final_FF_start+1:final_FF_end-1, :],
+            json.dump(density_data[final_ff_start+1:final_ff_end-1, :],
                       f, cls=NumpyArrayEncoder)
 
         with open(str(self.output)+"LipidDensity.json", 'w') as f:
-            json.dump(density_lipids_center[final_FF_start+1:final_FF_end-1, :],
+            json.dump(density_lipids_center[final_ff_start+1:final_ff_end-1, :],
                       f, cls=NumpyArrayEncoder)
 
         with open(str(self.output)+"WaterDensity.json", 'w') as f:
-            json.dump(density_waters_center[final_FF_start+1:final_FF_end-1, :],
+            json.dump(density_waters_center[final_ff_start+1:final_ff_end-1, :],
                       f, cls=NumpyArrayEncoder)
 
         with open(str(self.output)+"FormFactor.json", 'w') as f:
             json.dump(fourrier_data2, f, cls=NumpyArrayEncoder)
     # end calculate_density
 
-    def fourier(self, ff_density, box_z, FF_range, d_ff):
+    def fourier(self, ff_density, box_z, ff_range, d_ff):
         """Calculates fourier transform of ff_density in the FF_range.
         It calculates a "height" of a bin for FF puroposes; in this case the number of
         bins is constant and the bin width changes.
@@ -567,7 +569,7 @@ class FormFactor:
         Args:
             ff_density (_type_): TODO: fill
             box_z (_type_): TODO: fill
-            FF_range (_type_): TODO: fill
+            ff_range (_type_): TODO: fill
             d_ff (_type_): TODO: fill
 
         Returns:
@@ -587,11 +589,11 @@ class FormFactor:
             k += 1
         bulk /= (2*k)
 
-        fa = np.zeros(FF_range.shape[0])
-        fb = np.zeros(FF_range.shape[0])
+        fa = np.zeros(ff_range.shape[0])
+        fb = np.zeros(ff_range.shape[0])
 
         for j in range(0, ff_density.shape[0]):
-            fa += (ff_density[j]-bulk)*np.cos(FF_range*ff_x[j]*0.01)*d_ff
-            fb += (ff_density[j]-bulk)*np.sin(FF_range*ff_x[j]*0.01)*d_ff
+            fa += (ff_density[j]-bulk)*np.cos(ff_range*ff_x[j]*0.01)*d_ff
+            fb += (ff_density[j]-bulk)*np.sin(ff_range*ff_x[j]*0.01)*d_ff
 
         return fa, fb

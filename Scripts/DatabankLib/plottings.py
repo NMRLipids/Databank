@@ -5,22 +5,21 @@ Network communication. Downloading files. Checking links etc.
 
 import os
 import json
-import yaml
 import numpy as np
 import matplotlib.pyplot as plt
 
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
-from DatabankLib.core import initialize_databank
 
 
-def plotFormFactor(expFormFactor, k, legend, PlotColor):
+def plotFormFactor(  # noqa: N802
+        exp_form_factor, k, legend, plot_color):
     """:meta private:"""
-    xValues = []
-    yValues = []
-    for i in expFormFactor:
-        xValues.append(i[0])
-        yValues.append(k * i[1])
-    plt.plot(xValues, yValues, label=legend, color=PlotColor, linewidth=4.0)
+    x_vals = []
+    y_vals = []
+    for i in exp_form_factor:
+        x_vals.append(i[0])
+        y_vals.append(k * i[1])
+    plt.plot(x_vals, y_vals, label=legend, color=plot_color, linewidth=4.0)
     plt.xlabel(r"$q_{z} [Å^{-1}]$", size=20)
     plt.ylabel(r"$|F(q_{z})|$", size=20)
     plt.xticks(size=20)
@@ -31,24 +30,24 @@ def plotFormFactor(expFormFactor, k, legend, PlotColor):
     plt.savefig("FormFactor.pdf")
 
 
-def plotOrderParameters(OPsim, OPexp):
+def plotOrderParameters(OPsim, OPexp):  # noqa
     """:meta private:"""
-    xValuesHG = []
-    xValuesSN1 = []
-    xValuesSN2 = []
+    xValuesHG = []  # noqa: N806
+    xValuesSN1 = []  # noqa: N806
+    xValuesSN2 = []  # noqa: N806
 
-    yValuesHGsim = []
-    yValuesSN1sim = []
-    yValuesSN2sim = []
-    yValuesHGsimERR = []
-    yValuesSN1simERR = []
-    yValuesSN2simERR = []
-    yValuesHGexp = []
-    yValuesSN1exp = []
-    yValuesSN2exp = []
-    xValuesHGexp = []
-    xValuesSN1exp = []
-    xValuesSN2exp = []
+    yValuesHGsim = []  # noqa: N806
+    yValuesSN1sim = []  # noqa: N806
+    yValuesSN2sim = []  # noqa: N806
+    yValuesHGsimERR = []  # noqa: N806
+    yValuesSN1simERR = []  # noqa: N806
+    yValuesSN2simERR = []  # noqa: N806
+    yValuesHGexp = []  # noqa: N806
+    yValuesSN1exp = []  # noqa: N806
+    yValuesSN2exp = []  # noqa: N806
+    xValuesHGexp = []  # noqa: N806
+    xValuesSN1exp = []  # noqa: N806
+    xValuesSN2exp = []  # noqa: N806
 
     sn1carbons = {
         "M_G1C3_M M_G1C3H1_M": 2,
@@ -124,7 +123,7 @@ def plotOrderParameters(OPsim, OPexp):
         "M_G2C19_M M_G2C19H3_M": 18,
     }
 
-    HGcarbons = {
+    HGcarbons = {  # noqa: N806
         "M_G3N6C1_M M_G3N6C1H1_M": 1,
         "M_G3N6C1_M M_G3N6C1H2_M": 1,
         "M_G3N6C1_M M_G3N6C1H3_M": 1,
@@ -231,7 +230,7 @@ def plotOrderParameters(OPsim, OPexp):
     plt.show()
 
 
-def plotSimulation(system, lipid: str):
+def plotSimulation(system, lipid: str):  # noqa: N802
     """
     Creates plots of form factor and C-H bond order parameters for the selected
     ``lipid`` from a simulation given by system.
@@ -241,46 +240,46 @@ def plotSimulation(system, lipid: str):
 
     """
     path = os.path.join(NMLDB_SIMU_PATH, system['path'])
-    FFpathSIM = os.path.join(path, 'FormFactor.json')
-    OPpathSIM = os.path.join(path, lipid + 'OrderParameters.json')
-    READMEfilepath = os.path.join(path, 'README.yaml')
-    FFQualityFilePath = os.path.join(path, 'FormFactorQuality.json')
+    ff_path_sim = os.path.join(path, 'FormFactor.json')
+    op_path_sim = os.path.join(path, lipid + 'OrderParameters.json')
+    ffqual_fpath = os.path.join(path, 'FormFactorQuality.json')
 
     print('DOI: ', system['DOI'])
 
     try:
-        with open(FFQualityFilePath) as json_file:
-            FFq = json.load(json_file)
-        print('Form factor quality: ', FFq[0])
+        with open(ffqual_fpath) as json_file:
+            ff_quality = json.load(json_file)
+        print('Form factor quality: ', ff_quality[0])
         ffdir = os.path.join(NMLDB_EXP_PATH, 'FormFactors',
                              system['EXPERIMENT']['FORMFACTOR'])
         for subdir, dirs, files in os.walk(ffdir):
             for filename in files:
                 if filename.endswith('_FormFactor.json'):
-                    FFpathEXP = subdir + '/' + filename
-        with open(FFpathEXP) as json_file:
-            FFexp = json.load(json_file)
+                    ff_path_exp = subdir + '/' + filename
+        with open(ff_path_exp) as json_file:
+            ff_exp = json.load(json_file)
     except Exception:
         print('Force field quality not found')
 
-    with open(OPpathSIM) as json_file:
-        OPsim = json.load(json_file)
+    with open(op_path_sim) as json_file:
+        op_sim = json.load(json_file)
 
-    OPexp = {}
-    for expOPfolder in list(system['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
-        OPpathEXP = os.path.join(NMLDB_EXP_PATH, 'OrderParameters',
-                                 expOPfolder, lipid + '_Order_Parameters.json')
-        with open(OPpathEXP) as json_file:
-            OPexp.update(json.load(json_file))
+    op_exp = {}
+    for exp_op_folder in list(system['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
+        op_path_exp = os.path.join(
+            NMLDB_EXP_PATH, 'OrderParameters', exp_op_folder,
+            lipid + '_Order_Parameters.json')
+        with open(op_path_exp) as json_file:
+            op_exp.update(json.load(json_file))
 
     try:
-        with open(FFpathSIM) as json_file:
-            FFsim = json.load(json_file)
-        plotFormFactor(FFsim, 1, "Simulation", "red")
-        plotFormFactor(FFexp, FFq[1], "Experiment", "black")
+        with open(ff_path_sim) as json_file:
+            ff_sim = json.load(json_file)
+        plotFormFactor(ff_sim, 1, "Simulation", "red")
+        plotFormFactor(ff_exp, ff_quality[1], "Experiment", "black")
         plt.show()
     except Exception:
         plt.show()
         print('Form factor plotting failed')
 
-    plotOrderParameters(OPsim, OPexp)
+    plotOrderParameters(op_sim, op_exp)

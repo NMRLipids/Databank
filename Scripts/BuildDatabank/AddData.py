@@ -42,6 +42,7 @@ from MDAnalysis import Universe
 
 # import databank dictionaries
 import DatabankLib
+from DatabankLib.core import System
 from DatabankLib.databankLibrary import (
     calc_file_sha1_hash,
     create_databank_directories,
@@ -118,7 +119,6 @@ if __name__ == "__main__":
         info_yaml = yaml.load(
             yaml_file, Loader=yaml.FullLoader
         )  # TODO may throw yaml.YAMLError
-    yaml_file.close()
 
     # Show the input read
     logger.debug(f"{os.linesep} Input read from {input_path} file:")
@@ -128,14 +128,14 @@ if __name__ == "__main__":
 
     # validate yaml entries and return updated sim dict
     try:
-        sim, files = parse_valid_config_settings(info_yaml)
+        sim_dict, files = parse_valid_config_settings(info_yaml)
     except KeyError as e:
         logger.error(f"missing entry key in yaml config: {e}, aborting")
         logger.error(traceback.format_exc())
         quit(1)
     except Exception as e:
         logger.error(
-            f"an '{type(e).__name__}' occured while processing"
+            f"an '{type(e).__name__}' occured while performing validity check"
             f" '{input_path}', script has been aborted"
         )
         logger.error(e)
@@ -147,7 +147,20 @@ if __name__ == "__main__":
         logger.debug("valid sim entry keys:")
         pp = pprint.PrettyPrinter(width=41, compact=True)
         if logger.isEnabledFor(logging.DEBUG):
-            pp.pprint(sim)
+            pp.pprint(sim_dict)
+
+    try:
+        sim = System(sim_dict)
+        # mapping files are registered here!
+    except Exception as e:
+        logger.error(
+            f"an '{type(e).__name__}' occured while processing dict->System"
+            f" '{input_path}', script has been aborted"
+        )
+        logger.error(e)
+        quit(1)
+    else:
+        logger.info(f"System object is successfully created from '{input_path}' file")
 
     # Create temporary directory where to download files and analyze them
 
@@ -308,7 +321,7 @@ if __name__ == "__main__":
     )
 
     try:
-        struc, top, traj = get_struc_top_traj_fnames(sim, joinPath=dir_tmp)
+        struc, top, traj = get_struc_top_traj_fnames(sim, join_path=dir_tmp)
     except (ValueError, KeyError) as e:
         logger.error(str(type(e)) + " => " + str(e))
         quit(1)
@@ -332,7 +345,7 @@ if __name__ == "__main__":
         fail_from_top = True
 
     # if previous fails then try the same from struc + trajectory
-    if (fail_from_top and struc is not None):
+    if fail_from_top and struc is not None:
         try:
             logger.info(f"MDAnalysis tries to use {struc} and {traj}")
             u = Universe(struc, traj)
@@ -354,17 +367,17 @@ if __name__ == "__main__":
             sim["WARNINGS"] is not None and
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
-            execStr = (
+            exec_str = (
                 f"executing 'echo System | trjconv -s {top} -f {traj} "
                 f"-dump 0 -o {gro}'"
             )
         else:
-            execStr = (
+            exec_str = (
                 f"executing 'echo System | gmx trjconv -s {top} -f {traj}"
                 f" -dump 0 -o {gro}'"
             )
-        logger.debug(execStr)
-        os.system(execStr)
+        logger.debug(exec_str)
+        os.system(exec_str)
         try:
             u = Universe(gro, traj)
             # write first frame into gro file
@@ -497,13 +510,13 @@ if __name__ == "__main__":
     nsteps = 0
     nstxout = 0
 
-    Nframes = len(u.trajectory)
+    n_frames = len(u.trajectory)
     timestep = u.trajectory.dt
 
-    logger.info(f"Number of frames: {Nframes}")
+    logger.info(f"Number of frames: {n_frames}")
     logger.info(f"Timestep: {timestep}")
 
-    trj_length = Nframes * timestep
+    trj_length = n_frames * timestep
 
     sim["TRJLENGTH"] = trj_length
 
@@ -535,7 +548,7 @@ if __name__ == "__main__":
 
     # Check that the number of atoms between data and README.yaml match
 
-    number_of_atomsTRJ = u.atoms.n_atoms
+    natoms_trj = u.atoms.n_atoms
 
     number_of_atoms = 0
     for key_mol in sim["COMPOSITION"]:
@@ -558,9 +571,9 @@ if __name__ == "__main__":
                 np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
             )
 
-    if number_of_atoms != number_of_atomsTRJ:
+    if number_of_atoms != natoms_trj:
         stop = input(
-            f"Number of atoms in trajectory {number_of_atomsTRJ} and README.yaml "
+            f"Number of atoms in trajectory {natoms_trj} and README.yaml "
             f"{number_of_atoms} do no match. Check the mapping files and molecule"
             f" names. {os.linesep} If you know what you are doing, you can still "
             "continue the running the script. Do you want to (y/n)?"
@@ -573,7 +586,7 @@ if __name__ == "__main__":
                 " CHECK RESULTS MANUALLY!"
             )
 
-    sim["NUMBER_OF_ATOMS"] = number_of_atomsTRJ
+    sim["NUMBER_OF_ATOMS"] = natoms_trj
     logger.info(f"Number of atoms in the system: {str(sim['NUMBER_OF_ATOMS'])}")
 
     # ---- DATE OF RUNNING ----
@@ -606,9 +619,9 @@ if __name__ == "__main__":
     shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
 
     # dictionary saved in yaml format
-    outfileDICT = os.path.join(dir_tmp, "README.yaml")
+    outfile_dict = os.path.join(dir_tmp, "README.yaml")
 
-    with open(outfileDICT, "w") as f:
+    with open(outfile_dict, "w") as f:
         yaml.dump(sim, f, sort_keys=False, allow_unicode=True)
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),

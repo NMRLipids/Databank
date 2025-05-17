@@ -11,7 +11,6 @@ from abc import ABC, abstractmethod
 import os
 import yaml
 import re
-from deprecated import deprecated
 
 from DatabankLib import NMLDB_MOL_PATH
 
@@ -181,16 +180,18 @@ class MoleculeSet(MutableSet, ABC):
         """
         Add a lipid to the set.
 
-        :param item: Can add either Molecule or str (then Molecule constructor will be called)
+        :param item: Can add either Molecule or str (then Molecule constructor
+                     will be called)
         """
         if self._test_item_type(item):
             self._items.add(item)
             self._names.add(item.name.toupper())
         elif isinstance(item, str):
-            self._items.add(self._create_item(item)) # here we call Lipid constructor
+            self._items.add(self._create_item(item))  # here we call Lipid constructor
             self._names.add(item.upper())
         else:
-            raise TypeError(f"Only proper instances can be added to {type(self).__name__}.")
+            raise TypeError(
+                f"Only proper instances can be added to {type(self).__name__}.")
 
     def discard(self, item):
         """
@@ -203,11 +204,11 @@ class MoleculeSet(MutableSet, ABC):
             if item.upper() not in self._names:
                 return
             ifound = None
-            for l in self._items:
-                if l.name.upper() == item.upper():
-                    ifound = l
+            for i in self._items:
+                if i.name.upper() == item.upper():
+                    ifound = i
                     break
-            assert(ifound is not None)
+            assert ifound is not None
             self._items.discard(ifound)
             self._names.discard(item.upper())
 
@@ -248,6 +249,7 @@ class LipidSet(MoleculeSet):
             lset.add(name)
         return lset
 
+
 class NonLipidSet(MoleculeSet):
     """
     MoleculeSet specialization for NonLipid.
@@ -277,6 +279,7 @@ class NonLipidSet(MoleculeSet):
             lset.add(name)
         return lset
 
+
 lipids_set: LipidSet = LipidSet.load_from_data()
 """ Dictionary of possible lipids """
 
@@ -290,7 +293,7 @@ molecules_dict = molecules_set
 """ @deprecated: Use molecules_set instead"""
 
 molecule_ff_set = {("FF" + x) for x in (lipids_set.names | molecules_set.names)}
-""" 
+"""
 Dictionary containing possible force-field labels for molecules given by the contributor
  (used for README/info fields validation)
 """

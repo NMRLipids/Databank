@@ -26,21 +26,21 @@ if __name__ == "__main__":
 
     for simulation in simulations:
         # save OP quality and FF quality here
-        DATAdir = os.path.join(NMLDB_SIMU_PATH, simulation.indexingPath)
+        DATAdir = os.path.join(NMLDB_SIMU_PATH, simulation._path)
         print('Analyzing: ', DATAdir)
 
         # Order Parameters
         system_quality = {}
-        for lipid1 in simulation.getLipids():
+        for lipid1 in simulation.get_lipids():
             print("\n"
                   "Evaluating order parameter quality of "
-                  f"simulation data in {simulation.indexingPath}")
+                  f"simulation data in {simulation._path}")
 
             OP_data_lipid = {}
             # convert elements to float because in some files the elements are strings
             try:
-                for key, value in simulation.OPdata[lipid1].items():
-                    OP_array = [float(x) for x in simulation.OPdata[lipid1][key][0]]
+                for key, value in simulation.op_data[lipid1].items():
+                    OP_array = [float(x) for x in simulation.op_data[lipid1][key][0]]
                     OP_data_lipid[key] = OP_array
             except Exception:
                 continue
@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 data_dict[doi] = OP_qual_data
 
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
-                fragments = qq.getFragments(mapping_file)
+                fragments = qq.get_fragments(mapping_file)
                 fragment_qual_dict[doi] = qq.fragmentQuality(
                     fragments, lipidExpOPdata, OP_data_lipid)
 
@@ -158,7 +158,7 @@ if __name__ == "__main__":
         if SQout:
             with open(outfile2, 'w') as f:
                 json.dump(system_qual_output, f)
-            print('Order parameter quality evaluated for ' + simulation.indexingPath)
+            print('Order parameter quality evaluated for ' + simulation._path)
             EvaluatedOPs += 1
             print('')
 
@@ -176,7 +176,7 @@ if __name__ == "__main__":
                         with open(filepath) as json_file:
                             expFFdata = json.load(json_file)
 
-        simFFdata = simulation.FFdata
+        simFFdata = simulation.ff_data
 
         if len(expFFpath) > 0 and len(simFFdata) > 0:
             ffQuality = qq.formfactorQuality(simFFdata, expFFdata)

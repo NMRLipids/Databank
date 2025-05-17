@@ -18,16 +18,16 @@ import os
 
 lipid_numbers_list = lipids_set.names  # should contain all lipid names
 
-
-class Simulation:
-    def __init__(self, readme, OPdata, FFdata, indexingPath):
+# TODO: inherit from System
+class QualSimulation:
+    def __init__(self, readme, op_data, ff_data, idx_path):
         self.readme = readme.copy()
         # dictionary where key is the lipid type and value is order parameter file
-        self.OPdata = OPdata
-        self.FFdata = FFdata
-        self.indexingPath = indexingPath
+        self.op_data = op_data
+        self.ff_data = ff_data
+        self.indexingPath = idx_path
 
-    def getLipids(self, molecules=lipid_numbers_list):
+    def get_lipids(self, molecules=lipid_numbers_list):
         lipids = []
 
         for key in self.readme['COMPOSITION'].keys():
@@ -35,7 +35,7 @@ class Simulation:
                 lipids.append(key)
         return lipids
 
-    def molarFraction(self, molecule, molecules=lipid_numbers_list):  # only for lipids
+    def molar_fraction(self, molecule, molecules=lipid_numbers_list):  # only for lipids
         sum_lipids = 0
         number = sum(self.readme['COMPOSITION'][molecule]['COUNT'])
 
@@ -72,23 +72,23 @@ def prob_S_in_g(OP_exp: float, exp_error: float,
     a = OP_exp - exp_error
     b = OP_exp + exp_error
 
-    A = (OP_sim-a)/op_sim_sd
-    B = (OP_sim-b)/op_sim_sd
-    P_S = scipy.stats.t.sf(B, df=1, loc=0, scale=1) - \
-        scipy.stats.t.sf(A, df=1, loc=0, scale=1)
+    a_rel = (OP_sim-a)/op_sim_sd
+    b_rel = (OP_sim-b)/op_sim_sd
+    p_s = scipy.stats.t.sf(b_rel, df=1, loc=0, scale=1) - \
+        scipy.stats.t.sf(a_rel, df=1, loc=0, scale=1)
 
-    if np.isnan(P_S):
-        return P_S
+    if np.isnan(p_s):
+        return p_s
 
     # this is an attempt to deal with precision, max set manually to 70
     dc.getcontext().prec = 70
-    _ = -dc.Decimal(P_S).log10()
+    _ = -dc.Decimal(p_s).log10()
 
-    return float(P_S)
+    return float(p_s)
 
 
 # quality of molecule fragments
-def getFragments(mapping_file):
+def get_fragments(mapping_file):
     mapping_dict = loadMappingFile(mapping_file)
 
     fragments = {}
@@ -253,11 +253,11 @@ def systemQuality(system_fragment_qualities, simulation):
     w_nan = []
 
     for lipid in system_fragment_qualities.keys():
-        _ = getFragments(simulation.system['COMPOSITION'][lipid]['MAPPING'])
+        _ = get_fragments(simulation.system['COMPOSITION'][lipid]['MAPPING'])
         # copy keys to new dictionary
         lipid_dict = dict.fromkeys(system_fragment_qualities[lipid].keys(), 0)
 
-        w = simulation.molarFraction(lipid)
+        w = simulation.molar_fraction(lipid)
 
         for key, value in system_fragment_qualities[lipid].items():
             if not np.isnan(value):
@@ -540,7 +540,7 @@ def loadSimulations():
                     # FormFactor data for this system is missed
                     pass
                 simulations.append(
-                    Simulation(system, simOPdata, simFFdata, system["path"])
+                    QualSimulation(system, simOPdata, simFFdata, system["path"])
                 )
             else:
                 print("The simulation does not have experimental data.")

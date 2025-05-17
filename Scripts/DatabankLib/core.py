@@ -11,7 +11,7 @@ from typing import Dict
 from DatabankLib.settings.molecules import Molecule
 
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.settings.molecules import Lipid, lipids_set, lipids_dict, molecules_set, NonLipid
+from DatabankLib.settings.molecules import Lipid, lipids_set, molecules_set, NonLipid
 
 
 class SystemsCollection(collections.abc.Sequence):
@@ -19,9 +19,9 @@ class SystemsCollection(collections.abc.Sequence):
 
     def __init__(self, iterable=[]):
         self.data = iterable
-        self.__genIndexByID()
+        self.__get_index_byid()
 
-    def __genIndexByID(self):
+    def __get_index_byid(self):
         self._idx = dict()
         for i in range(len(self)):
             if 'ID' in self[i].keys():
@@ -53,7 +53,7 @@ class System(collections.abc.MutableMapping):
             raise TypeError("Expected dict or Mapping")
 
         self._content = {}
-        for k,v in self["COMPOSITION"].items():
+        for k, v in self["COMPOSITION"].items():
             mol = None
             if k in lipids_set:
                 mol = Lipid(k)
@@ -135,7 +135,7 @@ def initialize_databank():
 
 
 # TODO: is not used at all in the project!!
-def print_README(system):
+def print_README(system):  # noqa: N802 (API)
     """
     Prints the content of ``system`` dictionary in human readable format.
 
@@ -144,12 +144,13 @@ def print_README(system):
     """
     if system == 'example':
         current_folder = os.path.dirname(os.path.realpath(__file__))
-        readmePath = os.path.join(current_folder, 'settings', 'READMEexplanations.yaml')
-        with open(readmePath, 'r') as file:
-            readmeFile = yaml.safe_load(file)
+        readme_path = os.path.join(
+            current_folder, 'settings', 'READMEexplanations.yaml')
+        with open(readme_path, 'r') as file:
+            readme_file = yaml.safe_load(file)
     else:
-        readmeFile = system
+        readme_file = system
 
-    for key in readmeFile:
+    for key in readme_file:
         print('\033[1m' + key + ":" + '\033[0m')
-        print(" ", readmeFile[key])
+        print(" ", readme_file[key])

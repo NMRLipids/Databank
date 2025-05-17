@@ -1,4 +1,4 @@
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as etree
 
 
 def openmm_input(input, type):
@@ -50,7 +50,7 @@ def read_xml_input(input):
 
         print("File does not exist")
 
-    tree = ET.parse(filename.name)
+    tree = etree.parse(filename.name)
     temp = [
         value
         for key, value in tree.getroot()[1].attrib.items()
@@ -60,7 +60,7 @@ def read_xml_input(input):
     return (["temp"], [temp])
 
 
-class openmmParser:
+class OpenMMParser:
 
     def __init__(self, filename, type):
         [properties, values] = openmm_input(filename, type)
@@ -71,18 +71,18 @@ class openmmParser:
     #       self.ptype = values[properties.index('p_type')]
     #       self.dt = values[properties.index('dt')]
 
-    def setTempurature(self, temp):
+    def set_tempurature(self, temp):
 
         self.temperature = temp
 
-    def setPressure(self, pressure):
+    def set_pressure(self, pressure):
 
         self.pressure = pressure
 
-    def setPType(self, ptype):
+    def set_ptype(self, ptype):
 
         self.ptype = ptype
 
-    def setDt(self, dt):
+    def set_dt(self, dt):
 
         self.dt = dt
