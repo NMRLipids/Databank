@@ -3,9 +3,11 @@
 universe and from-trajectories computations.
 
 Test folder: Data/Simulations.1
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import glob
 from tempfile import TemporaryDirectory

@@ -1,13 +1,14 @@
 """
 `test_adddata.py` perform regression testing of adding-data functionality
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import subprocess
 from tempfile import TemporaryDirectory
 import pytest
-import DatabankLib
 
 
 @pytest.fixture(scope="module")
@@ -39,14 +40,18 @@ def header_module_scope():
 
 class TestAddData:
 
-    exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "Scripts",
-                       "BuildDatabank", "AddData.py")
+    def _init(self):
+        import DatabankLib
+        self.exe = os.path.join(
+            DatabankLib.NMLDB_ROOT_PATH, "Scripts",
+            "BuildDatabank", "AddData.py")
 
     """
     Testing `AddData.py -h` behavior
     """
 
     def test_add_data_h(self):
+        self._init()
         result = subprocess.run([
             self.exe,
             "-h"
@@ -64,6 +69,7 @@ class TestAddData:
             "infofn, debug", [("info566.yaml", False),
                               ("info566.yaml", True)])
     def test_add_data_addgood(self, infofn, debug, tmpWorkDir, tmpOutDir):
+        self._init()
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
         runList = [
             self.exe,
@@ -83,6 +89,7 @@ class TestAddData:
 
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
     def test_add_data_fail(self, infofn, tmpWorkDir, tmpOutDir):
+        self._init()
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
         result = subprocess.run([
             self.exe,
