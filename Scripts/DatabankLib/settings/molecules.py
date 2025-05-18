@@ -49,7 +49,7 @@ class Molecule(ABC):
     @property
     def mapping_dict(self) -> dict:
         # preload on first call
-        if self.mapping_dict is None:
+        if self._mapping_dict is None:
             with open(self._mapping_fpath, "r") as yaml_file:
                 self._mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         return self._mapping_dict
