@@ -60,7 +60,8 @@ class System(collections.abc.MutableMapping):
             elif k in molecules_set:
                 mol = NonLipid(k)
             else:
-                raise ValueError(f"Molecule {k} is not in the set of lipids or molecules.")
+                raise ValueError(
+                    f"Molecule {k} is not in the set of lipids or molecules.")
             mol.register_mapping(v["MAPPING"])
             self._content[k] = mol
 
@@ -80,9 +81,16 @@ class System(collections.abc.MutableMapping):
         return len(self._store)
 
     @property
+    def readme(self) -> dict:
+        return self._store
+
+    @property
     def content(self) -> Dict[str, Molecule]:
         """ Returns dictionary of molecule objects. """
         return self._content
+    
+    def __repr__(self) -> str:
+        return f"System({self._store['ID']}): {self._store['path']}"
 
 
 class Databank:
