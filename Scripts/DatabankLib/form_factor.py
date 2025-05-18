@@ -20,7 +20,7 @@ import periodictable
 from DatabankLib.core import System
 from DatabankLib.databankLibrary import lipids_set, getLipids
 from DatabankLib.jsonEncoders import CompactJSONEncoder
-from DatabankLib import NMLDB_ROOT_PATH, NMLDB_SIMU_PATH
+from DatabankLib import NMLDB_SIMU_PATH, NMLDB_DATA_PATH
 
 
 # To write data in numpy arrays into json file, we inherit compact JSON
@@ -378,8 +378,7 @@ class FormFactor:
 
                 if ua_flag and key1 in lipids_set:
                     ua_lip_json_name = os.path.join(
-                        NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
-                        'lipid_json_buildH',
+                        NMLDB_DATA_PATH, 'lipid_json_buildH',
                         self.system['UNITEDATOM_DICT'][key1] + '.json')
 
                     with open(ua_lip_json_name) as json_file:

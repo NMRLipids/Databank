@@ -19,8 +19,8 @@ import numpy as np
 import gc
 
 from DatabankLib import (
-    NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
-    RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
+    NMLDB_SIMU_PATH, RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED,
+    NMLDB_DATA_PATH)
 from DatabankLib.core import System
 from DatabankLib.settings.molecules import lipids_set
 from DatabankLib.settings.engines import get_struc_top_traj_fnames
@@ -368,8 +368,7 @@ def computeOP(  # noqa: N802 (API)
                     NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
 
                 lipid_json_file = [
-                    os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
-                                 'lipid_json_buildH',
+                    os.path.join(NMLDB_DATA_PATH, 'lipid_json_buildH',
                                  system['UNITEDATOM_DICT'][key] + '.json')
                 ]
 
@@ -507,7 +506,7 @@ def computeFF(  # noqa: N802 (API)
     if skip_downloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
-    if (os.path.isfile(system_path + os.sep + "FormFactor.json") and not recompute):
+    if os.path.isfile(system_path + os.sep + "FormFactor.json") and not recompute:
         return RCODE_SKIPPED
 
     if system['TYPEOFSYSTEM'] == 'miscellaneous':
@@ -518,7 +517,7 @@ def computeFF(  # noqa: N802 (API)
     try:
         if system['UNITEDATOM_DICT']:
             print('United atom simulation')
-    except (KeyError):
+    except KeyError:
         pass
 
     try:
@@ -564,8 +563,8 @@ def computeFF(  # noqa: N802 (API)
     socket.setdefaulttimeout(15)
 
     try:
-        if (skip_downloading):
-            if (not os.path.isfile(trj_name)):
+        if skip_downloading:
+            if not os.path.isfile(trj_name):
                 raise FileNotFoundError(
                     f"Trajectory should be downloaded [{trj_name}] by user")
         else:
