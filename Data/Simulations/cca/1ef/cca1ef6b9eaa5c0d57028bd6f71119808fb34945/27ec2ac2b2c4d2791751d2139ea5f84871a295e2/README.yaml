@@ -40,6 +40,7 @@ DATEOFRUNNING: 16/08/2022
 TYPEOFSYSTEM: lipid bilayer
 EXPERIMENT:
   ORDERPARAMETER:
-    POPC: {}
-  FORMFACTOR: 10.1016/j.bbamem.2011.07.022/2
+    DOPC:
+      unpublished/ferreiraDOPC: unpublished/ferreiraDOPC/1
+  FORMFACTOR: {}
 ID: 47

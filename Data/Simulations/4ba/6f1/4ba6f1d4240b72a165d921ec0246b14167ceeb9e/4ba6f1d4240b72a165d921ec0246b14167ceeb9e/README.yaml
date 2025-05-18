@@ -32,8 +32,8 @@ AUTHORS_CONTACT: Kav, Batuhan
 SYSTEM: DOPC_1000mM_NaCl_at_303K_with_AMOEBA
 SOFTWARE_VERSION: v7.5.1
 FF: AMOEBA
-FF_SOURCE: OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in
-  publication https://doi.org/10.1021/jacs.0c02394, original parameters  https://doi.org/10.1080/00268976.2018.1436201
+FF_SOURCE: "OpenMM version https://github.com/Inniag/openmm-scripts-amoeba used in\n\
+  publication https://doi.org/10.1021/jacs.0c02394, \noriginal parameters  https://doi.org/10.1080/00268976.2018.1436201\n"
 FF_DATE: null
 TRAJECTORY_SIZE: 1380782904
 TRJLENGTH: 201600.0
