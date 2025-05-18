@@ -59,6 +59,8 @@ class System(collections.abc.MutableMapping):
                 mol = Lipid(k)
             elif k in molecules_set:
                 mol = NonLipid(k)
+            else:
+                raise ValueError(f"Molecule {k} is not in the set of lipids or molecules.")
             mol.register_mapping(v["MAPPING"])
             self._content[k] = mol
 
@@ -111,11 +113,18 @@ class Databank:
             for filename in files:
                 filepath = os.path.join(subdir, filename)
                 if filename == "README.yaml":
+                    ydict = {}
                     with open(filepath) as yaml_file:
-                        content = System(yaml.load(yaml_file, Loader=yaml.FullLoader))
+                        ydict.update(yaml.load(yaml_file, Loader=yaml.FullLoader))
+                    try:
+                        content = System(ydict)
                         relpath = os.path.relpath(filepath, rpath)
                         content["path"] = relpath[:-11]
                         systems.append(content)
+                    except FileNotFoundError as e:
+                        print(f"Problem loading mapping file for the system: {e}")
+                        print(f"System ID: {ydict['ID']}")
+                        print(f"System path: {subdir}")
         return systems
 
     def get_systems(self):
