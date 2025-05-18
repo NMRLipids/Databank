@@ -43,14 +43,15 @@ class Molecule(ABC):
         :param fname: mapping filename (without path)
         :return:
         """
-        mapping_fpath = os.path.join(self._get_path(), fname)
-        mapping_dict = {}
-        with open(mapping_fpath, "r") as yaml_file:
-            mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        self._mapping_dict = mapping_dict
+        self._mapping_fpath = os.path.join(self._get_path(), fname)
+        assert os.path.isfile(self._mapping_fpath)
 
     @property
     def mapping_dict(self) -> dict:
+        # preload on first call
+        if self.mapping_dict is None:
+            with open(self._mapping_fpath, "r") as yaml_file:
+                self._mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         return self._mapping_dict
 
     def __init__(self, name: str) -> None:
@@ -62,6 +63,7 @@ class Molecule(ABC):
         """
         self.__check_name(name)
         self._molname = name
+        self._mapping_fpath = None
         self._mapping_dict = None
 
     @staticmethod
