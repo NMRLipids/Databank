@@ -8,141 +8,131 @@ from tqdm import tqdm
 from typing import List, IO
 
 from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
-from DatabankLib.core import initialize_databank
+from DatabankLib.core import System, initialize_databank
 from DatabankLib.databankLibrary import lipids_set
 
 import logging
 logger = logging.getLogger("__name__")
 
-lipid_numbers_list = lipids_set.names     # should contain all lipid names
+# TODO: move ions list into Data
 ions_list = ['POT', 'SOD', 'CLA', 'CAL']  # should contain names of all ions
 
 LIP_CONC_REL_THRESHOLD = 0.15   # relative acceptable error for determination
 # of the hydration in ssNMR # noqa
 
 
-class Simulation:
+class SearchSystem:
 
-    readme: dict
-    indexingPath: str
+    system: dict
+    idx_path: str
 
     def __init__(self, readme):
-        self.readme = readme
-        self.indexingPath = readme['path']
+        self.system: System = readme
+        self.idx_path = readme['path']
 
-    def getLipids(self, molecules=lipid_numbers_list):
-        lipids = []
-
-        for key in self.readme['COMPOSITION'].keys():
-            if key in molecules:
-                lipids.append(key)
+    def get_lipids(self, molecules=lipids_set):
+        lipids = [k for k in self.system['COMPOSITION'] if k in molecules]
         return lipids
 
-    def getIons(self, ions):
-        simIons = []
-        for key in self.readme['COMPOSITION'].keys():
-            if key in ions:
-                simIons.append(key)
-
-        return simIons
+    def get_ions(self, ions):
+        sim_ions = [k for k in self.system['COMPOSITION'] if k in ions]
+        return sim_ions
 
     # fraction of each lipid with respect to total amount of lipids (only for lipids!)
-    def molarFraction(self, molecule, molecules=lipid_numbers_list) -> float:
+    def molar_fraction(self, molecule, molecules=lipids_set) -> float:
         sum_lipids = 0
-        number = sum(self.readme['COMPOSITION'][molecule]['COUNT'])
+        cmps = self.system['COMPOSITION']
+        number = sum(cmps[molecule]['COUNT'])
 
-        for key in self.readme['COMPOSITION'].keys():
-            if key in molecules:
-                sum_lipids += sum(self.readme['COMPOSITION'][key]['COUNT'])
+        for k, i in self.system['COMPOSITION'].items():
+            if k in molecules:
+                sum_lipids += sum(i['COUNT'])
 
         return number / sum_lipids
 
     # concentration of other molecules than lipids
     # change name to ionConcentration()
 
-    def ionConcentration(self, molecule, exp_counter_ions):
-        lipids1 = self.getLipids()
+    def ion_conc(self, molecule, exp_counter_ions):
+        lipids1 = self.get_lipids()
         c_water = 55.5
-        N_water = self.readme['COMPOSITION']['SOL']['COUNT']
+        n_water = self.system['COMPOSITION']['SOL']['COUNT']
         try:
-            N_molecule = self.readme['COMPOSITION'][molecule]['COUNT']  # number of ions
+            n_molecule = self.system['COMPOSITION'][molecule]['COUNT']  # number of ions
         except KeyError:
-            N_molecule = 0
+            n_molecule = 0
 
         lipids2 = []
-        if exp_counter_ions and N_molecule != 0:
+        if exp_counter_ions and n_molecule != 0:
             for lipid in lipids1:
                 if (molecule in exp_counter_ions.keys() and
                         lipid == exp_counter_ions[molecule]):
-                    N_lipid = self.readme['COMPOSITION'][lipid]['COUNT']
-                    lipids2.append(sum(N_lipid))
+                    n_lipid = self.system['COMPOSITION'][lipid]['COUNT']
+                    lipids2.append(sum(n_lipid))
 
-        N_molecule = N_molecule - sum(lipids2)
-        c_molecule = (N_molecule * c_water) / N_water
+        n_molecule = n_molecule - sum(lipids2)
+        c_molecule = (n_molecule * c_water) / n_water
 
         return c_molecule
 
-    def totalLipidConcentration(self):
-        lipids = self.getLipids()
+    def total_lipid_conc(self):
         c_water = 55.5
-        N_water = self.readme['COMPOSITION']['SOL']['COUNT']
-        N_lipids = 0
-        for lipid in lipids:
-            N_lipids += sum(self.readme['COMPOSITION'][lipid]['COUNT'])
+        n_water = self.system['COMPOSITION']['SOL']['COUNT']
+        n_lipids = 0
+        for lipid in self.get_lipids():
+            try:
+                n_lipids += sum(self.system['COMPOSITION'][lipid]['COUNT'])
+            except KeyError as e:
+                print(self.system)
+                raise e
         try:
-            if (N_water / N_lipids) > 25:
+            if (n_water / n_lipids) > 25:
                 tot_lipid_c = 'full hydration'
             else:
-                tot_lipid_c = (N_lipids * c_water) / N_water
+                tot_lipid_c = (n_lipids * c_water) / n_water
         except ZeroDivisionError:
             logger.warning("Division by zero when determining lipid concentration!")
-            print(self.readme)
+            print(self.system)
         return tot_lipid_c
 
 ##################
 
 
 class Experiment:
-    def __init__(self, readme: dict, molname: str, dataPath: str, exptype: str):
+    def __init__(self, readme: dict, molname: str, data_path: str, exptype: str):
         self.readme = readme
         self.molname = molname    # <- the dictionary about existence of data files
-        self.dataPath = dataPath  # .... for particular lipids
+        self.dataPath = data_path  # .... for particular lipids
         self.exptype = exptype
 
-    def getLipids(self, molecules=lipid_numbers_list) -> List[str]:
-        lipids: List[str] = []
-        for key in molecules:
-            try:
-                if key in self.readme['MOLAR_FRACTIONS'].keys():
-                    lipids.append(key)
-            except KeyError:
-                continue
+    def get_lipids(self, molecules=lipids_set) -> List[str]:
+        lipids = [k for k in self.readme['MOLAR_FRACTIONS'] if k in molecules]
         return lipids
 
-    def getIons(self, ions) -> List[str]:
-        expIons: List[str] = []
+    def get_ions(self, ions) -> List[str]:
+        exp_ions: List[str] = []
 
         for key in ions:
             try:
                 if self.readme['ION_CONCENTRATIONS'][key] != 0:
-                    expIons.append(key)
+                    exp_ions.append(key)
             except KeyError:
                 continue
             try:
                 if key in self.readme['COUNTER_IONS'].keys():
-                    expIons.append(key)
+                    exp_ions.append(key)
             except AttributeError:
                 continue
-        return expIons
+        return exp_ions
 
 
-def loadSimulations() -> List[Simulation]:
+def load_simulations() -> List[SearchSystem]:
     """
     Generates the list of Simulation objects. Go through all README.yaml files.
     """
 
     systems = initialize_databank()
-    simulations: List[Simulation] = []
+    simulations: List[SearchSystem] = []
 
     for system in systems:
         # conditions of exclusions
@@ -152,82 +142,82 @@ def loadSimulations() -> List[Simulation]:
         except (KeyError, TypeError):
             pass
 
-        simulations.append(Simulation(system))
+        simulations.append(SearchSystem(system))
 
     return simulations
 
 
-def loadExperiments(experimentType: str) -> List[Experiment]:
+def load_experiments(exp_type: str) -> List[Experiment]:
     """
     Loops over the experiment entries in the experiment databank and read experiment
     readme and order parameter files into objects.
     """
 
-    if experimentType == 'OrderParameters':
-        dataFile = '_Order_Parameters.json'
-    elif experimentType == 'FormFactors':
-        dataFile = '_FormFactor.json'
+    if exp_type == 'OrderParameters':
+        data_file = '_Order_Parameters.json'
+    elif exp_type == 'FormFactors':
+        data_file = '_FormFactor.json'
     else:
         raise NotImplementedError(
             "Only OrderParameters and FormFactors types are implemented.")
 
-    print("Build experiments [%s] index..." % experimentType, end='')
-    rmIdx = []
+    print("Build experiments [%s] index..." % exp_type, end='')
+    rm_idx = []
 
-    path = os.path.join(NMLDB_EXP_PATH, experimentType)
+    path = os.path.join(NMLDB_EXP_PATH, exp_type)
     for subdir, dirs, files in os.walk(path):
         for fn in files:
             if fn == 'README.yaml':
-                rmIdx.append(subdir)
-    print('%d READMEs loaded.' % len(rmIdx))
+                rm_idx.append(subdir)
+    print('%d READMEs loaded.' % len(rm_idx))
 
     print("Loading data for each experiment.")
     experiments: List[Experiment] = []
-    for subdir in tqdm(rmIdx, desc='Experiment'):
-        READMEfilepathExperiment = os.path.join(subdir, 'README.yaml')
-        with open(READMEfilepathExperiment) as yaml_file_exp:
-            readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+    for subdir in tqdm(rm_idx, desc='Experiment'):
+        exp_readme_fp = os.path.join(subdir, 'README.yaml')
+        with open(exp_readme_fp) as yaml_file_exp:
+            exp_readme = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
 
         for fname in os.listdir(subdir):
-            if fname.endswith(dataFile):
+            if fname.endswith(data_file):
                 molecule_name = ""
-                if experimentType == "OrderParameters":
-                    molecule_name = fname.replace(dataFile, '')
-                elif experimentType == "FormFactors":
+                if exp_type == "OrderParameters":
+                    molecule_name = fname.replace(data_file, '')
+                elif exp_type == "FormFactors":
                     molecule_name = 'system'
                 experiments.append(Experiment(
-                    readmeExp, molecule_name, subdir, experimentType))
+                    exp_readme, molecule_name, subdir, exp_type))
 
     return experiments
 
 
-def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
+def find_pairs(experiments: List[Experiment], simulations: List[SearchSystem]):
     pairs = []
     for simulation in tqdm(simulations, desc='Simulation'):
-        sim_lipids = simulation.getLipids()
-        sim_total_lipid_concentration = simulation.totalLipidConcentration()
-        sim_ions = simulation.getIons(ions_list)
-        t_sim = simulation.readme['TEMPERATURE']
+        sim_lipids = simulation.get_lipids()
+        sim_total_lipid_concentration = simulation.total_lipid_conc()
+        sim_ions = simulation.get_ions(ions_list)
+        t_sim = simulation.system['TEMPERATURE']
 
         # calculate molar fractions from simulation
         sim_molar_fractions = {}
         for lipid in sim_lipids:
-            sim_molar_fractions[lipid] = simulation.molarFraction(lipid)
+            sim_molar_fractions[lipid] = simulation.molar_fraction(lipid)
 
         for experiment in experiments:
 
             # check lipid composition matches the simulation
-            exp_lipids = experiment.getLipids()
+            exp_lipids = experiment.get_lipids()
 
             exp_total_lipid_concentration = \
                 experiment.readme['TOTAL_LIPID_CONCENTRATION']
-            exp_ions = experiment.getIons(ions_list)
+            exp_ions = experiment.get_ions(ions_list)
             exp_counter_ions = experiment.readme['COUNTER_IONS']
 
             # calculate simulation ion concentrations
             sim_concentrations = {}
             for molecule in ions_list:
-                sim_concentrations[molecule] = simulation.ionConcentration(
+                sim_concentrations[molecule] = simulation.ion_conc(
                     molecule, exp_counter_ions)
 
             # continue if lipid compositions are the same
@@ -284,32 +274,32 @@ def findPairs(experiments: List[Experiment], simulations: List[Simulation]):
                             start=os.path.join(NMLDB_EXP_PATH, experiment.exptype))
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.molname
-                            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path # noqa
+                            simulation.system['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path # noqa
                         elif experiment.exptype == "FormFactors":
-                            simulation.readme['EXPERIMENT']['FORMFACTOR'] = exp_path
+                            simulation.system['EXPERIMENT']['FORMFACTOR'] = exp_path
                     else:
                         continue
 
         # sorting experiment lists to keep experimental order strict
-        for _lipid in simulation.readme['EXPERIMENT']['ORDERPARAMETER'].keys():
-            unsortDict = simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid].copy(
-            )
-            if not len(unsortDict):
+        cur_exp = simulation.system['EXPERIMENT']
+        for _lipid in cur_exp['ORDERPARAMETER']:
+            unsort_dict = cur_exp['ORDERPARAMETER'][_lipid].copy()
+            if not len(unsort_dict):
                 continue
-            sortDict = dict(sorted(unsortDict.items()))
-            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][_lipid] = sortDict.copy()
+            sort_dict = dict(sorted(unsort_dict.items()))
+            cur_exp['ORDERPARAMETER'][_lipid] = sort_dict.copy()
 
-        outfileDICT = os.path.join(
-            NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
-        with open(outfileDICT, 'w') as f:
-            if "path" in simulation.readme.keys():
-                del (simulation.readme['path'])
-            yaml.dump(simulation.readme, f, sort_keys=False, allow_unicode=True)
+        outfile_dict = os.path.join(
+            NMLDB_SIMU_PATH, simulation.idx_path, 'README.yaml')
+        with open(outfile_dict, 'w') as f:
+            if "path" in simulation.system.keys():
+                del (simulation.system['path'])
+            yaml.dump(simulation.system.readme, f, sort_keys=False, allow_unicode=True)
 
     return pairs
 
 
-def logPairs(pairs, fd: IO[str]) -> None:
+def log_pairs(pairs, fd: IO[str]) -> None:
     """
     Write found correspondences into log file.
 
@@ -318,11 +308,11 @@ def logPairs(pairs, fd: IO[str]) -> None:
     """
 
     for p in pairs:
-        sim: Simulation = p[0]
+        sim: SearchSystem = p[0]
         exp: Experiment = p[1]
 
-        sysn = sim.readme['SYSTEM']
-        simp = sim.indexingPath
+        sysn = sim.system['SYSTEM']
+        simp = sim.idx_path
 
         expp = exp.dataPath
         expd = exp.readme['DOI']
@@ -346,36 +336,36 @@ def main():
     Main program function. Not for exporting.
     """
 
-    simulations = loadSimulations()
+    simulations = load_simulations()
 
     # clear all EXPERIMENT sections in all simulations
     # TODO: check if EXPERIMENT section changed and trigger the action!
     for simulation in simulations:
-        simulation.readme['EXPERIMENT'] = {}
-        simulation.readme['EXPERIMENT']['ORDERPARAMETER'] = {}
-        simulation.readme['EXPERIMENT']['FORMFACTOR'] = {}
-        for lipid in simulation.getLipids():
-            simulation.readme['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
+        simulation.system['EXPERIMENT'] = {}
+        simulation.system['EXPERIMENT']['ORDERPARAMETER'] = {}
+        simulation.system['EXPERIMENT']['FORMFACTOR'] = {}
+        for lipid in simulation.get_lipids():
+            simulation.system['EXPERIMENT']['ORDERPARAMETER'][lipid] = {}
 
-        outfileDICT = os.path.join(
-            NMLDB_SIMU_PATH, simulation.indexingPath, 'README.yaml')
-        with open(outfileDICT, 'w') as f:
-            yaml.dump(simulation.readme, f, sort_keys=False, allow_unicode=True)
+        readme_path = os.path.join(
+            NMLDB_SIMU_PATH, simulation.idx_path, 'README.yaml')
+        with open(readme_path, 'w') as f:
+            yaml.dump(simulation.system.readme, f, sort_keys=False, allow_unicode=True)
 
-    experimentsOrderParameters = loadExperiments('OrderParameters')
-    experimentsFormFactors = loadExperiments('FormFactors')
+    experiments_op = load_experiments('OrderParameters')
+    experiments_ff = load_experiments('FormFactors')
 
     # Pair each simulation with an experiment with the closest matching temperature
     # and composition
     with open('search-databank-pairs.log', 'w') as logf:
         print("Scanning simulation-experiment pairs among order parameter experiments.")
-        pairsOP = findPairs(experimentsOrderParameters, simulations)
+        pairs_op = find_pairs(experiments_op, simulations)
         logf.write("=== OP PAIRS ===\n")
-        logPairs(pairsOP, logf)
+        log_pairs(pairs_op, logf)
         print("Scanning simulation-experiment pairs among form factor experiments.")
-        pairsFF = findPairs(experimentsFormFactors, simulations)
+        pairs_ff = find_pairs(experiments_ff, simulations)
         logf.write("=== FF PAIRS ===\n")
-        logPairs(pairsFF, logf)
+        log_pairs(pairs_ff, logf)
 
     '''
     for pair in pairsFF:
@@ -386,8 +376,8 @@ def main():
         print(pair[1].readme)
     '''
 
-    print("Found order parameter data for " + str(len(pairsOP)) + " pairs")
-    print("Found form factor data for " + str(len(pairsFF)) + " pairs")
+    print("Found order parameter data for " + str(len(pairs_op)) + " pairs")
+    print("Found form factor data for " + str(len(pairs_ff)) + " pairs")
 
 
 if __name__ == "__main__":
