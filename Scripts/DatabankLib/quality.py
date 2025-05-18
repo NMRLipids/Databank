@@ -4,8 +4,9 @@ TODO: add tests
 TODO: remove code duplication and commented code
 """
 
+from typing import List
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.core import initialize_databank
+from DatabankLib.core import System, initialize_databank
 from DatabankLib.databankLibrary import loadMappingFile, lipids_set
 
 import re
@@ -16,38 +17,31 @@ import scipy.signal
 import json
 import os
 
-lipid_numbers_list = lipids_set.names  # should contain all lipid names
 
 # TODO: inherit from System
 class QualSimulation:
-    def __init__(self, readme, op_data, ff_data, idx_path):
-        self.readme = readme.copy()
+    def __init__(self, system: System, op_data, ff_data, idx_path):
+        self.system: System = system
         # dictionary where key is the lipid type and value is order parameter file
         self.op_data = op_data
         self.ff_data = ff_data
-        self.indexingPath = idx_path
+        self.idx_path = idx_path
 
-    def get_lipids(self, molecules=lipid_numbers_list):
-        lipids = []
-
-        for key in self.readme['COMPOSITION'].keys():
-            if key in molecules:
-                lipids.append(key)
+    def get_lipids(self, molecules=lipids_set):
+        lipids = [k for k in self.system['COMPOSITION'] if k in molecules]
         return lipids
 
-    def molar_fraction(self, molecule, molecules=lipid_numbers_list):  # only for lipids
-        sum_lipids = 0
-        number = sum(self.readme['COMPOSITION'][molecule]['COUNT'])
-
-        for key in self.readme['COMPOSITION'].keys():
-            if key in molecules:
-                sum_lipids += sum(self.readme['COMPOSITION'][key]['COUNT'])
-
-        return number / sum_lipids
+    # fraction of each lipid with respect to total amount of lipids (only for lipids!)
+    def molar_fraction(self, molecule, molecules=lipids_set) -> float:
+        cmps = self.system['COMPOSITION']
+        number = sum(cmps[molecule]['COUNT'])
+        all_counts = [i['COUNT'] for k, i in cmps.items() if k in molecules]
+        return number / sum(map(sum, all_counts))
 
 
 class Experiment:
     pass
+
 
 # ------------------------------------
 
@@ -88,13 +82,14 @@ def prob_S_in_g(OP_exp: float, exp_error: float,
 
 
 # quality of molecule fragments
-def get_fragments(mapping_file):
-    mapping_dict = loadMappingFile(mapping_file)
-
+def get_fragments(mapping_dict: dict):
     fragments = {}
 
     for key_m, value in mapping_dict.items():
-        key_f = value['FRAGMENT']
+        try:
+            key_f = value['FRAGMENT']
+        except KeyError:
+            key_f = 'n/d'
         fragments.setdefault(key_f, []).append(key_m)
 
     # merge glycerol backbone fragment into headgroup fragment
@@ -252,8 +247,8 @@ def systemQuality(system_fragment_qualities, simulation):
     lipid_dict = {}
     w_nan = []
 
-    for lipid in system_fragment_qualities.keys():
-        _ = get_fragments(simulation.system['COMPOSITION'][lipid]['MAPPING'])
+    for lipid in system_fragment_qualities:
+        _ = get_fragments(simulation.system.content[lipid].mapping_dict)
         # copy keys to new dictionary
         lipid_dict = dict.fromkeys(system_fragment_qualities[lipid].keys(), 0)
 
@@ -299,95 +294,6 @@ def systemQuality(system_fragment_qualities, simulation):
     print(system_quality)
 
     return system_quality
-
-# ---------------------- TODO: MARKED FOR REMOVAL ------------
-#        # SHOULD BE CHANGED TO WORK ALSO WITH OTHER LIPIDS WITHOUT HEAD AND
-#        # TAILS THAN CHOLESTEROL
-#        if lipid != 'CHOL':
-#            for key, value in system_fragment_qualities[lipid].items():
-#                if value != 'nan':
-#                    if key == 'headgroup':
-#                        headgroup.append(w * value)
-#                    elif key == 'sn-1':
-#                        sn1.append(w * value)
-#                    elif key == 'sn-2':
-#                        sn2.append(w * value)
-#                    elif key == 'total':
-#                        total.append(w * value)
-#                    else:
-#                        continue
-#                else:
-#                    # save 1 - w of a lipid into a list if the fragment quality is nan
-#                    w_nan.append(1-w)
-#        else:
-#            for key, value in system_fragment_qualities[lipid].items():
-#                 if value != 'nan':
-#                     if key == 'total':
-#                         total.append(w * value)
-#    # print(headgroup,sum(headgroup), np.prod(w_nan), w_nan)
-#    # multiply all elements of w_nan and divide the sum by the product
-#    out_dict['headgroup'] = sum(headgroup) * np.prod(w_nan)
-#    out_dict['sn-1'] = sum(sn1) * np.prod(w_nan)
-#    out_dict['sn-2'] = sum(sn2) * np.prod(w_nan)
-#    out_dict['total'] = sum(total) * np.prod(w_nan)
-
-# - EXTREMELY DIRTY FIX FOR WORKSHOP, SHOULD BE IMPROVED LATER
-#    for lipid in system_fragment_qualities.keys():
-#        w = simulation.molarFraction(lipid)
-#        if lipid != 'CHOL':
-#            for key, value in system_fragment_qualities[lipid].items():
-#                if value == 'nan':
-#                   if key == 'headgroup':
-#                       headgroup[:] = [x / (1-w) for x in headgroup]
-#                   elif key == 'sn-1':
-#                       sn1[:] = [x / (1-w) for x in sn1]
-#                   elif key == 'sn-2':
-#                       sn2[:] = [x / (1-w) for x in sn2]
-#                   elif key == 'total':
-#                       total[:] = [x / (1-w) for x in total]
-#                else:
-#                    continue
-
-
-#    out_dict['headgroup'] = sum(headgroup)
-#    out_dict['sn-1'] = sum(sn1)
-#    out_dict['sn-2'] = sum(sn2)
-#    out_dict['total'] = sum(total)
-
-#    return out_dict
-
-
-# Form factor quality
-
-
-# SAMULI: This one did not work because simulation and experimental data does not start
-#         at the same x-axis value.
-#         I have commented out. A new version is below. It reads a array which already
-#         has a correct array of simulation and experimental data.
-
-
-# def calc_k_e(simFFdata,expFFdata):
-#    """Scaling factor as defined by Kučerka et al. 2008b,
-#       doi:10.1529/biophysj.107.122465  """
-#    sum1 = 0
-#    sum2 = 0
-
-#   # print("simulation:" + str(len(simFFdata)))
-#   # print("experiment:" + str(len(expFFdata)))
-
-#    if len(expFFdata) <= len(simFFdata):
-#        for i in range(0,len(expFFdata)): #experiment should contain less data points
-#            F_s = simFFdata[i][1]
-#            F_e = expFFdata[i][1]
-#            deltaF_e = expFFdata[i][2]
-
-#            sum1 = sum1 + np.abs(F_s)*np.abs(F_e)/(deltaF_e**2)
-#            sum2 = sum2 + np.abs(F_e)**2 / deltaF_e**2
-#        k_e = sum1 / sum2
-#        return k_e
-
-#    else:
-#        return ""
 
 
 def calc_k_e(SimExpData):
@@ -500,7 +406,7 @@ def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
         return ""
 
 
-def loadSimulations():
+def loadSimulations() -> List[QualSimulation]:
 
     systems = initialize_databank()
 

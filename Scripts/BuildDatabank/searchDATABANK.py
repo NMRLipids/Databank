@@ -40,15 +40,10 @@ class SearchSystem:
 
     # fraction of each lipid with respect to total amount of lipids (only for lipids!)
     def molar_fraction(self, molecule, molecules=lipids_set) -> float:
-        sum_lipids = 0
         cmps = self.system['COMPOSITION']
         number = sum(cmps[molecule]['COUNT'])
-
-        for k, i in self.system['COMPOSITION'].items():
-            if k in molecules:
-                sum_lipids += sum(i['COUNT'])
-
-        return number / sum_lipids
+        all_counts = [i['COUNT'] for k, i in cmps.items() if k in molecules]
+        return number / sum(map(sum, all_counts))
 
     # concentration of other molecules than lipids
     # change name to ionConcentration()

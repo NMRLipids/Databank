@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     for simulation in simulations:
         # save OP quality and FF quality here
-        DATAdir = os.path.join(NMLDB_SIMU_PATH, simulation._path)
+        DATAdir = os.path.join(NMLDB_SIMU_PATH, simulation.idx_path)
         print('Analyzing: ', DATAdir)
 
         # Order Parameters
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         for lipid1 in simulation.get_lipids():
             print("\n"
                   "Evaluating order parameter quality of "
-                  f"simulation data in {simulation._path}")
+                  f"simulation data in {simulation.idx_path}")
 
             OP_data_lipid = {}
             # convert elements to float because in some files the elements are strings
@@ -54,29 +54,26 @@ if __name__ == "__main__":
                 print(f"Evaluating {lipid1} lipid using experimental data from"
                       f"{doi} in {NMLDB_EXP_PATH}/OrderParameters/{path}")
 
-                # load mapping file
-                mapping_file = simulation.system['COMPOSITION'][lipid1]['MAPPING']
-
                 print(doi)
                 OP_qual_data = {}
                 # get readme file of the experiment
-                experimentFilepath = os.path.join(
+                exp_fpath = os.path.join(
                     NMLDB_EXP_PATH, "OrderParameters", path)
-                print('Experimental data available at ' + experimentFilepath)
+                print('Experimental data available at ' + exp_fpath)
 
-                READMEfilepathExperiment = os.path.join(experimentFilepath,
-                                                        'README.yaml')
+                READMEfilepathExperiment = os.path.join(
+                    exp_fpath, 'README.yaml')
                 experiment = qq.Experiment()
                 with open(READMEfilepathExperiment) as yaml_file_exp:
-                    readmeExp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
-                    experiment.readme = readmeExp
+                    readme_exp = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+                    experiment.readme = readme_exp
 
-                exp_OP_filepath = os.path.join(experimentFilepath,
-                                               lipid1 + '_Order_Parameters.json')
-                lipidExpOPdata = {}
+                exp_op_fpath = os.path.join(
+                    exp_fpath, lipid1 + '_Order_Parameters.json')
+                exp_op_data = {}
                 try:
-                    with open(exp_OP_filepath) as json_file:
-                        lipidExpOPdata = json.load(json_file)
+                    with open(exp_op_fpath) as json_file:
+                        exp_op_data = json.load(json_file)
                 except FileNotFoundError:
                     print("Experimental order parameter data"
                           f" do not exist for lipid {lipid1}.")
@@ -84,10 +81,10 @@ if __name__ == "__main__":
 
                 exp_error = 0.02
 
-                for key in OP_data_lipid.keys():
+                for key in OP_data_lipid:
                     OP_array = OP_data_lipid[key].copy()
                     try:
-                        OP_exp = lipidExpOPdata[key][0][0]
+                        OP_exp = exp_op_data[key][0][0]
                     except KeyError:
                         continue
                     else:
@@ -107,9 +104,10 @@ if __name__ == "__main__":
                 data_dict[doi] = OP_qual_data
 
                 # calculate quality for molecule fragments headgroup, sn-1, sn-2
-                fragments = qq.get_fragments(mapping_file)
+                fragments = qq.get_fragments(
+                    simulation.system.content[lipid1].mapping_dict)
                 fragment_qual_dict[doi] = qq.fragmentQuality(
-                    fragments, lipidExpOPdata, OP_data_lipid)
+                    fragments, exp_op_data, OP_data_lipid)
 
             try:
                 fragment_quality_output = qq.fragmentQualityAvg(
@@ -158,7 +156,7 @@ if __name__ == "__main__":
         if SQout:
             with open(outfile2, 'w') as f:
                 json.dump(system_qual_output, f)
-            print('Order parameter quality evaluated for ' + simulation._path)
+            print('Order parameter quality evaluated for ' + simulation.idx_path)
             EvaluatedOPs += 1
             print('')
 
