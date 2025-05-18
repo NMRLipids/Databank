@@ -31,7 +31,7 @@ COMPOSITION:
     COUNT:
     - 40
     - 40
-  SM:
+  SM16:
     NAME: PSM
     MAPPING: mappingSM16charmm.yaml
   SOL:

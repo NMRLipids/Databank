@@ -7,7 +7,7 @@ TPR:
 PREEQTIME: 0
 TIMELEFTOUT: 0
 COMPOSITION:
-  POPC:
+  DOPC:
     NAME: DOPC
     MAPPING: mappingDOPCcharmm.yaml
     COUNT:
