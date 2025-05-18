@@ -34,6 +34,9 @@ COMPOSITION:
   SM16:
     NAME: PSM
     MAPPING: mappingSM16charmm.yaml
+    COUNT:
+    - 18
+    - 18
   SOL:
     NAME: TIP3
     MAPPING: mappingTIP3PCHARMMgui.yaml
@@ -81,5 +84,6 @@ EXPERIMENT:
     POPC: {}
     POPS: {}
     CHOL: {}
+    SM16: {}
     GM1: {}
   FORMFACTOR: {}
