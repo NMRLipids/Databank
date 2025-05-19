@@ -1,0 +1,62 @@
+name: Build documentation
+
+on: 
+  workflow_dispatch: #Can be triggered manually. 
+
+  push:
+    branches: 
+      - main #Will run with changes to main branch (including merged pull requests)
+    paths:
+      - Scripts/**  #Will only run with changes within the Scripts folder (including subfolders)
+    
+jobs:
+    build-documentation:
+        runs-on: ubuntu-latest
+        container:
+           image: nmrlipids/doc-builder 
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+            with:
+               ref: "main"
+       
+          - name: build
+            run: make html
+            working-directory: Scripts/BuildDocs
+
+          - name: Archive production artifacts  #This step will upload the documentation files as an artifact 
+            uses: actions/upload-artifact@v4
+            with:
+                name: html-build
+                path: Scripts/BuildDocs/build/html/*
+                retention-days: 1
+        
+    deploy-documentation:
+        runs-on: ubuntu-latest
+        needs: build-documentation
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+              with:
+                repository: "NMRLipids/NMRLipids.github.io"
+                ref: "main"   
+                token: ${{ secrets.DOCS_DEPLOY_TOKEN }}     
+
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: html-build
+                path: .
+                
+            - name: Commit and push documentation
+              uses: EndBug/add-and-commit@v9
+              with:
+                author_name: github-actions[bot]
+                author_email: github-actions[bot]@users.noreply.github.com
+                message: "Automated update of documentation"
+                    
+            
+
+
+
+

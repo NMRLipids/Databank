@@ -12,8 +12,14 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
+#Directory containing this conf.py
+here = os.path.dirname(__file__)  
+#Scripts directory
+scripts_dir = os.path.abspath(os.path.join(here, '..', '..'))  
+
+#Add to path:
+sys.path.insert(0, scripts_dir)
 
 # -- Project information -----------------------------------------------------
 
