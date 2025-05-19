@@ -6,7 +6,7 @@ from importlib import import_module
 """
 Creates PDB for every GROMACS-system and
 It imports just `core` and `databankio` to avoid additional dependecies.
-It DOES NOT require the package to be pre-installed
+It DOES NOT require the package to be pre-installed. Only yaml!
 """
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 dbl = import_module("DatabankLib")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
             tpr = system.get('TPR')
             tpr_name = os.path.join(path, system.get('TPR')[0][0])
 
-            if (not os.path.isfile(tpr_name)):
+            if not os.path.isfile(tpr_name):
                 tpr_url = dbio.resolve_download_file_url(doi, tpr[0][0])
                 response = urllib.request.urlretrieve(tpr_url, tpr_name)
         except Exception:
@@ -46,7 +46,7 @@ if __name__ == "__main__":
             gro = system.get('GRO')
             gro_name = os.path.join(path, system.get('GRO')[0][0])
 
-            if (not os.path.isfile(gro_name)):
+            if not os.path.isfile(gro_name):
                 gro_url = dbio.resolve_download_file_url(doi, gro[0][0])
                 response = urllib.request.urlretrieve(gro_url, gro_name)
         except Exception:
