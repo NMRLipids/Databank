@@ -560,7 +560,7 @@ if __name__ == '__main__':
             Lipid_Quality = {}
             # Find the lipids in the composition
             for key in README["COMPOSITION"]:
-                if key in NMRDict.lipids_dict and key not in HETEROMOLECULES_LIST:
+                if key in NMRDict.lipids_set and key not in HETEROMOLECULES_LIST:
                     # Save the quality of the lipid
                     Store = True
 
@@ -640,7 +640,7 @@ if __name__ == '__main__':
             Ions = {}
             # Find the ions in the composition
             for key in README["COMPOSITION"]:
-                if key in NMRDict.molecules_dict and key != "SOL" and \
+                if key in NMRDict.molecules_set and key != "SOL" and \
                         key not in HETEROMOLECULES_LIST:
                     # Collect the info of the ions
                     Info = {
@@ -687,7 +687,7 @@ if __name__ == '__main__':
 
             # Find the heteromolecules in the composition
             for key in README["COMPOSITION"]:
-                if key in NMRDict.lipids_dict and key in HETEROMOLECULES_LIST:
+                if key in NMRDict.lipids_set and key in HETEROMOLECULES_LIST:
 
                     # Collect the info of the lipids
                     Info = {
