@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
         total_quality_file_path = os.path.join(path, 'SYSTEM_quality.json')
 
-        fragment_Q = {}
+        fragment_Q = {}  # noqa: N816
         for lipid in system['COMPOSITION']:
             quality_file = os.path.join(path, lipid + '_FragmentQuality.json')
             try:
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 fragment_Q['TotalQuality']['FFQuality'] = FFq
             json_file.close()
 
-        fragment_Q['system'] = system
+        fragment_Q['system'] = system.readme
         qualities.append(fragment_Q)
 
     # ---- Sort based on total quality of a simulation
