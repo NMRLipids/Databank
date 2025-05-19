@@ -1363,6 +1363,174 @@
         }
     },
     {
+        "DOPC": { "sn-1": 0.688792, "sn-2": 0.333611, "headgroup": 0.644916, "total": 0.555773 },
+        "TotalQuality": { "headgroup": 0.644916, "tails": 0.511202, "total": 0.555773, "FFQuality": 1.022 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DOPC_303_small.xtc"]
+            ],
+            "TPR": [
+                ["DOPC_303_small.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DOPC": {
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [32, 32]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 3200 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "64DOPC_3200SOL_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_303_small.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DOPC_small.top"]
+            ],
+            "GRO": [
+                ["DOPC_303_small.gro"]
+            ],
+            "TRAJECTORY_SIZE": 66993928,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 18432,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DOPC": { "unpublished/ferreiraDOPC": "unpublished/ferreiraDOPC/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 316,
+            "path": "25a/fb6/25afb68fd3cf91b95e9a62fb71909d688c5e430c/d6ae10a7d8827f65c7c10330d525deb73feff3d0/"
+        }
+    },
+    {
+        "DOPC": { "sn-1": 0.814323, "sn-2": 0.399765, "headgroup": 0.641559, "total": 0.618549 },
+        "TotalQuality": { "headgroup": 0.641559, "tails": 0.607044, "total": 0.618549, "FFQuality": 0.922 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DOPC_303_large.xtc"]
+            ],
+            "TPR": [
+                ["DOPC_303_large.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DOPC": {
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [512, 512]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 51200 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "1024DOPC_51200SOL_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_303_large.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DOPC_large.top"]
+            ],
+            "GRO": [
+                ["DOPC_303_large.gro"]
+            ],
+            "TRAJECTORY_SIZE": 1103759636,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 294912,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DOPC": { "unpublished/ferreiraDOPC": "unpublished/ferreiraDOPC/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 47,
+            "path": "cca/1ef/cca1ef6b9eaa5c0d57028bd6f71119808fb34945/27ec2ac2b2c4d2791751d2139ea5f84871a295e2/"
+        }
+    },
+    {
+        "DOPC": { "sn-1": 0.75016, "sn-2": 0.381065, "headgroup": 0.638109, "total": 0.589778 },
+        "TotalQuality": { "headgroup": 0.638109, "tails": 0.565613, "total": 0.589778, "FFQuality": 0.922 },
+        "system": {
+            "DOI": "10.5281/zenodo.6943086",
+            "SOFTWARE": "gromacs",
+            "TRJ": [
+                ["DOPC_303_medium.xtc"]
+            ],
+            "TPR": [
+                ["DOPC_303_medium.tpr"]
+            ],
+            "PREEQTIME": 0,
+            "TIMELEFTOUT": 0,
+            "COMPOSITION": {
+                "DOPC": {
+                    "NAME": "DOPC",
+                    "MAPPING": "mappingDOPCcharmm.yaml",
+                    "COUNT": [128, 128]
+                },
+                "SOL": { "NAME": "TIP3", "MAPPING": "mappingTIP3PCHARMMgui.yaml", "COUNT": 12800 }
+            },
+            "DIR_WRK": "/home/lara/Databank",
+            "PUBLICATION": null,
+            "AUTHORS_CONTACT": "Javanainen, Matti",
+            "SYSTEM": "256DOPC_12800SOL_303K",
+            "SOFTWARE_VERSION": null,
+            "FF": "CHARMM36",
+            "FF_SOURCE": "CHARMM-GUI",
+            "FF_DATE": null,
+            "CPT": [
+                ["DOPC_303_medium.cpt"]
+            ],
+            "LOG": null,
+            "TOP": [
+                ["DOPC_medium.top"]
+            ],
+            "GRO": [
+                ["DOPC_303_medium.gro"]
+            ],
+            "TRAJECTORY_SIZE": 271793404,
+            "TRJLENGTH": 1.001e+06,
+            "TEMPERATURE": 303.15,
+            "NUMBER_OF_ATOMS": 73728,
+            "DATEOFRUNNING": "16/08/2022",
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "EXPERIMENT": {
+                "ORDERPARAMETER": {
+                    "DOPC": { "unpublished/ferreiraDOPC": "unpublished/ferreiraDOPC/1" }
+                },
+                "FORMFACTOR": {}
+            },
+            "ID": 551,
+            "path": "1ef/206/1ef20600128744e801bca89047de22964acd3e9d/edbe8c7309de6bdb695c6fc59615b8c5488ab91b/"
+        }
+    },
+    {
         "POPC": { "sn-1": 0.26358, "sn-2": 0.274967, "headgroup": 0.635074, "total": 0.391207 },
         "TotalQuality": { "headgroup": 0.635074, "tails": 0.269273, "total": 0.391207, "FFQuality": 1.455 },
         "system": {
