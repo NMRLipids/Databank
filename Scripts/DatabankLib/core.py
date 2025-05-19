@@ -7,34 +7,11 @@ Can be imported without additional libraries to scan Databank system file tree!
 import os
 import yaml
 import collections.abc
-from typing import Dict
+from typing import Dict, List
 from DatabankLib.settings.molecules import Molecule
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.settings.molecules import Lipid, lipids_set, molecules_set, NonLipid
-
-
-class SystemsCollection(collections.abc.Sequence):
-    """Immutable collection of system dicts. Can be accessed by ID using loc()."""
-
-    def __init__(self, iterable=[]):
-        self.data = iterable
-        self.__get_index_byid()
-
-    def __get_index_byid(self):
-        self._idx = dict()
-        for i in range(len(self)):
-            if 'ID' in self[i].keys():
-                self._idx[self[i]['ID']] = i
-
-    def __getitem__(self, i):
-        return self.data[i]
-
-    def __len__(self):
-        return len(self.data)
-
-    def loc(self, id: int):
-        return self.data[self._idx[id]]
 
 
 class System(collections.abc.MutableMapping):
@@ -93,6 +70,29 @@ class System(collections.abc.MutableMapping):
         return f"System({self._store['ID']}): {self._store['path']}"
 
 
+class SystemsCollection(collections.abc.Sequence[System]):
+    """Immutable collection of system dicts. Can be accessed by ID using loc()."""
+
+    def __init__(self, iterable: collections.abc.Iterable[System] = []):
+        self._data = iterable
+        self.__get_index_byid()
+
+    def __get_index_byid(self):
+        self._idx = dict()
+        for i in range(len(self)):
+            if 'ID' in self[i].keys():
+                self._idx[self[i]['ID']] = i
+
+    def __getitem__(self, i) -> System:
+        return self._data[i]
+
+    def __len__(self):
+        return len(self._data)
+
+    def loc(self, id: int) -> System:
+        return self._data[self._idx[id]]
+
+
 class Databank:
     """ :meta private:
     Representation of all simulation in the NMR lipids databank.
@@ -111,11 +111,11 @@ class Databank:
     def __init__(self):
         self.path = NMLDB_SIMU_PATH
         __systems = self.__load_systems__()
-        self._systems = SystemsCollection(__systems)
+        self._systems: SystemsCollection = SystemsCollection(__systems)
         print('Databank initialized from the folder:', os.path.realpath(self.path))
 
-    def __load_systems__(self):
-        systems = []
+    def __load_systems__(self) -> List[System]:
+        systems: List[System] = []
         rpath = os.path.realpath(self.path)
         for subdir, dirs, files in os.walk(rpath):
             for filename in files:
@@ -135,7 +135,7 @@ class Databank:
                         print(f"System path: {subdir}")
         return systems
 
-    def get_systems(self):
+    def get_systems(self) -> SystemsCollection:
         """ Returns a list of all systems in the NMRlipids databank """
         return self._systems
 

@@ -9,6 +9,7 @@ in the databank, you have to add it here!
 from collections.abc import MutableSet
 from abc import ABC, abstractmethod
 import os
+from typing import Any
 import yaml
 import re
 
@@ -128,7 +129,7 @@ class NonLipid(Molecule):
         return os.path.join(self._nonlipids_dir, self.name)
 
 
-class MoleculeSet(MutableSet, ABC):
+class MoleculeSet(MutableSet[Molecule], ABC):
     """
     MoleculeSet is a Set (repeating normal set functionality) but with
     some additional molecule-specific things.
@@ -144,7 +145,7 @@ class MoleculeSet(MutableSet, ABC):
             self.add(arg)
 
     @abstractmethod
-    def _test_item_type(self, item) -> bool:
+    def _test_item_type(self, item: Any) -> bool:
         """
         Tests if item is of proper Molecule type
 
@@ -163,7 +164,7 @@ class MoleculeSet(MutableSet, ABC):
         """
         pass
 
-    def __contains__(self, item):
+    def __contains__(self, item: Molecule):
         """
         Check if a lipid is in the set.
         """
@@ -178,7 +179,7 @@ class MoleculeSet(MutableSet, ABC):
     def __len__(self):
         return len(self._items)
 
-    def add(self, item):
+    def add(self, item: Molecule):
         """
         Add a lipid to the set.
 
@@ -227,7 +228,7 @@ class LipidSet(MoleculeSet):
     MoleculeSet specialization for Lipid.
     """
 
-    def _test_item_type(self, item):
+    def _test_item_type(self, item: Any) -> bool:
         return isinstance(item, Lipid)
 
     def _create_item(self, name):
@@ -257,7 +258,7 @@ class NonLipidSet(MoleculeSet):
     MoleculeSet specialization for NonLipid.
     """
 
-    def _test_item_type(self, item):
+    def _test_item_type(self, item: Any) -> bool:
         return isinstance(item, NonLipid)
 
     def _create_item(self, name):
