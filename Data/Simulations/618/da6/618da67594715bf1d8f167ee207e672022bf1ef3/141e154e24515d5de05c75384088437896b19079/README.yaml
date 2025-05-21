@@ -1,0 +1,32 @@
+DOI: 10.5281/zenodo.15065748
+TRJ:
+- - md_every_100_ps.xtc
+TPR:
+- - md.tpr
+SOFTWARE: gromacs
+FF: FF-development
+FF_SOURCE: null
+FF_DATE: 2025
+PREEQTIME: 100
+TIMELEFTOUT: 50
+COMPOSITION:
+  POPC:
+    NAME: POPC
+    MAPPING: mappingPOPCsage_smiles.yaml
+    COUNT:
+    - 128
+    - 0
+  SOL:
+    NAME: TIP3P
+    MAPPING: mappingTIP3Psage_smiles.yaml
+    COUNT: 5120
+SYSTEM: POPCandTIP3P
+TOP:
+- - bilayer.top
+DIR_WRK: /media/julianne/DATA/Lipids/NMRLipids/temp/
+TRAJECTORY_SIZE: 612881128
+TRJLENGTH: 500100.0
+TEMPERATURE: 300.0
+NUMBER_OF_ATOMS: 32512
+DATEOFRUNNING: 14/05/2025
+TYPEOFSYSTEM: lipid bilayer
