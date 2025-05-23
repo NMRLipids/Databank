@@ -111,7 +111,7 @@ class Lipid(Molecule):
     which belongs to the bilayer.
     """
 
-    _lipids_dir: str = os.path.join(NMLDB_MOL_PATH, "main")
+    _lipids_dir: str = os.path.join(NMLDB_MOL_PATH, "membrane")
     """Directory containing all lipid-subdirs"""
 
     def _get_path(self) -> str:
@@ -122,7 +122,7 @@ class NonLipid(Molecule):
     """
     Class for non-bilayer molecules: solvent, ions, etc.
     """
-    _nonlipids_dir: str = os.path.join(NMLDB_MOL_PATH, "env")
+    _nonlipids_dir: str = os.path.join(NMLDB_MOL_PATH, "solution")
     """Directory containing all lipid-subdirs"""
 
     def _get_path(self) -> str:
@@ -188,7 +188,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
         """
         if self._test_item_type(item):
             self._items.add(item)
-            self._names.add(item.name.toupper())
+            self._names.add(item.name.upper())
         elif isinstance(item, str):
             self._items.add(self._create_item(item))  # here we call Lipid constructor
             self._names.add(item.upper())
@@ -267,10 +267,10 @@ class NonLipidSet(MoleculeSet):
     @staticmethod
     def load_from_data():
         """
-        Loads lipid data from the designated directory and returns a set of lipids.
+        Loads Nonlipid data from the designated directory and returns a set of lipids.
 
         :rtype: NonLipidSet
-        :return: An instance of loaded `LipidSet`.
+        :return: An instance of loaded `NonLipidSet`.
         """
         lset = NonLipidSet()
         path = NonLipid._nonlipids_dir
