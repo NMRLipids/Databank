@@ -16,24 +16,15 @@ import pytest
 
 # Global fixtures
 # ----------------------------------------------------------------
-# we substitute simulation path to test databank analysis scripts
 
-
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
-    os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    import DatabankLib
-    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
-    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
-    yield
-    print("DBG: Mocking completed")
-
+pytestmark = pytest.mark.sim1
 
 @pytest.fixture(scope="module")
 def systems():
     import DatabankLib
     from DatabankLib.core import initialize_databank
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+        pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     print(f"Loaded: {len(s)} systems")
     yield s

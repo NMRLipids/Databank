@@ -9,7 +9,8 @@ import os
 from urllib.error import HTTPError
 import pytest
 
-
+# run only without mocking data
+pytestmark = pytest.mark.nodata
 
 class TestDownloadResourceFromUri:
 

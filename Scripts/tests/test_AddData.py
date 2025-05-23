@@ -11,6 +11,9 @@ from tempfile import TemporaryDirectory
 import pytest
 
 
+# run only without mocking data
+pytestmark = pytest.mark.nodata
+
 @pytest.fixture(scope="module")
 def tmpWorkDir():
     with TemporaryDirectory(prefix="dbtestWD_", dir=os.path.dirname(__file__)) as wdir:
@@ -27,21 +30,12 @@ def tmpOutDir():
         yield wdir
 
 
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
-    os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    import DatabankLib
-    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
-    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
-    yield
-    print("DBG: Mocking completed")
-
-
 class TestAddData:
 
     def _init(self):
         import DatabankLib
+        if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+            pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
         self.exe = os.path.join(
             DatabankLib.NMLDB_ROOT_PATH, "Scripts",
             "BuildDatabank", "AddData.py")

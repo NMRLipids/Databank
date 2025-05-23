@@ -18,42 +18,17 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 import os
 import sys
 import pytest
-import logging
 
-
-@pytest.fixture(scope="module")
-def logger():
-    logger = logging.getLogger("test_logger")
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler.setFormatter(formatter)
-
-    if not logger.handlers:  # Avoid adding multiple handlers during pytest runs
-        logger.addHandler(handler)
-
-    yield logger
-
-    # TEARDOWN: clean up handlers after use
-    for handler in logger.handlers:
-        logger.removeHandler(handler)
-
-
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
-    os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
-    import DatabankLib
-    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
-    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
-    yield
-    print("DBG: Mocking completed")
+# run only on sim2 mocking data
+pytestmark = pytest.mark.sim2
 
 
 @pytest.fixture(scope="module")
 def systems():
+    import DatabankLib
     from DatabankLib.core import initialize_databank
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+        pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     print(f"Loaded: {len(s)} systems")
     yield s
