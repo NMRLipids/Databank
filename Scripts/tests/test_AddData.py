@@ -1,14 +1,18 @@
 """
 `test_adddata.py` perform regression testing of adding-data functionality
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import subprocess
 from tempfile import TemporaryDirectory
 import pytest
-import DatabankLib
 
+
+# run only without mocking data
+pytestmark = pytest.mark.nodata
 
 @pytest.fixture(scope="module")
 def tmpWorkDir():
@@ -26,25 +30,22 @@ def tmpOutDir():
         yield wdir
 
 
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
-        print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
-        yield
-    print("DBG: Mocking completed")
-
-
 class TestAddData:
 
-    exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "Scripts",
-                       "BuildDatabank", "AddData.py")
+    def _init(self):
+        import DatabankLib
+        if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+            pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
+        self.exe = os.path.join(
+            DatabankLib.NMLDB_ROOT_PATH, "Scripts",
+            "BuildDatabank", "AddData.py")
 
     """
     Testing `AddData.py -h` behavior
     """
 
     def test_add_data_h(self):
+        self._init()
         result = subprocess.run([
             self.exe,
             "-h"
@@ -62,6 +63,7 @@ class TestAddData:
             "infofn, debug", [("info566.yaml", False),
                               ("info566.yaml", True)])
     def test_add_data_addgood(self, infofn, debug, tmpWorkDir, tmpOutDir):
+        self._init()
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
         runList = [
             self.exe,
@@ -81,6 +83,7 @@ class TestAddData:
 
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
     def test_add_data_fail(self, infofn, tmpWorkDir, tmpOutDir):
+        self._init()
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
         result = subprocess.run([
             self.exe,

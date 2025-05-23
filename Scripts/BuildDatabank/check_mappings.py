@@ -12,9 +12,8 @@ import MDAnalysis as mda
 from tqdm import tqdm
 import traceback
 
-from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib import NMLDB_SIMU_PATH, lipids_set
 from DatabankLib.core import initialize_databank
-from DatabankLib.databankLibrary import lipids_dict, loadMappingFile
 
 if __name__ == "__main__":
     systems = initialize_databank()
@@ -46,16 +45,16 @@ if __name__ == "__main__":
             for molecule in system['COMPOSITION']:
                 errnum = 0
                 m_file = system['COMPOSITION'][molecule]['MAPPING']
-                mapping_dict = loadMappingFile(m_file)
+                mapping_dict = system.content[molecule].mapping_dict
                 # go over all records
-                for mk in mapping_dict.keys():
+                for mk in mapping_dict:
                     selection = (
                         'resname ' + system['COMPOSITION'][molecule]['NAME'] +
                         ' and name ' + mapping_dict[mk]['ATOMNAME'])
                     NatomsFromMapping = len(u.select_atoms(selection))
                     NatomsFromREADME = system['COMPOSITION'][molecule]['COUNT']
                     if NatomsFromMapping != NatomsFromREADME and \
-                            molecule not in lipids_dict:
+                            molecule not in lipids_set:
                         print(f"""
         Found problematic system: {system['SYSTEM']}
         Molecule named {system['COMPOSITION'][molecule]['NAME']}

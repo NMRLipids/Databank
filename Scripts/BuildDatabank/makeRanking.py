@@ -13,7 +13,7 @@ import os
 import json
 
 from DatabankLib import NMLDB_DATA_PATH, NMLDB_SIMU_PATH
-from DatabankLib.databankLibrary import lipids_dict
+from DatabankLib.databankLibrary import lipids_set
 from DatabankLib.core import initialize_databank
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
         total_quality_file_path = os.path.join(path, 'SYSTEM_quality.json')
 
-        fragment_Q = {}
+        fragment_Q = {}  # noqa: N816
         for lipid in system['COMPOSITION']:
             quality_file = os.path.join(path, lipid + '_FragmentQuality.json')
             try:
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 fragment_Q['TotalQuality']['FFQuality'] = FFq
             json_file.close()
 
-        fragment_Q['system'] = system
+        fragment_Q['system'] = system.readme
         qualities.append(fragment_Q)
 
     # ---- Sort based on total quality of a simulation
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     fragments = ['total', 'sn-1', 'sn-2', 'headgroup']
 
     for sort_based_on in fragments:
-        for lipid in lipids_dict:
+        for lipid in lipids_set:
             new_qualities = []
             for i in qualities:
                 try:

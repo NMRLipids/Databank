@@ -18,7 +18,7 @@ COMPOSITION:
     NAME: SWM4
     MAPPING: mappingSWM4water.yaml
     COUNT: 6400
-  SOD:
+  CAL:
     NAME: CAL
     MAPPING: mappingCALcharmmPolarizable.yaml
     COUNT: 41

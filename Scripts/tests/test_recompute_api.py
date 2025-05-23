@@ -3,9 +3,11 @@
 universe and from-trajectories computations.
 
 Test folder: Data/Simulations.1
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import glob
 from tempfile import TemporaryDirectory
@@ -14,23 +16,15 @@ import pytest
 
 # Global fixtures
 # ----------------------------------------------------------------
-# we substitute simulation path to test databank analysis scripts
 
-
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    import DatabankLib
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp) as _:
-        print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
-        yield
-    print("DBG: Mocking completed")
-
+pytestmark = pytest.mark.sim1
 
 @pytest.fixture(scope="module")
 def systems():
     import DatabankLib
     from DatabankLib.core import initialize_databank
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+        pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     print(f"Loaded: {len(s)} systems")
     yield s

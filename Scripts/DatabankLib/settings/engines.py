@@ -29,6 +29,8 @@ import os.path
 from collections.abc import Sequence
 from typing import Optional
 
+from DatabankLib.core import System
+
 # GROMACS
 gromacs_dict = {
     "INI": {
@@ -499,15 +501,15 @@ software_dict = {
 
 
 def get_struc_top_traj_fnames(
-        system: dict, allowStructure=False,
-        joinPath=None) -> tuple[Optional[str], Optional[str], Optional[str]]:
+        system: System, allow_structure=False,
+        join_path=None) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """Returns filenames of structure/topology/trajectory according to system's engine.
 
     Args:
         system (dict): Databank System
-        allowStructure (bool, optional): Allow using structure instead of topology for
+        allow_structure (bool, optional): Allow using structure instead of topology for
             further MDAnalysis' Universe initialization. Defaults to False.
-        joinPath (str,None): path to be joined with filenames
+        join_path (str,None): path to be joined with filenames
 
     Returns ((string, string, string)): structure filename, topology filename,
             trajectory filename
@@ -516,24 +518,24 @@ def get_struc_top_traj_fnames(
         ValueError: function
     """
     sft = system["SOFTWARE"]
-    sftSpec = software_dict[sft.upper()]
-    trjF = None
-    for k, v in sftSpec.items():
+    sft_spec = software_dict[sft.upper()]
+    trj_fn = None
+    for k, v in sft_spec.items():
         if ("CATEGORY" in v and v["CATEGORY"] == "trajectory" and
                 k in system and system[k] is not None):
-            trjF = system[k]
+            trj_fn = system[k]
             break
-    topF = None
-    for k, v in sftSpec.items():
+    top_fn = None
+    for k, v in sft_spec.items():
         if ("CATEGORY" in v and v["CATEGORY"] == "topology" and
                 k in system and system[k] is not None):
-            topF = system[k]
+            top_fn = system[k]
             break
-    strF = None
-    for k, v in sftSpec.items():
+    struc_fn = None
+    for k, v in sft_spec.items():
         if ("CATEGORY" in v and v["CATEGORY"] == "structure"
                 and k in system and system[k] is not None):
-            strF = system[k]
+            struc_fn = system[k]
             break
 
     def is_sequence(var):
@@ -541,28 +543,28 @@ def get_struc_top_traj_fnames(
 
     # taking first elements
     # TODO can it be removed?
-    if is_sequence(topF):
-        topF = topF[0]
-        if is_sequence(topF):
-            topF = topF[0]
+    if is_sequence(top_fn):
+        top_fn = top_fn[0]
+        if is_sequence(top_fn):
+            top_fn = top_fn[0]
 
-    if is_sequence(trjF):
-        trjF = trjF[0]
-        if is_sequence(trjF):
-            trjF = trjF[0]
+    if is_sequence(trj_fn):
+        trj_fn = trj_fn[0]
+        if is_sequence(trj_fn):
+            trj_fn = trj_fn[0]
 
-    if is_sequence(strF):
-        strF = strF[0]
-        if is_sequence(strF):
-            strF = strF[0]
+    if is_sequence(struc_fn):
+        struc_fn = struc_fn[0]
+        if is_sequence(struc_fn):
+            struc_fn = struc_fn[0]
 
     # applying joinPath
-    if joinPath is not None:
-        if topF is not None:
-            topF = os.path.join(joinPath, topF)
-        if trjF is not None:
-            trjF = os.path.join(joinPath, trjF)
-        if strF is not None:
-            strF = os.path.join(joinPath, strF)
+    if join_path is not None:
+        if top_fn is not None:
+            top_fn = os.path.join(join_path, top_fn)
+        if trj_fn is not None:
+            trj_fn = os.path.join(join_path, trj_fn)
+        if struc_fn is not None:
+            struc_fn = os.path.join(join_path, struc_fn)
 
-    return strF, topF, trjF
+    return struc_fn, top_fn, trj_fn

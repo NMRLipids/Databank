@@ -3,14 +3,14 @@
 downloading everything from testing repository.
 
 Test data is stored in `./Data/Simulations.1`
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
-from unittest import mock
 import os
 import glob
 import pytest
-import logging
-import DatabankLib
 
 # Global loaders
 # ----------------------------------------------------------------
@@ -19,38 +19,15 @@ import DatabankLib
 # https://doi.org/10.5281/zenodo.11614468
 # On teardown stage we clear the folders.
 
-
-@pytest.fixture(autouse=True, scope="module")
-def header_module_scope():
-    _rp = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    with mock.patch.object(DatabankLib, "NMLDB_SIMU_PATH", _rp):
-        print("DBG: Mocking simulation path: ", DatabankLib.NMLDB_SIMU_PATH)
-        yield
-    print("DBG: Mocking completed")
-
-
-@pytest.fixture(scope="module")
-def logger():
-    logger = logging.getLogger("test_logger")
-    logger.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler.setFormatter(formatter)
-
-    if not logger.handlers:  # Avoid adding multiple handlers during pytest runs
-        logger.addHandler(handler)
-
-    yield logger
-
-    # TEARDOWN: clean up handlers after use
-    for handler in logger.handlers:
-        logger.removeHandler(handler)
-
+# run only on sim2 mocking data
+pytestmark = pytest.mark.sim1
 
 @pytest.fixture(scope="module")
 def systems():
+    import DatabankLib
     from DatabankLib.core import initialize_databank
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+        pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     print(f"Loaded: {len(s)} systems")
     yield s
@@ -68,6 +45,7 @@ def systems():
 
 @pytest.fixture(scope="module")
 def systemLoadTraj(systems):
+    import DatabankLib
     from DatabankLib.databankLibrary import system2MDanalysisUniverse
     print('DBG: Download trajectory data.')
     for s in systems:
@@ -143,6 +121,7 @@ def compareJSONsBtwSD(jsfn: str):
 
 @pytest.mark.parametrize("systemid", [86, 243, 281, 566, 787])
 def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
+    import DatabankLib
     from DatabankLib.analyze import computeAPL
 
     s = systems.loc(systemid)
@@ -160,21 +139,22 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
 
 
 @pytest.mark.parametrize("systemid, rcodex",
-                         [(281, DatabankLib.RCODE_COMPUTED),
-                          (566, DatabankLib.RCODE_COMPUTED),
-                          (787, DatabankLib.RCODE_ERROR),
-                          (243, DatabankLib.RCODE_COMPUTED),
-                          (86,  DatabankLib.RCODE_COMPUTED)])
+                         [(281, 1),
+                          (566, 1),
+                          (787, 2),
+                          (243, 1),
+                          (86,  1)])
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
+    import DatabankLib
     from DatabankLib.analyze import computeOP
-    from DatabankLib.settings.molecules import lipids_dict
+    from DatabankLib.settings.molecules import lipids_set
     s = systems.loc(systemid)
     rCode = computeOP(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_dict.keys())):
+    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_set.names)):
         cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
                              s['path'], lip + 'OrderParameters.json')
         assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
@@ -185,12 +165,13 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
 
 
 @pytest.mark.parametrize("systemid, rcodex",
-                         [(281, DatabankLib.RCODE_COMPUTED),
-                          (566, DatabankLib.RCODE_COMPUTED),
-                          (787, DatabankLib.RCODE_ERROR),
-                          (243, DatabankLib.RCODE_COMPUTED),
-                          (86,  DatabankLib.RCODE_COMPUTED)],)
+                         [(281, 1),
+                          (566, 1),
+                          (787, 2),
+                          (243, 1),
+                          (86,  1)],)
 def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
+    import DatabankLib
     from DatabankLib.analyze import computeFF
     s = systems.loc(systemid)
     rCode = computeFF(s, logger)
@@ -210,12 +191,13 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
 
 
 @pytest.mark.parametrize("systemid, rcodex",
-                         [(281, DatabankLib.RCODE_COMPUTED),
-                          (566, DatabankLib.RCODE_COMPUTED),
-                          (787, DatabankLib.RCODE_ERROR),
-                          (243, DatabankLib.RCODE_COMPUTED),
-                          (86,  DatabankLib.RCODE_COMPUTED)])
+                         [(281, 1),
+                          (566, 1),
+                          (787, 2),
+                          (243, 1),
+                          (86,  1)])
 def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
+    import DatabankLib
     from DatabankLib.analyze import computeNMRPCA
     s = systems.loc(systemid)
     rCode = computeNMRPCA(s, logger)

@@ -14,7 +14,7 @@ def run_analysis(method: Callable, logger: Logger):
         logger (Logger): reference to Logger initialized by the top script
     """
     systems = initialize_databank()
-    resDict = {
+    result_dict = {
         RCODE_COMPUTED: 0,
         RCODE_SKIPPED: 0,
         RCODE_ERROR: 0}
@@ -23,10 +23,10 @@ def run_analysis(method: Callable, logger: Logger):
         logger.info("System title: " + system['SYSTEM'])
         logger.info("System path: " + system['path'])
         res = method(system, logger)
-        resDict[res] += 1
+        result_dict[res] += 1
 
     print(f"""
-    COMPUTED: {resDict[RCODE_COMPUTED]}
-    SKIPPED: {resDict[RCODE_SKIPPED]}
-    ERROR: {resDict[RCODE_ERROR]}
+    COMPUTED: {result_dict[RCODE_COMPUTED]}
+    SKIPPED: {result_dict[RCODE_SKIPPED]}
+    ERROR: {result_dict[RCODE_ERROR]}
     """)

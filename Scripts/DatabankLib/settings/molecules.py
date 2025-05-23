@@ -6,431 +6,297 @@ There is a dictionary of lipids, ions, etc. If you add a lipid which is not yet
 in the databank, you have to add it here!
 """
 
-# Dictionary of possible lipids
-lipids_dict = {
-    "POPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PAzePCprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "PAzePCdeprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DMPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DEPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DRPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DLPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DLIPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DSPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DAPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DMTAP": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SDG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SDPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "POPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI24": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SAPI25": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SLPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CER": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CER180": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DHMDMAB": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SLiPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SM16": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SM18": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TOCL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TLCL_0H": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TMCL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "GM1": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "DPPGK": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "GB3": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "BOG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    }
-}
+from collections.abc import MutableSet
+from abc import ABC, abstractmethod
+import os
+from typing import Any
+import yaml
+import re
+
+from DatabankLib import NMLDB_MOL_PATH
 
 
-# Dictionary of other than lipid molecules.
-#
-# If you add other than a lipid molecule which is not yet in the databank, you have to
-# add it here
-molecules_dict = {
-    "POT": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOD": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CLA": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CAL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "CES": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "SOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "C20": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "TMA": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    }
-}
+class Molecule(ABC):
+    """
+    Abstract base class representing a molecule and its related operations.
+
+    This class is designed to provide an interface for interacting with
+    molecule-related files, which are stored in a molecule-related folder.
+    It serves as a base for concrete implementations that need to define
+    specific operations for handling molecule data.
+    """
+
+    _molname: (str | None) = None
+
+    @abstractmethod
+    def _get_path(self) -> str:
+        """
+        Returns absolute path to molecule-related files.
+
+        :return: str path
+        """
+        pass
+
+    def register_mapping(self, fname: str) -> None:
+        """
+        Register mapping dictionary for the Molecule object
+
+        :param fname: mapping filename (without path)
+        :return:
+        """
+        self._mapping_fpath = os.path.join(self._get_path(), fname)
+        assert os.path.isfile(self._mapping_fpath)
+
+    @property
+    def mapping_dict(self) -> dict:
+        # preload on first call
+        if self._mapping_dict is None:
+            with open(self._mapping_fpath, "r") as yaml_file:
+                self._mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        return self._mapping_dict
+
+    def __init__(self, name: str) -> None:
+        """
+        Create the molecule.
+
+        :param name: The name of the molecule.
+        :type name: str
+        """
+        self.__check_name(name)
+        self._molname = name
+        self._mapping_fpath = None
+        self._mapping_dict = None
+
+    @staticmethod
+    def __check_name(name: str) -> None:
+        """
+        Checks if the provided name contains only valid characters.
+
+        This static method verifies that the input name string complies with
+        the defined regular expression pattern, which restricts it to alphanumeric
+        characters and underscores. If the name does not match the pattern, a
+        ValueError is raised.
+
+        :param name: A string representing the name to validate.
+
+        :raises ValueError: If the name contains characters outside of the allowed set.
+        """
+        pat = r"[A-Za-z0-9_]+"
+        if not re.match(pat, name):
+            raise ValueError(f"Only {pat} symbols are allowed in Molecule name.")
+
+    @property
+    def name(self) -> str:
+        """
+        :return: Molecule name.
+        """
+        return self._molname
+
+    # comparison by name to behave in a set
+    # It's case-insesitive as folder structure should work on mac/win
+
+    def __eq__(self, other):
+        return isinstance(other, type(self)) and self.name.upper() == other.name.upper()
+
+    def __hash__(self):
+        return hash(self.name.upper())
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.name})"
 
 
-# Dictionary containing the force fields for molecules given by the contributor
-molecule_ff_dict = {
-    "FFPOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPAzePCprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPAzePCdeprot": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDMPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDEPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDRPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDYPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDLPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDLIPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDDOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDOPS": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDSPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDAPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDMTAP": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOPC": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSDG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSDPE": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSAPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSAPI24": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSLPI": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCER": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCER180": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDCHOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDHMDMAB": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPG": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSM16": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSM18": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFTOCL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFGM1": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFDPPGK": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFGB3": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFPOT": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOD": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCLA": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCAL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFCES": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-    "FFSOL": {
-        "REQUIRED": False,
-        "TYPE": "string",
-    },
-}
+class Lipid(Molecule):
+    """
+    Lipid class inherited from Molecule base. Contains all the molecules
+    which belongs to the bilayer.
+    """
+
+    _lipids_dir: str = os.path.join(NMLDB_MOL_PATH, "membrane")
+    """Directory containing all lipid-subdirs"""
+
+    def _get_path(self) -> str:
+        return os.path.join(self._lipids_dir, self.name)
+
+
+class NonLipid(Molecule):
+    """
+    Class for non-bilayer molecules: solvent, ions, etc.
+    """
+    _nonlipids_dir: str = os.path.join(NMLDB_MOL_PATH, "solution")
+    """Directory containing all lipid-subdirs"""
+
+    def _get_path(self) -> str:
+        return os.path.join(self._nonlipids_dir, self.name)
+
+
+class MoleculeSet(MutableSet[Molecule], ABC):
+    """
+    MoleculeSet is a Set (repeating normal set functionality) but with
+    some additional molecule-specific things.
+    """
+
+    def __init__(self, *args):
+        """
+        Initialize the LipidSet with optional initial elements.
+        """
+        self._items = set()
+        self._names = set()
+        for arg in args:
+            self.add(arg)
+
+    @abstractmethod
+    def _test_item_type(self, item: Any) -> bool:
+        """
+        Tests if item is of proper Molecule type
+
+        :param item: any type variable
+        :return: bool answer
+        """
+        pass
+
+    @abstractmethod
+    def _create_item(self, name: str) -> Molecule:
+        """
+        Construct the molecule of the proper type
+
+        :param name: unique name of the molecule
+        :return: constructed Molecule
+        """
+        pass
+
+    def __contains__(self, item: Molecule):
+        """
+        Check if a lipid is in the set.
+        """
+        return (
+                (self._test_item_type(item) and item in self._items) or
+                (isinstance(item, str) and item.upper() in self._names)
+        )
+
+    def __iter__(self):
+        return iter(self._items)
+
+    def __len__(self):
+        return len(self._items)
+
+    def add(self, item: Molecule):
+        """
+        Add a lipid to the set.
+
+        :param item: Can add either Molecule or str (then Molecule constructor
+                     will be called)
+        """
+        if self._test_item_type(item):
+            self._items.add(item)
+            self._names.add(item.name.upper())
+        elif isinstance(item, str):
+            self._items.add(self._create_item(item))  # here we call Lipid constructor
+            self._names.add(item.upper())
+        else:
+            raise TypeError(
+                f"Only proper instances can be added to {type(self).__name__}.")
+
+    def discard(self, item):
+        """
+        Remove a lipid from the set without raising an error if it does not exist.
+        """
+        if self._test_item_type(item):
+            self._items.discard(item)
+            self._names.discard(item.name.toupper())
+        elif isinstance(item, str):
+            if item.upper() not in self._names:
+                return
+            ifound = None
+            for i in self._items:
+                if i.name.upper() == item.upper():
+                    ifound = i
+                    break
+            assert ifound is not None
+            self._items.discard(ifound)
+            self._names.discard(item.upper())
+
+    def __repr__(self):
+        return f"{type(self).__name__}[{self._names}]"
+
+    @property
+    def names(self) -> set[str]:
+        return self._names
+
+
+class LipidSet(MoleculeSet):
+    """
+    MoleculeSet specialization for Lipid.
+    """
+
+    def _test_item_type(self, item: Any) -> bool:
+        return isinstance(item, Lipid)
+
+    def _create_item(self, name):
+        return Lipid(name)
+
+    @staticmethod
+    def load_from_data():
+        """
+        Loads lipid data from the designated directory and returns a set of lipids.
+
+        :rtype: LipidSet
+        :return: An instance of loaded `LipidSet`.
+        """
+        lset = LipidSet()
+        path = Lipid._lipids_dir
+        sub_dirs = [
+            name for name in os.listdir(path)
+            if os.path.isdir(os.path.join(path, name))
+        ]
+        for name in sub_dirs:
+            lset.add(name)
+        return lset
+
+
+class NonLipidSet(MoleculeSet):
+    """
+    MoleculeSet specialization for NonLipid.
+    """
+
+    def _test_item_type(self, item: Any) -> bool:
+        return isinstance(item, NonLipid)
+
+    def _create_item(self, name):
+        return NonLipid(name)
+
+    @staticmethod
+    def load_from_data():
+        """
+        Loads Nonlipid data from the designated directory and returns a set of lipids.
+
+        :rtype: NonLipidSet
+        :return: An instance of loaded `NonLipidSet`.
+        """
+        lset = NonLipidSet()
+        path = NonLipid._nonlipids_dir
+        sub_dirs = [
+            name for name in os.listdir(path)
+            if os.path.isdir(os.path.join(path, name))
+        ]
+        for name in sub_dirs:
+            lset.add(name)
+        return lset
+
+
+lipids_set: LipidSet = LipidSet.load_from_data()
+""" Dictionary of possible lipids """
+
+lipids_dict = lipids_set
+""" @deprecated: Use lipids_set instead. """
+
+molecules_set: NonLipidSet = NonLipidSet.load_from_data()
+""" Dictionary of other than lipid molecules. """
+
+molecules_dict = molecules_set
+""" @deprecated: Use molecules_set instead"""
+
+molecule_ff_set = {("FF" + x) for x in (lipids_set.names | molecules_set.names)}
+"""
+Dictionary containing possible force-field labels for molecules given by the contributor
+ (used for README/info fields validation)
+"""

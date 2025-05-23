@@ -10,20 +10,22 @@ import sys
 import re
 import traceback
 from logging import Logger
-from DatabankLib.settings.engines import get_struc_top_traj_fnames
 import buildh
 import urllib.request
 import socket
+
 from tqdm import tqdm
 import numpy as np
 import gc
 
 from DatabankLib import (
-    NMLDB_SIMU_PATH, NMLDB_ROOT_PATH,
-    RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED)
-from DatabankLib.settings.molecules import lipids_dict
+    NMLDB_SIMU_PATH, RCODE_ERROR, RCODE_SKIPPED, RCODE_COMPUTED,
+    NMLDB_DATA_PATH)
+from DatabankLib.core import System
+from DatabankLib.settings.molecules import lipids_set
+from DatabankLib.settings.engines import get_struc_top_traj_fnames
 from DatabankLib.databankLibrary import (
-    GetNlipids, loadMappingFile, system2MDanalysisUniverse)
+    GetNlipids, system2MDanalysisUniverse)
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
@@ -31,11 +33,12 @@ from DatabankLib.form_factor import FormFactor
 from DatabankLib import analyze_nmrpca as nmrpca
 
 
-def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeNMRPCA(  # noqa: N802 (API)
+        system: System, logger: Logger, recompute: bool = False) -> int:
     """Compute eq_times.json using NMR PCA analysis.
 
     Args:
-        system (dict): one of systems of the Databank
+        system (System): one of systems of the Databank
         recompute (bool, optional): Delete previous apl.json and recompute it if True.
         Defaults to False.
     Returns:
@@ -46,15 +49,15 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
     # getting data from databank and preprocessing them
     # Start Parser
     # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
-    parser = nmrpca.Parser(NMLDB_SIMU_PATH, system, 'eq_times.json')
+    parser = nmrpca.Parser(system, 'eq_times.json')
     # Check trajectory
-    print(parser.indexingPath)
-    vPcode = parser.validatePath()
-    print("ValidatePath code: ", vPcode)
-    if vPcode > 0:
+    print(parser._path)
+    vpcode = parser.validate_path()
+    print("ValidatePath code: ", vpcode)
+    if vpcode > 0:
         sys.stderr.write("Some errors in analyze_nmrpca.py::Parser constructor.\n")
         return RCODE_ERROR
-    elif vPcode < 0 and not recompute:
+    elif vpcode < 0 and not recompute:
         return RCODE_SKIPPED
 
     if (
@@ -80,17 +83,17 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
         return RCODE_ERROR
 
     # Download files
-    parser.downloadTraj()
+    parser.download_traj()
     # Prepare trajectory
-    parser.prepareTraj()
+    parser.prepare_traj()
     # Concatenate trajectory
-    parser.concatenateTraj()
+    parser.concatenate_traj()
     equilibration_times = {}
     # Iterate over trajectories for different lipids
-    for traj in parser.concatenated_trajs:
-        print(f"Main: parsing lipid {traj[4]}")
+    for lip, traj in parser.concatenated_trajs.items():
+        print(f"Main: parsing lipid {lip}")
         # Creat PCA for trajectory
-        pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trjLen)
+        pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trj_len)
         # Run PCA
         data = pca_runner.PCA()
         print("Main: PCA: done")
@@ -102,17 +105,18 @@ def computeNMRPCA(system: dict, logger: Logger, recompute: bool = False) -> int:
         print("Main: Autocorrelations: done")
         # Estimate equilibration time
         te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
-        equilibration_times[traj[4]] = te2 / parser.trjLen
+        equilibration_times[lip] = te2 / parser.trj_len
         print("Main: EQ time: done")
 
-        print(te2 / parser.trjLen)
+        print(te2 / parser.trj_len)
 
-    parser.dumpData(equilibration_times)
+    parser.dump_data(equilibration_times)
     gc.collect()
     return RCODE_COMPUTED
 
 
-def computeAPL(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeAPL(  # noqa: N802 (API)
+        system: System, logger: Logger, recompute: bool = False) -> int:
     """Generate apl.json analysis file for a system.
 
     Args:
@@ -138,7 +142,7 @@ def computeAPL(system: dict, logger: Logger, recompute: bool = False) -> int:
     print('Will write into: ', outfilename)
 
     # calculates the total number of lipids
-    Nlipid = GetNlipids(system)
+    n_lipid = GetNlipids(system)
 
     # makes MDAnalysis universe from the system. This also downloads the data if not
     # yet locally available
@@ -154,8 +158,8 @@ def computeAPL(system: dict, logger: Logger, recompute: bool = False) -> int:
     for ts in tqdm(u.trajectory, desc='Scanning the trajectory'):
         if u.trajectory.time >= system['TIMELEFTOUT']*1000:
             dims = u.dimensions
-            aplFrame = dims[0]*dims[1]*2/Nlipid
-            apl[u.trajectory.time] = aplFrame
+            apl_frame = dims[0]*dims[1]*2/n_lipid
+            apl[u.trajectory.time] = apl_frame
 
     with open(outfilename, 'w') as f:
         json.dump(apl, f, cls=CompactJSONEncoder)
@@ -163,24 +167,25 @@ def computeAPL(system: dict, logger: Logger, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-def computeTH(system: dict, logger: Logger, recompute: bool = False) -> int:
-    thickFN = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
-    if (os.path.isfile(thickFN) and not recompute):
+def computeTH(  # noqa: N802 (API)
+        system: dict, logger: Logger, recompute: bool = False) -> int:
+    thick_fn = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
+    if os.path.isfile(thick_fn) and not recompute:
         # file exist. Skipping
         return RCODE_SKIPPED
 
-    WaterDensity_name = os.path.join(
+    wat_dens_name = os.path.join(
         NMLDB_SIMU_PATH, system['path'], 'WaterDensity.json')
-    LipidDensity_name = os.path.join(
+    lip_dens_name = os.path.join(
         NMLDB_SIMU_PATH, system['path'], 'LipidDensity.json')
-    print(LipidDensity_name)
+    print(lip_dens_name)
     try:
-        with open(WaterDensity_name) as f:
-            WaterDensity = json.load(f)
-        with open(LipidDensity_name) as f:
-            LipidDensity = json.load(f)
-        wd = np.array(WaterDensity)
-        ld = np.array(LipidDensity)
+        with open(wat_dens_name) as f:
+            wat_dens = json.load(f)
+        with open(lip_dens_name) as f:
+            lip_dens = json.load(f)
+        wd = np.array(wat_dens)
+        ld = np.array(lip_dens)
         idx = np.argwhere(np.diff(np.sign(wd[:, 1] - ld[:, 1]))).flatten()
         if len(idx) < 2:
             print("Dehydrated sample! Standard thickness rule doesn't work."
@@ -188,7 +193,7 @@ def computeTH(system: dict, logger: Logger, recompute: bool = False) -> int:
             thickness = wd[-1, 0] - wd[0, 0]
         else:
             thickness = wd[idx[1], 0] - wd[idx[0], 0]
-        with open(thickFN, 'w') as f:
+        with open(thick_fn, 'w') as f:
             json.dump(thickness, f)
     except Exception as e:
         print('Calculation failed for ' + system['path'])
@@ -200,7 +205,8 @@ def computeTH(system: dict, logger: Logger, recompute: bool = False) -> int:
 
 
 # TODO: implement onlyLipid
-def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeOP(  # noqa: N802 (API)
+        system: System, logger: Logger, recompute: bool = False) -> int:
     """_summary_
 
     Args:
@@ -226,12 +232,12 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                 key in system['WARNINGS']['AMBIGUOUS_ATOMNAMES']
             )
         ):
-            FileFound = True
-        elif key in lipids_dict:
-            FileFound = False
+            file_found = True
+        elif key in lipids_set:
+            file_found = False
             break
 
-    if FileFound and not recompute:
+    if file_found and not recompute:
         return RCODE_SKIPPED
 
     # If order parameters are not calculated and system ok, then continue to
@@ -244,13 +250,13 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
 
     # Software and time for equilibration period
     software = system['SOFTWARE']
-    EQtime = float(system['TIMELEFTOUT'])*1000
+    eq_time = float(system['TIMELEFTOUT'])*1000
 
     # Check if all or united atom simulation
     try:
-        unitedAtom = system['UNITEDATOM_DICT']
+        united_atom = system['UNITEDATOM_DICT']
     except (KeyError):
-        unitedAtom = False
+        united_atom = False
 
     # Check relevant warnings
     g3switch = (
@@ -259,12 +265,13 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
         'GROMACS_VERSION' in system['WARNINGS'] and
         system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'
     )
-    trjconvCOMMAND = 'trjconv' if g3switch else 'gmx trjconv'
+    trconv_command = 'trjconv' if g3switch else 'gmx trjconv'
 
-    curPath = os.path.join(NMLDB_SIMU_PATH, path)
+    cur_path = os.path.join(NMLDB_SIMU_PATH, path)
 
     try:
-        struc_fname, top_fname, trj_fname = get_struc_top_traj_fnames(system, joinPath=curPath)
+        struc_fname, top_fname, trj_fname = \
+            get_struc_top_traj_fnames(system, join_path=cur_path)
     except (ValueError, KeyError) as e:
         sys.stderr.write("Error reading filenames from system dictionary.\n")
         sys.stderr.write(str(type(e)) + " => " + str(e))
@@ -277,21 +284,21 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                 raise ValueError("TPR is required for OP calculations!")
 
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, 'whole.xtc')
-            if (not os.path.isfile(xtcwhole)):
-                execStr = (
-                    f"echo System | {trjconvCOMMAND} -f {trj_fname} "
-                    f"-s {top_fname} -o {xtcwhole} -pbc mol -b {str(EQtime)}"
+            if not os.path.isfile(xtcwhole):
+                exec_str = (
+                    f"echo System | {trconv_command} -f {trj_fname} "
+                    f"-s {top_fname} -o {xtcwhole} -pbc mol -b {str(eq_time)}"
                 )
                 print("Make molecules whole in the trajectory")
-                if unitedAtom and system['TRAJECTORY_SIZE'] > 15e9:
+                if united_atom and system['TRAJECTORY_SIZE'] > 15e9:
                     print("United atom trajectry larger than 15 Gb. "
                           "Using only every third frame to reduce memory usage.")
-                    execStr += " -skip 3"
-                rCode = os.system(execStr)
-                if (rCode != 0):
+                    exec_str += " -skip 3"
+                rcode = os.system(exec_str)
+                if rcode != 0:
                     raise RuntimeError("trjconv exited with error (see above)")
         elif 'openMM' in software or 'NAMD' in software:
-            if (not os.path.isfile(struc_fname)):
+            if not os.path.isfile(struc_fname):
                 pdb_url = resolve_download_file_url(system.get('DOI'), struc_fname)
                 _ = urllib.request.urlretrieve(pdb_url, struc_fname)
         else:
@@ -302,50 +309,53 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
         # Calculate order parameters
         # -----------------------------------
         # united-atom switch -> engine switch
-        if unitedAtom:
+        if united_atom:
             if 'gromacs' not in software:
                 raise ValueError("UNITED_ATOMS is supported only for GROMACS engine!")
             frame0struc = os.path.join(NMLDB_SIMU_PATH, path, 'frame0.gro')
             if g3switch:
-                rCode = os.system(
+                rcode = os.system(
                     f'echo System | editconf -f {top_fname} -o {frame0struc}')
-                if (rCode != 0):
+                if rcode != 0:
                     raise RuntimeError("editconf exited with error (see above)")
             else:
-                rCode = os.system(f"echo System | {trjconvCOMMAND} -f {xtcwhole}"
+                rcode = os.system(f"echo System | {trconv_command} -f {xtcwhole}"
                                   f" -s {top_fname} -dump 0 -o {frame0struc}")
-                if (rCode != 0):
+                if rcode != 0:
                     raise RuntimeError(
-                        f"trjconv ({trjconvCOMMAND}) exited with error (see above)")
+                        f"trjconv ({trconv_command}) exited with error (see above)")
 
             for key in system['UNITEDATOM_DICT']:
                 # construct order parameter definition file for CH bonds from
                 # mapping file
-                mapping_file = system['COMPOSITION'][key]['MAPPING']
-                mapping_dict = loadMappingFile(mapping_file)
+                mapping_dict = system.content[key].mapping_dict
 
-                def_fileNAME = os.path.join(NMLDB_SIMU_PATH, path, key + '.def')
-                def_file = open(def_fileNAME, 'w')
+                def_fname = os.path.join(NMLDB_SIMU_PATH, path, key + '.def')
+                def_file = open(def_fname, 'w')
 
                 previous_line = ""
 
-                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')
-                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')
-                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')
-                regexp2_C = re.compile(r'M_G[0-9]_M')
+                regexp1_H = re.compile(r'M_[A-Z0-9]*C[0-9]*H[0-9]*_M')  # noqa: N806
+                regexp2_H = re.compile(r'M_G[0-9]*H[0-9]*_M')  # noqa: N806
+                regexp1_C = re.compile(r'M_[A-Z0-9]*C[0-9]*_M')  # noqa: N806
+                regexp2_C = re.compile(r'M_G[0-9]_M')  # noqa: N806
 
-                for mapping_key in mapping_dict.keys():
+                # Note that mapping_dict's keys must be ordered
+                # C11 H111 H112 C12 H121 H122 ...
+                # otherwize algorithm will fail
+                for mapping_key in mapping_dict:
                     if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key):
-                        atomC = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
-                        atomH = []
+                        atom_c = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+                        atom_h = []
                     elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key):
-                        atomH = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
+                        atom_h = [mapping_key, mapping_dict[mapping_key]['ATOMNAME']]
                     else:
-                        atomC = []
-                        atomH = []
+                        atom_c = []
+                        atom_h = []
 
-                    if atomH:
-                        items = [atomC[1], atomH[1], atomC[0], atomH[0]]
+                    if atom_h:
+                        assert atom_c
+                        items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
                         def_line = (items[2] + "&" + items[3] + " " +
                                     key + " " + items[0] + " " + items[1] + "\n")
                         if def_line != previous_line:
@@ -354,33 +364,32 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                 def_file.close()
 
                 # Add hydrogens to trajectory and calculate order parameters with buildH
-                ordPfile = os.path.join(
+                op_file = os.path.join(
                     NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
 
                 lipid_json_file = [
-                    os.path.join(NMLDB_ROOT_PATH, 'Scripts', 'DatabankLib',
-                                 'lipid_json_buildH',
+                    os.path.join(NMLDB_DATA_PATH, 'lipid_json_buildH',
                                  system['UNITEDATOM_DICT'][key] + '.json')
                 ]
 
-                if (not os.path.isfile(lipid_json_file[0])):
+                if not os.path.isfile(lipid_json_file[0]):
                     lipid_json_file = None
 
                 print(system['UNITEDATOM_DICT'][key])
-                buildh.launch(coord_file=frame0struc, def_file=def_fileNAME,
+                buildh.launch(coord_file=frame0struc, def_file=def_fname,
                               lipid_type=system['UNITEDATOM_DICT'][key],
                               lipid_jsons=lipid_json_file, traj_file=xtcwhole,
-                              out_file=f"{ordPfile}.buildH", ignore_CH3s=True)
+                              out_file=f"{op_file}.buildH", ignore_CH3s=True)
 
-                outfile = open(ordPfile, 'w')
+                outfile = open(op_file, 'w')
                 outfile.write("Atom     Average OP     OP stem\n")
 
                 data = {}
                 outfile2 = os.path.join(
                     NMLDB_SIMU_PATH, path, key + 'OrderParameters.json')
 
-                with open(ordPfile + '.buildH') as OPfile:
-                    lines = OPfile.readlines()
+                with open(op_file + '.buildH') as op_file:
+                    lines = op_file.readlines()
                     for line in lines:
                         if "#" in line:
                             continue
@@ -390,15 +399,15 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                             " " + line.split()[6] + "\n")
                         outfile.write(line2)
 
-                        OPname = line.split()[0].replace('&', ' ')
+                        op_name = line.split()[0].replace('&', ' ')
                         # -- line.split()[0] + " " + line.split()[1]
-                        OPvalues = [
+                        op_values = [
                             float(line.split()[4]),
                             float(line.split()[5]),
                             float(line.split()[6])
                         ]
-                        data[str(OPname)] = []
-                        data[str(OPname)].append(OPvalues)
+                        data[str(op_name)] = []
+                        data[str(op_name)].append(op_values)
 
                 with open(outfile2, 'w') as f:
                     json.dump(data, f, cls=CompactJSONEncoder)
@@ -412,13 +421,13 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
 
                 print("\n Making gro file")
                 if g3switch:
-                    rCode = os.system(f'echo System | editconf -f {top_fname} -o {gro}')
-                    if (rCode != 0):
+                    rcode = os.system(f'echo System | editconf -f {top_fname} -o {gro}')
+                    if rcode != 0:
                         raise RuntimeError("editconf exited with error (see above)")
                 else:
-                    rCode = os.system(f"echo System | gmx trjconv "
+                    rcode = os.system(f"echo System | gmx trjconv "
                                       f"-f {trj_fname} -s {top_fname} -dump 0 -o {gro}")
-                    if (rCode != 0):
+                    if rcode != 0:
                         raise RuntimeError("trjconv exited with error (see above)")
 
             for key in system['COMPOSITION']:
@@ -434,37 +443,37 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
                           "names are ambiguous.")
                     continue
 
-                if key in lipids_dict.keys():
+                if key in lipids_set:
                     print('Calculating ', key, ' order parameters')
-                    mapping_file = system['COMPOSITION'][key]['MAPPING']
                     resname = system['COMPOSITION'][key]['NAME']
                     outfilename = os.path.join(
                         NMLDB_SIMU_PATH, path, key + 'OrderParameters.dat')
                     outfilename2 = os.path.join(
                         NMLDB_SIMU_PATH, path, key + 'OrderParameters.json')
-                    if (os.path.isfile(outfilename2)):
+                    if os.path.isfile(outfilename2):
                         print('Order parameter file already found')
                         continue
                     if 'gromacs' in software:
                         try:
-                            OrdParam = find_OP(mapping_file, top_fname,
-                                               xtcwhole, resname)
+                            op_obj = find_OP(system.content[key].mapping_dict,
+                                             top_fname, xtcwhole, resname)
                         except Exception as e:
                             logger.warning(f"We got this exception: \n    {e}")
                             logger.warning("But we will try rebuild the Universe "
                                            "from GROM if using tpr did not work!")
-                            OrdParam = find_OP(mapping_file, gro, xtcwhole, resname)
+                            op_obj = find_OP(system.content[key].mapping_dict,
+                                             gro, xtcwhole, resname)
 
                     if 'openMM' in software or 'NAMD' in software:
-                        OrdParam = find_OP(mapping_file, struc_fname, trj_fname,
-                                           resname)
+                        op_obj = find_OP(system.content[key].mapping_dict,
+                                         struc_fname, trj_fname, resname)
 
                     data = {}
 
                     with open(outfilename, 'w') as outfile:
                         outfile.write("Atom     Average OP     OP stem\n")
 
-                        for i, op in enumerate(OrdParam):
+                        for i, op in enumerate(op_obj):
                             (op.avg, op.std, op.stem) = op.get_avg_std_stem_OP
                             outfile.write(f'{op.name} {str(op.avg)} {str(op.stem)}\n')
 
@@ -485,18 +494,19 @@ def computeOP(system: dict, logger: Logger, recompute: bool = False) -> int:
     return RCODE_COMPUTED
 
 
-def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
+def computeFF(  # noqa: N802 (API)
+        system: System, logger: Logger, recompute: bool = False) -> int:
     logger.info("System title: " + system['SYSTEM'])
     logger.info("System path: " + system['path'])
     software = system['SOFTWARE']
     # download trajectory and gro files
     system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
     doi = system.get('DOI')
-    skipDownloading: bool = (doi == 'localhost')
-    if skipDownloading:
+    skip_downloading: bool = (doi == 'localhost')
+    if skip_downloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
-    if (os.path.isfile(system_path + os.sep + "FormFactor.json") and not recompute):
+    if os.path.isfile(system_path + os.sep + "FormFactor.json") and not recompute:
         return RCODE_SKIPPED
 
     if system['TYPEOFSYSTEM'] == 'miscellaneous':
@@ -507,7 +517,7 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
     try:
         if system['UNITEDATOM_DICT']:
             print('United atom simulation')
-    except (KeyError):
+    except KeyError:
         pass
 
     try:
@@ -553,13 +563,13 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
     socket.setdefaulttimeout(15)
 
     try:
-        if (skipDownloading):
-            if (not os.path.isfile(trj_name)):
+        if skip_downloading:
+            if not os.path.isfile(trj_name):
                 raise FileNotFoundError(
                     f"Trajectory should be downloaded [{trj_name}] by user")
         else:
             trj_url = resolve_download_file_url(system['DOI'], trj)
-            if (not os.path.isfile(trj_name)):
+            if not os.path.isfile(trj_name):
                 print('Downloading trajectory with the size of ',
                       system['TRAJECTORY_SIZE'], ' to ', system['path'])
                 _ = urllib.request.urlretrieve(trj_url, trj_name)
@@ -569,65 +579,64 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
         if 'gromacs' in software:
             tpr_name = top_name
 
-            if (skipDownloading):
-                if (not os.path.isfile(tpr_name)):
+            if skip_downloading:
+                if not os.path.isfile(tpr_name):
                     raise FileNotFoundError(
                         f"TPR should be downloaded [{tpr_name}] by user")
             else:
                 tpr_url = resolve_download_file_url(doi, top)
-                if (not os.path.isfile(tpr_name)):
+                if not os.path.isfile(tpr_name):
                     _ = urllib.request.urlretrieve(tpr_url, tpr_name)
 
         if 'openMM' in software or 'NAMD' in software:
-            if (skipDownloading):
+            if skip_downloading:
                 if (not os.path.isfile(struc_name)):
                     raise FileNotFoundError(
                         f"Structure file should be downloaded [{struc_name}] by user")
             else:
                 pdb_url = resolve_download_file_url(doi, struc)
-                if (not os.path.isfile(struc_name)):
+                if not os.path.isfile(struc_name):
                     _ = urllib.request.urlretrieve(pdb_url, struc_name)
 
-        EQtime = float(system['TIMELEFTOUT'])*1000
+        eq_time = float(system['TIMELEFTOUT'])*1000
 
         # FIND LAST CARBON OF SN-1 TAIL AND G3 CARBON
         for molecule in system['COMPOSITION']:
-            if molecule in lipids_dict:
-                mapping_file = system['COMPOSITION'][molecule]['MAPPING']
-                mapping = loadMappingFile(mapping_file)
+            if molecule in lipids_set:
+                mapping = system.content[molecule].mapping_dict
 
                 # TODO: rewrite via lipid dictionary!
                 for nm in ["M_G3_M", "M_G13_M", "M_C32_M"]:
                     try:
-                        G3atom = mapping[nm]['ATOMNAME']
+                        g3_atom = mapping[nm]['ATOMNAME']
                         continue
                     except (KeyError, TypeError):
                         pass
 
                 # TODO: rewrite via lipid dictionary
                 if "M_G1C4_M" in mapping.keys():
-                    for Cindex in range(4, 30):
-                        atom = 'M_G1C' + str(Cindex) + '_M'
+                    for c_idx in range(4, 30):
+                        atom = 'M_G1C' + str(c_idx) + '_M'
                         try:
-                            lastAtom = mapping[atom]['ATOMNAME']
+                            last_atom = mapping[atom]['ATOMNAME']
                         except (KeyError, TypeError):
                             continue
                 elif "M_G11C4_M" in mapping.keys():
-                    for Cindex in range(4, 30):
-                        atom = 'M_G11C' + str(Cindex) + '_M'
+                    for c_idx in range(4, 30):
+                        atom = 'M_G11C' + str(c_idx) + '_M'
                         try:
-                            lastAtom = mapping[atom]['ATOMNAME']
+                            last_atom = mapping[atom]['ATOMNAME']
                         except (KeyError, TypeError):
                             continue
                 elif "M_CA4_M" in mapping.keys():
-                    for Cindex in range(4, 30):
-                        atom = 'M_CA' + str(Cindex) + '_M'
+                    for c_idx in range(4, 30):
+                        atom = 'M_CA' + str(c_idx) + '_M'
                         try:
-                            lastAtom = mapping[atom]['ATOMNAME']
+                            last_atom = mapping[atom]['ATOMNAME']
                         except (KeyError, TypeError):
                             continue
 
-        print(lastAtom, G3atom)
+        print(last_atom, g3_atom)
 
         # Center around one lipid tail CH3 to guarantee all lipids in the same box
         if 'gromacs' in system['SOFTWARE']:
@@ -638,14 +647,14 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
                 'GROMACS_VERSION' in system['WARNINGS'] and
                 system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'
             ):
-                trjconvCOMMAND = 'trjconv'
-                makendxCOMMAND = 'make_ndx'
+                trjconv_cmd = 'trjconv'
+                makendx_cmd = 'make_ndx'
             else:
-                trjconvCOMMAND = 'gmx trjconv'
-                makendxCOMMAND = 'gmx make_ndx'
+                trjconv_cmd = 'gmx trjconv'
+                makendx_cmd = 'gmx make_ndx'
 
             os.system('rm foo.ndx')
-            os.system(f'echo "a {lastAtom}\nq" | {makendxCOMMAND} -f {tpr_name} '
+            os.system(f'echo "a {last_atom}\nq" | {makendx_cmd} -f {tpr_name} '
                       f'-o foo.ndx')
             os.system("tail -n1 foo.ndx | awk '{print $NF}'")
             os.system('echo "[ centralAtom ]" >> foo.ndx')
@@ -663,12 +672,12 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
                 #        tpr_name + ' -o ' + xtcwhole + ' -pbc mol -b ' + str(EQtime) +
                 #        ' -skip 3')
                 # else:
-                if (not os.path.isfile(xtcwhole)):
-                    os.system(f'echo System |  {trjconvCOMMAND} -f {trj_name} '
-                              f'-s {tpr_name} -o {xtcwhole} -pbc mol -b {str(EQtime)}')
+                if not os.path.isfile(xtcwhole):
+                    os.system(f'echo System |  {trjconv_cmd} -f {trj_name} '
+                              f'-s {tpr_name} -o {xtcwhole} -pbc mol -b {str(eq_time)}')
 
                 if (not os.path.isfile(xtcfoo)):
-                    os.system(f'echo "centralAtom\nSystem" |  {trjconvCOMMAND} -center'
+                    os.system(f'echo "centralAtom\nSystem" |  {trjconv_cmd} -center'
                               f' -pbc mol -n foo.ndx -f {xtcwhole} -s {tpr_name}'
                               f' -o {xtcfoo}')
 
@@ -677,9 +686,9 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
 
             # Center around the center of mass of all the g_3 carbons
             # if (not os.path.isfile(xtccentered)):
-                os.system(f'echo "a {G3atom}\nq" | {makendxCOMMAND}'
+                os.system(f'echo "a {g3_atom}\nq" | {makendx_cmd}'
                           f' -f {tpr_name} -o foo.ndx')
-                os.system(f'echo "{G3atom}\nSystem" |  {trjconvCOMMAND} -center'
+                os.system(f'echo "{g3_atom}\nSystem" |  {trjconv_cmd} -center'
                           f' -pbc mol -n foo.ndx -f {xtcfoo} -s {tpr_name}'
                           f' -o {xtccentered}')
                 os.system('rm ' + xtcfoo)
@@ -687,13 +696,13 @@ def computeFF(system: dict, logger: Logger, recompute: bool = False) -> int:
             print("Centering for other than Gromacs may not work if there are"
                   " jumps over periodic boundary conditions in z-direction.")
 
-        if (not os.path.isfile(system_path + os.sep + "FormFactor.json")):
+        if not os.path.isfile(system_path + os.sep + "FormFactor.json"):
             try:
                 if 'gromacs' in system['SOFTWARE']:
-                    FormFactor(system_path, tpr_name, xtccentered, 200,
+                    FormFactor(tpr_name, xtccentered, 200,
                                output_name, system)
                 if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
-                    FormFactor(system_path, struc_name, trj_name, 200,
+                    FormFactor(struc_name, trj_name, 200,
                                output_name, system)
             except ValueError as e:
                 # Here it was expected to have allow_pickle-type errors.

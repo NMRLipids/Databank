@@ -8,7 +8,7 @@ from IPython.display import display
 from IPython.display import Markdown
 
 
-def showTable(sorted_qualities, quality):
+def showTable(sorted_qualities, quality):  # noqa: N802 (API)
     """
     Shows a table of simulation qualities against experimental data.
 

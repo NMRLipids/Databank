@@ -1,19 +1,23 @@
 """
 `test_loads` tests ONLY functions related to downloading files and/or resolving links.
+
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+      breaks the substitution of global path folders
 """
 
 import os
 from urllib.error import HTTPError
 import pytest
 
-import DatabankLib.databankio as dio
-
+# run only without mocking data
+pytestmark = pytest.mark.nodata
 
 class TestDownloadResourceFromUri:
 
     TESTFILENAME = 't.tpr'
 
     def test_justdl__download_resource_from_uri(self):
+        import DatabankLib.databankio as dio
         if os.path.exists(self.TESTFILENAME):
             os.remove(self.TESTFILENAME)  # just for sure
         # first-time download
@@ -27,6 +31,7 @@ class TestDownloadResourceFromUri:
         os.remove(self.TESTFILENAME)
 
     def test_corrupted__download_resource_from_uri(self):
+        import DatabankLib.databankio as dio
         # redownload corrupted file
         with open(self.TESTFILENAME, 'w') as f:
             f.write('BABABA')
@@ -36,6 +41,7 @@ class TestDownloadResourceFromUri:
         os.remove(self.TESTFILENAME)
 
     def test_errs__download_resource_from_uri(self):
+        import DatabankLib.databankio as dio
         # put directory instead of filename
         with pytest.raises(IsADirectoryError) as _:
             dio.download_resource_from_uri(
@@ -52,6 +58,7 @@ class TestDownloadResourceFromUri:
 class TestResolveDoiUrl:
 
     def test_badDOI__resolve_doi_url(self):
+        import DatabankLib.databankio as dio
         # test if bad DOI fails
         with pytest.raises(HTTPError, match='404') as _:
             dio.resolve_doi_url('10.5281/zenodo.8435a', True)
@@ -60,6 +67,7 @@ class TestResolveDoiUrl:
                 dio.resolve_doi_url('10.5281/zenodo.8435a', False))
 
     def test_goodDOI__resolve_doi_url(self):
+        import DatabankLib.databankio as dio
         # good DOI works properly
         assert ("https://doi.org/10.5281/zenodo.8435138" ==
                 dio.resolve_doi_url('10.5281/zenodo.8435138', True))
