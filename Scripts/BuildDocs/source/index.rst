@@ -82,6 +82,13 @@ Setup using conda as distribution:
    exampleAndTutorials
    modules
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Project Structure
+
+   auto_gen/Scripts
+
+
 Indices and tables
 ==================
 
