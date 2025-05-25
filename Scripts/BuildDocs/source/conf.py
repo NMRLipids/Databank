@@ -12,19 +12,21 @@
 #
 import os
 import sys
+from datetime import datetime
 
 #Directory containing this conf.py
 here = os.path.dirname(__file__)  
 #Scripts directory
-scripts_dir = os.path.abspath(os.path.join(here, '..', '..'))  
+repo_root = os.path.abspath(os.path.join(here, '..', '..','..'))
 
 #Add to path:
-sys.path.insert(0, scripts_dir)
+sys.path.insert(0, repo_root)
+year = datetime.now().year
 
 # -- Project information -----------------------------------------------------
 
 project = 'NMRlipids databank'
-copyright = '2024, Samuli Ollila'
+copyright = f"{year},OSI Approved: GNU General Public License v3 (GPLv3)"
 author = 'Samuli Ollila'
 
 # The full version, including alpha/beta/rc tags
@@ -49,7 +51,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['**tests**']
 
 
 # -- Options for HTML output -------------------------------------------------
