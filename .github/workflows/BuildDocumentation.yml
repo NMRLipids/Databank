@@ -22,6 +22,10 @@ jobs:
           
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
+
+          - name: generate rst files 
+            run: sphinx-apidoc -f -o auto_gen --separate --implicit-namespaces -d 1 --templatedir _templates/apidoc ../..
+            working-directory: Scripts/BuildDocs/source
        
           - name: build
             run: make html
