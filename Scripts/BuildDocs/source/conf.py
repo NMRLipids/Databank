@@ -28,7 +28,6 @@ year = datetime.now().year
 project = 'NMRlipids databank'
 author = 'NMRlipids open collaboration'
 copyright = f"""{year},{author} 
-
     OSI Approved: GNU General Public License v3 (GPLv3)
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,10 +37,9 @@ copyright = f"""{year},{author}
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>."""
+    GNU General Public License for more details or visit:
+    <https://github.com/NMRLipids/Databank/blob/main/LICENSE.txt>
+   """
 
 
 # The full version, including alpha/beta/rc tags
