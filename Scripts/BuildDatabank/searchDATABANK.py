@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import os
+import sys
 import yaml
 
 from tqdm import tqdm
@@ -114,9 +115,9 @@ class Experiment:
             except KeyError:
                 continue
             try:
-                if key in self.readme['COUNTER_IONS'].keys():
+                if key in self.readme['COUNTER_IONS']:
                     exp_ions.append(key)
-            except AttributeError:
+            except (TypeError, KeyError):
                 continue
         return exp_ions
 
@@ -169,9 +170,13 @@ def load_experiments(exp_type: str) -> List[Experiment]:
     print("Loading data for each experiment.")
     experiments: List[Experiment] = []
     for subdir in tqdm(rm_idx, desc='Experiment'):
-        exp_readme_fp = os.path.join(subdir, 'README.yaml')
-        with open(exp_readme_fp) as yaml_file_exp:
-            exp_readme = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+        try:
+            exp_readme_fp = os.path.join(subdir, 'README.yaml')
+            with open(exp_readme_fp) as yaml_file_exp:
+                exp_readme = yaml.load(yaml_file_exp, Loader=yaml.FullLoader)
+        except (FileNotFoundError, PermissionError):
+            logger.warning(f"Problems while accessing README.yaml in: {subdir}")
+            continue
 
         for fname in os.listdir(subdir):
             if fname.endswith(data_file):

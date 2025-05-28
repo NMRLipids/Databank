@@ -16,12 +16,12 @@ setup(
         path.join('.', 'Scripts', 'DatabankLib', 'requirements.txt')),
     author="NMRlipids open collaboration",  # Your name or organization
     author_email="samuli.ollila@helsinki.fi",
-    description="NMRLipid databank main package",
+    description="NMRLipids Databank main package",
     url="https://github.com/NMRlipids/Databank",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.7"
+    python_requires=">=3.9"
 )
