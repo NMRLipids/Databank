@@ -21,6 +21,14 @@ class System(collections.abc.MutableMapping):
     """
 
     def __init__(self, data=None):
+        """
+        Initialize the container for storing simulation record.
+
+        :param data: README-type dictionary.
+        :raises TypeError: If `data` is neither a `dict` nor another mapping type.
+        :raises ValueError: If a molecule key in the "COMPOSITION" data does not
+                            belong to the predefined set of lipids or molecules.
+        """
         self._store = {}
         if isinstance(data, dict):
             self._store.update(data)
@@ -122,17 +130,21 @@ class Databank:
                 filepath = os.path.join(subdir, filename)
                 if filename == "README.yaml":
                     ydict = {}
-                    with open(filepath) as yaml_file:
-                        ydict.update(yaml.load(yaml_file, Loader=yaml.FullLoader))
                     try:
+                        with open(filepath) as yaml_file:
+                            ydict.update(yaml.load(yaml_file, Loader=yaml.FullLoader))
                         content = System(ydict)
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Problem loading on of the files required for the system: {e}")
+                        print(f"System path: {subdir}")
+                        print(f"System: {str(ydict)}")
+                    except Exception as e:
+                        print(f"Unexpected error: {e}")
+                        print(f"System: {str(ydict)}")
+                    else:
                         relpath = os.path.relpath(filepath, rpath)
                         content["path"] = relpath[:-11]
                         systems.append(content)
-                    except FileNotFoundError as e:
-                        print(f"Problem loading mapping file for the system: {e}")
-                        print(f"System ID: {ydict['ID']}")
-                        print(f"System path: {subdir}")
         return systems
 
     def get_systems(self) -> SystemsCollection:
