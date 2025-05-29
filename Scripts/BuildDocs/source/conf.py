@@ -27,7 +27,7 @@ year = datetime.now().year
 
 project = 'NMRlipids databank'
 author = 'NMRlipids open collaboration'
-copyright = f"""{year},{author} 
+copyright = f"""{year}, {author} 
     OSI Approved: GNU General Public License v3 (GPLv3)
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['**tests**']
+exclude_patterns = ['**tests**','*__init__.py']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -88,3 +88,4 @@ source_suffix = {
 }
 
 autodoc_member_order = 'bysource'
+
