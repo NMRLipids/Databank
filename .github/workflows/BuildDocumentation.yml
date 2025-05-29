@@ -18,16 +18,16 @@ jobs:
           - name: Checkout repository
             uses: actions/checkout@v4
             with:
-               ref: "clean_document_cicd"
+               ref: "main"
           
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
-
-          - name: generate rst files 
-            run: sphinx-apidoc -f -o auto_gen --separate --implicit-namespaces -d 1 --templatedir _templates/apidoc ../..
+        
+          - name: generate rst files
+            run: python3 run_apidoc.py
             working-directory: Scripts/BuildDocs/source
        
-          - name: build
+          - name: build html files
             run: make html
             working-directory: Scripts/BuildDocs
 
@@ -45,10 +45,10 @@ jobs:
             - name: checkout
               uses: actions/checkout@v4
               with:
-                repository: "MagnusPriv/NMRLipids.github.io"
-                ref: "push_test"   
-                token: ${{ secrets.DOCUMENT_TOKEN }}   
-
+                repository: "NMRLipids/NMRLipids.github.io"
+                ref: "main"   
+                token: ${{ secrets.DOCS_DEPLOY_TOKEN }}    
+                
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:
