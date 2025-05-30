@@ -10,7 +10,6 @@ In the standard protocol, it should be run *after* ``searchDATABANK.py``.
 """
 
 import os
-import sys
 
 import yaml
 import json
@@ -81,7 +80,8 @@ if __name__ == "__main__":
                           f" do not exist for lipid {lipid1}.")
                     continue
                 except Exception as e:
-                    sys.exit("Unexpected error: " + str(e), 2)
+                    raise RuntimeError(
+                        f"Unexpected error during loading {exp_op_fpath}") from e
 
                 exp_error = 0.02
 
