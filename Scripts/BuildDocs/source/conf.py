@@ -32,19 +32,16 @@ copyright = f"""{year}, {author}
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details or visit:
-    <https://github.com/NMRLipids/Databank/blob/main/LICENSE.txt>
+    (at your option) any later version
    """
 
 
 # The full version, including alpha/beta/rc tags
 release = '4.9.2023'
-
+html_context = {
+    "copyright_link": "https://github.com/NMRLipids/Databank/blob/main/LICENSE.txt",
+    "repo_link":      "https://github.com/NMRLipids/Databank",
+}
 
 # -- General configuration ---------------------------------------------------
 
