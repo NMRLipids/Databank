@@ -27,7 +27,7 @@ year = datetime.now().year
 
 project = 'NMRlipids databank'
 author = 'NMRlipids open collaboration'
-copyright = f"""{year},{author} 
+copyright = f"""{year}, {author} 
     OSI Approved: GNU General Public License v3 (GPLv3)
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

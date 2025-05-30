@@ -18,7 +18,7 @@ jobs:
           - name: Checkout repository
             uses: actions/checkout@v4
             with:
-               ref: "clean_document_cicd"
+               ref: "main"
           
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
@@ -45,10 +45,10 @@ jobs:
             - name: checkout
               uses: actions/checkout@v4
               with:
-                repository: "MagnusPriv/NMRLipids.github.io"
-                ref: "push_test"   
-                token: ${{ secrets.DOCUMENT_TOKEN }}   
-
+                repository: "NMRLipids/NMRLipids.github.io"
+                ref: "main"   
+                token: ${{ secrets.DOCS_DEPLOY_TOKEN }}    
+                
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:
