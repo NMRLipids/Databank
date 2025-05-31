@@ -1,42 +1,55 @@
 Project structure
-=============
+=================
 
-Project has four subfolders within the Scripts folder:
+Project has four sub-folders inside **Scripts**:
 
 
 DatabankLib
 -----------
 
-Main project package. Contains most of project's logic and API.
+Main project package. Contains most of the project’s logic and API.
+
+:doc:`More info on DatabankLib <auto_gen/Scripts.DatabankLib>`
 
 
 AnalyzeDatabank
 ---------------
 
-Scripts performing analysis of the entire databank.
+Scripts that perform analysis of the entire databank.
+
+:doc:`More info on AnalyzeDatabank <auto_gen/Scripts.AnalyzeDatabank>`
+
 
 BuildDatabank
 -------------
+
+Scripts related to adding new simulations into the databank.
+
+:doc:`More info on BuildDatabank <auto_gen/Scripts.BuildDatabank>`
 
 
 updateGUI
 ---------
 
+Functionality for updating the GUI of the NMRLipids Databank.
+
+:doc:`More info on updateGUI <auto_gen/Scripts.updateGUI>`
+
 
 tests
 -----
 
-Contains pytest-based unit-tests and regression tests over toy-databank.
+Pytest-based unit and regression tests.
 
-Contents of each subfolder
+:doc:`More info on tests <auto_gen/Scripts.tests>`
+
+
+Repository folder structure 
 --------------------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    
-   auto_gen/Scripts.DatabankLib
-   auto_gen/Scripts.AnalyzeDatabank
-   auto_gen/Scripts.BuildDatabank
-   auto_gen/Scripts.updateGUI
-   auto_gen/Scripts.tests
+
+   auto_gen/Scripts
    
