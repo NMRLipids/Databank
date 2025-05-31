@@ -22,13 +22,9 @@ jobs:
           
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
-        
-          - name: generate rst files
-            run: python3 run_apidoc.py
-            working-directory: Scripts/BuildDocs/source
        
-          - name: build html files
-            run: make html
+          - name: Build RST and HTML files
+            run: make all
             working-directory: Scripts/BuildDocs
 
           - name: Archive production artifacts  #This step will upload the documentation files as an artifact 
