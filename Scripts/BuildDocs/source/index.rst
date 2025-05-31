@@ -70,7 +70,7 @@ Setup using conda as distribution:
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: User information:
 
    listOfFiles
@@ -82,7 +82,7 @@ Setup using conda as distribution:
    exampleAndTutorials
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Project Structure
 
    Overview
