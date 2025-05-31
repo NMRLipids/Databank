@@ -21,7 +21,8 @@ def main():
         '--separate',         # separate .rst per module
         '--implicit-namespaces',  # support namespace packages
         '-d', '1',            # max depth = 1
-        '--templatedir', template_dir,  # relative template directory
+        '--templatedir', template_dir,
+        '--tocfile','Scripts',   # relative template directory
         scripts_dir, *excluded_patterns           
     ]
 
