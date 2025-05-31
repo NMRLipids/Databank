@@ -25,6 +25,12 @@ if errorlevel 9009 (
 
 if "%1" == "" goto help
 
+if "%1" == "all" (
+	python "%SOURCEDIR%\run_apidoc.py"
+	%SPHINXBUILD% -M html %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+    goto end
+)
+
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 goto end
 

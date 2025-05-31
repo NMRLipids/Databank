@@ -12,24 +12,36 @@
 #
 import os
 import sys
+from datetime import datetime
 
 #Directory containing this conf.py
 here = os.path.dirname(__file__)  
 #Scripts directory
-scripts_dir = os.path.abspath(os.path.join(here, '..', '..'))  
+repo_root = os.path.abspath(os.path.join(here, '..', '..','..'))
 
 #Add to path:
-sys.path.insert(0, scripts_dir)
+sys.path.insert(0, repo_root)
+year = datetime.now().year
 
 # -- Project information -----------------------------------------------------
 
 project = 'NMRlipids databank'
-copyright = '2024, Samuli Ollila'
-author = 'Samuli Ollila'
+author = 'NMRlipids open collaboration'
+copyright = f"""{year}, {author} 
+    OSI Approved: GNU General Public License v3 (GPLv3)
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version
+   """
+
 
 # The full version, including alpha/beta/rc tags
 release = '4.9.2023'
-
+html_context = {
+    "copyright_link": "https://github.com/NMRLipids/Databank/blob/main/LICENSE.txt",
+    "repo_link":      "https://github.com/NMRLipids/Databank",
+}
 
 # -- General configuration ---------------------------------------------------
 
@@ -49,7 +61,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['**tests**','*__init__.py']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -73,3 +85,4 @@ source_suffix = {
 }
 
 autodoc_member_order = 'bysource'
+

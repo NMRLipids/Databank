@@ -23,8 +23,8 @@ jobs:
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
        
-          - name: build
-            run: make html
+          - name: Build RST and HTML files
+            run: make all
             working-directory: Scripts/BuildDocs
 
           - name: Archive production artifacts  #This step will upload the documentation files as an artifact 
@@ -43,8 +43,8 @@ jobs:
               with:
                 repository: "NMRLipids/NMRLipids.github.io"
                 ref: "main"   
-                token: ${{ secrets.DOCS_DEPLOY_TOKEN }}     
-
+                token: ${{ secrets.DOCS_DEPLOY_TOKEN }}    
+                
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:

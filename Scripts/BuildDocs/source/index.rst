@@ -71,7 +71,7 @@ Setup using conda as distribution:
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: User information:
 
    listOfFiles
    READMEcontent
@@ -80,7 +80,16 @@ Setup using conda as distribution:
    moleculesAndMapping
    databankLibrary
    exampleAndTutorials
-   modules
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Project Structure
+
+   Overview
+
+
+
+
 
 Indices and tables
 ==================
