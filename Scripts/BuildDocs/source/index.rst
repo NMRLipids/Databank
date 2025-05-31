@@ -85,7 +85,7 @@ Setup using conda as distribution:
    :maxdepth: 2
    :caption: Project Structure
 
-   auto_gen/Overview
+   Overview
 
 
 
