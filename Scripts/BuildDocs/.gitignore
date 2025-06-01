@@ -1,2 +1,3 @@
 build 
-source/auto_gen
+source/auto_gen/*
+!source/auto_gen/.gitkeep 
