@@ -30,8 +30,8 @@ There are custom templates used by apidoc within the `source/_templates` folder.
 
 The main change to the `source/_templates/package.rst.jinja` is removing differentiation between namespace packages and normal python packages.
 
-For original apidoc templates, they can be found [here](https://github.com/sphinx-doc/sphinx/tree/master/sphinx/templates/apidoc).
-For the original footer template it can be found [here](https://github.com/readthedocs/sphinx_rtd_theme/blob/master/sphinx_rtd_theme/footer.html).
+The original apidoc templates can be found [here](https://github.com/sphinx-doc/sphinx/tree/master/sphinx/templates/apidoc).
+The original footer template can be found [here](https://github.com/readthedocs/sphinx_rtd_theme/blob/master/sphinx_rtd_theme/footer.html).
 
 Deleting the custom templates within `source/_templates` would make Sphinx use default templates. 
 
