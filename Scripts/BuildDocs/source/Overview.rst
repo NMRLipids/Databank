@@ -45,7 +45,7 @@ Pytest-based unit and regression tests.
 
 
 Repository folder structure 
---------------------------
+---------------------------
 
 .. toctree::
    :maxdepth: 3
