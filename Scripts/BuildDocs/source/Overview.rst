@@ -1,7 +1,7 @@
 Project structure
 =================
 
-Project has four sub-folders inside **Scripts**:
+Project has four sub-folders inside `Databank/Scripts`:
 
 
 DatabankLib
