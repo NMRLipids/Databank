@@ -1,0 +1,17 @@
+DOI: 10.5281/zenodo.15065748
+TRJ: md_every_100_ps.xtc
+TPR: md.tpr
+SOFTWARE: gromacs
+PREEQTIME: 100
+TIMELEFTOUT: 50
+COMPOSITION:
+  POPC:     # universal name
+    NAME: POPC         # simulation specific name
+    MAPPING: mappingPOPCsage_smiles.yaml     # name of mapping file
+  SOL:
+    NAME: TIP3P
+    MAPPING: mappingTIP3Psage_smiles.yaml
+SYSTEM: POPCandTIP3P
+TOP: bilayer.top
+DIR_WRK: /media/julianne/DATA/Lipids/NMRLipids/temp/
+

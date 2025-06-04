@@ -1,0 +1,64 @@
+DOI:
+ DOI from where the raw data is found user given (compulsory).
+SOFTWARE:
+ Software used to run the simulation (e.g. Gromacs, Amber, NAMD, etc.).
+TRJ:
+ Name of the trajectory file found from DOI.
+TPR:
+ Name of the topology file found from DOI (tpr file in the case of Gromacs).
+PREEQTIME:
+ Pre-equilibrate time simulated before the uploaded trajectory in nanoseconds. For example, if you upload 100-200 ns part of total 200 ns simulation this should value should be 100. 
+TIMELEFTOUT:
+ Equilibration period in the uploaded trajectory that should be discarded in analyses. For example, if you upload 0-200 ns part of total 200 ns simulation where the first 100 ns should be considered as an equilibration, this value should be 100. 
+UNITEDATOM_DICT:
+ Information for constructing hydrogens for united atom simulations, empty for all atom simulations.
+COMPOSITION:
+ Molecule names used in the simulation and corresponding mapping files. The COMPOSITION is given in a dictionary format, where the first key is the universal molecule name (abbreviation listed in the table below). Another dictionary is then created for each molecule containing the values for the residue name in your simulation (NAME) and the name of the mapping file (MAPPING). For example, the COMPOSITION dictionary for [a system](https://doi.org/10.5281/zenodo.259392) containing POPC, Cholesterol (CHOL), water (SOL), sodium (SOD), and chloride (CLA) can be given as Numbers of lipid molecules (NPOPC, NPOPG, etc.) per membrane leaflet are calculated by determining on which side of the center of mass of the membrane the center of mass of the head group of each lipid molecule is located. Numbers of other molecules such as solvent and ions (NSOL, NPOT, NSOD, etc.) are read from the topology file. For more detailed description see below.
+DIR_WRK:
+ Temporary working directory in your local computer.
+TYPEOFSYSTEM:
+ Lipid bilayer or something else
+PUBLICATION:
+ Give reference to a publication(s) related to the data. | User given (optional)
+AUTHORS_CONTACT:
+ Name and email of the main author(s) of the data. 
+SYSTEM:
+ System description in the free text format.
+SOFTWARE_VERSION:
+ Version of the used software.
+FF:
+ Name of the used force field 
+FF_SOURCE:
+ Source of the force field parameters, e.g, CHARMM-GUI, webpage, citation to a publication, etc.
+FF_DATE:
+ Date when force field parameters were accessed in the given source (day/month/year).
+FF{molename}:
+ Molecule specific force field information, e.g., water model with FFSOL and sodium parameters with FFSOD.
+CPT:
+ Name of the Gromacs checkpoint file.
+LOG:
+ Name of the Gromacs log file.
+TOP:
+ Name of the Gromacs top file.
+GRO:
+ Name of the Gromacs gro file.
+TRAJECTORY_SIZE:
+ Size of the trajectory file in bytes | automatically extracted data. 
+TRJLENGTH:
+ Lenght of the trajectory (ps).
+TEMPERATURE:
+ Temperature of the simulation.
+NUMBER_OF_ATOMS:
+ Number of atoms in the simulation.
+DATEOFRUNNIG:
+ Date when added into the databank.
+EXPERIMENT:
+ Potentially connected experimental data.
+WARNINGS:
+ Warnings related to potential issues with the simulation (eg. non-standar orientation of membrane or old Gromacs version)
+ID:
+ NMRlipids databank ID number of the simulation.
+
+
+
+
