@@ -520,7 +520,8 @@ if __name__ == '__main__':
                 Exp_ID = DBEntry('experiments_FF', Info, Info)
 
     # Iterate over the loaded systems
-    for README in systems:
+    for _README in systems:
+        README = _README.readme
 
         try:
             # if True:
