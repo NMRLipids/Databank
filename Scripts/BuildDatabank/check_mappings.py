@@ -12,15 +12,15 @@ import MDAnalysis as mda
 from tqdm import tqdm
 import traceback
 
-from DatabankLib import NMLDB_SIMU_PATH, lipids_set
-from DatabankLib.core import initialize_databank
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.core import initialize_databank, lipids_set
 
 if __name__ == "__main__":
     systems = initialize_databank()
 
     for system in tqdm(systems):
         try:
-            if 'TPR' not in system.keys():
+            if 'TPR' not in system.readme.keys():
                 sys.stderr.write(
                     f"Skipping {system['SYSTEM']} because there is no TPR\n")
                 continue
