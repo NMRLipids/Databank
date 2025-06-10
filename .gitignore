@@ -1,0 +1,14 @@
+# python
+__pycache__/
+
+# visual studio code
+.vscode/
+
+# development
+AddData-dev.ipynb
+test.py
+
+# os dependent
+**/.DS_Store
+
+**/*.swp
