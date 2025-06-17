@@ -57,6 +57,102 @@ You should also activate *DatabankLib* package:
 
 You can install the package in non-development mode, without `-e` (it's obligatory in Colab runtime environment); however, in this case, the package will be installed to the folder with other pip-packages and it will not know about the path to the `Data` folder. Then you should provide the path to the *repository root* by setting the environment variable `NMLDB_ROOT_PATH`.
 
+# Installation using Docker
+
+We provide a Docker-based development environment that allows for easy testing of new code and features. This method is recommended for development and testing purposes.
+
+## 1. Install Docker
+
+Before using the Docker-based development environment, you'll need to have Docker installed on your system:
+
+- **Linux**: Follow the official Docker installation guide for Linux: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
+- **macOS**: Download and install Docker Desktop for Mac from [https://www.docker.com/products/docker-desktop/](https://docs.docker.com/desktop/setup/install/mac-install/)
+- **Windows**: Download and install Docker Desktop for Windows from [https://www.docker.com/products/docker-desktop/](https://docs.docker.com/desktop/setup/install/windows-install/) (requires Windows Subsystem for Linux)
+
+## 2. Using the Docker Development Environment
+
+### Setting Up the Development Environment
+Go to the directory where you have the Databank repository. Then, 
+
+1. Build the Docker image:
+   ```bash
+   docker build -t NAME_OF_THE_DOCKER_IMAGE .
+   ```
+
+   or just pull the latest Docker image
+   ```
+   docker pull nmrlipids/core:latest
+   ```
+
+2. Initialize the submodule data:
+   ```bash
+   git submodule update --init
+   ```
+
+### Testing Code
+
+1. Start the container with your code mounted:
+   ```bash
+   docker run -it -v $(pwd):/workspace NAME_OF_THE_DOCKER_IMAGE
+   ```
+   or
+   if you pulled the latest image,
+   ```bash
+   docker run -it -v $(pwd):/workspace nmrlipids/core:latest
+   ```
+
+2. Inside the container:
+   ```bash
+   # Create a new virtual environment for testing
+   uv venv test-env
+   source test-env/bin/activate
+
+   # Install base requirements
+   uv pip install -r Scripts/DatabankLib/requirements.txt
+
+   # Install any additional packages needed for testing
+   uv pip install new-package-name
+
+   # Run tests
+   python -m pytest Scripts/tests/
+   ```
+
+3. When done testing:
+   ```bash
+   # Deactivate virtual environment
+   deactivate
+   
+   # Exit container
+   exit
+   ```
+
+### Managing Different Test Environments
+
+You can easily create different testing environments with different dependencies:
+
+1. Start container again:
+   ```bash
+   docker run -it -v $(pwd):/work databank-test
+   ```
+
+2. Inside container, create a new virtual environment:
+   ```bash
+   uv venv test-env-new
+   source test-env-new/bin/activate
+
+   # Install updated dependencies
+   uv pip install -r Scripts/DatabankLib/requirements.txt
+   uv pip install additional-package
+   ```
+
+### Tips for Docker Development
+
+- Your local code changes are automatically reflected in the container since we use a volume mount
+- Each test session should use a new virtual environment to keep dependencies isolated
+- You can run multiple test environments simultaneously by creating different virtual environments
+- To see all running containers: `docker ps`
+- To stop a container: `docker stop <container_id>`
+
 # Contribution
 
 The project is open for contributions! 
