@@ -17,6 +17,8 @@ import socket
 from tqdm import tqdm
 import numpy as np
 import gc
+import MDAnalysis as mda
+from maicos.core.base import AnalysisCollection
 
 from DatabankLib import (
     NMLDB_SIMU_PATH,
@@ -34,7 +36,12 @@ from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
 from DatabankLib.form_factor import FormFactor
 from DatabankLib import analyze_nmrpca as nmrpca
-
+from DatabankLib.maicos import (
+    FormFactorPlanar,
+    DielectricPlanar,
+    DensityPlanar,
+    DiporderPlanar,
+)
 
 def computeNMRPCA(  # noqa: N802 (API)
     system: System, logger: Logger, recompute: bool = False
@@ -795,3 +802,166 @@ def computeFF(  # noqa: N802 (API)
         return RCODE_ERROR
     else:
         return RCODE_COMPUTED
+
+
+def computeMAICOS(  # noqa: N802 (API)
+    system: System, logger: Logger, recompute: bool = False
+) -> int:
+
+    # TODO: Preprocess trajectory
+
+    # IMPORTANT: Ensure membrane surface normal is along z-axis, system is centered on
+    # lipids, and molecules are unbroken across periodic boundaries
+    u = mda.Universe("topol", "traj")
+
+    # We us a hardoced bin width
+    bin_width = 0.3
+
+    # Guesser might charged elements wrong like Cl- may guessed as Cl...
+    u.guess_TopologyAttrs(force_guess=["elements"])
+    u.atoms.elements = np.array([el.title() for el in u.atoms.elements])
+
+    # TODO: Adjust the group selection to be general for analysis
+    water = u.select_atoms("resname SOL")
+    lipid = u.select_atoms("resname POPC")
+    # Maybe add group for ions and compute densities for them as well?
+
+    # fixed `zmin` and `zmax` for profiles are deduced from smallest box dimension
+    L_min = u.dimensions[2]
+
+    for ts in u.trajectory:
+        if ts.dimensions[2] < L_min:
+            L_min = ts.dimensions[2]
+
+    zmin = -L_min / 2
+    zmax = L_min / 2
+
+    # Skip unwrap/pack for speed - trajectories are already centered and whole
+    base_options = {"unwrap": False, "bin_width": bin_width, "pack": False}
+    zlim = {"zmin": zmin, "zmax": zmax}
+    dens_options = {**zlim, **base_options}
+
+    # Density profiles
+    dens_e_total = DensityPlanar(
+        u.atoms,
+        dens="electron",
+        **dens_options,
+        output="TotalDensity.json",
+    )
+    dens_e_water = DensityPlanar(
+        water,
+        dens="electron",
+        **dens_options,
+        output="WaterDensity.json",
+    )
+    dens_e_lipid = DensityPlanar(
+        lipid,
+        dens="electron",
+        **dens_options,
+        output="LipidDensity.json",
+    )
+
+    dens_m_total = DensityPlanar(
+        u.atoms,
+        dens="mass",
+        **dens_options,
+        output="TotalMassDensity.json",
+    )
+    dens_m_water = DensityPlanar(
+        water,
+        dens="mass",
+        **dens_options,
+        output="WaterMassDensity.json",
+    )
+    dens_m_lipid = DensityPlanar(
+        lipid,
+        dens="mass",
+        **dens_options,
+        output="LipidMassDensity.json",
+    )
+
+    dens_c_total = DensityPlanar(
+        u.atoms,
+        dens="charge",
+        **dens_options,
+        output="TotalChargeDensity.json",
+    )
+    dens_c_water = DensityPlanar(
+        water,
+        dens="charge",
+        **dens_options,
+        output="WaterChargeDensity.json",
+    )
+    dens_c_lipid = DensityPlanar(
+        lipid,
+        dens="charge",
+        **dens_options,
+        output="LipidChargeDensity.json",
+    )
+
+    # Form factor
+    # Use `None` for `zmin`/`zmax` to respect changing cell size (vs fixed zmin/zmax for
+    # density profiles)
+    form_factor = FormFactorPlanar(
+        atomgroup=u.atoms,
+        **base_options,
+        zmin=None,
+        zmax=None,
+        output="FormFactorMAICoS.json",
+    )
+
+    # Water Orientation
+    # TODO: Maybe also compute orientation for lipid heads/tails?
+    cos_water = DiporderPlanar(
+        water,
+        order_parameter="cos_theta",
+        **dens_options,
+        output="DiporderWater.json",
+    )
+    cos2_water = DiporderPlanar(
+        water,
+        order_parameter="cos_2_theta",
+        **dens_options,
+        output="Diporder2Water.json",
+    )
+
+    # Combine all analysis instances for combined analysis run
+    analysis_instances = [
+        dens_e_total,
+        dens_e_water,
+        dens_e_lipid,
+        dens_m_total,
+        dens_m_water,
+        dens_m_lipid,
+        dens_c_total,
+        dens_c_water,
+        dens_c_lipid,
+        form_factor,
+        cos_water,
+        cos2_water,
+    ]
+
+    # Dielectric profiles
+    diel_total = DielectricPlanar(
+        u.atoms, **base_options, output_prefix="DielectricTotal"
+    )
+    diel_water = DielectricPlanar(
+        water, **base_options, output_prefix="DielectricWater"
+    )
+    diel_lipid = DielectricPlanar(
+        lipid, **base_options, output_prefix="DielectricLipid"
+    )
+
+    # Check if dielectric profiles can be calculated (not possible for charged systems)
+    try:
+        diel_total.run(stop=1)
+    except (ValueError, UserWarning) as e:
+        print(f"Dielectric profiles not available for this system: {e}")
+    else:
+        analysis_instances += [diel_total, diel_water, diel_lipid]
+
+    collection = AnalysisCollection(*analysis_instances)
+    collection.run()
+
+    for analysis in analysis_instances:
+        analysis.save()
