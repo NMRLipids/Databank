@@ -14,13 +14,15 @@ jobs:
         if: github.repository == 'NMRLipids/Databank'
         runs-on: ubuntu-latest
         container:
-           image: nmrlipids/doc-builder 
+           image: nmrlipids/doc-builder
+        env:
+            NMLDB_DATA_PATH: ${{ github.workspace }}/Scripts/tests/Data #github.workspace: root of repository after checkout step
+            NMLDB_SIMU_PATH: ${{ github.workspace }}/Scripts/tests/Data/Simulations.1 
         steps:
           - name: Checkout repository
             uses: actions/checkout@v4
             with:
                ref: "main"
-               submodules: True
           
           - name: Update dependencies   #Checks for updates in package requirements. 
             run: pip install --break-system-packages -e .
