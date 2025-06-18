@@ -12,3 +12,8 @@ test.py
 **/.DS_Store
 
 **/*.swp
+
+# if tests are cancelled for some reason
+**/*gro
+**/*tpr
+**/*xtc
