@@ -9,6 +9,7 @@ The NMRlipids databank documentation is available in [here](https://nmrlipids.gi
 More information and example applications are available from the [NMRlipids databank manuscript](https://doi.org/10.1038/s41467-024-45189-z).
 
 ## API
+
 The `DatabankLib` python module provides programmatic access to all simulation data in the NMRlipids Databank. This enables wide range of novel data-driven applications &mdash; from construction of machine learning models that predict membrane properties, to automatic analysis of virtually any property across all simulations in the Databank. 
 
 NMRlipids Databank-API documentation is available in [here](https://nmrlipids.github.io/databankLibrary.html).
@@ -36,7 +37,7 @@ The code has been tested in Linux and MacOS environment with python 3.9 or newer
 
 Note that the data is stored as a submodule repository and should be loaded after clonning. Default data storage is [BilayerData](https://github.com/NMRLipids/BilayerData), and it is loaded automatically by using
 ```
-$ git submodule update --init
+$ git submodule update --init --remote
 ```
 
 We recomend installing python libraries into an environment, for example, using conda:
