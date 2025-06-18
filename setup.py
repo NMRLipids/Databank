@@ -11,6 +11,7 @@ setup(
     name="DatabankLib",
     version="1.1.0",                          # should agree with git tag!
     package_dir={"": "Scripts"},
+    package_data={"": ["*.yaml"]},
     packages=find_packages(where="Scripts"),  # Automatically list packages
     install_requires=parse_requirements(
         path.join('.', 'Scripts', 'DatabankLib', 'requirements.txt')),
