@@ -103,25 +103,19 @@ Go to the directory where you have the Databank repository. Then,
 
 2. Inside the container:
    ```bash
-   # Create a new virtual environment for testing
-   uv venv test-env
-   source test-env/bin/activate
-
-   # Install base requirements
+   # Install base requirements and the DatabankLib
    uv pip install -r Scripts/DatabankLib/requirements.txt
+   uv pip install -e .
 
    # Install any additional packages needed for testing
    uv pip install new-package-name
 
    # Run tests
-   python -m pytest Scripts/tests/
+   bash runtests.sh
    ```
-
+   Do not forget to add this new package to the requirements.txt! 
 3. When done testing:
    ```bash
-   # Deactivate virtual environment
-   deactivate
-   
    # Exit container
    exit
    ```
@@ -132,13 +126,13 @@ You can easily create different testing environments with different dependencies
 
 1. Start container again:
    ```bash
-   docker run -it -v $(pwd):/work databank-test
+   docker run -it -v $(pwd):/workspace NAME_OF_THE_DOCKER_IMAGE
    ```
 
 2. Inside container, create a new virtual environment:
    ```bash
-   uv venv test-env-new
-   source test-env-new/bin/activate
+   uv venv /home/runner/test-env-new
+   source /home/runner/test-env-new/bin/activate
 
    # Install updated dependencies
    uv pip install -r Scripts/DatabankLib/requirements.txt
