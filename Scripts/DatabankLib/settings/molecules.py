@@ -116,6 +116,18 @@ class Lipid(Molecule):
 
     def _get_path(self) -> str:
         return os.path.join(self._lipids_dir, self.name)
+    
+    def _populate_meta_data(self) -> None:
+        """
+        Populates metadata for the lipid from its YAML file.
+        """
+        self._metadata = {}
+        meta_path = os.path.join(self._get_path(), "metadata.yaml")
+        if os.path.isfile(meta_path):
+            with open(meta_path, "r") as yaml_file:
+                self._metadata = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        else:
+            raise FileNotFoundError(f"Metadata file not found for {self.name}.")
 
 
 class NonLipid(Molecule):
