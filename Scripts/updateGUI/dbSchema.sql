@@ -127,6 +127,98 @@ CREATE TABLE `lipids` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `lipid_properties`
+-- Mapping table for lipids and property entries.
+-- Many-to-many relationship.
+-- Each lipid can have multiple properties, and each 
+-- property can be associated with multiple lipids.
+--
+
+DROP TABLE IF EXISTS `lipid_properties`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lipid_properties` (
+  `lipid_id` bigint unsigned NOT NULL,
+  `property_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`lipid_id`,`property_id`),
+  CONSTRAINT `lipid_id_fk_constraint` FOREIGN KEY (`lipid_id`) REFERENCES `lipids` (`id`),
+  CONSTRAINT `property_id_fk_constraint` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `properties`
+-- This table stores various properties associated with lipids.
+-- Each property has a name, description, value, unit, and type.
+-- The type can be used to categorize the property (e.g., "integer", "string", etc.).
+-- The `created_at` and `updated_at` timestamps track when the 
+-- property was created and last updated.
+-- 
+
+DROP TABLE IF EXISTS `properties`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `properties` ( 
+  `property_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `unit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` ENUM('string', 'integer', 'numeric', 'float') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`property_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 
+-- Table structure for table `db` 
+-- This table is used to store external databases to cross-reference to.
+-- The `url` field is used to link to the database, and the `version` field
+-- indicates the version of the database.
+-- URL schema is used to define the URL structure for accessing the database.
+-- 
+
+DROP TABLE IF EXISTS `db`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `db` (
+  `db_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url_schema` varchar(255) CHARACTER SET utf8
+  `version` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`db_id`),
+  KEY `name` (`name`),
+  UNIQUE KEY `name_version_constraint` (`name`, `version`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+
+--
+-- Table structure for table `cross_references`
+-- This table is used to store cross-references between lipids and external databases.
+-- Each cross-reference links a lipid to an external database entry.
+-- The `db_id` field references the `db` table, and the `lipid_id` field references the `lipids` table.
+-- 
+DROP TABLE IF EXISTS `cross_references`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cross_references` (
+  `cross_ref_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `db_id` bigint unsigned NOT NULL,
+  `lipid_id` bigint unsigned NOT NULL,
+  `external_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `external_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`cross_ref_id`),
+  UNIQUE KEY `db_lipid_external_id_constraint` (`db_id`, `lipid_id`, `external_id`), 
+  KEY `db_id` (`db_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;    
+
+
+
+--
 -- Table structure for table `membranes`
 --
 
