@@ -1,0 +1,19 @@
+NMRlipids:
+  id: TOCL
+  name: 1’,3’-Bis[1,2-dioleoyl-sn-glycero-3-phospho]-glycerol
+  charge:
+sameAs:
+  ChEBI: CHEBI:60356
+  pubchem.compound: 46931152
+  lipidmaps: LMGP12010525
+  metabolights: MTBLC60356
+  slm: SLM:000389835
+  pdb: QSR
+bioschema_properties:
+  iupacName: '[(2R)-3-[[3-[[(2R)-2,3-bis[[(Z)-octadec-9-enoyl]oxy]propoxy]-hydroxyphosphoryl]oxy-2-hydroxypropoxy]-hydroxyphosphoryl]oxy-2-[(Z)-octadec-9-enoyl]oxypropyl]
+    (Z)-octadec-9-enoate'
+  smiles: CCCCCCCC/C=C\\CCCCCCCC(=O)OC[C@@H](OC(=O)CCCCCCC/C=C\\CCCCCCCC)COP(=O)(OCC(O)COP(=O)(OC[C@H](OC(=O)CCCCCCC/C=C\\CCCCCCCC)COC(=O)CCCCCCC/C=C\\CCCCCCCC)O)O
+  inChI: InChI=1S/C81H150O17P2/c1-5-9-13-17-21-25-29-33-37-41-45-49-53-57-61-65-78(83)91-71-76(97-80(85)67-63-59-55-51-47-43-39-35-31-27-23-19-15-11-7-3)73-95-99(87,88)93-69-75(82)70-94-100(89,90)96-74-77(98-81(86)68-64-60-56-52-48-44-40-36-32-28-24-20-16-12-8-4)72-92-79(84)66-62-58-54-50-46-42-38-34-30-26-22-18-14-10-6-2/h33-40,75-77,82H,5-32,41-74H2,1-4H3,(H,87,88)(H,89,90)/b37-33-,38-34-,39-35-,40-36-/t76-,77-/m1/s1
+  inChIKey: TWHQNHQPSCPQNY-WVRHUKEESA-N
+  molecularFormula: C81H150O17P2
+  MolecularWeight: 1458.0
