@@ -1,12 +1,12 @@
 # General credits
 
-NMRLipids project is run by [NMRLipids research collaboration](https://nmrlipids.blogspot.com/) since 2013.
+NMRlipids project is run by [NMRlipids research collaboration](https://nmrlipids.blogspot.com/) since 2013.
 
 # Contributors
 
-NMRLipids Databank separates codespace from [Data](https://github.com/NMRLipids/BilayerData) since June 2025 (v.1.1.0). Here we list only the contributors of the code part. The contributors of the bilayer data for the Databank project are listed in [BilayerData/AUTHORS.md](https://github.com/NMRLipids/BilayerData/blob/main/AUTHORS.md).
+Since June 2025 (v.1.1.0), NMRlipids Databank separates codespace from [Data](https://github.com/NMRLipids/BilayerData). Below we list contributors of the code part only; contributors of the bilayer-data part are listed at [BilayerData/AUTHORS.md](https://github.com/NMRLipids/BilayerData/blob/main/AUTHORS.md).
 
-Here is the authors in alphabetical order:
+ Alphabetical list of contributors:
 
 - @MelbourneFL
 - Alexey M. Nesterenko (@comcon1)
@@ -16,11 +16,11 @@ Here is the authors in alphabetical order:
 - Cedric Mingham (@thraindk)
 - Fabián Suárez-Lestón (@fsuarezleston)
 - Julianne Hoeflich (@JHoeflich1)
-- Hanne Susanna Antilla (@hsantila)
+- Hanne Susanna Antila (@hsantila)
 - Hector Martinez-Seara Monne (@hseara)
-- Lara Bort (@larabort)
+- Lara Dautzenberg (@larabort)
 - Magnus-Elias Sletten (@MagnusSletten)
-- Markus Sakkari Miettinen (@markussmiettinen)
+- Markus Miettinen (@markussmiettinen)
 - Patrick Frankel (@PEFrankel)
 - Pavel Buslaev (@pbuslaev)
 - Samuli O.H. Ollila (@ohsOlilla)
