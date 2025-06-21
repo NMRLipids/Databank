@@ -1,15 +1,13 @@
 # Test the Molecules class
 import pytest
-import os
 
 
 
 # run only on sim2 mocking data
 pytestmark = pytest.mark.sim2
 
-def test_initialize_n():
+def test_lipids_metadata():
     import DatabankLib
-    from DatabankLib.core import initialize_databank
     from DatabankLib.settings.molecules import lipids_set
     #from molecules import lipids, nonlipids,lipids_set, nonlipids_set
     print(DatabankLib.NMLDB_MOL_PATH)
