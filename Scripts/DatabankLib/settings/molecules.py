@@ -66,6 +66,7 @@ class Molecule(ABC):
         self._molname = name
         self._mapping_fpath = None
         self._mapping_dict = None
+        
 
     @staticmethod
     def __check_name(name: str) -> None:
@@ -84,6 +85,26 @@ class Molecule(ABC):
         pat = r"[A-Za-z0-9_]+"
         if not re.match(pat, name):
             raise ValueError(f"Only {pat} symbols are allowed in Molecule name.")
+    
+    def _populate_meta_data(self) -> None:
+        """
+        Populates metadata for the molecule from its YAML file.
+        
+        This method should be implemented in subclasses to load specific
+        metadata related to the molecule.
+        """
+        pass
+
+    
+    @property
+    def metadata(self) -> dict:
+        """
+        Returns metadata for the molecule.
+
+        :return: dict with metadata
+        """
+        pass
+
 
     @property
     def name(self) -> str:
@@ -103,7 +124,8 @@ class Molecule(ABC):
 
     def __repr__(self):
         return f"{type(self).__name__}({self.name})"
-
+    
+    
 
 class Lipid(Molecule):
     """
@@ -129,6 +151,27 @@ class Lipid(Molecule):
         else:
             raise FileNotFoundError(f"Metadata file not found for {self.name}.")
 
+    @property
+    def metadata(self) -> dict:
+        """
+        Returns metadata for the lipid.
+
+        :return: dict with metadata
+        """
+        if not hasattr(self, '_metadata'):
+            self._populate_meta_data()
+        return self._metadata 
+
+    def __init__(self, name: str) -> None:
+        """
+        Create the lipid.
+
+        :param name: The name of the lipid.
+        :type name: str
+        """
+        super().__init__(name)
+        self._populate_meta_data()
+        
 
 class NonLipid(Molecule):
     """
@@ -227,6 +270,21 @@ class MoleculeSet(MutableSet[Molecule], ABC):
             self._items.discard(ifound)
             self._names.discard(item.upper())
 
+
+    def get(self, key: str, default=None) -> Molecule | None:
+        """
+        Get a molecule by its name.
+        :param key: The name of the molecule to retrieve.
+        :param default: The value to return if the molecule is not found.
+        """
+        if key.upper() in self._names:
+            for item in self._items:
+                if item.name.upper() == key.upper():
+                    return item
+        return default
+    
+
+
     def __repr__(self):
         return f"{type(self).__name__}[{self._names}]"
 
@@ -296,7 +354,7 @@ class NonLipidSet(MoleculeSet):
 
 
 lipids_set: LipidSet = LipidSet.load_from_data()
-""" Dictionary of possible lipids """
+""" MutableSet of possible lipids """
 
 lipids_dict = lipids_set
 """ @deprecated: Use lipids_set instead. """
