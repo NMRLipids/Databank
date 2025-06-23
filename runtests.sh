@@ -15,6 +15,7 @@ fi
 if command -v pytest &> /dev/null; then
   pytest Scripts/tests --cmdopt sim2
   pytest Scripts/tests --cmdopt sim1
+  pytest Scripts/tests --cmdopt adddata
   pytest Scripts/tests --cmdopt nodata
 else
   echo "pytest is not installed. Please install required libraries using"

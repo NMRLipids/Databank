@@ -3,11 +3,15 @@ import pytest
 import logging
 
 # Pytest HOOKS
+# -------------------------------------------------------------------
+
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--cmdopt", action="store", default="sim1", help="Two test groups: sim1|sim2|nodata"
+        "--cmdopt", action="store", default="sim1",
+        help="Two test groups: sim1|sim2|nodata"
     )
+
 
 def pytest_collection_modifyitems(config, items):
     cmdopt = config.getoption("--cmdopt")
@@ -16,7 +20,10 @@ def pytest_collection_modifyitems(config, items):
         if cmdopt not in item.keywords:
             item.add_marker(run_only_sim)
 
+
 # Pytest GLOBAL FIXTURES
+# -------------------------------------------------------------------
+
 
 @pytest.fixture(autouse=True, scope="session")
 def header_module_scope(request):
@@ -25,18 +32,22 @@ def header_module_scope(request):
         sim = "Simulations.1"
     elif cmdopt == "sim2":
         sim = "Simulations.2"
+    elif cmdopt == "adddata":
+        sim = "Simulations.AddData"
     elif cmdopt == "nodata":
         sim = None
     else:
         pytest.exit(f"Unknown --cmdopt {cmdopt}")
     os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
     if sim is not None:
-        os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", sim)
+        os.environ["NMLDB_SIMU_PATH"] = os.path.join(
+            os.path.dirname(__file__), "Data", sim)
     import DatabankLib
     print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
     print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
     yield
     print("DBG: Mocking completed")
+
 
 @pytest.fixture(scope="module")
 def logger():
