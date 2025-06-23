@@ -622,7 +622,7 @@ if __name__ == "__main__":
     outfile_dict = os.path.join(dir_tmp, "README.yaml")
 
     with open(outfile_dict, "w") as f:
-        yaml.dump(sim, f, sort_keys=False, allow_unicode=True)
+        yaml.dump(sim.readme, f, sort_keys=False, allow_unicode=True)
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),
             os.path.join(directory_path, "README.yaml"),
