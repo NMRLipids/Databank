@@ -5,6 +5,7 @@ Can be imported without additional libraries to scan Databank system file tree!
 """
 
 import os
+import sys
 import yaml
 import collections.abc
 from typing import Dict, List
@@ -135,12 +136,16 @@ class Databank:
                             ydict.update(yaml.load(yaml_file, Loader=yaml.FullLoader))
                         content = System(ydict)
                     except (FileNotFoundError, PermissionError) as e:
-                        print(f"Problem loading on of the files required for the system: {e}")
-                        print(f"System path: {subdir}")
-                        print(f"System: {str(ydict)}")
+                        sys.stderr.write(f"""
+!!README LOAD ERROR!!
+Problems while loading on of the files required for the system: {e}
+System path: {subdir}
+System: {str(ydict)}\n""")
                     except Exception as e:
-                        print(f"Unexpected error: {e}")
-                        print(f"System: {str(ydict)}")
+                        sys.stderr.write(f"""
+!!README LOAD ERROR!!
+Unexpected error: {e}
+System: {str(ydict)}\n""")
                     else:
                         relpath = os.path.relpath(filepath, rpath)
                         content["path"] = relpath[:-11]
