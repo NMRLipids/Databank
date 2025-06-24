@@ -80,7 +80,7 @@ class TestAddData:
         else:
             assert '[DEBUG]' not in result.stderr
         assert '[INFO]' in result.stderr
-        self._check_new_readmy(capsys)
+        self._check_new_readme(capsys)
         assert result.returncode == 0
 
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
@@ -100,7 +100,7 @@ class TestAddData:
         assert '[ERROR]' in result.stderr, "Expected an error message in stderr"
         assert result.returncode == 1
 
-    def _check_new_readmy(self, capsys):
+    def _check_new_readme(self, capsys):
         from DatabankLib.core import initialize_databank
         ss = initialize_databank()
         captured = capsys.readouterr()
