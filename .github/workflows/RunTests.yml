@@ -1,0 +1,31 @@
+name: Run tests
+
+on:
+  pull_request: # This workflow is triggered when pull requests are made or updated towards the main branch.
+    branches:
+      - 'main'
+    paths:
+      - 'Scripts/**/*.py'
+      - 'Scripts/**/*.sh'
+      - 'Scripts/**/*.ipynb'
+    
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    container:
+      image: nmrlipids/github-runner
+    env:
+      TQDM_DISABLE: True #Disables TQDM progress bars to make output cleaner.
+    steps:
+      - name: Checkout pull-request code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref:        ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+    
+      - name: Install package and test dependencies
+        run: |
+          pip install -e . -r Scripts/DatabankLib/requirements-dev.txt
+      - name: Run tests
+        run: ./runtests.sh 
