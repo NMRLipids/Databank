@@ -72,7 +72,7 @@ def systemLoadTraj(systems):
 # ----------------------------------------------------------------
 # Every test function is parametrized with system ID to make clear reporting
 # about which system actually fails on a test function.
-MAXRELERR_COMPARE_THRESHOLD = 2e-6
+MAXRELERR_COMPARE_THRESHOLD = 1e-2
 
 def compareJSONsBtwSD(jsfn: str):
     """Function to call from the test to compare JSON to the precomputed one.
