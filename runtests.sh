@@ -11,14 +11,16 @@ else
   exit 1
 fi
 
+status=0
 # Run the tests using pytest
 if command -v pytest &> /dev/null; then
-  pytest Scripts/tests --cmdopt sim2
-  pytest Scripts/tests --cmdopt sim1
-  pytest Scripts/tests --cmdopt adddata
-  pytest Scripts/tests --cmdopt nodata
+  pytest Scripts/tests --cmdopt sim2 || status=1
+  pytest Scripts/tests --cmdopt sim1 || status=1
+  pytest Scripts/tests --cmdopt adddata || status=1
+  pytest Scripts/tests --cmdopt nodata || status=1
 else
   echo "pytest is not installed. Please install required libraries using"
   echo ">> pip install -e . -r Scripts/DatabankLib/requirements-dev.txt <<"
-  exit 1
+  status=1
 fi
+exit $status
