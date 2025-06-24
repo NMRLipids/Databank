@@ -74,15 +74,16 @@ Before using the Docker-based development environment, you'll need to have Docke
 ### Setting Up the Development Environment
 Go to the directory where you have the Databank repository. Then, 
 
-1. Build the Docker image:
+1. Download the latest nmrlipids core image:
+   ```
+   docker pull nmrlipids/core:latest
+   ```
+
+2. Alternatively the Docker image can be built locally:
    ```bash
    docker build -t NAME_OF_THE_DOCKER_IMAGE .
    ```
 
-   or just pull the latest Docker image
-   ```
-   docker pull nmrlipids/core:latest
-   ```
 
 2. Initialize the submodule data:
    ```bash
@@ -104,16 +105,13 @@ Go to the directory where you have the Databank repository. Then,
 2. Inside the container:
    ```bash
    # Install base requirements and the DatabankLib
-   uv pip install -r Scripts/DatabankLib/requirements.txt
-   uv pip install -e .
-
-   # Install any additional packages needed for testing
-   uv pip install new-package-name
-
+   pip install -e . -r Scripts/DatabankLib/requirements.txt
+   
    # Run tests
-   bash runtests.sh
+   ./runtests.sh
    ```
    Do not forget to add this new package to the requirements.txt! 
+
 3. When done testing:
    ```bash
    # Exit container
@@ -122,30 +120,22 @@ Go to the directory where you have the Databank repository. Then,
 
 ### Managing Different Test Environments
 
-You can easily create different testing environments with different dependencies:
+By default the core image features the dev requirements from this repository but you can easily create different testing environments with different dependencies:
 
 1. Start container again:
    ```bash
    docker run -it -v $(pwd):/workspace NAME_OF_THE_DOCKER_IMAGE
    ```
 
-2. Inside container, create a new virtual environment:
-   ```bash
-   uv venv /home/runner/test-env-new
-   source /home/runner/test-env-new/bin/activate
-
-   # Install updated dependencies
-   uv pip install -r Scripts/DatabankLib/requirements.txt
-   uv pip install additional-package
-   ```
+2. Inside container, create a new virtual environment using Conda as previously described. 
 
 ### Tips for Docker Development
 
 - Your local code changes are automatically reflected in the container since we use a volume mount
-- Each test session should use a new virtual environment to keep dependencies isolated
 - You can run multiple test environments simultaneously by creating different virtual environments
 - To see all running containers: `docker ps`
 - To stop a container: `docker stop <container_id>`
+- To remove all resources related to docker including images, container, build-resources: ` docker system prune -a`
 
 # Contribution
 
