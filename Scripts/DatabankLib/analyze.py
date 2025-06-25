@@ -1025,62 +1025,64 @@ def computeMAICOS(  # noqa: N802 (API)
         zlim = {"zmin": zmin, "zmax": zmax}
         dens_options = {**zlim, **base_options}
 
+        prfx = os.path.join(NMLDB_SIMU_PATH, system['path']) + os.sep
+
         # Density profiles
         dens_e_total = DensityPlanar(
             u.atoms,
             dens="electron",
             **dens_options,
-            output="TotalDensity_mcs.json",
+            output=prfx + "TotalDensity_mcs.json",
         )
         dens_e_water = DensityPlanar(
             water,
             dens="electron",
             **dens_options,
-            output="WaterDensity_mcs.json",
+            output=prfx + "WaterDensity_mcs.json",
         )
         dens_e_lipid = DensityPlanar(
             lipid,
             dens="electron",
             **dens_options,
-            output="LipidDensity_mcs.json",
+            output=prfx + "LipidDensity_mcs.json",
         )
 
         dens_m_total = DensityPlanar(
             u.atoms,
             dens="mass",
             **dens_options,
-            output="TotalMassDensity_mcs.json",
+            output=prfx + "TotalMassDensity_mcs.json",
         )
         dens_m_water = DensityPlanar(
             water,
             dens="mass",
             **dens_options,
-            output="WaterMassDensity_mcs.json",
+            output=prfx + "WaterMassDensity_mcs.json",
         )
         dens_m_lipid = DensityPlanar(
             lipid,
             dens="mass",
             **dens_options,
-            output="LipidMassDensity_mcs.json",
+            output=prfx + "LipidMassDensity_mcs.json",
         )
 
         dens_c_total = DensityPlanar(
             u.atoms,
             dens="charge",
             **dens_options,
-            output="TotalChargeDensity_mcs.json",
+            output=prfx + "TotalChargeDensity_mcs.json",
         )
         dens_c_water = DensityPlanar(
             water,
             dens="charge",
             **dens_options,
-            output="WaterChargeDensity_mcs.json",
+            output=prfx + "WaterChargeDensity_mcs.json",
         )
         dens_c_lipid = DensityPlanar(
             lipid,
             dens="charge",
             **dens_options,
-            output="LipidChargeDensity_mcs.json",
+            output=prfx + "LipidChargeDensity_mcs.json",
         )
 
         # Form factor
@@ -1091,7 +1093,7 @@ def computeMAICOS(  # noqa: N802 (API)
             **base_options,
             zmin=None,
             zmax=None,
-            output="FormFactor_mcs.json",
+            output=prfx + "FormFactor_mcs.json",
         )
 
         # Water Orientation
@@ -1100,13 +1102,13 @@ def computeMAICOS(  # noqa: N802 (API)
             water,
             order_parameter="cos_theta",
             **dens_options,
-            output="DiporderWater_mcs.json",
+            output=prfx + "DiporderWater_mcs.json",
         )
         cos2_water = DiporderPlanar(
             water,
             order_parameter="cos_2_theta",
             **dens_options,
-            output="Diporder2Water_mcs.json",
+            output=prfx + "Diporder2Water_mcs.json",
         )
 
         # Combine all analysis instances for combined analysis run
@@ -1127,13 +1129,13 @@ def computeMAICOS(  # noqa: N802 (API)
 
         # Dielectric profiles
         diel_total = DielectricPlanar(
-            u.atoms, **base_options, output_prefix="DielectricTotal"
+            u.atoms, **base_options, output_prefix=prfx + "DielectricTotal"
         )
         diel_water = DielectricPlanar(
-            water, **base_options, output_prefix="DielectricWater"
+            water, **base_options, output_prefix=prfx + "DielectricWater"
         )
         diel_lipid = DielectricPlanar(
-            lipid, **base_options, output_prefix="DielectricLipid"
+            lipid, **base_options, output_prefix=prfx + "DielectricLipid"
         )
 
         # Check if dielectric profiles can be calculated (not possible for charged systems)
