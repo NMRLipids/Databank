@@ -36,9 +36,15 @@ def systems():
     for _s in s:
         def gbGen(x): return glob.glob(
                     os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
-        clearList = ['*.json', '*.dat', 'conf.gro', 'frame0.gro', '*.dat',
+        clear_list = []
+        if os.environ["NMLDB_TEST_NOWIPE"] == "1":
+            # leave JSONs
+            pass
+        else:
+            clear_list = ['*.json']
+        clear_list += ['*.dat', 'conf.gro', 'frame0.gro', '*.dat',
                      '*.buildH', '.*', '#*', '*.def', 'whole.xtc', 'centered.xtc']
-        for pat in clearList:
+        for pat in clear_list:
             for f in gbGen(pat):
                 os.remove(f)
 
