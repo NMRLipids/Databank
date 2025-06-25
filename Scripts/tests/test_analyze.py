@@ -88,22 +88,24 @@ def systemLoadTraj(systems):
         del u
     yield
     # TEARDOWN SYSTEM-LOADING
-    logger.info("Wiping trajectory data.")
-    for s in systems:
-        if s.get("DOI") == "localhost":
+    if os.environ["NMLDB_TEST_NOWIPE"] == "1":
+        logger.info('DBG: Skipping trajectory data wipe.')
+    else:
+        print('DBG: Wiping trajectory data.')
+        for s in systems:
             logger.debug("Skipping localhost system")
-            continue  # don't remove in this case!
-        for wp in ["GRO", "TPR", "TRJ"]:
-            try:
-                file_ = s[wp][0][0]
-            except (KeyError, TypeError):
-                logger.warning(f"No {wp} file found for system")
-                continue
-            file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], file_)
-            logger.debug(f"Checking file: {file_}")
-            if os.path.exists(file_):
-                logger.info(f"Removing file: {file_}")
-                os.remove(file_)
+            if s.get('DOI') == 'localhost':
+                continue  # don't remove in this case!
+            for wp in ['GRO', 'TPR', 'TRJ']:
+                try:
+                    file_ = s[wp][0][0]
+                except (KeyError, TypeError):
+                    logger.warning(f"No {wp} file found for system")
+                    continue
+                file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
+                logger.debug(f"Checking file: {file_}")
+                if os.path.exists(file_):
+                    os.remove(file_)
 
 
 # Test functions block.
@@ -138,9 +140,8 @@ def compareJSONsBtwSD(jsfn: str):
     assert type(j1) is type(j2)
 
     if type(j1) is list:
-        assert len(j1) == len(
-            j2
-        ), f"Problem in {jsfn} comparison: lists has different lengths!"
+        assert len(j1) == len(j2), \
+            f"Problem in {jsfn} comparison: lists has different lengths!"
         # to process further list as dict
         j1 = dict(enumerate(j1))
         j2 = dict(enumerate(j2))
@@ -225,6 +226,32 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
         assert os.path.isfile(cFile)
         assert os.path.getsize(cFile) > 1e3
         compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
+
+@pytest.mark.parametrize("systemid, rcodex",
+                         [(281, 1),
+                          (566, 1),
+                          (787, 2),
+                          (243, 1),
+                          (86,  1)],)
+def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
+    import DatabankLib
+    from DatabankLib.analyze import computeMAICOS
+    s = systems.loc(systemid)
+    rCode = computeMAICOS(s, logger)
+    assert rCode == rcodex
+    if rcodex == DatabankLib.RCODE_ERROR:
+        return
+
+    for fn in ['FormFactor_mcs.json', 'TotalDensity_mcs.json', 'WaterDensity_mcs.json',
+               'LipidDensity_mcs.json']:
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
+                             s['path'], fn)
+        assert os.path.isfile(cFile)
+        assert os.path.getsize(cFile) > 1e3
+        compareJSONsBtwSD(
+            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
+        )
+
 
 
 @pytest.mark.parametrize(

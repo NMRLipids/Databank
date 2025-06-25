@@ -807,161 +807,359 @@ def computeFF(  # noqa: N802 (API)
 def computeMAICOS(  # noqa: N802 (API)
     system: System, logger: Logger, recompute: bool = False
 ) -> int:
+    logger.info("System title: " + system['SYSTEM'])
+    logger.info("System path: " + system['path'])
+    software = system['SOFTWARE']
+    # download trajectory and gro files
+    system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
+    doi = system.get('DOI')
+    skip_downloading: bool = (doi == 'localhost')
+    if skip_downloading:
+        print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
-    # TODO: Preprocess trajectory
+    if os.path.isfile(system_path + os.sep + "FormFactor_mcs.json") and not recompute:
+        return RCODE_SKIPPED
 
-    # IMPORTANT: Ensure membrane surface normal is along z-axis, system is centered on
-    # lipids, and molecules are unbroken across periodic boundaries
-    u = mda.Universe("topol", "traj")
+    if system['TYPEOFSYSTEM'] == 'miscellaneous':
+        return RCODE_SKIPPED
 
-    # We us a hardoced bin width
-    bin_width = 0.3
+    print('Analyzing', system_path)
 
-    # Guesser might charged elements wrong like Cl- may guessed as Cl...
-    u.guess_TopologyAttrs(force_guess=["elements"])
-    u.atoms.elements = np.array([el.title() for el in u.atoms.elements])
-
-    # TODO: Adjust the group selection to be general for analysis
-    water = u.select_atoms("resname SOL")
-    lipid = u.select_atoms("resname POPC")
-    # Maybe add group for ions and compute densities for them as well?
-
-    # fixed `zmin` and `zmax` for profiles are deduced from smallest box dimension
-    L_min = u.dimensions[2]
-
-    for ts in u.trajectory:
-        if ts.dimensions[2] < L_min:
-            L_min = ts.dimensions[2]
-
-    zmin = -L_min / 2
-    zmax = L_min / 2
-
-    # Skip unwrap/pack for speed - trajectories are already centered and whole
-    base_options = {"unwrap": False, "bin_width": bin_width, "pack": False}
-    zlim = {"zmin": zmin, "zmax": zmax}
-    dens_options = {**zlim, **base_options}
-
-    # Density profiles
-    dens_e_total = DensityPlanar(
-        u.atoms,
-        dens="electron",
-        **dens_options,
-        output="TotalDensity.json",
-    )
-    dens_e_water = DensityPlanar(
-        water,
-        dens="electron",
-        **dens_options,
-        output="WaterDensity.json",
-    )
-    dens_e_lipid = DensityPlanar(
-        lipid,
-        dens="electron",
-        **dens_options,
-        output="LipidDensity.json",
-    )
-
-    dens_m_total = DensityPlanar(
-        u.atoms,
-        dens="mass",
-        **dens_options,
-        output="TotalMassDensity.json",
-    )
-    dens_m_water = DensityPlanar(
-        water,
-        dens="mass",
-        **dens_options,
-        output="WaterMassDensity.json",
-    )
-    dens_m_lipid = DensityPlanar(
-        lipid,
-        dens="mass",
-        **dens_options,
-        output="LipidMassDensity.json",
-    )
-
-    dens_c_total = DensityPlanar(
-        u.atoms,
-        dens="charge",
-        **dens_options,
-        output="TotalChargeDensity.json",
-    )
-    dens_c_water = DensityPlanar(
-        water,
-        dens="charge",
-        **dens_options,
-        output="WaterChargeDensity.json",
-    )
-    dens_c_lipid = DensityPlanar(
-        lipid,
-        dens="charge",
-        **dens_options,
-        output="LipidChargeDensity.json",
-    )
-
-    # Form factor
-    # Use `None` for `zmin`/`zmax` to respect changing cell size (vs fixed zmin/zmax for
-    # density profiles)
-    form_factor = FormFactorPlanar(
-        atomgroup=u.atoms,
-        **base_options,
-        zmin=None,
-        zmax=None,
-        output="FormFactorMAICoS.json",
-    )
-
-    # Water Orientation
-    # TODO: Maybe also compute orientation for lipid heads/tails?
-    cos_water = DiporderPlanar(
-        water,
-        order_parameter="cos_theta",
-        **dens_options,
-        output="DiporderWater.json",
-    )
-    cos2_water = DiporderPlanar(
-        water,
-        order_parameter="cos_2_theta",
-        **dens_options,
-        output="Diporder2Water.json",
-    )
-
-    # Combine all analysis instances for combined analysis run
-    analysis_instances = [
-        dens_e_total,
-        dens_e_water,
-        dens_e_lipid,
-        dens_m_total,
-        dens_m_water,
-        dens_m_lipid,
-        dens_c_total,
-        dens_c_water,
-        dens_c_lipid,
-        form_factor,
-        cos_water,
-        cos2_water,
-    ]
-
-    # Dielectric profiles
-    diel_total = DielectricPlanar(
-        u.atoms, **base_options, output_prefix="DielectricTotal"
-    )
-    diel_water = DielectricPlanar(
-        water, **base_options, output_prefix="DielectricWater"
-    )
-    diel_lipid = DielectricPlanar(
-        lipid, **base_options, output_prefix="DielectricLipid"
-    )
-
-    # Check if dielectric profiles can be calculated (not possible for charged systems)
     try:
-        diel_total.run(stop=1)
-    except (ValueError, UserWarning) as e:
-        print(f"Dielectric profiles not available for this system: {e}")
+        if system['UNITEDATOM_DICT']:
+            print('United atom simulation')
+    except KeyError:
+        pass
+
+    try:
+        if system['WARNINGS']['ORIENTATION']:
+            print('Skipping due to ORIENTATION warning:',
+                  system['WARNINGS']['ORIENTATION'])
+            return RCODE_SKIPPED
+    except (KeyError, TypeError):
+        pass
+
+    try:
+        if system['WARNINGS']['PBC'] == 'hexagonal-box':
+            print('Skipping due to PBC warning:', system['WARNINGS']['PBC'])
+            return RCODE_SKIPPED
+    except (KeyError, TypeError):
+        pass
+
+    try:
+        if system['WARNINGS']['NOWATER']:
+            print('Skipping because there is not water in the trajectory.')
+            return RCODE_SKIPPED
+    except (KeyError, TypeError):
+        pass
+
+    output_name = ""
+
+    try:
+        struc, top, trj = get_struc_top_traj_fnames(system)
+        trj_name = os.path.join(system_path, trj)
+        if struc is None:
+            struc_name = None
+        else:
+            struc_name = os.path.join(system_path, struc)
+        if top is None:
+            tpr_name = None
+        else:
+            top_name = os.path.join(system_path, top)
+    except Exception as e:
+        logger.error("Error getting structure/topology/trajectory filenames.")
+        logger.error(str(e))
+        return RCODE_ERROR
+
+    socket.setdefaulttimeout(15)
+
+    try:
+        if skip_downloading:
+            if not os.path.isfile(trj_name):
+                raise FileNotFoundError(
+                    f"Trajectory should be downloaded [{trj_name}] by user")
+        else:
+            trj_url = resolve_download_file_url(system['DOI'], trj)
+            if not os.path.isfile(trj_name):
+                print('Downloading trajectory with the size of ',
+                      system['TRAJECTORY_SIZE'], ' to ', system['path'])
+                _ = urllib.request.urlretrieve(trj_url, trj_name)
+
+        # make a function like this
+        # TODO TPR should not be obligatory for GROMACS
+        if 'gromacs' in software:
+            tpr_name = top_name
+
+            if skip_downloading:
+                if not os.path.isfile(tpr_name):
+                    raise FileNotFoundError(
+                        f"TPR should be downloaded [{tpr_name}] by user")
+            else:
+                tpr_url = resolve_download_file_url(doi, top)
+                if not os.path.isfile(tpr_name):
+                    _ = urllib.request.urlretrieve(tpr_url, tpr_name)
+
+        if 'openMM' in software or 'NAMD' in software:
+            if skip_downloading:
+                if (not os.path.isfile(struc_name)):
+                    raise FileNotFoundError(
+                        f"Structure file should be downloaded [{struc_name}] by user")
+            else:
+                pdb_url = resolve_download_file_url(doi, struc)
+                if not os.path.isfile(struc_name):
+                    _ = urllib.request.urlretrieve(pdb_url, struc_name)
+
+        eq_time = float(system['TIMELEFTOUT'])*1000
+
+        # FIND LAST CARBON OF SN-1 TAIL AND G3 CARBON
+        for molecule in system['COMPOSITION']:
+            if molecule in lipids_set:
+                mapping = system.content[molecule].mapping_dict
+
+                # TODO: rewrite via lipid dictionary!
+                for nm in ["M_G3_M", "M_G13_M", "M_C32_M"]:
+                    try:
+                        g3_atom = mapping[nm]['ATOMNAME']
+                        continue
+                    except (KeyError, TypeError):
+                        pass
+
+                # TODO: rewrite via lipid dictionary
+                if "M_G1C4_M" in mapping.keys():
+                    for c_idx in range(4, 30):
+                        atom = 'M_G1C' + str(c_idx) + '_M'
+                        try:
+                            last_atom = mapping[atom]['ATOMNAME']
+                        except (KeyError, TypeError):
+                            continue
+                elif "M_G11C4_M" in mapping.keys():
+                    for c_idx in range(4, 30):
+                        atom = 'M_G11C' + str(c_idx) + '_M'
+                        try:
+                            last_atom = mapping[atom]['ATOMNAME']
+                        except (KeyError, TypeError):
+                            continue
+                elif "M_CA4_M" in mapping.keys():
+                    for c_idx in range(4, 30):
+                        atom = 'M_CA' + str(c_idx) + '_M'
+                        try:
+                            last_atom = mapping[atom]['ATOMNAME']
+                        except (KeyError, TypeError):
+                            continue
+
+        print(last_atom, g3_atom)
+
+        # Center around one lipid tail CH3 to guarantee all lipids in the same box
+        if 'gromacs' in system['SOFTWARE']:
+
+            trjconv_cmd = 'gmx trjconv'
+            makendx_cmd = 'gmx make_ndx'
+
+            os.system('rm foo.ndx')
+            os.system(f'echo "a {last_atom}\nq" | {makendx_cmd} -f {tpr_name} '
+                      f'-o foo.ndx')
+            os.system("tail -n1 foo.ndx | awk '{print $NF}'")
+            os.system('echo "[ centralAtom ]" >> foo.ndx')
+            os.system("tail -n2 foo.ndx | head -n1 |  awk '{print $NF}' >> foo.ndx")
+
+            xtcwhole = os.path.join(system_path, 'whole.xtc')
+            xtcfoo = os.path.join(system_path, 'foo2.xtc')
+            xtccentered = os.path.join(system_path, 'centered.xtc')
+            if (not os.path.isfile(xtccentered)):
+                print("Make molecules whole in the trajectory")
+                if not os.path.isfile(xtcwhole):
+                    os.system(f'echo System |  {trjconv_cmd} -f {trj_name} '
+                              f'-s {tpr_name} -o {xtcwhole} -pbc mol -b {str(eq_time)}')
+
+                if (not os.path.isfile(xtcfoo)):
+                    os.system(f'echo "centralAtom\nSystem" |  {trjconv_cmd} -center'
+                              f' -pbc mol -n foo.ndx -f {xtcwhole} -s {tpr_name}'
+                              f' -o {xtcfoo}')
+
+                os.system('rm foo.ndx')
+                os.system('rm ' + xtcwhole)
+
+                # Center around the center of mass of all the g_3 carbons
+                # if (not os.path.isfile(xtccentered)):
+                os.system(f'echo "a {g3_atom}\nq" | {makendx_cmd}'
+                          f' -f {tpr_name} -o foo.ndx')
+                os.system(f'echo "{g3_atom}\nSystem" |  {trjconv_cmd} -center'
+                          f' -pbc mol -n foo.ndx -f {xtcfoo} -s {tpr_name}'
+                          f' -o {xtccentered}')
+                os.system('rm ' + xtcfoo)
+        else:
+            print("Centering for other than Gromacs may not work if there are"
+                  " jumps over periodic boundary conditions in z-direction.")
+
+        if 'gromacs' in system['SOFTWARE']:
+            u = mda.Universe(tpr_name, xtccentered)
+        if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
+            u = mda.Universe(struc_name, trj_name)
+        
+        # -- PHILIP code starts here --
+        # We us a hardoced bin width
+        bin_width = 0.3
+
+        # Guesser might charged elements wrong like Cl- may guessed as Cl...
+        u.guess_TopologyAttrs(force_guess=["elements"])
+        u.atoms.elements = np.array([el.title() for el in u.atoms.elements])
+
+        # Adjust the group selection to be general for analysis
+        from DatabankLib.databankLibrary import getLipids
+        water = u.select_atoms(f"resname {system['COMPOSITION']['SOL']['NAME']}")
+        lipid = u.select_atoms(getLipids(system))
+        # Maybe add group for ions and compute densities for them as well?
+
+        # fixed `zmin` and `zmax` for profiles are deduced from smallest box dimension
+        L_min = u.dimensions[2]
+
+        for ts in u.trajectory:
+            if ts.dimensions[2] < L_min:
+                L_min = ts.dimensions[2]
+
+        zmin = -L_min / 2
+        zmax = L_min / 2
+
+        # Skip unwrap/pack for speed - trajectories are already centered and whole
+        base_options = {"unwrap": False, "bin_width": bin_width, "pack": False}
+        zlim = {"zmin": zmin, "zmax": zmax}
+        dens_options = {**zlim, **base_options}
+
+        # Density profiles
+        dens_e_total = DensityPlanar(
+            u.atoms,
+            dens="electron",
+            **dens_options,
+            output="TotalDensity_mcs.json",
+        )
+        dens_e_water = DensityPlanar(
+            water,
+            dens="electron",
+            **dens_options,
+            output="WaterDensity_mcs.json",
+        )
+        dens_e_lipid = DensityPlanar(
+            lipid,
+            dens="electron",
+            **dens_options,
+            output="LipidDensity_mcs.json",
+        )
+
+        dens_m_total = DensityPlanar(
+            u.atoms,
+            dens="mass",
+            **dens_options,
+            output="TotalMassDensity_mcs.json",
+        )
+        dens_m_water = DensityPlanar(
+            water,
+            dens="mass",
+            **dens_options,
+            output="WaterMassDensity_mcs.json",
+        )
+        dens_m_lipid = DensityPlanar(
+            lipid,
+            dens="mass",
+            **dens_options,
+            output="LipidMassDensity_mcs.json",
+        )
+
+        dens_c_total = DensityPlanar(
+            u.atoms,
+            dens="charge",
+            **dens_options,
+            output="TotalChargeDensity_mcs.json",
+        )
+        dens_c_water = DensityPlanar(
+            water,
+            dens="charge",
+            **dens_options,
+            output="WaterChargeDensity_mcs.json",
+        )
+        dens_c_lipid = DensityPlanar(
+            lipid,
+            dens="charge",
+            **dens_options,
+            output="LipidChargeDensity_mcs.json",
+        )
+
+        # Form factor
+        # Use `None` for `zmin`/`zmax` to respect changing cell size (vs fixed zmin/zmax for
+        # density profiles)
+        form_factor = FormFactorPlanar(
+            atomgroup=u.atoms,
+            **base_options,
+            zmin=None,
+            zmax=None,
+            output="FormFactor_mcs.json",
+        )
+
+        # Water Orientation
+        # TODO: Maybe also compute orientation for lipid heads/tails?
+        cos_water = DiporderPlanar(
+            water,
+            order_parameter="cos_theta",
+            **dens_options,
+            output="DiporderWater_mcs.json",
+        )
+        cos2_water = DiporderPlanar(
+            water,
+            order_parameter="cos_2_theta",
+            **dens_options,
+            output="Diporder2Water_mcs.json",
+        )
+
+        # Combine all analysis instances for combined analysis run
+        analysis_instances = [
+            dens_e_total,
+            dens_e_water,
+            dens_e_lipid,
+            dens_m_total,
+            dens_m_water,
+            dens_m_lipid,
+            dens_c_total,
+            dens_c_water,
+            dens_c_lipid,
+            form_factor,
+            cos_water,
+            cos2_water,
+        ]
+
+        # Dielectric profiles
+        diel_total = DielectricPlanar(
+            u.atoms, **base_options, output_prefix="DielectricTotal"
+        )
+        diel_water = DielectricPlanar(
+            water, **base_options, output_prefix="DielectricWater"
+        )
+        diel_lipid = DielectricPlanar(
+            lipid, **base_options, output_prefix="DielectricLipid"
+        )
+
+        # Check if dielectric profiles can be calculated (not possible for charged systems)
+        try:
+            diel_total.run(stop=1)
+        except (ValueError, UserWarning) as e:
+            print(f"Dielectric profiles not available for this system: {e}")
+        else:
+            analysis_instances += [diel_total, diel_water, diel_lipid]
+
+        collection = AnalysisCollection(*analysis_instances)
+        collection.run()
+
+        for analysis in analysis_instances:
+            analysis.save()
+        # -- PHILIP code ends here --
+
+    # finall catch
+    except Exception as e:
+        print('Calculation failed for ' + system['path'])
+        print(str(e))
+        print(traceback.format_exc())
+        return RCODE_ERROR
     else:
-        analysis_instances += [diel_total, diel_water, diel_lipid]
+        return RCODE_COMPUTED
 
-    collection = AnalysisCollection(*analysis_instances)
-    collection.run()
 
-    for analysis in analysis_instances:
-        analysis.save()
+
+
