@@ -11,6 +11,7 @@ on:
     
 jobs:
   Tests:
+    if: github.repository == 'NMRLipids/Databank'
     runs-on: ubuntu-latest
     container:
       image: nmrlipids/core
