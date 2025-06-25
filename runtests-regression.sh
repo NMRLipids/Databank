@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run all the tests from here excluding regression tests. Must work on both Linux and MacOS
+# Run all the tests from here including regression tests. Must work on both Linux and MacOS
 
 # Determine the platform (Linux or MacOS)
 OS_TYPE=$(uname)
@@ -15,6 +15,7 @@ status=0
 # Run the tests using pytest
 if command -v pytest &> /dev/null; then
   pytest Scripts/tests --cmdopt sim2 || status=1
+  pytest Scripts/tests --cmdopt sim1 || status=1
   pytest Scripts/tests --cmdopt adddata || status=1
   pytest Scripts/tests --cmdopt nodata || status=1
 else

@@ -13,7 +13,8 @@ jobs:
   Tests:
     runs-on: ubuntu-latest
     container:
-      image: nmrlipids/github-runner
+      image: nmrlipids/core
+      options: --user 1001:118
     env:
       TQDM_DISABLE: True #Disables TQDM progress bars to make output cleaner.
     steps:
@@ -28,4 +29,4 @@ jobs:
         run: |
           pip install -e . -r Scripts/DatabankLib/requirements-dev.txt
       - name: Run tests
-        run: ./runtests.sh 
+        run: ./runtests.sh

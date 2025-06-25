@@ -2,30 +2,30 @@ FROM nmrlipids/gromacs:latest
 
 USER root
 
-ARG RUNNER_UID=1001
-ARG RUNNER_GID=118
+ARG RUNNER_UID=1000
+ARG RUNNER_GID=1000
 
-#Copy the dev requirements
+# Copy the dev requirements
 COPY Scripts/DatabankLib/requirements-dev.txt /tmp/requirements-dev.txt
 
-# Install minimal envirornment dependencies
+# Install minimal environment dependencies and bootstrap venv
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       bash \
       git \
       curl \
-      libgomp1 \  
+      libgomp1 \
       python3.11-venv \
       python3-pip \
       ca-certificates && \
     rm -rf /var/lib/apt/lists/* && \
     python3.11 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip
+    /opt/venv/bin/pip install --upgrade pip && \
+    chmod -R a+rwX /opt/venv
 
 # Create runner group & user, then own the venv
 RUN groupadd --gid ${RUNNER_GID} runner && \
-    useradd  --uid ${RUNNER_UID} --gid runner --create-home --shell /bin/bash runner && \
-    chown -R runner:runner /opt/venv
+    useradd --uid ${RUNNER_UID} --gid runner --create-home --shell /bin/bash runner 
 
 # Put venv and GROMACS on PATH
 ENV PATH="/opt/venv/bin:/usr/local/gromacs/bin:${PATH}"
@@ -33,6 +33,7 @@ ENV PATH="/opt/venv/bin:/usr/local/gromacs/bin:${PATH}"
 USER runner
 # Install dev requirements into the venv
 RUN pip install --no-cache-dir -r /tmp/requirements-dev.txt
+
 WORKDIR /github/workspace
 
 
