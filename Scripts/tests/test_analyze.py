@@ -53,19 +53,22 @@ def systemLoadTraj(systems):
         del u
     yield
     # TEARDOWN SYSTEM-LOADING
-    print('DBG: Wiping trajectory data.')
-    for s in systems:
-        if s.get('DOI') == 'localhost':
-            continue  # don't remove in this case!
-        for wp in ['GRO', 'TPR', 'TRJ']:
-            try:
-                file_ = s[wp][0][0]
-            except (KeyError, TypeError):
-                continue
-            file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
-            print(file_)
-            if os.path.exists(file_):
-                os.remove(file_)
+    if os.environ["NMLDB_TEST_NOWIPE"] == "1":
+        print('DBG: Skipping trajectory data wipe.')
+    else:
+        print('DBG: Wiping trajectory data.')
+        for s in systems:
+            if s.get('DOI') == 'localhost':
+                continue  # don't remove in this case!
+            for wp in ['GRO', 'TPR', 'TRJ']:
+                try:
+                    file_ = s[wp][0][0]
+                except (KeyError, TypeError):
+                    continue
+                file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
+                print(file_)
+                if os.path.exists(file_):
+                    os.remove(file_)
 
 
 # Test functions block.
@@ -188,6 +191,32 @@ def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
         compareJSONsBtwSD(
             os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
         )
+
+@pytest.mark.parametrize("systemid, rcodex",
+                         [(281, 1),
+                          (566, 1),
+                          (787, 2),
+                          (243, 1),
+                          (86,  1)],)
+def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
+    import DatabankLib
+    from DatabankLib.analyze import computeMAICOS
+    s = systems.loc(systemid)
+    rCode = computeMAICOS(s, logger)
+    assert rCode == rcodex
+    if rcodex == DatabankLib.RCODE_ERROR:
+        return
+
+    for fn in ['FormFactor_mcs.json', 'TotalDensity_mcs.json', 'WaterDensity_mcs.json',
+               'LipidDensity_mcs.json']:
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
+                             s['path'], fn)
+        assert os.path.isfile(cFile)
+        assert os.path.getsize(cFile) > 1e3
+        compareJSONsBtwSD(
+            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
+        )
+
 
 
 @pytest.mark.parametrize("systemid, rcodex",
