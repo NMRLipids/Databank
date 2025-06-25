@@ -53,6 +53,7 @@ class FormFactorPlanar(ProfilePlanarBase):
             bin_width=bin_width,
             refgroup=refgroup,
             sym=False,
+            sym_odd=False,
             grouping="atoms",
             bin_method="com",
             output=output,
