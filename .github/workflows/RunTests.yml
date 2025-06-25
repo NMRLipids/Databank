@@ -11,7 +11,7 @@ on:
     
 jobs:
   Tests:
-    if: github.repository == 'NMRLipids/Databank'
+    if: github.repository == 'NMRLipids/Databank' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     container:
       image: nmrlipids/core
