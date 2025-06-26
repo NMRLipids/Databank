@@ -46,12 +46,12 @@ Go to the directory where you have the Databank repository. Then,
 
 1. Start the container with your code mounted:
    ```bash
-   docker run -it -v $(pwd):/workspace NAME_OF_THE_DOCKER_IMAGE
+   docker run -it -v $(pwd):/github/workspace NAME_OF_THE_DOCKER_IMAGE
    ```
    or
    if you pulled the latest image,
    ```bash
-   docker run -it -v $(pwd):/workspace nmrlipids/core:latest
+   docker run -it -v $(pwd):/github/workspace nmrlipids/core:latest
    ```
 
 2. Inside the container:
