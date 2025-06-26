@@ -77,6 +77,8 @@ class FormFactorPlanar(ProfilePlanarBase):
         delta = (self._obs.profile - bulk)[:, np.newaxis]
         angles = self.results.scattering_vectors * bin_pos[:, np.newaxis]
 
+        # Here delta is e/A^3 and _bin_width in A,
+        # so the result is 100 times lower than if we calculate in nm
         self._obs.ff_real = np.sum(delta * np.cos(angles) * self._bin_width, axis=0)
         self._obs.ff_imag = np.sum(delta * np.sin(angles) * self._bin_width, axis=0)
 
@@ -97,11 +99,13 @@ class FormFactorPlanar(ProfilePlanarBase):
         )
 
     def save(self):
+        # perform unit conversion from Å to nm
+        # (see comments in _single_frame)
         output = np.vstack(
             [
                 self.results.scattering_vectors,
-                self.results.form_factor,
-                self.results.dform_factor,
+                self.results.form_factor * 1e2,
+                self.results.dform_factor * 1e2,
             ]
         ).T
         with open(self.output, "w") as f:
@@ -110,11 +114,12 @@ class FormFactorPlanar(ProfilePlanarBase):
 
 class DensityPlanar(maicos.DensityPlanar):
     def save(self):
+        # perform unit conversion from Å to nm and e/Å^3 to e/nm^3
         outdata = np.vstack(
             [
-                self.results.bin_pos,
-                self.results.profile,
-                self.results.dprofile,
+                self.results.bin_pos / 10,
+                self.results.profile * 1e3,
+                self.results.dprofile * 1e3,
             ]
         ).T
         with open(self.output, "w") as f:
@@ -125,7 +130,7 @@ class DielectricPlanar(maicos.DielectricPlanar):
     def save(self):
         outdata_perp = np.vstack(
             [
-                self.results.bin_pos,
+                self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.eps_perp,
                 self.results.deps_perp,
             ]
@@ -136,7 +141,7 @@ class DielectricPlanar(maicos.DielectricPlanar):
 
         outdata_par = np.vstack(
             [
-                self.results.bin_pos,
+                self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.eps_par,
                 self.results.deps_par,
             ]
@@ -150,7 +155,7 @@ class DiporderPlanar(maicos.DiporderPlanar):
     def save(self):
         outdata = np.vstack(
             [
-                self.results.bin_pos,
+                self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.profile,
                 self.results.dprofile,
             ]
