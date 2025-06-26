@@ -336,7 +336,7 @@ class FormFactor:
 
         box_z = self.u.dimensions[2]  # + 10 if fails
         print(box_z)
-        d = box_z/10 / self.nbin  # bin width
+        d = box_z/10 / self.nbin  # bin width [nm]
         box_h = box_z/10
         print(box_h)
         x = np.linspace(-box_h/2, box_h/2, self.nbin+1)[:-1] + d/2
