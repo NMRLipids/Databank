@@ -1001,8 +1001,10 @@ def computeMAICOS(  # noqa: N802 (API)
         bin_width = 0.3
 
         # Guesser might charged elements wrong like Cl- may guessed as Cl...
+        from DatabankLib.settings import elements
+        elements.guess_elements(system, u)
         u.guess_TopologyAttrs(force_guess=["elements"])
-        u.atoms.elements = np.array([el.title() for el in u.atoms.elements])
+
 
         # Adjust the group selection to be general for analysis
         from DatabankLib.databankLibrary import getLipids
