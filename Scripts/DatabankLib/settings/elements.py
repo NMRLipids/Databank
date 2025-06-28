@@ -25,7 +25,7 @@ def uname2element(mapping_name):
     except AttributeError as e:
         raise KeyError("This mapping name cannot be read by our rules: {mapping_name}") from e
 
-    return el
+    return name2
 
 def guess_elements(system: System, u: mda.Universe) -> None:
     for _mol,comp in system['COMPOSITION'].items():
@@ -41,11 +41,14 @@ def guess_elements(system: System, u: mda.Universe) -> None:
                 res = str(props['RESIDUE'])
             except KeyError:
                 res = ""
-            _residue = f"resname {mol_simu_name if res == '' else res} and"
-            _name = f"name = '{props['ATOMNAME']}'"
-            selection = u.select_atoms(_moltype + _residue + _name)
-            assert(selection.n_atoms > 0)
-            selection.atoms.elements = selection.n_atoms*[uname2element(uname)]
+            _residue = f"resname {mol_simu_name if res == '' else res} and "
+            _name = f"name {props['ATOMNAME']}"
+            selstr = _moltype + _residue + _name
+            selection = u.select_atoms(selstr)
+            assert (selection.n_atoms > 0), \
+                f"No atoms found for selection: {selstr}"
+            elname = uname2element(uname)
+            selection.atoms.elements = selection.n_atoms*[elname]
         # end mapping loop
     # end molecules loop
     return

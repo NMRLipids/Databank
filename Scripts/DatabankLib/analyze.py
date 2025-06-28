@@ -1002,8 +1002,8 @@ def computeMAICOS(  # noqa: N802 (API)
 
         # Guesser might charged elements wrong like Cl- may guessed as Cl...
         from DatabankLib.settings import elements
-        elements.guess_elements(system, u)
         u.guess_TopologyAttrs(force_guess=["elements"])
+        elements.guess_elements(system, u)
 
 
         # Adjust the group selection to be general for analysis
