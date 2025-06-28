@@ -37,7 +37,7 @@ def systems():
         def gbGen(x): return glob.glob(
                     os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
         clear_list = []
-        if os.environ["NMLDB_TEST_NOWIPE"] == "1":
+        if "NMLDB_TEST_NOWIPE" in os.environ:
             # leave JSONs
             pass
         else:
@@ -59,7 +59,7 @@ def systemLoadTraj(systems):
         del u
     yield
     # TEARDOWN SYSTEM-LOADING
-    if os.environ["NMLDB_TEST_NOWIPE"] == "1":
+    if "NMLDB_TEST_NOWIPE" in os.environ:
         print('DBG: Skipping trajectory data wipe.')
     else:
         print('DBG: Wiping trajectory data.')
