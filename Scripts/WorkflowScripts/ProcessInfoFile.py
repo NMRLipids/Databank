@@ -25,9 +25,6 @@ def main(info_file_path):
         "Calcproperties failed",
         working_dir=path_dict["AnalyzeDatabank_path"]
     )
-    run_python_script(path_dict["searchDATABANK_path"], error_message="SearchDatabank failed")
-    run_python_script(path_dict["QualityEvaluation_path"], error_message="QualityEvaluation failed")
-    run_python_script(path_dict["makeRanking_path"], error_message="makeRanking failed")
     delete_info_file(info_file_path)
 
 #Gets arguments from parser
