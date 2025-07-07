@@ -19,9 +19,25 @@ import MDAnalysis as mda
 import numpy as np
 import warnings  # TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
+from numba import jit
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
 bond_len_max_sq = bond_len_max**2
+
+@jit(nopython=True)
+def calc_op_numba(positions, bond_len_max_sq):
+    """
+    Numba-accelerated order parameter calculation
+    positions: numpy array of shape (2, 3) for two atom positions
+    bond_len_max_sq: squared maximum bond length for validation
+    Returns: (order_parameter, is_valid)
+    """
+    vec = positions[1] - positions[0]
+    d2 = np.sum(vec**2)
+    if d2 > bond_len_max_sq:
+        return 0.0, False  # Return 0.0 as a placeholder, but mark as invalid
+    cos2 = (vec[2] / np.sqrt(d2))**2
+    return 0.5 * (3.0 * cos2 - 1.0), True
 
 
 class OrderParameter:
@@ -87,22 +103,19 @@ class OrderParameter:
         calculates Order Parameter according to equation
         S = 1/2 * (3*cos(theta)^2 -1)
         """
-        vec = atoms[1].position - atoms[0].position
-        d2 = np.square(vec).sum()
-
-        if d2 > bond_len_max_sq:
+        positions = np.array([atoms[0].position, atoms[1].position])
+        op, is_valid = calc_op_numba(positions, bond_len_max_sq)
+        
+        if not is_valid:
             at1 = atoms[0].name
             at2 = atoms[1].name
             resnr = atoms[0].resid
-            d = np.sqrt(d2)
+            d = np.sqrt(np.sum((positions[1] - positions[0])**2))
             warnings.warn(
-                f"Atomic distance for atoms"
-                f"{at1} and {at2} in residue no. {resnr} is suspiciously "
-                f"long: {d}!\nPBC removed???"
+                f"Atomic distance for atoms {at1} and {at2} in residue no. {resnr} "
+                f"is suspiciously long: {d}!\nPBC removed???"
             )
-        cos2 = vec[2] ** 2 / d2
-        val = 0.5 * (3.0 * cos2 - 1.0)
-        return val
+        return op
 
     @property
     def get_avg_std_OP(self):  # noqa: N802 (API)
@@ -189,20 +202,22 @@ def read_trajs_calc_OPs(  # noqa: N802 (API)
     for i in improper_ops:
         del op_obj_list[i]
 
-    # go through trajectory frame-by-frame
+    # Pre-allocate arrays for trajectory data
     n_frames = len(mol.trajectory)
     for op in op_obj_list:
-        # print(op.selection)
         n_res = len(op.selection)
-        op.traj = [0] * n_res
-
-    for frame in tqdm(mol.trajectory):
-        for op in op_obj_list:  # .values():
-            n_res = len(op.selection)
-            for i in range(0, n_res):
-                residue = op.selection[i]
-                opval = OrderParameter.calc_OP(residue)
-                op.traj[i] = op.traj[i] + opval / n_frames
+        op.traj = np.zeros(n_res, dtype=np.float64)
+    
+    # Process frames
+    for frame in tqdm(mol.trajectory, total=n_frames):
+        for op in op_obj_list:
+            # Batch process all residues for this OP
+            for i, residue in enumerate(op.selection):
+                op.traj[i] += OrderParameter.calc_OP(residue) / n_frames
+    
+    # Convert back to lists if needed for backward compatibility
+    for op in op_obj_list:
+        op.traj = op.traj.tolist()
 
 
 def parse_op_input(mapping_dict: dict, lipid_resname: str):
