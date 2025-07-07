@@ -11,6 +11,26 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 import os
 import glob
 import pytest
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# Create file handler which logs even debug messages
+fh = logging.FileHandler('test_analyze.log')
+fh.setLevel(logging.DEBUG)
+
+# Create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+
+# Create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(ch)
 
 # Global loaders
 # ----------------------------------------------------------------
@@ -26,13 +46,14 @@ pytestmark = pytest.mark.sim1
 def systems():
     import DatabankLib
     from DatabankLib.core import initialize_databank
+    logger.info("Starting systems fixture initialization")
     if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
         pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
-    print(f"Loaded: {len(s)} systems")
+    logger.info(f"Loaded: {len(s)} systems")
     yield s
     # TEARDOWN SYSTEMS
-    print('DBG: Wiping temporary calculation data.')
+    logger.info('Wiping temporary calculation data.')
     for _s in s:
         def gbGen(x): return glob.glob(
                     os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
@@ -40,6 +61,7 @@ def systems():
                      '*.buildH', '.*', '#*', '*.def', 'whole.xtc', 'centered.xtc']
         for pat in clearList:
             for f in gbGen(pat):
+                logger.debug(f"Removing file: {f}")
                 os.remove(f)
 
 
@@ -47,24 +69,28 @@ def systems():
 def systemLoadTraj(systems):
     import DatabankLib
     from DatabankLib.databankLibrary import system2MDanalysisUniverse
-    print('DBG: Download trajectory data.')
+    logger.info('Downloading trajectory data.')
     for s in systems:
+        logger.debug(f"Processing system: {s.get('id', 'unknown')}")
         u = system2MDanalysisUniverse(s)
         del u
     yield
     # TEARDOWN SYSTEM-LOADING
-    print('DBG: Wiping trajectory data.')
+    logger.info('Wiping trajectory data.')
     for s in systems:
         if s.get('DOI') == 'localhost':
+            logger.debug("Skipping localhost system")
             continue  # don't remove in this case!
         for wp in ['GRO', 'TPR', 'TRJ']:
             try:
                 file_ = s[wp][0][0]
             except (KeyError, TypeError):
+                logger.warning(f"No {wp} file found for system")
                 continue
             file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
-            print(file_)
+            logger.debug(f"Checking file: {file_}")
             if os.path.exists(file_):
+                logger.info(f"Removing file: {file_}")
                 os.remove(file_)
 
 
@@ -83,6 +109,7 @@ def compareJSONsBtwSD(jsfn: str):
     """
     import json
     import numpy as np
+    logger.info(f"Comparing JSON files for: {jsfn}")
 
     _p1 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
     _p2 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
@@ -116,7 +143,7 @@ def compareJSONsBtwSD(jsfn: str):
                     f"Pre-computed: {str(j2[k1])}")
             )
 
-    print(f"Data {jsfn} was compared against precomputed!")
+    logger.info(f"Data {jsfn} was compared against precomputed!")
 
 
 @pytest.mark.parametrize("systemid", [86, 243, 281, 566, 787])
