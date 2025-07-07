@@ -62,6 +62,12 @@ Go to the directory where you have the Databank repository. Then,
    # Run tests
    ./runtests.sh
    ```
+
+   You can specify additional arguments to the `pytest` via
+   `./runtests.sh -vx`
+
+   For full list of accepted flags, please look at [pytest documentation](https://docs.pytest.org/en/6.2.x/usage.html).
+
    Do not forget to add this new package to the requirements.txt! 
 
 3. When done testing:
