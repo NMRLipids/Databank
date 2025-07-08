@@ -19,25 +19,9 @@ import MDAnalysis as mda
 import numpy as np
 import warnings  # TODO: should we change to NMRlipids' logger?
 from tqdm import tqdm
-from numba import jit
 
 bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
 bond_len_max_sq = bond_len_max**2
-
-@jit(nopython=True)
-def calc_op_numba(positions, bond_len_max_sq):
-    """
-    Numba-accelerated order parameter calculation
-    positions: numpy array of shape (2, 3) for two atom positions
-    bond_len_max_sq: squared maximum bond length for validation
-    Returns: (order_parameter, is_valid)
-    """
-    vec = positions[1] - positions[0]
-    d2 = np.sum(vec**2)
-    if d2 > bond_len_max_sq:
-        return 0.0, False  # Return 0.0 as a placeholder, but mark as invalid
-    cos2 = (vec[2] / np.sqrt(d2))**2
-    return 0.5 * (3.0 * cos2 - 1.0), True
 
 
 class OrderParameter:
@@ -94,54 +78,18 @@ class OrderParameter:
                 f"Number of optional positional arguments is {len}, not 2 or 0."
                 f" Args: {args}\nWrong file format?"
             )
-        self.traj = []  # for storing OPs
-        self.selection = []
 
-    @staticmethod
-    def calc_OP(atoms):  # noqa: N802 (API)
-        """
-        calculates Order Parameter according to equation
-        S = 1/2 * (3*cos(theta)^2 -1)
-        """
-        positions = np.array([atoms[0].position, atoms[1].position])
-        op, is_valid = calc_op_numba(positions, bond_len_max_sq)
-        
-        if not is_valid:
-            at1 = atoms[0].name
-            at2 = atoms[1].name
-            resnr = atoms[0].resid
-            d = np.sqrt(np.sum((positions[1] - positions[0])**2))
-            warnings.warn(
-                f"Atomic distance for atoms {at1} and {at2} in residue no. {resnr} "
-                f"is suspiciously long: {d}!\nPBC removed???"
-            )
-        return op
+        self.traj = []  # For storing final OP results.
+        self.selection = []  # List of AtomGroups, one for each residue.
+        self.atomgroup = None  # A single AtomGroup containing all atoms for this OP.
 
     @property
-    def get_avg_std_OP(self):  # noqa: N802 (API)
-        """
-        Provides average and stddev of all OPs in self.traj
-        """
-        # convert to numpy array
-        return (np.mean(self.traj), np.std(self.traj))
-
-    @property
-    def get_avg_std_stem_OP(self):  # noqa: N802 (API)
-        """
-        Provides average and stddev of all OPs in self.traj
-        """
+    def get_avg_std_stem_OP(self):  # noqa: N802 (API compliance)
+        """Provides average, stddev, and standard error of the mean of OPs."""
         std = np.std(self.traj)
-        # convert to numpy array
-        return (np.mean(self.traj), std, std / np.sqrt(len(self.traj) - 1))
-
-    @property
-    def get_op_res(self):
-        """
-        Provides average and stddev of all OPs in self.traj
-        """
-
-        # convert to numpy array
-        return self.traj
+        n = len(self.traj)
+        stem = std / np.sqrt(n - 1) if n > 1 else 0
+        return np.mean(self.traj), std, stem
 
 
 def read_trajs_calc_OPs(  # noqa: N802 (API)
