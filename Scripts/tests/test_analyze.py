@@ -4,7 +4,7 @@ downloading everything from testing repository.
 
 Test data is stored in `./Data/Simulations.1`
 
-NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
 """
 
@@ -22,7 +22,7 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 
 # Create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch.setFormatter(formatter)
 
 # Add the handler to the logger
@@ -38,23 +38,38 @@ logger.addHandler(ch)
 # run only on sim2 mocking data
 pytestmark = pytest.mark.sim1
 
+
 @pytest.fixture(scope="module")
 def systems():
     import DatabankLib
     from DatabankLib.core import initialize_databank
+
     logger.info("Starting systems fixture initialization")
-    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, ".notest")):
         pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     logger.info(f"Loaded: {len(s)} systems")
     yield s
     # TEARDOWN SYSTEMS
-    logger.info('Wiping temporary calculation data.')
+    logger.info("Wiping temporary calculation data.")
     for _s in s:
-        def gbGen(x): return glob.glob(
-                    os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
-        clearList = ['*.json', '*.dat', 'conf.gro', 'frame0.gro', '*.dat',
-                     '*.buildH', '.*', '#*', '*.def', 'whole.xtc', 'centered.xtc']
+
+        def gbGen(x):
+            return glob.glob(os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s["path"], x))
+
+        clearList = [
+            "*.json",
+            "*.dat",
+            "conf.gro",
+            "frame0.gro",
+            "*.dat",
+            "*.buildH",
+            ".*",
+            "#*",
+            "*.def",
+            "whole.xtc",
+            "centered.xtc",
+        ]
         for pat in clearList:
             for f in gbGen(pat):
                 logger.debug(f"Removing file: {f}")
@@ -65,25 +80,26 @@ def systems():
 def systemLoadTraj(systems):
     import DatabankLib
     from DatabankLib.databankLibrary import system2MDanalysisUniverse
-    logger.info('Downloading trajectory data.')
+
+    logger.info("Downloading trajectory data.")
     for s in systems:
         logger.debug(f"Processing system: {s.get('id', 'unknown')}")
         u = system2MDanalysisUniverse(s)
         del u
     yield
     # TEARDOWN SYSTEM-LOADING
-    logger.info('Wiping trajectory data.')
+    logger.info("Wiping trajectory data.")
     for s in systems:
-        if s.get('DOI') == 'localhost':
+        if s.get("DOI") == "localhost":
             logger.debug("Skipping localhost system")
             continue  # don't remove in this case!
-        for wp in ['GRO', 'TPR', 'TRJ']:
+        for wp in ["GRO", "TPR", "TRJ"]:
             try:
                 file_ = s[wp][0][0]
             except (KeyError, TypeError):
                 logger.warning(f"No {wp} file found for system")
                 continue
-            file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
+            file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], file_)
             logger.debug(f"Checking file: {file_}")
             if os.path.exists(file_):
                 logger.info(f"Removing file: {file_}")
@@ -96,6 +112,7 @@ def systemLoadTraj(systems):
 # about which system actually fails on a test function.
 MAXRELERR_COMPARE_THRESHOLD = 1e-2
 
+
 def compareJSONsBtwSD(jsfn: str):
     """Function to call from the test to compare JSON to the precomputed one.
     Raises standard assertion to fail the test.
@@ -105,6 +122,7 @@ def compareJSONsBtwSD(jsfn: str):
     """
     import json
     import numpy as np
+
     logger.info(f"Comparing JSON files for: {jsfn}")
 
     _p1 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
@@ -117,26 +135,28 @@ def compareJSONsBtwSD(jsfn: str):
     with open(jsf2) as f:
         j2 = json.load(f)
 
-    assert (type(j1) is type(j2))
+    assert type(j1) is type(j2)
 
     if type(j1) is list:
-        assert len(j1) == len(j2), \
-            f"Problem in {jsfn} comparison: lists has different lengths!"
+        assert len(j1) == len(
+            j2
+        ), f"Problem in {jsfn} comparison: lists has different lengths!"
         # to process further list as dict
         j1 = dict(enumerate(j1))
         j2 = dict(enumerate(j2))
 
     if type(j1) is dict:
-        assert(set(j1.keys())==set(j2.keys()))
+        assert set(j1.keys()) == set(j2.keys())
         for k1 in j1:
             np.testing.assert_allclose(
                 np.array(j1[k1]),
                 np.array(j2[k1]),
                 rtol=MAXRELERR_COMPARE_THRESHOLD,
                 err_msg=(
-                    f"Problem in {jsfn} comparison: {k1} line.\n" +
-                    f"Computed: {str(j1[k1])} \n" +
-                    f"Pre-computed: {str(j2[k1])}")
+                    f"Problem in {jsfn} comparison: {k1} line.\n"
+                    + f"Computed: {str(j1[k1])} \n"
+                    + f"Pre-computed: {str(j2[k1])}"
+                ),
             )
 
     logger.info(f"Data {jsfn} was compared against precomputed!")
@@ -152,76 +172,68 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
     rCode = computeAPL(s, logger)
     assert rCode == DatabankLib.analyze.RCODE_COMPUTED
 
-    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                         s['path'], 'apl.json')
+    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], "apl.json")
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 1e3
-    compareJSONsBtwSD(
-        os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
-    )
+    compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
 
 
-@pytest.mark.parametrize("systemid, rcodex",
-                         [(281, 1),
-                          (566, 1),
-                          (787, 2),
-                          (243, 1),
-                          (86,  1)])
+@pytest.mark.parametrize(
+    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)]
+)
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
     from DatabankLib.analyze import computeOP
     from DatabankLib.settings.molecules import lipids_set
+
     s = systems.loc(systemid)
     rCode = computeOP(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for lip in set(s['COMPOSITION'].keys()).intersection(set(lipids_set.names)):
-        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                             s['path'], lip + 'OrderParameters.json')
+    for lip in set(s["COMPOSITION"].keys()).intersection(set(lipids_set.names)):
+        cFile = os.path.join(
+            DatabankLib.NMLDB_SIMU_PATH, s["path"], lip + "OrderParameters.json"
+        )
         assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
         assert os.path.getsize(cFile) > 1e3, f"File {cFile} for {lip} is less than 1K!"
-        compareJSONsBtwSD(
-            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
-        )
+        compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
 
 
-@pytest.mark.parametrize("systemid, rcodex",
-                         [(281, 1),
-                          (566, 1),
-                          (787, 2),
-                          (243, 1),
-                          (86,  1)],)
+@pytest.mark.parametrize(
+    "systemid, rcodex",
+    [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
+)
 def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
     from DatabankLib.analyze import computeFF
+
     s = systems.loc(systemid)
     rCode = computeFF(s, logger)
     assert rCode == rcodex
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for fn in ['FormFactor.json', 'TotalDensity.json', 'WaterDensity.json',
-               'LipidDensity.json']:
-        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                             s['path'], fn)
+    for fn in [
+        "FormFactor.json",
+        "TotalDensity.json",
+        "WaterDensity.json",
+        "LipidDensity.json",
+    ]:
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], fn)
         assert os.path.isfile(cFile)
         assert os.path.getsize(cFile) > 1e3
-        compareJSONsBtwSD(
-            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
-        )
+        compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
 
 
-@pytest.mark.parametrize("systemid, rcodex",
-                         [(281, 1),
-                          (566, 1),
-                          (787, 2),
-                          (243, 1),
-                          (86,  1)])
+@pytest.mark.parametrize(
+    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)]
+)
 def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
     from DatabankLib.analyze import computeNMRPCA
+
     s = systems.loc(systemid)
     rCode = computeNMRPCA(s, logger)
     assert rCode == rcodex
@@ -229,10 +241,7 @@ def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
     if rCode == DatabankLib.RCODE_ERROR:
         return
 
-    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                         s['path'], 'eq_times.json')
+    cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], "eq_times.json")
     assert os.path.isfile(cFile)
     assert os.path.getsize(cFile) > 10
-    compareJSONsBtwSD(
-        os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
-    )
+    compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
