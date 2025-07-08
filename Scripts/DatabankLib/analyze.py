@@ -692,6 +692,7 @@ def computeFF(  # noqa: N802 (API)
                           f' -pbc mol -n foo.ndx -f {xtcfoo} -s {tpr_name}'
                           f' -o {xtccentered}')
                 os.system('rm ' + xtcfoo)
+                os.system("rm foo.ndx")
         else:
             print("Centering for other than Gromacs may not work if there are"
                   " jumps over periodic boundary conditions in z-direction.")
