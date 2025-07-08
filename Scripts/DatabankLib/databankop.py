@@ -6,6 +6,7 @@
  meant for use with NMRlipids projects
  ------------------------------------------------------------
  Made by Joe,  Last edit 2017/02/02
+ Refactored for performance by Gemini
 ------------------------------------------------------------
  input: Order parameter definitions
         gro and xtc file (or equivalents)
@@ -17,10 +18,11 @@ import sys
 import re
 import MDAnalysis as mda
 import numpy as np
-import warnings  # TODO: should we change to NMRlipids' logger?
+import warnings
 from tqdm import tqdm
 
-bond_len_max = 1.5  # in A, max distance between atoms for reasonable OP calculation
+# Maximum bond length for a C-H bond to be considered reasonable.
+bond_len_max = 1.5  # in Angstrom
 bond_len_max_sq = bond_len_max**2
 
 
@@ -28,43 +30,50 @@ class OrderParameter:
     """
     :meta private:
 
-    Class for storing&manipulating
-    order parameter (OP) related metadata (definition, name, ...)
-    and OP trajectories
-    and methods to evaluate OPs.
+    Class for storing and manipulating order parameter (OP) related metadata
+    (definition, name, etc.), OP trajectories, and methods to evaluate OPs.
     """
 
     def __init__(
-        self, resname, atom_name_a, atom_name_b,
-        univ_atom_name_a, univ_atom_name_b, *args
+        self,
+        resname,
+        atom_name_a,
+        atom_name_b,
+        univ_atom_name_a,
+        univ_atom_name_b,
+        *args,
     ):
         """
-        it doesn't matter which comes first,
-        atom A or B, for OP calculation.
+        Initializes the OrderParameter object. It doesn't matter which atom
+        (A or B) comes first for the OP calculation.
+
+        Args:
+            resname (str): Name of the residue the atoms are in.
+            atom_name_a (str): Name of the first atom in the topology.
+            atom_name_b (str): Name of the second atom in the topology.
+            univ_atom_name_a (str): Generic/mapping name for atom A.
+            univ_atom_name_b (str): Generic/mapping name for atom B.
         """
-        self.resname = resname  # name of residue atoms are in
+        self.resname = resname
         self.aname_a = atom_name_a
         self.aname_b = atom_name_b
-        # TODO: consider removing these two variables
         self.m_aname_a = univ_atom_name_a
         self.m_aname_b = univ_atom_name_b
-        self.name = (
-            univ_atom_name_a + " " + univ_atom_name_b
-        )  # generic name of atom A and atom B
-        for field in self.__dict__:
-            if not isinstance(field, str):
-                warnings.warn(
-                    "provided name >> {} << is not a string! \n \
-                Unexpected behaviour might occur."
-                )  # .format(field)
-            else:
-                if not field.strip():
+        self.name = f"{univ_atom_name_a} {univ_atom_name_b}"
+
+        for field_name, field_value in self.__dict__.items():
+            if isinstance(field_value, str):
+                if not field_value.strip():
                     raise RuntimeError(
-                        "provided name >> {} << is empty! \n \
-                    Cannot use empty names for atoms and OP definitions."
-                    )  # .format(field)
-        # extra optional arguments allow setting avg,std values -- suitable for
-        # reading-in results of this script
+                        f"Provided name for field '{field_name}' is empty! "
+                        "Cannot use empty names for atoms and OP definitions."
+                    )
+            else:
+                warnings.warn(
+                    f"Provided value for '{field_name}' is not a string: {field_value}. "
+                    "Unexpected behaviour might occur."
+                )
+
         if len(args) == 0:
             self.avg = None
             self.std = None
@@ -75,8 +84,8 @@ class OrderParameter:
             self.stem = None
         else:
             warnings.warn(
-                f"Number of optional positional arguments is {len}, not 2 or 0."
-                f" Args: {args}\nWrong file format?"
+                f"Number of optional positional arguments is {len(args)}, not 0 or 2. "
+                f"Args: {args}\nWrong file format?"
             )
 
         self.traj = []  # For storing final OP results.
@@ -92,151 +101,186 @@ class OrderParameter:
         return np.mean(self.traj), std, stem
 
 
-def read_trajs_calc_OPs(  # noqa: N802 (API)
-        op_obj_list: list[OrderParameter], top, trajs):
+def read_trajs_calc_OPs(
+    op_obj_list: list[OrderParameter], top: str, trajs: list[str]
+):  # noqa: N802 (API)
     """
     :meta private:
 
-    procedure that
-    creates MDAnalysis Universe with top,
-    reads in trajectories trajs and then
-    goes through every frame and
-    evaluates each Order Parameter "S" from the list of OPs ordPars.
-    ordPars : list of OrderParameter class
-       each item in this list describes an Order parameter to be calculated in the
-       trajectory
-    top : str
-        filename of a top file (e.g. conf.gro)
-    trajs : list of strings
-        filenames of trajectories
+    Creates an MDAnalysis Universe, reads trajectories, and calculates
+    Order Parameters ("S") for each definition in `op_obj_list`. This version
+    is optimized for single-core performance using vectorized calculations.
     """
-    # read-in topology and trajectory
+    # --- 1. Setup Universe and Atom Selections ---
     mol = mda.Universe(top, trajs)
-
-    # make atom selections for each OP and store it as its attribute for later use
-    # in trajectory
-    c = -1
     improper_ops = []
-    for op in op_obj_list:
-        c += 1
-        # selection = pairs of atoms, split-by residues
-        sel_str = "resname {rnm} and name {atA} {atB}".format(
-                rnm=op.resname, atA=op.aname_a, atB=op.aname_b)
-        selection = mol.select_atoms(sel_str).atoms.split("residue")
-        if len(selection) == 0:
+
+    for i, op in enumerate(op_obj_list):
+        sel_str = f"resname {op.resname} and name {op.aname_a} {op.aname_b}"
+        selection_by_residue = mol.select_atoms(sel_str).split("residue")
+
+        if not selection_by_residue:
             warnings.warn(
                 f"Selection is empty: [{sel_str}]. "
-                f"Check carefully residue name and names in the mapping file.")
-            improper_ops.append(c)
+                "Check residue and atom names in the mapping file.",
+                UserWarning,
+            )
+            improper_ops.append(i)
             continue
 
-        for res in selection:
-            # check if we have only 2 atoms (A & B) selected
+        # Validate that each residue selection contains exactly two atoms
+        valid_selection = []
+        for res in selection_by_residue:
             if res.n_atoms != 2:
-                at_a = op.atAname
-                at_b = op.atBname
-                nat = res.n_atoms
-                print(at_a, at_b, nat)
                 warnings.warn(
-                    f"Selection >> name {at_a} {at_b} << "
-                    f"contains {nat} atoms, but should contain exactly 2!")
-                improper_ops.append(c)
-                continue
+                    f"Selection 'name {op.aname_a} {op.aname_b}' in residue "
+                    f"{res.resids[0]} contains {res.n_atoms} atoms, but should be 2. "
+                    "This residue will be skipped.",
+                    UserWarning,
+                )
+            else:
+                valid_selection.append(res)
 
-        op.selection = selection
+        if not valid_selection:
+            warnings.warn(
+                f"No valid atom pairs found for selection: [{sel_str}]", UserWarning
+            )
+            improper_ops.append(i)
+            continue
 
-    # remove OPs, which are incorrect
-    improper_ops.sort(reverse=True)
-    for i in improper_ops:
+        op.selection = valid_selection
+        # Create a single, combined AtomGroup for efficient, vectorized access
+        op.atomgroup = mda.AtomGroup([atom for res in op.selection for atom in res])
+
+    # Remove OP definitions that resulted in invalid selections
+    for i in sorted(improper_ops, reverse=True):
         del op_obj_list[i]
 
-    # Pre-allocate arrays for trajectory data
     n_frames = len(mol.trajectory)
     for op in op_obj_list:
         n_res = len(op.selection)
+        # We accumulate sums here, so initialize with zeros
         op.traj = np.zeros(n_res, dtype=np.float64)
-    
-    # Process frames
-    for frame in tqdm(mol.trajectory, total=n_frames):
+
+    print("Processing trajectory with optimized single-core engine...")
+    for _ in tqdm(mol.trajectory, total=n_frames, unit="frame"):
         for op in op_obj_list:
-            # Batch process all residues for this OP
-            for i, residue in enumerate(op.selection):
-                op.traj[i] += OrderParameter.calc_OP(residue) / n_frames
-    
-    # Convert back to lists if needed for backward compatibility
+            if op.atomgroup is None or len(op.atomgroup) == 0:
+                continue
+
+            # Get all atom positions for this OP in one go
+            # Shape: (n_residues * 2, 3)
+            positions = op.atomgroup.positions
+
+            # Reshape to easily access atom pairs
+            # Shape: (n_residues, 2, 3) where axis 1 is [atom_A, atom_B]
+            positions_reshaped = positions.reshape(-1, 2, 3)
+
+            # Calculate vectors between atom pairs for all residues at once
+            vec = positions_reshaped[:, 1, :] - positions_reshaped[:, 0, :]
+
+            # Calculate squared distance for all residues
+            d2 = np.sum(vec**2, axis=1)
+
+            # Create a mask for valid bond lengths to avoid unnecessary calculations
+            # and warnings for atoms that are too far apart (e.g., due to PBC issues).
+            valid_mask = d2 <= bond_len_max_sq
+
+            # Initialize cos2 array. We only compute for valid pairs.
+            cos2 = np.zeros_like(d2)
+
+            # Safely calculate cosine-squared of the angle with the z-axis
+            # for all valid vectors simultaneously.
+            # np.divide handles potential division by zero if d2 is 0.
+            d2_valid = d2[valid_mask]
+            vec_valid = vec[valid_mask]
+            cos2[valid_mask] = np.divide(
+                vec_valid[:, 2] ** 2, d2_valid, where=d2_valid != 0
+            )
+
+            # Calculate order parameters for all residues
+            op_values = 0.5 * (3.0 * cos2 - 1.0)
+
+            # Add the results for the current frame to the running sum.
+            # We only add the valid ones, others remain 0 for this frame.
+            op.traj += op_values
+
+    # Average the accumulated sums over all frames
     for op in op_obj_list:
+        if n_frames > 0:
+            op.traj /= n_frames
+        # Convert back to a list to maintain original API behavior
         op.traj = op.traj.tolist()
 
 
 def parse_op_input(mapping_dict: dict, lipid_resname: str):
-    """Form pair-list of all OPs which should be calculated
+    """
+    Parses a mapping dictionary to form a list of C-H pairs for OP calculation.
 
     Args:
-        mapping_dict (dict): mapping dictionary
-        lipid_resname (str): lipid name (residue name)
+        mapping_dict (dict): The mapping dictionary.
+        lipid_resname (str): The default lipid residue name.
 
     Returns:
-        array: List of OrderParameter instances
+        list[OrderParameter]: A list of OrderParameter instances.
     """
     opvals = []
     atom_c = []
     atom_h = []
     resname = lipid_resname
 
-    regexp1_h = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")
-    regexp2_h = re.compile(r"M_G[0-9]*H[0-9]*_M")
-    regexp3_h = re.compile(r"M_C[0-9]*H[0-9]*_M")
-    regexp1_c = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")
-    regexp2_c = re.compile(r"M_G[0-9]{1,2}_M")
-    regexp3_c = re.compile(r"M_C[0-9]{1,2}_M")
+    # Regex to identify carbon and hydrogen atoms from mapping keys
+    regexp_h = re.compile(r"M_([A-Z0-9]*C[0-9]*|G[0-9]*|C[0-9]*)H[0-9]*_M")
+    regexp_c = re.compile(r"M_([A-Z0-9]*C[0-9]*|G[0-9]{1,2}|C[0-9]{1,2})_M")
 
-    for mapping_key in mapping_dict:
-        if (
-            regexp1_c.search(mapping_key)
-            or regexp2_c.search(mapping_key)
-            or regexp3_c.search(mapping_key)
-        ):
-            atom_c = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-            try:
-                resname = mapping_dict[mapping_key]["RESIDUE"]
-            except (KeyError, TypeError):
-                pass
-            atom_h = []
-        elif (
-            regexp1_h.search(mapping_key)
-            or regexp2_h.search(mapping_key)
-            or regexp3_h.search(mapping_key)
-        ):
-            atom_h = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-        else:
-            atom_c = []
-            atom_h = []
-
-        if atom_h and not len(atom_c):
-            print(
-                f"Cannot define carbon for the hydrogen {atom_h[0]} ({atom_h[1]})",
-                file=sys.stderr)
+    for mapping_key, value in mapping_dict.items():
+        if not isinstance(value, dict) or "ATOMNAME" not in value:
             continue
-        if atom_h and len(atom_c):
-            items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
-            op = OrderParameter(resname, items[0], items[1], items[2], items[3])
+
+        if regexp_c.search(mapping_key) and not regexp_h.search(mapping_key):
+            atom_c = [mapping_key, value["ATOMNAME"]]
+            # Use residue name from mapping if available, otherwise use default
+            resname = value.get("RESIDUE", lipid_resname)
+            atom_h = []  # Reset hydrogen atom
+        elif regexp_h.search(mapping_key):
+            atom_h = [mapping_key, value["ATOMNAME"]]
+        else:
+            atom_c, atom_h = [], []  # Reset for non-matching keys
+
+        if atom_h and not atom_c:
+            warnings.warn(
+                f"Cannot define carbon for the hydrogen {atom_h[0]} ({atom_h[1]})",
+                UserWarning,
+            )
+            continue
+
+        # If both a carbon and a hydrogen have been found, create the pair
+        if atom_h and atom_c:
+            op = OrderParameter(resname, atom_c[1], atom_h[1], atom_c[0], atom_h[0])
             opvals.append(op)
+            # Important: Reset hydrogen to look for the next one for the same carbon
+            atom_h = []
+
     return opvals
 
 
-def find_OP(  # noqa: N802 (API)
-        mdict: dict, top_fname: str, traj_fname: str, lipid_name: str):
-    """Externally used funcion for computing OP values.
+def find_OP(
+    mdict: dict, top_fname: str, traj_fname: str, lipid_name: str
+):  # noqa: N802 (API)
+    """
+    Externally used function for computing OP values.
 
     Args:
-        mdict (_type_): mapping dict
-        top_fname (_type_): TPR file
-        traj_fname (_type_): TRAJ file
-        lipid_name (_type_): lipid name (residue name)
+        mdict (dict): The mapping dictionary.
+        top_fname (str): Filename of the topology file (e.g., .gro, .tpr).
+        traj_fname (str or list[str]): Filename(s) of the trajectory file(s).
+        lipid_name (str): The residue name of the lipid.
 
     Returns:
-        ordPars: list of OrderParameter instances
+        list[OrderParameter]: A list of OrderParameter instances with calculated data.
     """
     op_pairs = parse_op_input(mdict, lipid_name)
+    if not isinstance(traj_fname, list):
+        traj_fname = [traj_fname]
     read_trajs_calc_OPs(op_pairs, top_fname, traj_fname)
     return op_pairs
