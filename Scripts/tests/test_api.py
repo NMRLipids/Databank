@@ -334,23 +334,27 @@ def test_GetThickness(systems, systemid, result):
     assert (th is None and result is None) or abs(float(th) - float(result)) < 1e-4
 
 
-@pytest.mark.parametrize("systemid, result",
-                         [(243, "0.7212"),
-                          (86, "1.5018"),
-                          (566, "1.174")])
-def test_ShowEquilibrationTimes(systems, capsys, systemid, result):
-    from DatabankLib.databankLibrary import ShowEquilibrationTimes
+@pytest.mark.parametrize(
+    "systemid, result",
+    [
+        (243, 0.7212884475213442),
+        (86, 1.5018596337724872),
+        (566, 1.1740608659926115),
+    ],
+)
+def test_GetEquilibrationTimes(systems, systemid, result):
+    from DatabankLib.databankLibrary import GetEquilibrationTimes
     from DatabankLib.settings.molecules import lipids_set
+
     sys0 = systems.loc(systemid)
-    _ = ShowEquilibrationTimes(sys0)
-    captured = capsys.readouterr()
-    print("\n========\n", captured, "\n=========\n")
-    lips = list(set(sys0['COMPOSITION'].keys()).intersection(lipids_set.names))
+    eq_times = GetEquilibrationTimes(sys0)
+    print("\n========\n", eq_times, "\n=========\n")
+    lips = list(set(sys0["COMPOSITION"].keys()).intersection(lipids_set.names))
     for lip in lips:
         if lip in ["CHOL", "DCHOL"]:
             continue  # for them eq_times are not computed
-        assert lip in captured.out
-    assert result in captured.out
+        assert lip in eq_times.keys()
+        assert result == eq_times[lip]
 
 
 @pytest.mark.xfail(reason="EQtimes were not computed", run=True,
