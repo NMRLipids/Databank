@@ -355,11 +355,10 @@ def test_GetEquilibrationTimes(systems, systemid, result):
             continue  # for them eq_times are not computed
         assert lip in eq_times.keys()
         assert result == eq_times[lip]
-
-
+    
 @pytest.mark.xfail(reason="EQtimes were not computed", run=True,
                    raises=FileNotFoundError, strict=True)
-def test_ShowEquilibrationTimes_fail(systems):
+def test_GetEquilibrationTimes_fail(systems):
     sys0 = systems.loc(787)
-    from DatabankLib.databankLibrary import ShowEquilibrationTimes
-    ShowEquilibrationTimes(sys0)
+    from DatabankLib.databankLibrary import GetEquilibrationTimes
+    GetEquilibrationTimes(sys0)
