@@ -94,6 +94,28 @@ def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
         print(i + ":", eq_time_dict[i])
 
 
+def GetEquilibrationTimes(system: System):  # noqa: N802 (API name)
+    """
+    Returns relative equilibration time for each lipid within a simulation defined
+    by ``system``. Relative equilibration times are calculated with
+    ``NMRPCA_timerelax.py`` and stored in ``eq_times.json`` files.
+
+    :param system: NMRlipids databank dictionary defining a simulation.
+
+    :return: dictionary of relative equilibration times for each lipid
+    """
+
+    eq_times_path = os.path.join(NMLDB_SIMU_PATH, system["path"], "eq_times.json")
+
+    try:
+        with open(eq_times_path) as f:
+            eq_time_dict = json.load(f)
+    except Exception:
+        raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
+
+    return eq_time_dict
+
+
 def GetNlipids(system: System):  # noqa: N802 (API name)
     """
     Returns the total number of lipids in a simulation defined by ``system``.
