@@ -19,9 +19,8 @@ import warnings
 import MDAnalysis as mda
 
 from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.core import (System)
-from DatabankLib.settings.molecules import (
-    lipids_set, molecules_set, molecule_ff_set)
+from DatabankLib.core import System
+from DatabankLib.settings.molecules import lipids_set, molecules_set, molecule_ff_set
 from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 
@@ -38,7 +37,7 @@ def CalcAreaPerMolecule(system):  # noqa: N802 (API name)
 
     :return: area per lipid (Å^2)
     """
-    path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'apl.json')
+    path = os.path.join(NMLDB_SIMU_PATH, system["path"], "apl.json")
     try:
         with open(path) as f:
             data = json.load(f)
@@ -47,9 +46,9 @@ def CalcAreaPerMolecule(system):  # noqa: N802 (API name)
         for i, j in data.items():
             sum_APL += j
             sum_ind += 1
-        return sum_APL/sum_ind
+        return sum_APL / sum_ind
     except Exception:
-        print('apl.json not found from' + path)
+        print("apl.json not found from" + path)
 
 
 def GetThickness(system):  # noqa: N802 (API name)
@@ -61,7 +60,7 @@ def GetThickness(system):  # noqa: N802 (API name)
 
     :return: membrane thickess (nm) or None
     """
-    thickness_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'thickness.json')
+    thickness_path = os.path.join(NMLDB_SIMU_PATH, system["path"], "thickness.json")
     try:
         with open(thickness_path) as f:
             thickness = json.load(f)
@@ -125,9 +124,9 @@ def GetNlipids(system: System):  # noqa: N802 (API name)
     :return: the total number of lipids in the ``system``.
     """
     n_lipid = 0
-    for molecule in system['COMPOSITION']:
+    for molecule in system["COMPOSITION"]:
         if molecule in lipids_set:
-            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid += np.sum(system["COMPOSITION"][molecule]["COUNT"])
     return n_lipid
 
 
@@ -147,11 +146,11 @@ def getLipids(system: System, molecules=lipids_set):  # noqa: N802 (API name)
         if key in molecules:
             try:
                 for atom in mol.mapping_dict:
-                    res_set.add(mol.mapping_dict[atom]['RESIDUE'])
+                    res_set.add(mol.mapping_dict[atom]["RESIDUE"])
             except (KeyError, TypeError):
-                res_set.add(system['COMPOSITION'][key]['NAME'])
+                res_set.add(system["COMPOSITION"][key]["NAME"])
 
-    lipids = 'resname ' + ' or resname '.join(sorted(list(res_set)))
+    lipids = "resname " + " or resname ".join(sorted(list(res_set)))
 
     return lipids
 
@@ -170,14 +169,14 @@ def simulation2universal_atomnames(system: System, molname: str, atom: str):
     try:
         mdict = system.content[molname].mapping_dict
     except KeyError:
-        sys.stderr.write(
-            f"Molecule '{molname}' was not found in the system!")
+        sys.stderr.write(f"Molecule '{molname}' was not found in the system!")
         return None
     try:
         m_atom1 = mdict[atom]["ATOMNAME"]
     except (KeyError, TypeError):
         sys.stderr.write(
-            f"{atom} was not found from {system['COMPOSITION'][molname]['MAPPING']}!")
+            f"{atom} was not found from {system['COMPOSITION'][molname]['MAPPING']}!"
+        )
         return None
 
     return m_atom1
@@ -189,8 +188,9 @@ def loadMappingFile(mapping_file):  # noqa: N802 (API name)
     This function is deprecated. Use Molecule.register_mapping() from
     DatbankLib.settings.molecules instead.
     """
-    raise NotImplementedError("This function is deprecated. "
-                              "Use Molecule.register_mapping() instead.")
+    raise NotImplementedError(
+        "This function is deprecated. " "Use Molecule.register_mapping() instead."
+    )
 
 
 def getAtoms(system: System, lipid: str):  # noqa: N802 (API name)
@@ -206,13 +206,14 @@ def getAtoms(system: System, lipid: str):  # noqa: N802 (API name)
     atoms = ""
     mdict = system.content[lipid].mapping_dict
     for key in mdict:
-        atoms = atoms + ' ' + mdict[key]['ATOMNAME']
+        atoms = atoms + " " + mdict[key]["ATOMNAME"]
 
     return atoms
 
 
 def getUniversalAtomName(  # noqa: N802 (API name)
-        system: System, atom_name: str, molname: str):
+    system: System, atom_name: str, molname: str
+):
     """
     Returns the universal atom name corresponding the simulation specific ``atomName``
     of a ``lipid`` in a simulation defined by the ``system``.
@@ -226,16 +227,15 @@ def getUniversalAtomName(  # noqa: N802 (API name)
     try:
         mdict = system.content[molname].mapping_dict
     except KeyError:
-        sys.stderr.write(
-            f"Molecule '{molname}' was not found in the system!")
+        sys.stderr.write(f"Molecule '{molname}' was not found in the system!")
         return None
 
     for universal_name in mdict:
-        sim_name = mdict[universal_name]['ATOMNAME']
+        sim_name = mdict[universal_name]["ATOMNAME"]
         if sim_name == atom_name:
             return universal_name
 
-    sys.stderr.write('Atom was not found!\n')
+    sys.stderr.write("Atom was not found!\n")
     return None
 
 
@@ -286,9 +286,9 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
 
     :return: MDAnalysis universe
     """
-    system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
-    doi = system.get('DOI')
-    skip_downloading: bool = (doi == 'localhost')
+    system_path = os.path.join(NMLDB_SIMU_PATH, system["path"])
+    doi = system.get("DOI")
+    skip_downloading: bool = doi == "localhost"
     if skip_downloading:
         print("NOTE: The system with 'localhost' DOI should be downloaded by the user.")
 
@@ -309,35 +309,40 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
         raise
 
     # downloading trajectory (obligatory)
-    if (skip_downloading):
-        if (not os.path.isfile(trj_name)):
+    if skip_downloading:
+        if not os.path.isfile(trj_name):
             raise FileNotFoundError(
-                f"Trajectory should be downloaded [{trj_name}] by user")
+                f"Trajectory should be downloaded [{trj_name}] by user"
+            )
     else:
         trj_url = resolve_download_file_url(doi, trj)
-        if (not os.path.isfile(trj_name)):
-            print('Downloading trajectory with the size of ', system['TRAJECTORY_SIZE'],
-                  ' to ', system['path'])
+        if not os.path.isfile(trj_name):
+            print(
+                "Downloading trajectory with the size of ",
+                system["TRAJECTORY_SIZE"],
+                " to ",
+                system["path"],
+            )
             _ = urllib.request.urlretrieve(trj_url, trj_name)
 
     # downloading topology (if exists)
     if top is not None:
         if skip_downloading:
-            if (not os.path.isfile(top_name)):
+            if not os.path.isfile(top_name):
                 raise FileNotFoundError(f"TPR should be downloaded [{top_name}]")
         else:
             top_url = resolve_download_file_url(doi, top)
-            if (not os.path.isfile(top_name)):
+            if not os.path.isfile(top_name):
                 _ = urllib.request.urlretrieve(top_url, top_name)
 
     # downloading structure (if exists)
     if struc is not None:
         if skip_downloading:
-            if (not os.path.isfile(struc_name)):
+            if not os.path.isfile(struc_name):
                 raise FileNotFoundError(f"GRO should be downloaded [{struc_name}]")
         else:
             struc_url = resolve_download_file_url(doi, struc)
-            if (not os.path.isfile(struc_name)):
+            if not os.path.isfile(struc_name):
                 _ = urllib.request.urlretrieve(struc_url, struc_name)
 
     made_from_top = False
@@ -360,19 +365,23 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
         if not made_from_struc:
             if system["SOFTWARE"].upper() == "GROMACS":
                 # rewrite struc_fname!
-                struc_fname = os.path.join(system_path, 'conf.gro')
+                struc_fname = os.path.join(system_path, "conf.gro")
 
-                print("Generating conf.gro because MDAnalysis cannot "
-                      "(probably!) read tpr version")
+                print(
+                    "Generating conf.gro because MDAnalysis cannot "
+                    "(probably!) read tpr version"
+                )
                 if (
-                    'WARNINGS' in system and
-                    'GROMACS_VERSION' in system['WARNINGS'] and
-                    system['WARNINGS']['GROMACS_VERSION'] == 'gromacs3'
+                    "WARNINGS" in system
+                    and "GROMACS_VERSION" in system["WARNINGS"]
+                    and system["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
                 ):
-                    os.system(f'echo System | editconf -f {top_name} -o {struc_fname}')
+                    os.system(f"echo System | editconf -f {top_name} -o {struc_fname}")
                 else:
-                    os.system(f"echo System | gmx trjconv "
-                              f"-s {top_name} -f {trj_name} -dump 0 -o {struc_fname}")
+                    os.system(
+                        f"echo System | gmx trjconv "
+                        f"-s {top_name} -f {trj_name} -dump 0 -o {struc_fname}"
+                    )
                 # the last try!
                 u = mda.Universe(struc_fname, trj_name)
             else:
@@ -382,7 +391,8 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
 
 
 def read_trj_PN_angles(  # noqa: N802 (API name)
-        molname: str, atom1: str, atom2: str, mda_universe: mda.Universe):
+    molname: str, atom1: str, atom2: str, mda_universe: mda.Universe
+):
     """
     Calculates the P-N vector angles with respect to membrane normal from the
     simulation defined by the MDAnalysis universe.
@@ -431,6 +441,7 @@ def read_trj_PN_angles(  # noqa: N802 (API name)
 
 
 # -------------------------------------- SEPARATED PART (??) ----------------------
+
 
 def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
     """
@@ -641,9 +652,9 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
                         files_list = []
                         for file_provided in value_sim.split(";"):
                             files_list.append([file_provided.strip()])
-                        sim[
-                            key_sim
-                        ] = files_list  # replace ; separated string with list
+                        sim[key_sim] = (
+                            files_list  # replace ; separated string with list
+                        )
                     else:
                         # print(f"value_sim_splitted = {value_sim_splitted}")
                         sim[key_sim] = [
@@ -668,9 +679,7 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
                 f"skipping key '{key_sim}': Not defined in software_sim library"
             )
 
-    logger.info(
-        f"found {len(files_tbd)} resources to download: {', '.join(files_tbd)}"
-    )
+    logger.info(f"found {len(files_tbd)} resources to download: {', '.join(files_tbd)}")
 
     return sim, files_tbd
 
@@ -685,11 +694,11 @@ def calcArea(system):  # noqa: N802 (API name)
     """
     APL = CalcAreaPerMolecule(system)  # noqa: N806
     n_lipid = 0
-    for molecule in system['COMPOSITION']:
+    for molecule in system["COMPOSITION"]:
         if molecule in lipids_set:
-            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid += np.sum(system["COMPOSITION"][molecule]["COUNT"])
     print(n_lipid, APL)
-    return n_lipid*APL/2
+    return n_lipid * APL / 2
 
 
 def GetFormFactorMin(system):  # noqa: N802 (API name)
@@ -700,14 +709,14 @@ def GetFormFactorMin(system):  # noqa: N802 (API name)
 
     :return: list of form factor minima
     """
-    form_factor_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'FormFactor.json')
+    form_factor_path = os.path.join(NMLDB_SIMU_PATH, system["path"], "FormFactor.json")
     with open(form_factor_path) as f:
         form_factor = json.load(f)
     iprev = form_factor[0][1]
     iprev_d = 0
     min_x = []
     for i in form_factor:
-        i_d = i[1]-iprev
+        i_d = i[1] - iprev
         if i_d > 0 and iprev_d < 0 and i[0] > 0.1:
             min_x.append(i[0])
         iprev_d = i[1] - iprev
@@ -727,29 +736,30 @@ def averageOrderParameters(system):  # noqa: N802 (API name)
     :return: average of *sn*-1 and *sn*-2 order parameters
     """
 
-    path = os.path.join(NMLDB_SIMU_PATH, system['path'])
+    path = os.path.join(NMLDB_SIMU_PATH, system["path"])
 
     sn1sum = 0
     sn1count = 0
     sn2sum = 0
     sn2count = 0
 
-    for lipid in system['COMPOSITION']:
-        if lipid in lipids_set and 'CHOL' not in lipid:
+    for lipid in system["COMPOSITION"]:
+        if lipid in lipids_set and "CHOL" not in lipid:
             OP_path_sim = os.path.join(  # noqa: N806
-                path, lipid + 'OrderParameters.json')
+                path, lipid + "OrderParameters.json"
+            )
             with open(OP_path_sim) as json_file:
                 OP_sim = json.load(json_file)  # noqa: N806
 
             for key in OP_sim:
-                if 'M_G1C' in key:
+                if "M_G1C" in key:
                     sn1sum += float(OP_sim[key][0][0])
                     sn1count += 1
-                elif 'M_G2C' in key:
+                elif "M_G2C" in key:
                     sn2sum += float(OP_sim[key][0][0])
                     sn2count += 1
 
-    return sn1sum/sn1count, sn2sum/sn2count
+    return sn1sum / sn1count, sn2sum / sn2count
 
 
 def calcLipidFraction(system, lipid):  # noqa: N802 (API name)
@@ -762,16 +772,16 @@ def calcLipidFraction(system, lipid):  # noqa: N802 (API name)
     :return: number fraction of ``lipid`` with respect total number of lipids
     """
     n_lipid_tot = 0
-    for molecule in system['COMPOSITION']:
+    for molecule in system["COMPOSITION"]:
         if molecule in lipids_set:
-            n_lipid_tot += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid_tot += np.sum(system["COMPOSITION"][molecule]["COUNT"])
 
     n_lipid = 0
-    for molecule in system['COMPOSITION']:
+    for molecule in system["COMPOSITION"]:
         if lipid in molecule:
-            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
+            n_lipid += np.sum(system["COMPOSITION"][molecule]["COUNT"])
 
-    return n_lipid/n_lipid_tot
+    return n_lipid / n_lipid_tot
 
 
 def getHydrationLevel(system):  # noqa: N802 (API name)
@@ -784,8 +794,8 @@ def getHydrationLevel(system):  # noqa: N802 (API name)
     :return: number of water molecules divided by number of lipid molecules
     """
     n_lipid = 0
-    for molecule in system['COMPOSITION']:
+    for molecule in system["COMPOSITION"]:
         if molecule in lipids_set:
-            n_lipid += np.sum(system['COMPOSITION'][molecule]['COUNT'])
-    n_water = system['COMPOSITION']['SOL']['COUNT']
-    return n_water/n_lipid
+            n_lipid += np.sum(system["COMPOSITION"][molecule]["COUNT"])
+    n_water = system["COMPOSITION"]["SOL"]["COUNT"]
+    return n_water / n_lipid
