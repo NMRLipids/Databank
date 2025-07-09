@@ -15,6 +15,7 @@ import os
 import sys
 import numpy as np
 import math
+import warnings
 import MDAnalysis as mda
 
 from DatabankLib import NMLDB_SIMU_PATH
@@ -77,8 +78,11 @@ def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
 
     :param system: NMRlipids databank dictionary defining a simulation.
     """
-
-    eq_times_path = os.path.join(NMLDB_SIMU_PATH, system['path'], 'eq_times.json')
+    warnings.warn(
+        "This function is deprecated. Use GetEquilibrationTimes instead.",
+        DeprecationWarning,
+    )
+    eq_times_path = os.path.join(NMLDB_SIMU_PATH, system["path"], "eq_times.json")
 
     try:
         with open(eq_times_path) as f:
@@ -87,7 +91,7 @@ def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
         raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
 
     for i in eq_time_dict:
-        print(i+':', eq_time_dict[i])
+        print(i + ":", eq_time_dict[i])
 
 
 def GetNlipids(system: System):  # noqa: N802 (API name)
