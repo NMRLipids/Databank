@@ -34,7 +34,7 @@ sys.path.pop(0)
 
 # most of paths should be inserted into the DB relative to repo root
 def genRpath(apath):
-    return osp.relpath(apath, dbl.NMLDB_ROOT_PATH)
+    return osp.relpath(apath, dbl.NMLDB_DATA_PATH)
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # ARGUMENTS
