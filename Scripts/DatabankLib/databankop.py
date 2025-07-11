@@ -1,5 +1,4 @@
 """
-    :meta private:
  calculation of order parameters of lipid bilayers
  from a MD trajectory
 
@@ -281,8 +280,7 @@ def _parse_op_input(mapping_dict: dict, lipid_resname: str):
 def find_OP(
     mdict: dict, top_fname: str, traj_fname: str, lipid_name: str
 ):  # noqa: N802 (API)
-    """
-    Externally used function for computing OP values.
+    """Externally used function for computing OP values.
 
     :param mdict: The mapping dictionary.
     :type mdict: dict
