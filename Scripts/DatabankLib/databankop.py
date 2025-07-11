@@ -43,16 +43,23 @@ class OrderParameter:
         univ_atom_name_b,
         *args,
     ):
-        """
-        Initializes the OrderParameter object. It doesn't matter which atom
-        (A or B) comes first for the OP calculation.
+        """Initializes the OrderParameter object.
 
-        Args:
-            resname (str): Name of the residue the atoms are in.
-            atom_name_a (str): Name of the first atom in the topology.
-            atom_name_b (str): Name of the second atom in the topology.
-            univ_atom_name_a (str): Generic/mapping name for atom A.
-            univ_atom_name_b (str): Generic/mapping name for atom B.
+        It doesn't matter which atom (A or B) comes first for the OP calculation.
+
+        :param resname: Name of the residue the atoms are in.
+        :type resname: str
+        :param atom_name_a: Name of the first atom in the topology.
+        :type atom_name_a: str
+        :param atom_name_b: Name of the second atom in the topology.
+        :type atom_name_b: str
+        :param univ_atom_name_a: Generic/mapping name for atom A.
+        :type univ_atom_name_a: str
+        :param univ_atom_name_b: Generic/mapping name for atom B.
+        :type univ_atom_name_b: str
+        :param args: Optional positional arguments. If provided, should be a pair of (avg, std).
+        :type args: tuple
+        :raises RuntimeError: If any of the provided names are empty strings.
         """
         self.resname = resname
         self.aname_a = atom_name_a
@@ -94,7 +101,11 @@ class OrderParameter:
 
     @property
     def get_avg_std_stem_OP(self):  # noqa: N802 (API compliance)
-        """Provides average, stddev, and standard error of the mean of OPs."""
+        """Provides average, stddev, and standard error of the mean of OPs.
+
+        :return: A tuple containing (average, stddev, stem).
+        :rtype: tuple[float, float, float]
+        """
         std = np.std(self.traj)
         n = len(self.traj)
         stem = std / np.sqrt(n - 1) if n > 1 else 0
@@ -104,12 +115,18 @@ class OrderParameter:
 def read_trajs_calc_OPs(
     op_obj_list: list[OrderParameter], top: str, trajs: list[str]
 ):  # noqa: N802 (API)
-    """
-    :meta private:
+    """Creates an MDAnalysis Universe, reads trajectories, and calculates Order Parameters ("S").
 
-    Creates an MDAnalysis Universe, reads trajectories, and calculates
-    Order Parameters ("S") for each definition in `op_obj_list`. This version
-    is optimized for single-core performance using vectorized calculations.
+    This function calculates the order parameters for each definition in ``op_obj_list``.
+    This version is optimized for single-core performance using vectorized calculations.
+    The results are stored in-place in the ``traj`` attribute of the objects in ``op_obj_list``.
+
+    :param op_obj_list: A list of _OrderParameter objects to be processed.
+    :type op_obj_list: list[_OrderParameter]
+    :param top: Path to the topology file (e.g., .gro, .tpr).
+    :type top: str
+    :param trajs: A list of paths to trajectory files (e.g., .xtc).
+    :type trajs: list[str]
     """
     # --- 1. Setup Universe and Atom Selections ---
     mol = mda.Universe(top, trajs)
@@ -217,12 +234,12 @@ def parse_op_input(mapping_dict: dict, lipid_resname: str):
     """
     Parses a mapping dictionary to form a list of C-H pairs for OP calculation.
 
-    Args:
-        mapping_dict (dict): The mapping dictionary.
-        lipid_resname (str): The default lipid residue name.
-
-    Returns:
-        list[OrderParameter]: A list of OrderParameter instances.
+    :param mapping_dict: The mapping dictionary.
+    :type mapping_dict: dict
+    :param lipid_resname: The default lipid residue name.
+    :type lipid_resname: str
+    :return: A list of _OrderParameter instances.
+    :rtype: list[_OrderParameter]
     """
     opvals = []
     atom_c = []
@@ -270,14 +287,16 @@ def find_OP(
     """
     Externally used function for computing OP values.
 
-    Args:
-        mdict (dict): The mapping dictionary.
-        top_fname (str): Filename of the topology file (e.g., .gro, .tpr).
-        traj_fname (str or list[str]): Filename(s) of the trajectory file(s).
-        lipid_name (str): The residue name of the lipid.
-
-    Returns:
-        list[OrderParameter]: A list of OrderParameter instances with calculated data.
+    :param mdict: The mapping dictionary.
+    :type mdict: dict
+    :param top_fname: Filename of the topology file (e.g., .gro, .tpr).
+    :type top_fname: str
+    :param traj_fname: Filename(s) of the trajectory file(s).
+    :type traj_fname: str or list[str]
+    :param lipid_name: The residue name of the lipid.
+    :type lipid_name: str
+    :return: A list of _OrderParameter instances with calculated data.
+    :rtype: list[_OrderParameter]
     """
     op_pairs = parse_op_input(mdict, lipid_name)
     if not isinstance(traj_fname, list):
