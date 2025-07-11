@@ -26,10 +26,8 @@ bond_len_max = 1.5  # in Angstrom
 bond_len_max_sq = bond_len_max**2
 
 
-class OrderParameter:
+class _OrderParameter:
     """
-    :meta private:
-
     Class for storing and manipulating order parameter (OP) related metadata
     (definition, name, etc.), OP trajectories, and methods to evaluate OPs.
     """
@@ -112,8 +110,8 @@ class OrderParameter:
         return np.mean(self.traj), std, stem
 
 
-def read_trajs_calc_OPs(
-    op_obj_list: list[OrderParameter], top: str, trajs: list[str]
+def _read_trajs_calc_OPs(
+    op_obj_list: list[_OrderParameter], top: str, trajs: list[str]
 ):  # noqa: N802 (API)
     """Creates an MDAnalysis Universe, reads trajectories, and calculates Order Parameters ("S").
 
@@ -230,9 +228,8 @@ def read_trajs_calc_OPs(
         op.traj = op.traj.tolist()
 
 
-def parse_op_input(mapping_dict: dict, lipid_resname: str):
-    """
-    Parses a mapping dictionary to form a list of C-H pairs for OP calculation.
+def _parse_op_input(mapping_dict: dict, lipid_resname: str):
+    """Parses a mapping dictionary to form a list of C-H pairs for OP calculation.
 
     :param mapping_dict: The mapping dictionary.
     :type mapping_dict: dict
@@ -273,7 +270,7 @@ def parse_op_input(mapping_dict: dict, lipid_resname: str):
 
         # If both a carbon and a hydrogen have been found, create the pair
         if atom_h and atom_c:
-            op = OrderParameter(resname, atom_c[1], atom_h[1], atom_c[0], atom_h[0])
+            op = _OrderParameter(resname, atom_c[1], atom_h[1], atom_c[0], atom_h[0])
             opvals.append(op)
             # Important: Reset hydrogen to look for the next one for the same carbon
             atom_h = []
@@ -298,8 +295,8 @@ def find_OP(
     :return: A list of _OrderParameter instances with calculated data.
     :rtype: list[_OrderParameter]
     """
-    op_pairs = parse_op_input(mdict, lipid_name)
+    op_pairs = _parse_op_input(mdict, lipid_name)
     if not isinstance(traj_fname, list):
         traj_fname = [traj_fname]
-    read_trajs_calc_OPs(op_pairs, top_fname, traj_fname)
+    _read_trajs_calc_OPs(op_pairs, top_fname, traj_fname)
     return op_pairs
