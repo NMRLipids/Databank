@@ -43,6 +43,7 @@ from DatabankLib.maicos import (
     DiporderPlanar,
 )
 
+
 def computeNMRPCA(  # noqa: N802 (API)
     system: System, logger: Logger, recompute: bool = False
 ) -> int:
@@ -853,8 +854,6 @@ def computeMAICOS(  # noqa: N802 (API)
     except (KeyError, TypeError):
         pass
 
-    output_name = ""
-
     try:
         struc, top, trj = get_struc_top_traj_fnames(system)
         trj_name = os.path.join(system_path, trj)
@@ -995,7 +994,7 @@ def computeMAICOS(  # noqa: N802 (API)
             u = mda.Universe(tpr_name, xtccentered)
         if 'openMM' in system['SOFTWARE'] or 'NAMD' in system['SOFTWARE']:
             u = mda.Universe(struc_name, trj_name)
-        
+
         # -- PHILIP code starts here --
         # We us a hardoced bin width
         bin_width = 0.3
@@ -1005,7 +1004,6 @@ def computeMAICOS(  # noqa: N802 (API)
         u.guess_TopologyAttrs(force_guess=["elements"])
         elements.guess_elements(system, u)
 
-
         # Adjust the group selection to be general for analysis
         from DatabankLib.databankLibrary import getLipids
         water = u.select_atoms(f"resname {system['COMPOSITION']['SOL']['NAME']}")
@@ -1013,7 +1011,7 @@ def computeMAICOS(  # noqa: N802 (API)
         # Maybe add group for ions and compute densities for them as well?
 
         # fixed `zmin` and `zmax` for profiles are deduced from smallest box dimension
-        L_min = u.dimensions[2]
+        L_min = u.dimensions[2]  # noqa: N806 (PEP8)
 
         for ts in u.trajectory:
             if ts.dimensions[2] < L_min:
@@ -1088,8 +1086,8 @@ def computeMAICOS(  # noqa: N802 (API)
         )
 
         # Form factor
-        # Use `None` for `zmin`/`zmax` to respect changing cell size (vs fixed zmin/zmax for
-        # density profiles)
+        # Use `None` for `zmin`/`zmax` to respect changing cell size (vs fixed
+        # zmin/zmax for density profiles)
         form_factor = FormFactorPlanar(
             atomgroup=u.atoms,
             **base_options,
@@ -1140,7 +1138,8 @@ def computeMAICOS(  # noqa: N802 (API)
             lipid, **base_options, output_prefix=prfx + "DielectricLipid"
         )
 
-        # Check if dielectric profiles can be calculated (not possible for charged systems)
+        # Check if dielectric profiles can be calculated (not possible
+        # for charged systems)
         try:
             diel_total.run(stop=1)
         except (ValueError, UserWarning) as e:
@@ -1163,7 +1162,3 @@ def computeMAICOS(  # noqa: N802 (API)
         return RCODE_ERROR
     else:
         return RCODE_COMPUTED
-
-
-
-
