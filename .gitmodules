@@ -1,4 +1,4 @@
 [submodule "Data"]
-	path = Data
+    path = Data
     url = https://github.com/NMRLipids/BilayerData.git
     branch = main
