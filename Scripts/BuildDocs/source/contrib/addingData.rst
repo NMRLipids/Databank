@@ -1,7 +1,7 @@
 .. _addData:
 
-Adding simulations into the NMRlipids databank
-------------------------------------
+Adding simulations
+==================
 
 Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform 
 automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. 
