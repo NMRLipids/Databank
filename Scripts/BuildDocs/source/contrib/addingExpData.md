@@ -1,7 +1,7 @@
 (addingExpData)=
 
-Adding experimental data into the NMRlipids databank
-==================
+Adding experimental data
+========================
 
 Experimental data is stored in [Data/experiments](https://github.com/NMRLipids/Databank/tree/main/Data/experiments) folder. C-H bond order parameters from NMR are in [OrderParameters subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters) and X-ray scattering form factors in [FormFactors subfolder](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors). The data is located in subfolders named after the DOI of the original source publication of the data. Because a publication can contain more than one experimental data set, each data set is stored in a subfolder with integer name, for example, [Data/experiments/OrderParameters/10.1039/c2cp42738a/2](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/OrderParameters/10.1039/c2cp42738a/2). Each of such folders then contain the experimental data and `README.yaml` files describing the experimental conditions. The keys of these dictionaries are summarized in the table and described more detailed below.
 
