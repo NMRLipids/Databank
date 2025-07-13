@@ -10,3 +10,5 @@ scipy
 flake8
 pep8-naming
 pytest
+myst-parser
+sphinx-rtd-theme

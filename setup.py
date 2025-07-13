@@ -1,5 +1,28 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from os import path
+import re
+
+
+def get_variable_from_file(vname, filepath):
+    with open(filepath, 'r') as f:
+        content = f.read()
+    match = re.search(rf"^__{vname}__\s*=\s*['\"]([^'\"]+)['\"]", content, re.MULTILINE)
+    if match:
+        return match.group(1)
+    raise RuntimeError(f"{vname} string not found")
+
+
+def extract_multis_var(vname, filepath):
+    with open(filepath, 'r') as f:
+        content = f.read()
+    pattern = re.compile(
+        rf"__{vname}__\s*=\s*\((\s+[^)]+)\)", re.MULTILINE
+    )
+    match = pattern.search(content)
+    if not match:
+        raise RuntimeError(f"{vname} string not found")
+    strings = re.findall(r'"([^"]*)"', match.group(1))
+    return ''.join(strings)
 
 
 def parse_requirements(filename):
@@ -7,18 +30,20 @@ def parse_requirements(filename):
         return f.read().splitlines()
 
 
+init_fpath = path.join('.', 'Scripts', 'DatabankLib', '__init__.py')
+
 setup(
     name="DatabankLib",
-    version="1.1.0",                          # should agree with git tag!
+    version=get_variable_from_file('version', init_fpath),
+    author=get_variable_from_file('author', init_fpath),
+    author_email=get_variable_from_file('author_email', init_fpath),
+    description=extract_multis_var('description', init_fpath),
+    url=get_variable_from_file('url', init_fpath),
     package_dir={"": "Scripts"},
     package_data={"": ["*.yaml"]},
-    packages=find_packages(where="Scripts"),  # Automatically list packages
+    packages=["DatabankLib"],
     install_requires=parse_requirements(
         path.join('.', 'Scripts', 'DatabankLib', 'requirements.txt')),
-    author="NMRlipids open collaboration",  # Your name or organization
-    author_email="samuli.ollila@helsinki.fi",
-    description="NMRLipids Databank main package",
-    url="https://github.com/NMRlipids/Databank",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
