@@ -14,7 +14,10 @@ import yaml
 import urllib.request
 
 # where to deploy PDBs
-outpath_prefix = os.environ['NMLDB_DEPLOY_PATH']
+if "NMLDB_DEPLOY_PATH" in os.environ:
+    outpath_prefix = os.environ['NMLDB_DEPLOY_PATH']
+else:
+    outpath_prefix = os.getcwd()
 
 FAILS=[]
 

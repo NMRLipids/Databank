@@ -1,6 +1,6 @@
 # Code style and naming conventions
 
-We use `flake8` as a linter-check with `pep8-naming` conventions. 
+We use `flake8` as a linter-check with `pep8-naming` conventions.
 So, we use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
 Sometimes, this convention can be broken, but a rule should be written in the end to allow vscode to ignore the breach.
 
@@ -21,11 +21,11 @@ We are using automatic testing with `pytest` please consult (test-README)[Script
 7. Check representation of yourself in `AUTHORS.md` file.
 8. You are always welcome to participate in repository discussions and NMRlipids community events to develop code together.
 
-
 # PATH handling in our code
 
-As the code operates with an over-filesystem database, universal path handling is crucial. To construct paths, we use global variables of the type NMLDB_**XXXX**_PATH, where **XXXX** could be:
-- **ROOT** points by default to the root folder of the repository. Can be set-up and *should not* be used for Data-related paths. Once set alone, all nested paths are recreated from it.
+As the code operates with an over-filesystem database, universal path handling is crucial. To construct paths, we use global variables of the type NMLDB\_**XXXX**\_PATH, where **XXXX** could be:
+
+- **ROOT** points by default to the root folder of the repository. Can be set-up and _should not_ be used for Data-related paths. Once set alone, all nested paths are recreated from it.
 - DATA points by default to `./Data` folder. Can be used to point to somewhere inside `Data` but not for molecules, simulations, and experiments. Currently is used for Rankings as well.
 - MOL points by default to `./Data/Molecules` folder, from where molecule lists are initialized. Is used to get access to something in molecule-folders.
 - SIMU points by default to `./Data/Simulations` folder. Is used to get access to a certain simulation.
@@ -35,10 +35,15 @@ We currently construct paths using `os.path.join(a,b)`.
 
 # Documentation generation
 
-Our documentation is automatically generated and deployed to https://nmrlipids.github.io. 
-We use `sphinx` with Read-The-Docs plugin to fullfill documentation pages. 
+Our documentation is automatically generated and deployed to https://nmrlipids.github.io.
+We use `sphinx` with Read-The-Docs plugin to fullfill documentation pages.
 Please refer [this page about Sphinx RTD](https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html) to guide docstrings styles.
 
+In vscode, you can install this format for docstring template generation:
+
+```
+"autoDocstring.docstringFormat": "sphinx"
+```
 
 # Data handling
 
