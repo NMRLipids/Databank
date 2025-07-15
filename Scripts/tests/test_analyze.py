@@ -195,31 +195,6 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
         compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
 
 
-@pytest.mark.parametrize(
-    "systemid, rcodex",
-    [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
-)
-def test_analyze_ff(systems, systemLoadTraj, systemid, rcodex, logger):
-    import DatabankLib
-    from DatabankLib.analyze import computeFF
-
-    s = systems.loc(systemid)
-    rCode = computeFF(s, logger)
-    assert rCode == rcodex
-    if rcodex == DatabankLib.RCODE_ERROR:
-        return
-
-    for fn in [
-        "FormFactor.json",
-        "TotalDensity.json",
-        "WaterDensity.json",
-        "LipidDensity.json",
-    ]:
-        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], fn)
-        assert os.path.isfile(cFile)
-        assert os.path.getsize(cFile) > 1e3
-        compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
-
 @pytest.mark.parametrize("systemid, rcodex",
                          [(281, 1),
                           (566, 1),
@@ -235,8 +210,8 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for fn in ['FormFactor_mcs.json', 'TotalDensity_mcs.json', 'WaterDensity_mcs.json',
-               'LipidDensity_mcs.json']:
+    for fn in ['FormFactor.json', 'TotalDensity.json', 'WaterDensity.json',
+               'LipidDensity.json']:
         cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
                              s['path'], fn)
         assert os.path.isfile(cFile)
@@ -244,7 +219,7 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
         compareJSONsBtwSD(
             os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
         )
-
+    # TODO: check other MAICoS outputs for at least existence
 
 
 @pytest.mark.parametrize(
