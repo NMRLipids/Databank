@@ -2,10 +2,10 @@
 # coding: utf-8
 
 from DatabankLib.utils import run_analysis
-from DatabankLib.analyze import computeFF
+from DatabankLib.analyze import computeMAICOS
 import logging
 
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
-    run_analysis(computeFF, logger)
+    run_analysis(computeMAICOS, logger)
