@@ -1,6 +1,6 @@
 buildh>=1.6.1
 MDAnalysis>=2.7.0
-maicos>=0.11,<0.12
+maicos>=0.11.2,<0.12
 numpy>=2.0
 pandas>=2.0.0
 PyYAML>=6.0.0

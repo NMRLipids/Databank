@@ -76,8 +76,10 @@ def guess_elements(system: System, u: mda.Universe) -> None:
             if ua_dict:
                 if props['ATOMNAME'] in ua_dict:
                     elname = ua_dict[props['ATOMNAME']][0]
+                    if elname == "CH":
+                        elname = "CH1"
                     if elname == "CHdoublebond":
-                        elname = "CH"
+                        elname = "CH1"
                 else:
                     if selection.n_atoms == 0:
                         continue  # this is an implicit atom
