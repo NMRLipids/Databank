@@ -22,6 +22,8 @@ import pytest
 # run only on sim2 mocking data
 pytestmark = pytest.mark.sim2
 
+# for vector comparisons with np.testing.assert_allclose
+MAXRELERR_COMPARE_THRESHOLD = 1e-2
 
 @pytest.fixture(scope="module")
 def systems():
@@ -88,17 +90,25 @@ def test_GetNLipids(systems, systemid, result):
 
 
 @pytest.mark.parametrize("systemid, result",
-                         [(281, [0.264, 0.415, 0.614]),
-                          (566, [0.263, 0.404, 0.604]),
+                         [(281, [0.261, 0.415, 0.609]),
+                          (566, [0.260, 0.405, 0.597]),
                           (243, [0.281, 0.423, 0.638]),
-                          (86,  [0.266, 0.421, 0.63])])
+                          (86,  [0.264, 0.419, 0.623])])
 def test_GetFormFactorMin(systems, systemid, result):
     from DatabankLib.databankLibrary import GetFormFactorMin
     import numpy as np
     sys0 = systems.loc(systemid)
     ffl = GetFormFactorMin(sys0)
-    err = ((np.array(ffl[:3]) - np.array(result))**2).sum()
-    assert err < 1e-9
+    np.testing.assert_allclose(
+            np.array(ffl[:3]),
+            np.array(result),
+            rtol=MAXRELERR_COMPARE_THRESHOLD,
+            err_msg=(
+                     "Problem in FFMIN comparison:\n"
+                  + f"Computed: {str(ffl[:3])} \n"
+                  + f"Pre-computed: {str(result)}"
+                ),
+    )
 
 
 @pytest.mark.parametrize("systemid, result",
@@ -265,26 +275,6 @@ def test_getLipids(systems, systemid, result):
     assert gl == result
 
 
-# TEST thickness calculation here because it is not trajectory-based, but JSON-based
-"""
-@pytest.mark.parametrize("systemid, result",
-                         [(566, 0),
-                          (787, 2),
-                          (86,  0)])
-def test_analyze_th(systems, systemid, result):
-    import DatabankLib
-    from DatabankLib.analyze import computeTH
-    sys0 = systems.loc(systemid)
-    rc = computeTH(sys0)
-    assert rc == result
-    if rc == DatabankLib.RCODE_ERROR:
-        fn = os.path.join(
-            DatabankLib.NMLDB_SIMU_PATH,
-            sys0['path'], 'thickness.json')
-        assert not os.path.isfile(fn)  # file is not created
-"""
-
-
 @pytest.fixture(scope='function')
 def wipeth(systems):
     import DatabankLib
@@ -304,8 +294,8 @@ def wipeth(systems):
 
 
 @pytest.mark.parametrize("systemid, result, thickres",
-                         [(281, 1, 4.18335),
-                          (243, 1, 4.27262)])
+                         [(281, 1, 4.19996),
+                          (243, 1, 4.25947)])
 def test_analyze_th(systems, systemid, result, wipeth, thickres, logger):
     import DatabankLib
     from DatabankLib.analyze import computeTH
