@@ -12,6 +12,7 @@ import os
 import glob
 import pytest
 import logging
+import pytest_check as check
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -210,15 +211,18 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for fn in ['FormFactor.json', 'TotalDensity.json', 'WaterDensity.json',
-               'LipidDensity.json']:
+    for fn in ['WaterDensity.json','LipidDensity.json',
+               'TotalDensity.json','FormFactor.json']:
         cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
                              s['path'], fn)
-        assert os.path.isfile(cFile)
-        assert os.path.getsize(cFile) > 1e3
-        compareJSONsBtwSD(
-            os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
-        )
+        check.is_true(os.path.isfile(cFile))
+        check.is_true(os.path.getsize(cFile) > 1e3)
+        try:
+            compareJSONsBtwSD(
+                os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
+            )
+        except AssertionError as e:
+            check.is_true(False, msg=str(e))
     # TODO: check other MAICoS outputs for at least existence
 
 

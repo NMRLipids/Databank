@@ -781,7 +781,10 @@ def computeMAICOS(  # noqa: N802 (API)
         # -- PHILIP code starts here --
         # We us a hardoced bin width
         bin_width = 0.3
-
+        
+        # introduce elements attribute (if it's empty)
+        # and make initial guess (just in case)
+        u.guess_TopologyAttrs(force_guess=["elements"])
         from DatabankLib.settings import elements
         elements.guess_elements(system, u)
 
