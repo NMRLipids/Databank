@@ -11,3 +11,4 @@ scipy
 flake8
 pep8-naming
 pytest
+pytest-check
