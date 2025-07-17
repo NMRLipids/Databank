@@ -19,9 +19,6 @@ class NumpyArrayEncoder(CompactJSONEncoder):
             return CompactJSONEncoder.encode(self, o)
 
 
-# TODO: Maybe perform unit conversions.
-# Units in maicos/MDAnalysis are Å for length, e for charge, u for mass
-# See https://mdanalysis.readthedocs.io/en/latest/documentation_pages/units.html
 
 class FormFactorPlanar(ProfilePlanarBase):
     """Form factor of a planar system based on the linear electron density profile."""

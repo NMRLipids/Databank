@@ -782,9 +782,7 @@ def computeMAICOS(  # noqa: N802 (API)
         # We us a hardoced bin width
         bin_width = 0.3
 
-        # Guesser might charged elements wrong like Cl- may guessed as Cl...
         from DatabankLib.settings import elements
-        u.guess_TopologyAttrs(force_guess=["elements"])
         elements.guess_elements(system, u)
 
         # Adjust the group selection to be general for analysis
