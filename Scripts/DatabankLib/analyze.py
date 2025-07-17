@@ -583,8 +583,8 @@ def computeMAICOS(  # noqa: N802 (API)
         "LipidDensity.json",
         "WaterDensity.json",
         "LipidChargeDensity.json",
-        "DielectricLipid",
-        "DielectricWater",
+        "DielectricLipid",  # Dielectric* files are treated
+        "DielectricWater",  # slightly differently (see below)
         "DielectricTotal"
     }
 
