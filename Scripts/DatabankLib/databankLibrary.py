@@ -501,10 +501,6 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
         f" '{sim['SOFTWARE'].upper()}' sim keys are present"
     )
 
-    # STEP 3 - check working directory
-    if "DIR_WRK" not in sim:
-        raise KeyError("'DIR_WRK' Parameter missing in yaml")
-
     # STEP 4 - Check that all entry keys provided for each simulation are valid
     files_tbd = []
 

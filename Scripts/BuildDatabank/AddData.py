@@ -620,10 +620,9 @@ if __name__ == "__main__":
         logger.info(
             "Copying files to the output directory [try hardlink for the traj.]...")
         try:
-            shutil.copyfile(
+            os.link(
                 traj,
-                os.path.join(directory_path, os.path.basename(traj)),
-                copy_function=os.link
+                os.path.join(directory_path, os.path.basename(traj))
                 )
         except OSError:
             logger.warning(

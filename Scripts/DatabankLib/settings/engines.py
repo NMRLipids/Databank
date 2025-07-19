@@ -154,10 +154,6 @@ gromacs_dict = {
         "REQUIRED": False,
         "TYPE": "integer",
     },
-    "DIR_WRK": {
-        "REQUIRED": True,
-        "TYPE": "string",
-    },
     "COMPOSITION": {
         "REQUIRED": True,
         "TYPE": "dictionary",
@@ -260,10 +256,6 @@ amber_dict = {
         "REQUIRED": False,
         "TYPE": "integer",
     },
-    "DIR_WRK": {
-        "REQUIRED": True,
-        "TYPE": "string",
-    },
     "COMPOSITION": {
         "REQUIRED": True,
         "TYPE": "dictionary",
@@ -363,10 +355,6 @@ namd_dict = {
     "TRAJECTORY_SIZE": {
         "REQUIRED": False,
         "TYPE": "integer",
-    },
-    "DIR_WRK": {
-        "REQUIRED": True,
-        "TYPE": "string",
     },
     "COMPOSITION": {
         "REQUIRED": True,
@@ -478,10 +466,6 @@ openmm_dict = {
     "TRAJECTORY_SIZE": {
         "REQUIRED": False,
         "TYPE": "integer",
-    },
-    "DIR_WRK": {
-        "REQUIRED": True,
-        "TYPE": "string",
     },
     "COMPOSITION": {
         "REQUIRED": True,
