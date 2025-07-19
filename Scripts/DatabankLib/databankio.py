@@ -1,16 +1,25 @@
 """
-@DRAFT
-Network communication. Downloading files. Checking links etc.
+:module databankio: Inut/Output auxilary module
+:description:
+    Input/Output auxilary module with some small usefull functions. It includes:
+    - Network communication.
+    - Downloading files.
+    - Checking links.
+    - Resolving DOIs.
+    - Calculating file hashes.
 """
 
+import logging
+import math
+import hashlib
 import os
 import time
 import socket
+from typing import Mapping
 import urllib.error
 from tqdm import tqdm
 import urllib.request
 
-import logging
 logger = logging.getLogger(__name__)
 MAX_DRYRUN_SIZE = 50 * 1024 * 1024  # 50 MB, max size for dry-run download
 
@@ -70,7 +79,9 @@ def download_resource_from_uri(
             downloaded = 0
             chunk_size = 8192
             next_report = 10 * 1024 * 1024  # print every 10 MB
-            logger.info(f"Dry-run: Downloading up to {total // (1024*1024)} MB of {fi_name} ...")
+            logger.info(
+                "Dry-run: Downloading up to"
+                f" {total // (1024*1024)} MB of {fi_name} ...")
             while downloaded < total:
                 to_read = min(chunk_size, total - downloaded)
                 chunk = response.read(to_read)
@@ -81,7 +92,9 @@ def download_resource_from_uri(
                 if downloaded >= next_report:
                     print(f"  Downloaded {downloaded // (1024*1024)} MB ...")
                     next_report += 10 * 1024 * 1024
-            logger.info(f"Dry-run: Finished, downloaded {downloaded // (1024*1024)} MB of {fi_name}")
+            logger.info(
+                "Dry-run: Finished, downloaded"
+                f" {downloaded // (1024*1024)} MB of {fi_name}")
         return 0
 
     with RetrieveProgressBar(
@@ -168,3 +181,79 @@ def resolve_download_file_url(
         raise NotImplementedError(
             "Repository not validated. Please upload the data for example to zenodo.org"
         )
+
+
+def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -> str:
+    """
+    Calculates SHA1 hash of given file using hashlib.
+
+    :param fi: (str) path to file
+    :param step: (int, optional) file read bytes step. Defaults to 64MB.
+    :param one_block: (bool, optional) read just a single block. Defaults to True.
+
+    :returns str: sha1 filehash of 40 char length
+    """
+    sha1_hash = hashlib.sha1()
+    n_tot_steps = math.ceil(os.path.getsize(fi) / step)
+    with open(fi, "rb") as f:
+        if one_block:
+            block = f.read(step)
+            sha1_hash.update(block)
+        else:
+            # we don't need tqdm from one-block SHA1
+            with tqdm(total=n_tot_steps) as pbar:
+                # Read and update hash string value in blocks of 4K
+                for byte_block in iter(lambda: f.read(step), b""):
+                    sha1_hash.update(byte_block)
+                    pbar.update(1)
+    return sha1_hash.hexdigest()
+
+
+def create_databank_directories(
+        sim: Mapping, 
+        sim_hashes: Mapping, 
+        out: str,
+        dry_run_mode: bool = False
+        ) -> str:
+    """
+    Creates nested output directory structure to save results.
+
+    :param sim: Processed simulation entries.
+    :param sim_hashes: File hashes needed for directory structure.
+    :param out: Output base path (str).
+    :param dry_run_mode: If True, do not create directories, just return the path.
+
+    :returns: Output directory (str).
+
+    :raises NotImplementedError: If the simulation software is unsupported.
+    :raises OSError: If an error occurs while creating the output directory.
+    """
+    # resolve output dir naming
+    if sim["SOFTWARE"] == "gromacs":
+        head_dir = sim_hashes.get("TPR")[0][1][0:3]
+        sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
+        sub_dir2 = sim_hashes.get("TPR")[0][1]
+        sub_dir3 = sim_hashes.get("TRJ")[0][1]
+    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
+        head_dir = sim_hashes.get("TRJ")[0][1][0:3]
+        sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
+        sub_dir2 = sim_hashes.get("TRJ")[0][1]
+        sub_dir3 = sim_hashes.get("TRJ")[0][1]
+    else:
+        raise NotImplementedError(f"sim software '{sim['SOFTWARE']}' not supported")
+
+    directory_path = os.path.join(out, head_dir, sub_dir1, sub_dir2, sub_dir3)
+
+    logger.debug(f"output_dir = {directory_path}")
+
+    # destination directory is not empty
+    if os.path.exists(directory_path) and os.listdir(directory_path) != 0:
+        logger.warning(
+            f"output directory '{directory_path}' is not empty. Data may be overriden."
+        )
+
+    # create directories
+    if not dry_run_mode:
+        os.makedirs(directory_path, exist_ok=True)
+
+    return directory_path

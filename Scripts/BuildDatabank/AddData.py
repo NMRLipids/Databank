@@ -44,13 +44,13 @@ from MDAnalysis import Universe
 import DatabankLib
 from DatabankLib.core import System
 from DatabankLib.databankLibrary import (
-    calc_file_sha1_hash,
-    create_databank_directories,
     lipids_set,
     molecules_set
 )
 # helpers
 from DatabankLib.databankio import (
+    calc_file_sha1_hash,
+    create_databank_directories,
     download_resource_from_uri,
     resolve_download_file_url
 )
@@ -595,10 +595,17 @@ if __name__ == "__main__":
     if "TYPEOFSYSTEM" not in list(sim.keys()):
         sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
-    # ---- Save to databank
+    # dictionary saved in yaml format
+    outfile_dict = os.path.join(dir_tmp, "README.yaml")
+    with open(outfile_dict, "w") as f:
+        yaml.dump(sim.readme, f, sort_keys=False, allow_unicode=True)
+
+    logger.info(f"Databank README was saved to '{outfile_dict}'")
 
     try:
-        directory_path = create_databank_directories(sim, sim_hashes, args.output_dir)
+        directory_path = create_databank_directories(
+            sim, sim_hashes, args.output_dir, dry_run_mode=args.dry_run
+            )
     except NotImplementedError as e:
         logger.error(e)
         quit(4)
@@ -606,18 +613,28 @@ if __name__ == "__main__":
         logger.error(f"couldn't create output directory: {e.args[1]}")
         quit(2)
 
-    logger.info(f"saving results to '{directory_path}'")
+    logger.info(f"Databank entry will be registered into '{directory_path}'")
 
     # copy previously downloaded files
-    logger.info("copying previously downloaded files ...")
-    shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
-    shutil.copyfile(top, os.path.join(directory_path, os.path.basename(top)))
-
-    # dictionary saved in yaml format
-    outfile_dict = os.path.join(dir_tmp, "README.yaml")
-
-    with open(outfile_dict, "w") as f:
-        yaml.dump(sim.readme, f, sort_keys=False, allow_unicode=True)
+    if not args.dry_run:
+        logger.info(
+            "Copying files to the output directory [try hardlink for the traj.]...")
+        try:
+            shutil.copyfile(
+                traj,
+                os.path.join(directory_path, os.path.basename(traj)),
+                copy_function=os.link
+                )
+        except OSError:
+            logger.warning(
+                f"Could not hardlink trajectory file '{traj}' to the output directory."
+                " Copying instead."
+            )
+            shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
+        shutil.copyfile(
+            top,
+            os.path.join(directory_path, os.path.basename(top))
+            )
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),
             os.path.join(directory_path, "README.yaml"),
