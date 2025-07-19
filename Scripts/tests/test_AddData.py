@@ -52,7 +52,7 @@ class TestAddData:
             "-h"
         ], capture_output=True, text=True)
         print(result.stdout)
-        assert "-o OUTPUT_DIR", "Expected -o OUTPUT_DIR in stdout"
+        assert "--dry-run", "Expected --dry-run option in help output"
         assert result.returncode == 0
 
     @pytest.mark.parametrize(
@@ -70,8 +70,6 @@ class TestAddData:
             fn,
             "-w",
             tmp_work_dir,
-            "-o",
-            self.out_dir
         ]
         if debug:
             run_list.append("-d")
@@ -106,8 +104,6 @@ class TestAddData:
             fn,
             "-w",
             tmp_work_dir,
-            "-o",
-            self.out_dir,
             "-d"
         ], capture_output=True, text=True)
         print(result.stderr)
