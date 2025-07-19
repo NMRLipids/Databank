@@ -11,6 +11,7 @@ import subprocess
 import time
 from tempfile import TemporaryDirectory
 import pytest
+from pytest_check import check
 
 
 # run only without mocking data
@@ -57,7 +58,7 @@ class TestAddData:
     @pytest.mark.parametrize(
             "infofn, debug", [("info566.yaml", False),
                               ("info566.yaml", True)])
-    def test_add_data_addgood(self, infofn, debug, tmp_work_dir, capsys):
+    def test_add_data_addgood(self, infofn, debug, tmp_work_dir, capsys, request):
         """
         Testing `AddData.py -f <filename> -w <dirname> -o <dirname>` which should
         end correctly
@@ -75,19 +76,26 @@ class TestAddData:
         if debug:
             run_list.append("-d")
         result = subprocess.run(run_list, capture_output=True, text=True)
-        with capsys.disabled():
-            print('stderr:')
-            print(result.stderr)
-            print('stdout:')
-            print(result.stdout)
+        if request.config.getoption("capture") == "no":
+            # do not disable capturing if pytest is run with `-s` option
+            with capsys.disabled():
+                print('stderr:')
+                print(result.stderr)
+                print('stdout:')
+                print(result.stdout)
         time.sleep(1)
         if debug:
-            assert '[DEBUG]' in result.stderr
+            '[DEBUG]' in result.stderr
+            check.is_in('[DEBUG]', result.stderr,
+                        msg="Expected [DEBUG] in stderr when debug mode is on")
         else:
-            assert '[DEBUG]' not in result.stderr
-        assert '[INFO]' in result.stderr
+            check.is_not_in('[DEBUG]', result.stderr,
+                            msg="Expected no [DEBUG] in stderr when debug mode is off")
+        check.is_in('[INFO]', result.stderr,
+                    msg="Expected [INFO] in stderr")
         self._check_new_readme(capsys)
-        assert result.returncode == 0
+        check.equal(result.returncode, 0)
+        TestAddData.teardown_class()  # clean up to run the same test again
 
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
     def test_add_data_fail(self, infofn, tmp_work_dir, capsys):
@@ -114,4 +122,5 @@ class TestAddData:
             pytest.fail("There was an error in the captured output: " + captured.err)
         for s in ss:
             print(s['DOI'])
-        assert len(ss) > 0, "No systems found in the databank after adding data."
+        check.is_true(len(ss) > 0,
+                      msg="No systems found in the databank after adding data.")

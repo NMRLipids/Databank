@@ -227,6 +227,7 @@ def create_databank_directories(
 
     :raises NotImplementedError: If the simulation software is unsupported.
     :raises OSError: If an error occurs while creating the output directory.
+    :raises FileExistsError: If the output directory already exists and is not empty.
     """
     # resolve output dir naming
     if sim["SOFTWARE"] == "gromacs":
@@ -248,8 +249,8 @@ def create_databank_directories(
 
     # destination directory is not empty
     if os.path.exists(directory_path) and os.listdir(directory_path) != 0:
-        logger.warning(
-            f"output directory '{directory_path}' is not empty. Data may be overriden."
+        raise FileExistsError(
+            f"Output directory '{directory_path}' is not empty. Delete it if you wish."
         )
 
     # create directories
