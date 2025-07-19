@@ -88,14 +88,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-w", "--work-dir",
-        help="set custom temporary working directory [not set = read from YAML]",
-        default=""
+        help="set custom temporary working directory [not set = /tmp]",
+        default="/tmp"
     )
     parser.add_argument(
         "-o",
         "--output-dir",
         help=f"set custom output directory [{DatabankLib.NMLDB_SIMU_PATH}]",
         default=DatabankLib.NMLDB_SIMU_PATH
+    )
+    parser.add_argument(
+        "--dry-run",
+        help="perform a dry-run download of the files with 50MB limit",
+        action="store_true"
     )
 
     args = parser.parse_args()
@@ -163,24 +168,13 @@ if __name__ == "__main__":
         logger.info(f"System object is successfully created from '{input_path}' file")
 
     # Create temporary directory where to download files and analyze them
-
-    if args.work_dir:
-        dir_wrk = args.work_dir
-        logger.warning(
-            f"--work_dir override, ignoring 'DIR_WRK' from "
-            f"configuration file: {sim['DIR_WRK']}"
-        )
-    else:
-        dir_wrk = sim["DIR_WRK"]
-
+    dir_wrk = args.work_dir
     dir_tmp = (
         os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
         if args.no_cache
         else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
     )
-
     logger.info(f"The data will be processed in directory path '{dir_tmp}'")
-
     try:
         os.makedirs(dir_tmp, exist_ok=True)
     except OSError as e:
@@ -190,11 +184,10 @@ if __name__ == "__main__":
         quit(2)
 
     # Check link status and download files
-
     try:
         download_links = []
         for fi in files:
-            logger.info(f"Validating file: {fi}..")
+            logger.info(f"Validating URL to file: {fi}..")
             _x = resolve_download_file_url(sim["DOI"], fi, validate_uri=True)
             download_links.append(_x)
 
@@ -202,7 +195,8 @@ if __name__ == "__main__":
 
         for url, fi in zip(download_links, files):
             download_resource_from_uri(
-                url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache
+                url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache,
+                dry_run_mode=args.dry_run
             )
 
         logger.info(f"Download of {len(files)} files was successful")
@@ -423,12 +417,13 @@ if __name__ == "__main__":
         if molecules.n_residues > 0:
             lipids.append(u0.select_atoms(selection))
 
+    assert len(lipids)
     # join all the selected the lipids together to make a selection of the entire
     # membrane and calculate the z component of the centre of mass of
     # the membrane
     membrane = u0.select_atoms("")
     R_membrane_z = 0
-    if not lipids:
+    if lipids:
         for i in range(0, len(lipids)):
             membrane = membrane + lipids[i]
         R_membrane_z = membrane.center_of_mass()[2]

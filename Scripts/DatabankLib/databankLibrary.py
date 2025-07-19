@@ -443,25 +443,29 @@ def read_trj_PN_angles(  # noqa: N802 (API name)
 # -------------------------------------- SEPARATED PART (??) ----------------------
 
 
-def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
+def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -> str:
+
     """
-    :meta private:
     Calculates sha1 hash of given file using hashlib
 
-    Args:
-        fi (str): path to file
-        step (int, optional): file read bytes step. Defaults to 4096.
+    :param fi: (str) path to file
+    :param step: (int, optional) file read bytes step. Defaults to 64MB.
 
-    Returns:
-        str: sha1 filehash of 40 char length
+    :returns str: sha1 filehash of 40 char length
     """
     sha1_hash = hashlib.sha1()
+    n_tot_steps = math.ceil(os.path.getsize(fi) / step)
     with open(fi, "rb") as f:
-        with tqdm(total=math.ceil(os.path.getsize(fi) / step)) as pbar:
-            # Read and update hash string value in blocks of 4K
-            for byte_block in iter(lambda: f.read(step), b""):
-                sha1_hash.update(byte_block)
-                pbar.update(1)
+        if one_block:
+            block = f.read(step)
+            sha1_hash.update(block)
+        else:
+            # we don't need tqdm from one-block SHA1
+            with tqdm(total=n_tot_steps) as pbar:
+                # Read and update hash string value in blocks of 4K
+                for byte_block in iter(lambda: f.read(step), b""):
+                    sha1_hash.update(byte_block)
+                    pbar.update(1)
     return sha1_hash.hexdigest()
 
 

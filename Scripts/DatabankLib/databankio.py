@@ -12,26 +12,25 @@ import urllib.request
 
 import logging
 logger = logging.getLogger(__name__)
+MAX_DRYRUN_SIZE = 50 * 1024 * 1024  # 50 MB, max size for dry-run download
 
 
 def download_resource_from_uri(
-    uri: str, dest: str, override_if_exists: bool = False
+    uri: str, dest: str, override_if_exists: bool = False,
+    dry_run_mode: bool = False
 ) -> int:
     """
-    :meta private:
     Download file resource [from uri] to given file destination using urllib
 
-    Args:
-        uri (str): file URL
-        dest (str): file destination path
-        override_if_exists (bool, optional): Override dest. file if exists.
-                                             Defaults to False.
+    :param uri: (str) file URL
+    :param dest: (str) file destination path
+    :param override_if_exists: (bool, optional)
+            Override dest. file if exists. Defaults to False.
 
-    Raises:
-        Exception: HTTPException: An error occured during download
+    :raises HTTPException: An error occured during download
 
-    Returns:
-        code (int): 0 - OK, 1 - skipped, 2 - redownloaded
+    :return: code (int) 
+             0 - OK, 1 - skipped, 2 - redownloaded
     """
     # TODO verify file size before skipping already existing download!
 
@@ -62,8 +61,28 @@ def download_resource_from_uri(
 
     # download
     socket.setdefaulttimeout(10)  # seconds
-
     url_size = urllib.request.urlopen(uri).length  # download size
+
+    if dry_run_mode:
+        # Download only up to MAX_DRYRUN_SIZE bytes, no tqdm
+        with urllib.request.urlopen(uri) as response, open(dest, "wb") as out_file:
+            total = min(url_size, MAX_DRYRUN_SIZE) if url_size else MAX_DRYRUN_SIZE
+            downloaded = 0
+            chunk_size = 8192
+            next_report = 10 * 1024 * 1024  # print every 10 MB
+            logger.info(f"Dry-run: Downloading up to {total // (1024*1024)} MB of {fi_name} ...")
+            while downloaded < total:
+                to_read = min(chunk_size, total - downloaded)
+                chunk = response.read(to_read)
+                if not chunk:
+                    break
+                out_file.write(chunk)
+                downloaded += len(chunk)
+                if downloaded >= next_report:
+                    print(f"  Downloaded {downloaded // (1024*1024)} MB ...")
+                    next_report += 10 * 1024 * 1024
+            logger.info(f"Dry-run: Finished, downloaded {downloaded // (1024*1024)} MB of {fi_name}")
+        return 0
 
     with RetrieveProgressBar(
         unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
