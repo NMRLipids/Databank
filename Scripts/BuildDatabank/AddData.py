@@ -7,7 +7,7 @@
               file.
 
 Usage:
-    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [-o OUTPUT_DIR]
+    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run] 
 
 :param: ``-h``, ``--help`` show this help message and exit
 :param: ``-f FILE``, ``--file``  Input config file in yaml format.
@@ -15,8 +15,6 @@ Usage:
 :param: ``-n``, ``--no-cache`` always redownload repository files
 :param: ``-w WORK_DIR``, ``--work-dir`` set custom temporary working directory
         [not set = read from YAML]
-:param: ``-o OUTPUT_DIR``, ``--output-dir`` set custom output directory
-        [/path-to-databank]
 
 Returning error codes:
     1 - input YAML parsing errors
@@ -42,7 +40,10 @@ from MDAnalysis import Universe
 
 # import databank dictionaries
 import DatabankLib
-from DatabankLib.core import System
+from DatabankLib.core import (
+    System,
+    initialize_databank
+    )
 from DatabankLib.databankLibrary import (
     lipids_set,
     molecules_set
@@ -90,12 +91,6 @@ if __name__ == "__main__":
         "-w", "--work-dir",
         help="set custom temporary working directory [not set = /tmp]",
         default="/tmp"
-    )
-    parser.add_argument(
-        "-o",
-        "--output-dir",
-        help=f"set custom output directory [{DatabankLib.NMLDB_SIMU_PATH}]",
-        default=DatabankLib.NMLDB_SIMU_PATH
     )
     parser.add_argument(
         "--dry-run",
@@ -595,16 +590,23 @@ if __name__ == "__main__":
     if "TYPEOFSYSTEM" not in list(sim.keys()):
         sim["TYPEOFSYSTEM"] = "lipid bilayer"
 
+    # Determine inserting ID. We set -1 -2 -3 .. to new systems
+    ss = initialize_databank()
+    id_list = [s["ID"] for s in ss] + [0]
+    sim["ID"] = min(id_list) - 1
+    logger.info("Inserting ID: " + str(sim["ID"]))
+    del ss
+
     # dictionary saved in yaml format
     outfile_dict = os.path.join(dir_tmp, "README.yaml")
     with open(outfile_dict, "w") as f:
         yaml.dump(sim.readme, f, sort_keys=False, allow_unicode=True)
-
     logger.info(f"Databank README was saved to '{outfile_dict}'")
 
+    # Try to create final directory
     try:
         directory_path = create_databank_directories(
-            sim, sim_hashes, args.output_dir, dry_run_mode=args.dry_run
+            sim, sim_hashes, DatabankLib.NMLDB_SIMU_PATH, dry_run_mode=args.dry_run
             )
     except NotImplementedError as e:
         logger.error(e)
