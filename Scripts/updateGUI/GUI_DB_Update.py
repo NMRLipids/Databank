@@ -533,7 +533,7 @@ if __name__ == '__main__':
 
             # In the case a field in the README does not exist, set its value to 0
             for field in [
-                    'AUTHORS_CONTACT', 'COMPOSITION', 'CPT', 'DATEOFRUNNING', 'DIR_WRK',
+                    'AUTHORS_CONTACT', 'COMPOSITION', 'CPT', 'DATEOFRUNNING', 
                     'DOI', 'FF', 'FF_DATE', 'FF_SOURCE', 'GRO', 'LOG',
                     'NUMBER_OF_ATOMS', 'PREEQTIME', 'PUBLICATION', 'SOFTWARE',
                     'SOFTWARE_VERSION', 'SYSTEM', 'TEMPERATURE', 'TIMELEFTOUT', 'TOP',
@@ -802,7 +802,7 @@ if __name__ == '__main__':
                 "system":          README["SYSTEM"],
                 "author":          README["AUTHORS_CONTACT"],
                 "date":            README["DATEOFRUNNING"],
-                "dir_wrk":         README["DIR_WRK"],
+                "dir_wrk":         "/none/",
                 "doi":             README["DOI"],
                 "number_of_atoms": README["NUMBER_OF_ATOMS"],
                 "preeq_time":      README["PREEQTIME"],

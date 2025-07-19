@@ -14,8 +14,6 @@ UNITEDATOM_DICT:
  Information for constructing hydrogens for united atom simulations, empty for all atom simulations.
 COMPOSITION:
  Molecule names used in the simulation and corresponding mapping files. The COMPOSITION is given in a dictionary format, where the first key is the universal molecule name (abbreviation listed in the table below). Another dictionary is then created for each molecule containing the values for the residue name in your simulation (NAME) and the name of the mapping file (MAPPING). For example, the COMPOSITION dictionary for [a system](https://doi.org/10.5281/zenodo.259392) containing POPC, Cholesterol (CHOL), water (SOL), sodium (SOD), and chloride (CLA) can be given as Numbers of lipid molecules (NPOPC, NPOPG, etc.) per membrane leaflet are calculated by determining on which side of the center of mass of the membrane the center of mass of the head group of each lipid molecule is located. Numbers of other molecules such as solvent and ions (NSOL, NPOT, NSOD, etc.) are read from the topology file. For more detailed description see below.
-DIR_WRK:
- Temporary working directory in your local computer.
 TYPEOFSYSTEM:
  Lipid bilayer or something else
 PUBLICATION:

@@ -4,10 +4,8 @@ analyzing the NMRlipids databank
 """
 
 import copy
-import hashlib
 import urllib
 import logging
-from tqdm import tqdm
 
 import json
 from deprecated import deprecated
@@ -443,75 +441,6 @@ def read_trj_PN_angles(  # noqa: N802 (API name)
 # -------------------------------------- SEPARATED PART (??) ----------------------
 
 
-def calc_file_sha1_hash(fi: str, step: int = 4096) -> str:
-    """
-    :meta private:
-    Calculates sha1 hash of given file using hashlib
-
-    Args:
-        fi (str): path to file
-        step (int, optional): file read bytes step. Defaults to 4096.
-
-    Returns:
-        str: sha1 filehash of 40 char length
-    """
-    sha1_hash = hashlib.sha1()
-    with open(fi, "rb") as f:
-        with tqdm(total=math.ceil(os.path.getsize(fi) / step)) as pbar:
-            # Read and update hash string value in blocks of 4K
-            for byte_block in iter(lambda: f.read(step), b""):
-                sha1_hash.update(byte_block)
-                pbar.update(1)
-    return sha1_hash.hexdigest()
-
-
-def create_databank_directories(sim, sim_hashes, out) -> str:
-    """
-    :meta private:
-    create nested output directory structure to save results
-
-    Args:
-        sim (_type_): Processed simulation entries
-        sim_hashes (_type_): file hashes needed for directory structure
-        out (str): output base path
-
-    Raises:
-        NotImplementedError: unsupported simulation software
-        OSError: Error while creating the output directory
-
-    Returns:
-        str: output directory
-    """
-    # resolve output dir naming
-    if sim["SOFTWARE"] == "gromacs":
-        head_dir = sim_hashes.get("TPR")[0][1][0:3]
-        sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
-        sub_dir2 = sim_hashes.get("TPR")[0][1]
-        sub_dir3 = sim_hashes.get("TRJ")[0][1]
-    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
-        head_dir = sim_hashes.get("TRJ")[0][1][0:3]
-        sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
-        sub_dir2 = sim_hashes.get("TRJ")[0][1]
-        sub_dir3 = sim_hashes.get("TRJ")[0][1]
-    else:
-        raise NotImplementedError(f"sim software '{sim['SOFTWARE']}' not supported")
-
-    directory_path = os.path.join(out, head_dir, sub_dir1, sub_dir2, sub_dir3)
-
-    logger.debug(f"output_dir = {directory_path}")
-
-    # destination directory is not empty
-    if os.path.exists(directory_path) and os.listdir(directory_path) != 0:
-        logger.warning(
-            f"output directory '{directory_path}' is not empty. Data may be overriden."
-        )
-
-    # create directories
-    os.makedirs(directory_path, exist_ok=True)
-
-    return directory_path
-
-
 class YamlBadConfigException(Exception):
     """
     :meta private:
@@ -571,10 +500,6 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
         f"all {len(software_required_keys)} required"
         f" '{sim['SOFTWARE'].upper()}' sim keys are present"
     )
-
-    # STEP 3 - check working directory
-    if "DIR_WRK" not in sim:
-        raise KeyError("'DIR_WRK' Parameter missing in yaml")
 
     # STEP 4 - Check that all entry keys provided for each simulation are valid
     files_tbd = []

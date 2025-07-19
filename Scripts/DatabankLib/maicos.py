@@ -19,7 +19,6 @@ class NumpyArrayEncoder(CompactJSONEncoder):
             return CompactJSONEncoder.encode(self, o)
 
 
-
 class FormFactorPlanar(ProfilePlanarBase):
     """Form factor of a planar system based on the linear electron density profile."""
 
