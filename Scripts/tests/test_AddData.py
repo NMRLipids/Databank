@@ -8,6 +8,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 import os
 import shutil
 import subprocess
+import time
 from tempfile import TemporaryDirectory
 import pytest
 
@@ -74,7 +75,12 @@ class TestAddData:
         if debug:
             run_list.append("-d")
         result = subprocess.run(run_list, capture_output=True, text=True)
-        print(result.stderr)
+        with capsys.disabled():
+            print('stderr:')
+            print(result.stderr)
+            print('stdout:')
+            print(result.stdout)
+        time.sleep(1)
         if debug:
             assert '[DEBUG]' in result.stderr
         else:

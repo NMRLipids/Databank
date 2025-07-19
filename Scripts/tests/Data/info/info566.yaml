@@ -17,8 +17,6 @@ COMPOSITION:
   NAME: WAT
   MAPPING: mappingwaterlipid14.yaml
 
-DIR_WRK: /usr/home/bort/Databank
-
 PUBLICATION:
 AUTHORS_CONTACT: Jesper J Madsen
 
