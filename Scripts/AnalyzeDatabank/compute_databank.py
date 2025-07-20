@@ -55,7 +55,7 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
-        "--OP",
+        "--OP", "--op",
         help="Compute Order Parameter for all systems",
         action="store_true",
     )
