@@ -10,20 +10,30 @@ Executes standard pipeline of processing for an info file.
    Users of the Databank repository can safely ignore it.
 """
 
-def main(info_file_path):    
+def main(info_file_path): 
     path_dict = get_databank_paths(NMLDB_ROOT_PATH)
-    work_directory = "/tmp/databank_workdir"
-    os.makedirs(work_directory, exist_ok=True)
+    parent_folder = os.path.dirname(NMLDB_ROOT_PATH)
+
+    base_tmp = os.path.join(parent_folder, "databank_workdir")
+    work_directory_dry  = os.path.join(base_tmp, "dry")
+    work_directory_real = os.path.join(base_tmp, "real")
+    os.makedirs(work_directory_dry, exist_ok=True)
+    os.makedirs(work_directory_real, exist_ok=True)
 
     run_python_script(
         path_dict["AddData_path"],
-        args=["-f", info_file_path, "-w", work_directory],
+        args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
+        error_message="AddData dry run failed"
+    )
+    run_python_script(
+        path_dict["AddData_path"],
+        args=["-f", info_file_path, "-w", work_directory_real],
         error_message="AddData failed"
     )
-    run_command(
-        path_dict["calcProperties_path"],
-        "Calcproperties failed",
-        working_dir=path_dict["AnalyzeDatabank_path"]
+    run_python_script(
+        path_dict["compute_databank_path"],
+        args = ["--nmrpca", "--maicos", "--op", "--thickness","--apl", "--range", "*-0"],
+        error_message="Compute_databank failed"
     )
     delete_info_file(info_file_path)
 
