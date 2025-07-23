@@ -17,8 +17,12 @@ def main(info_file_path):
     base_tmp = os.path.join(parent_folder, "databank_workdir")
     work_directory_dry  = os.path.join(base_tmp, "dry")
     work_directory_real = os.path.join(base_tmp, "real")
-    os.makedirs(work_directory_dry, exist_ok=True)
-    os.makedirs(work_directory_real, exist_ok=True)
+    try:
+        os.makedirs(work_directory_dry, exist_ok=True)
+        os.makedirs(work_directory_real, exist_ok=True)
+    except OSError as e:
+        logger.error(f"Failed to create work directories")
+        sys.exit(1)
 
     run_python_script(
         path_dict["AddData_path"],
