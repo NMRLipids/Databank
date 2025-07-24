@@ -61,7 +61,7 @@ def guess_elements(system: System, u: mda.Universe) -> None:
                 system["UNITEDATOM_DICT"][_mol]+".json")
             with open(ua_dict_f, 'r') as f:
                 ua_dict = json.load(f)
-        except KeyError:
+        except (KeyError, TypeError):
             ua_dict = False
 
         for uname, props in mol.mapping_dict.items():

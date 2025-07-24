@@ -18,6 +18,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 import os
 import sys
 import pytest
+import pytest_check as check
 
 # run only on sim2 mocking data
 pytestmark = pytest.mark.sim2
@@ -45,9 +46,11 @@ def test_print_README(systems, capsys):
     sys0 = systems[0]
     print_README(sys0)
     output: str = capsys.readouterr().out.rstrip()
-    fDOI = output.find('DOI:') != -1
-    fTEMP = output.find('TEMPERATURE:') != -1
-    assert fDOI and fTEMP
+    check.not_equal( output.find('DOI:'), -1 )
+    check.not_equal( output.find('TEMPERATURE:'), -1)
+    print_README('example')
+    output = capsys.readouterr().out.rstrip()
+    check.is_in('Gromacs, Amber, NAMD', output)
 
 
 @pytest.mark.parametrize("systemid, result",

@@ -592,7 +592,7 @@ def computeMAICOS(  # noqa: N802 (API)
         if "Dielectric" in file:
             if (
                 os.path.isfile(system_path + os.sep + file + '_par.json') and
-                os.path.isfile(system_path + os.sep + file + '_per.json') and
+                os.path.isfile(system_path + os.sep + file + '_perp.json') and
                 not recompute
             ):
                 set_maicos_files.remove(file)
