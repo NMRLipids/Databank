@@ -591,13 +591,13 @@ def computeMAICOS(  # noqa: N802 (API)
     for file in set_maicos_files.copy():
         if "Dielectric" in file:
             if (
-                os.path.isfile(system_path + os.sep + file + '_par.json') and
-                os.path.isfile(system_path + os.sep + file + '_perp.json') and
+                os.path.isfile(os.path.join(system_path, file + '_par.json')) and
+                os.path.isfile(os.path.join(system_path, file + '_perp.json')) and
                 not recompute
             ):
                 set_maicos_files.remove(file)
         else:
-            if os.path.isfile(system_path + os.sep + file) and not recompute:
+            if os.path.isfile(os.path.join(system_path, file)) and not recompute:
                 set_maicos_files.remove(file)
     logger.info("Files to be computed: " + "|".join(set_maicos_files))
 
@@ -781,7 +781,7 @@ def computeMAICOS(  # noqa: N802 (API)
         # -- PHILIP code starts here --
         # We us a hardoced bin width
         bin_width = 0.3
-        
+
         # introduce elements attribute (if it's empty)
         # and make initial guess (just in case)
         u.guess_TopologyAttrs(force_guess=["elements"])
@@ -809,7 +809,7 @@ def computeMAICOS(  # noqa: N802 (API)
         zlim = {"zmin": zmin, "zmax": zmax}
         dens_options = {**zlim, **base_options}
 
-        prfx = os.path.join(NMLDB_SIMU_PATH, system['path']) + os.sep
+        spath = os.path.join(NMLDB_SIMU_PATH, system['path'])
 
         request_analysis = dict()
 
@@ -819,25 +819,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="electron",
                 **dens_options,
-                output=prfx + "TotalDensity.json",
+                output=os.path.join(spath, "TotalDensity.json"),
             )
             request_analysis["TotalDensity.json"] = dens_e_total
-        
+
         if "WaterDensity.json" in set_maicos_files:
             dens_e_water = DensityPlanar(
                 water,
                 dens="electron",
                 **dens_options,
-                output=prfx + "WaterDensity.json",
+                output=os.path.join(spath, "WaterDensity.json"),
             )
             request_analysis["WaterDensity.json"] = dens_e_water
-        
+
         if "LipidDensity.json" in set_maicos_files:
             dens_e_lipid = DensityPlanar(
                 lipid,
                 dens="electron",
                 **dens_options,
-                output=prfx + "LipidDensity.json",
+                output=os.path.join(spath, "LipidDensity.json"),
             )
             request_analysis["LipidDensity.json"] = dens_e_lipid
 
@@ -846,25 +846,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="mass",
                 **dens_options,
-                output=prfx + "TotalMassDensity.json",
+                output=os.path.join(spath, "TotalMassDensity.json"),
             )
             request_analysis["TotalMassDensity.json"] = dens_m_total
-        
+
         if "WaterMassDensity.json" in set_maicos_files:
             dens_m_water = DensityPlanar(
                 water,
                 dens="mass",
                 **dens_options,
-                output=prfx + "WaterMassDensity.json",
+                output=os.path.join(spath, "WaterMassDensity.json"),
             )
             request_analysis["WaterMassDensity.json"] = dens_m_water
-        
+
         if "LipidMassDensity.json" in set_maicos_files:
             dens_m_lipid = DensityPlanar(
                 lipid,
                 dens="mass",
                 **dens_options,
-                output=prfx + "LipidMassDensity.json",
+                output=os.path.join(spath, "LipidMassDensity.json"),
             )
             request_analysis["LipidMassDensity.json"] = dens_m_lipid
 
@@ -873,25 +873,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="charge",
                 **dens_options,
-                output=prfx + "TotalChargeDensity.json",
+                output=os.path.join(spath, "TotalChargeDensity.json"),
             )
             request_analysis["TotalChargeDensity.json"] = dens_c_total
-        
+
         if "WaterChargeDensity.json" in set_maicos_files:
             dens_c_water = DensityPlanar(
                 water,
                 dens="charge",
                 **dens_options,
-                output=prfx + "WaterChargeDensity.json",
+                output=os.path.join(spath, "WaterChargeDensity.json"),
             )
             request_analysis["WaterChargeDensity.json"] = dens_c_water
-        
+
         if "LipidChargeDensity.json" in set_maicos_files:
             dens_c_lipid = DensityPlanar(
                 lipid,
                 dens="charge",
                 **dens_options,
-                output=prfx + "LipidChargeDensity.json",
+                output=os.path.join(spath, "LipidChargeDensity.json"),
             )
             request_analysis["LipidChargeDensity.json"] = dens_c_lipid
 
@@ -904,7 +904,7 @@ def computeMAICOS(  # noqa: N802 (API)
                 **base_options,
                 zmin=None,
                 zmax=None,
-                output=prfx + "FormFactor.json",
+                output=os.path.join(spath, "FormFactor.json"),
             )
             request_analysis["FormFactor.json"] = form_factor
 
@@ -915,7 +915,7 @@ def computeMAICOS(  # noqa: N802 (API)
                 water,
                 order_parameter="cos_theta",
                 **dens_options,
-                output=prfx + "DiporderWater.json",
+                output=os.path.join(spath, "DiporderWater.json"),
             )
             request_analysis["DiporderWater.json"] = cos_water
 
@@ -924,26 +924,29 @@ def computeMAICOS(  # noqa: N802 (API)
                 water,
                 order_parameter="cos_2_theta",
                 **dens_options,
-                output=prfx + "Diporder2Water.json",
+                output=os.path.join(spath, "Diporder2Water.json"),
             )
             request_analysis["Diporder2Water.json"] = cos2_water
 
         # Dielectric profiles
         if "DielectricTotal" in set_maicos_files:
             diel_total = DielectricPlanar(
-                u.atoms, **base_options, output_prefix=prfx + "DielectricTotal"
+                u.atoms, **base_options,
+                output_prefix=os.path.join(spath, "DielectricTotal")
             )
             request_analysis["DielectricTotal"] = diel_total
 
         if "DielectricWater" in set_maicos_files:
             diel_water = DielectricPlanar(
-                water, **base_options, output_prefix=prfx + "DielectricWater"
+                water, **base_options,
+                output_prefix=os.path.join(spath, "DielectricWater")
             )
             request_analysis["DielectricWater"] = diel_water
-        
+
         if "DielectricLipid" in set_maicos_files:
             diel_lipid = DielectricPlanar(
-                lipid, **base_options, output_prefix=prfx + "DielectricLipid"
+                lipid, **base_options,
+                output_prefix=os.path.join(spath, "DielectricLipid")
             )
             request_analysis["DielectricLipid"] = diel_lipid
 
@@ -959,8 +962,10 @@ def computeMAICOS(  # noqa: N802 (API)
                 print(f"Dielectric profiles not available for this system: {e}")
                 # create stub json-s to avoid recompute tries
                 for dfile in ["DielectricTotal", "DielectricWater", "DielectricLipid"]:
-                    open(system_path + os.sep + dfile + '_per.json', 'w').write('{}')
-                    open(system_path + os.sep + dfile + '_par.json', 'w').write('{}')
+                    open(os.path.join(system_path, dfile + '_per.json'),
+                         'w').write('{}')
+                    open(os.path.join(system_path, dfile + '_par.json'),
+                         'w').write('{}')
                     logger.info(f"Created empty dielectric profile JSONs for {dfile}.")
                 try:
                     del request_analysis["DielectricTotal"]
