@@ -351,50 +351,52 @@ def computeOP(  # noqa: N802 (API)
                 mapping_dict = system.content[key].mapping_dict
 
                 def_fname = os.path.join(NMLDB_SIMU_PATH, path, key + ".def")
-                def_file = open(def_fname, "w")
+                with open(def_fname, "w") as def_file:
+                    previous_line = ""
 
-                previous_line = ""
+                    regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")  # noqa: N806
+                    regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")  # noqa: N806
+                    regexp1_C = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")  # noqa: N806
+                    regexp2_C = re.compile(r"M_G[0-9]_M")  # noqa: N806
 
-                regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")  # noqa: N806
-                regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")  # noqa: N806
-                regexp1_C = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")  # noqa: N806
-                regexp2_C = re.compile(r"M_G[0-9]_M")  # noqa: N806
+                    # Note that mapping_dict's keys must be ordered
+                    # C11 H111 H112 C12 H121 H122 ...
+                    # otherwize algorithm will fail
+                    for mapping_key in mapping_dict:
+                        if (regexp1_C.search(mapping_key) or
+                                regexp2_C.search(mapping_key)):
+                            atom_c = [mapping_key,
+                                      mapping_dict[mapping_key]["ATOMNAME"]]
+                            atom_h = []
+                        elif (regexp1_H.search(mapping_key) or
+                                regexp2_H.search(mapping_key)):
+                            atom_h = [mapping_key,
+                                      mapping_dict[mapping_key]["ATOMNAME"]]
+                        else:
+                            atom_c = []
+                            atom_h = []
 
-                # Note that mapping_dict's keys must be ordered
-                # C11 H111 H112 C12 H121 H122 ...
-                # otherwize algorithm will fail
-                for mapping_key in mapping_dict:
-                    if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key):
-                        atom_c = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-                        atom_h = []
-                    elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key):
-                        atom_h = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-                    else:
-                        atom_c = []
-                        atom_h = []
-
-                    if atom_h:
-                        assert atom_c
-                        items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
-                        def_line = (
-                            items[2]
-                            + "&"
-                            + items[3]
-                            + " "
-                            + key
-                            + " "
-                            + items[0]
-                            + " "
-                            + items[1]
-                            + "\n"
-                        )
-                        if def_line != previous_line:
-                            def_file.write(def_line)
-                            previous_line = def_line
-                def_file.close()
+                        if atom_h:
+                            assert atom_c
+                            items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
+                            def_line = (
+                                items[2]
+                                + "&"
+                                + items[3]
+                                + " "
+                                + key
+                                + " "
+                                + items[0]
+                                + " "
+                                + items[1]
+                                + "\n"
+                            )
+                            if def_line != previous_line:
+                                def_file.write(def_line)
+                                previous_line = def_line
 
                 # Add hydrogens to trajectory and calculate order parameters with buildH
-                op_file = os.path.join(
+                op_filepath = os.path.join(
                     NMLDB_SIMU_PATH, path, key + "OrderParameters.dat"
                 )
 
@@ -416,49 +418,51 @@ def computeOP(  # noqa: N802 (API)
                     lipid_type=system["UNITEDATOM_DICT"][key],
                     lipid_jsons=lipid_json_file,
                     traj_file=xtcwhole,
-                    out_file=f"{op_file}.buildH",
+                    out_file=f"{op_filepath}.buildH",
                     ignore_CH3s=True,
                 )
 
-                outfile = open(op_file, "w")
-                outfile.write("Atom     Average OP     OP stem\n")
+                with open(op_filepath + ".buildH") as op_file:
+                    bh_lines = op_file.readlines()
 
+                op_lines = []
                 data = {}
+                for line in bh_lines:
+                    if "#" in line:
+                        continue
+                    line2 = (
+                        line.split()[0].replace("&", " ")
+                        + "  "
+                        + line.split()[4]
+                        + "  "
+                        + line.split()[5]
+                        + " "
+                        + line.split()[6]
+                        + "\n"
+                    )
+                    op_lines.append(line2)
+
+                    op_name = line.split()[0].replace("&", " ")
+                    # -- line.split()[0] + " " + line.split()[1]
+                    op_values = [
+                        float(line.split()[4]),
+                        float(line.split()[5]),
+                        float(line.split()[6]),
+                    ]
+                    data[str(op_name)] = []
+                    data[str(op_name)].append(op_values)
+
+                # write ascii file (TODO: DO WE NEED IT?)
+                with open(op_filepath, "w") as outfile:
+                    outfile.write("Atom     Average OP     OP stem\n")
+                    outfile.writelines(op_lines)
+
+                # write json
                 outfile2 = os.path.join(
                     NMLDB_SIMU_PATH, path, key + "OrderParameters.json"
                 )
-
-                with open(op_file + ".buildH") as op_file:
-                    lines = op_file.readlines()
-                    for line in lines:
-                        if "#" in line:
-                            continue
-                        line2 = (
-                            line.split()[0].replace("&", " ")
-                            + "  "
-                            + line.split()[4]
-                            + "  "
-                            + line.split()[5]
-                            + " "
-                            + line.split()[6]
-                            + "\n"
-                        )
-                        outfile.write(line2)
-
-                        op_name = line.split()[0].replace("&", " ")
-                        # -- line.split()[0] + " " + line.split()[1]
-                        op_values = [
-                            float(line.split()[4]),
-                            float(line.split()[5]),
-                            float(line.split()[6]),
-                        ]
-                        data[str(op_name)] = []
-                        data[str(op_name)].append(op_values)
-
                 with open(outfile2, "w") as f:
                     json.dump(data, f, cls=CompactJSONEncoder)
-
-                outfile.close()
 
         # not united-atom cases
         else:
@@ -962,10 +966,12 @@ def computeMAICOS(  # noqa: N802 (API)
                 print(f"Dielectric profiles not available for this system: {e}")
                 # create stub json-s to avoid recompute tries
                 for dfile in ["DielectricTotal", "DielectricWater", "DielectricLipid"]:
-                    open(os.path.join(system_path, dfile + '_per.json'),
-                         'w').write('{}')
-                    open(os.path.join(system_path, dfile + '_par.json'),
-                         'w').write('{}')
+                    with open(os.path.join(
+                            system_path, dfile + '_per.json'), 'w') as f:
+                        f.write('{}')
+                    with open(os.path.join(
+                            system_path, dfile + '_par.json'), 'w') as f:
+                        f.write('{}')
                     logger.info(f"Created empty dielectric profile JSONs for {dfile}.")
                 try:
                     del request_analysis["DielectricTotal"]
