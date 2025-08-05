@@ -6,7 +6,6 @@
 
 import json
 import os
-import sys
 import re
 import traceback
 from logging import Logger
@@ -60,13 +59,20 @@ def computeNMRPCA(  # noqa: N802 (API)
     # getting data from databank and preprocessing them
     # Start Parser
     # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
-    parser = nmrpca.Parser(system, "eq_times.json")
-    # Check trajectory
-    print(parser._path)
-    vpcode = parser.validate_path()
-    print("ValidatePath code: ", vpcode)
+    try:
+        parser = nmrpca.Parser(system, "eq_times.json")
+        # Check trajectory
+        print(parser._path)
+        vpcode = parser.validate_path()
+        print("ValidatePath code: ", vpcode)
+    except Exception as e:
+        logger.error("Error initializing NMRPCA parser.")
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
+        return RCODE_ERROR
+
     if vpcode > 0:
-        sys.stderr.write("Some errors in analyze_nmrpca.py::Parser constructor.\n")
+        logger.error("Some errors in analyze_nmrpca.py::Parser constructor.\n")
         return RCODE_ERROR
     elif vpcode < 0 and not recompute:
         return RCODE_SKIPPED
@@ -90,40 +96,47 @@ def computeNMRPCA(  # noqa: N802 (API)
         __ = system["TPR"][0][0]
         _ = __[0]
     except (KeyError, TypeError):
-        sys.stderr.write("TPR is required for NMRPCA analysis!")
+        logger.error(f"TPR is required for NMRPCA analysis ({system['ID']})!")
         return RCODE_ERROR
 
-    # Download files
-    parser.download_traj()
-    # Prepare trajectory
-    parser.prepare_traj()
-    # Concatenate trajectory
-    parser.concatenate_traj()
-    equilibration_times = {}
-    # Iterate over trajectories for different lipids
-    for lip, traj in parser.concatenated_trajs.items():
-        print(f"Main: parsing lipid {lip}")
-        # Creat PCA for trajectory
-        pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trj_len)
-        # Run PCA
-        data = pca_runner.PCA()
-        print("Main: PCA: done")
-        # Project trajectory on PC1
-        pca_runner.get_proj(data)
-        print("Main: Projections: done")
-        # Calculate autocorrelations
-        pca_runner.get_autocorrelations()
-        print("Main: Autocorrelations: done")
-        # Estimate equilibration time
-        te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
-        equilibration_times[lip] = te2 / parser.trj_len
-        print("Main: EQ time: done")
+    try:
+        # Download files
+        parser.download_traj()
+        # Prepare trajectory
+        parser.prepare_traj()
+        # Concatenate trajectory
+        parser.concatenate_traj()
+        equilibration_times = {}
+        # Iterate over trajectories for different lipids
+        for lip, traj in parser.concatenated_trajs.items():
+            print(f"Main: parsing lipid {lip}")
+            # Creat PCA for trajectory
+            pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trj_len)
+            # Run PCA
+            data = pca_runner.PCA()
+            print("Main: PCA: done")
+            # Project trajectory on PC1
+            pca_runner.get_proj(data)
+            print("Main: Projections: done")
+            # Calculate autocorrelations
+            pca_runner.get_autocorrelations()
+            print("Main: Autocorrelations: done")
+            # Estimate equilibration time
+            te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
+            equilibration_times[lip] = te2 / parser.trj_len
+            print("Main: EQ time: done")
 
-        print(te2 / parser.trj_len)
+            print(te2 / parser.trj_len)
 
-    parser.dump_data(equilibration_times)
-    gc.collect()
-    return RCODE_COMPUTED
+        parser.dump_data(equilibration_times)
+        gc.collect()
+    except Exception as e:
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
+        return RCODE_ERROR
+    else:
+        return RCODE_COMPUTED
 
 
 def computeAPL(  # noqa: N802 (API)
@@ -153,30 +166,36 @@ def computeAPL(  # noqa: N802 (API)
     print("Analyzing: ", path)
     print("Will write into: ", outfilename)
 
-    # calculates the total number of lipids
-    n_lipid = GetNlipids(system)
+    try:
+        # calculates the total number of lipids
+        n_lipid = GetNlipids(system)
 
-    # makes MDAnalysis universe from the system. This also downloads the data if not
-    # yet locally available
-    u = system2MDanalysisUniverse(system)
+        # makes MDAnalysis universe from the system. This also downloads the data if not
+        # yet locally available
+        u = system2MDanalysisUniverse(system)
 
-    if u is None:
-        print("Generation of MDAnalysis universe failed in folder", path)
+        if u is None:
+            print("Generation of MDAnalysis universe failed in folder", path)
+            return RCODE_ERROR
+
+        # this calculates the area per lipid as a function of time and stores it
+        # in the databank
+        apl = {}
+        for ts in tqdm(u.trajectory, desc="Scanning the trajectory"):
+            if u.trajectory.time >= system["TIMELEFTOUT"] * 1000:
+                dims = u.dimensions
+                apl_frame = dims[0] * dims[1] * 2 / n_lipid
+                apl[u.trajectory.time] = apl_frame
+
+        with open(outfilename, "w") as f:
+            json.dump(apl, f, cls=CompactJSONEncoder)
+    except Exception as e:
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
-
-    # this calculates the area per lipid as a function of time and stores it
-    # in the databank
-    apl = {}
-    for ts in tqdm(u.trajectory, desc="Scanning the trajectory"):
-        if u.trajectory.time >= system["TIMELEFTOUT"] * 1000:
-            dims = u.dimensions
-            apl_frame = dims[0] * dims[1] * 2 / n_lipid
-            apl[u.trajectory.time] = apl_frame
-
-    with open(outfilename, "w") as f:
-        json.dump(apl, f, cls=CompactJSONEncoder)
-
-    return RCODE_COMPUTED
+    else:
+        return RCODE_COMPUTED
 
 
 def computeTH(  # noqa: N802 (API)
@@ -209,9 +228,9 @@ def computeTH(  # noqa: N802 (API)
         with open(thick_fn, "w") as f:
             json.dump(thickness, f)
     except Exception as e:
-        print("Calculation failed for " + system["path"])
-        print(str(e))
-        print(traceback.format_exc())
+        logger.error("Calculation failed for " + system["path"])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
 
     return RCODE_COMPUTED
@@ -285,8 +304,8 @@ def computeOP(  # noqa: N802 (API)
             system, join_path=cur_path
         )
     except (ValueError, KeyError) as e:
-        sys.stderr.write("Error reading filenames from system dictionary.\n")
-        sys.stderr.write(str(type(e)) + " => " + str(e))
+        logger.error("Error reading filenames from system dictionary.\n")
+        logger.error(str(type(e)) + " => " + str(e))
         return RCODE_ERROR
 
     try:
@@ -990,9 +1009,9 @@ def computeMAICOS(  # noqa: N802 (API)
 
     # finall catch
     except Exception as e:
-        print('Calculation failed for ' + system['path'])
-        print(str(e))
-        print(traceback.format_exc())
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
     else:
         return RCODE_COMPUTED
