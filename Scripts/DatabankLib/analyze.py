@@ -6,7 +6,6 @@
 
 import json
 import os
-import sys
 import re
 import traceback
 from logging import Logger
@@ -60,13 +59,20 @@ def computeNMRPCA(  # noqa: N802 (API)
     # getting data from databank and preprocessing them
     # Start Parser
     # TODO: 2test|    parser = Parser(NMLDB_SIMU_PATH, readme, eq_time_fname, testTraj)
-    parser = nmrpca.Parser(system, "eq_times.json")
-    # Check trajectory
-    print(parser._path)
-    vpcode = parser.validate_path()
-    print("ValidatePath code: ", vpcode)
+    try:
+        parser = nmrpca.Parser(system, "eq_times.json")
+        # Check trajectory
+        print(parser._path)
+        vpcode = parser.validate_path()
+        print("ValidatePath code: ", vpcode)
+    except Exception as e:
+        logger.error("Error initializing NMRPCA parser.")
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
+        return RCODE_ERROR
+
     if vpcode > 0:
-        sys.stderr.write("Some errors in analyze_nmrpca.py::Parser constructor.\n")
+        logger.error("Some errors in analyze_nmrpca.py::Parser constructor.\n")
         return RCODE_ERROR
     elif vpcode < 0 and not recompute:
         return RCODE_SKIPPED
@@ -90,40 +96,47 @@ def computeNMRPCA(  # noqa: N802 (API)
         __ = system["TPR"][0][0]
         _ = __[0]
     except (KeyError, TypeError):
-        sys.stderr.write("TPR is required for NMRPCA analysis!")
+        logger.error(f"TPR is required for NMRPCA analysis ({system['ID']})!")
         return RCODE_ERROR
 
-    # Download files
-    parser.download_traj()
-    # Prepare trajectory
-    parser.prepare_traj()
-    # Concatenate trajectory
-    parser.concatenate_traj()
-    equilibration_times = {}
-    # Iterate over trajectories for different lipids
-    for lip, traj in parser.concatenated_trajs.items():
-        print(f"Main: parsing lipid {lip}")
-        # Creat PCA for trajectory
-        pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trj_len)
-        # Run PCA
-        data = pca_runner.PCA()
-        print("Main: PCA: done")
-        # Project trajectory on PC1
-        pca_runner.get_proj(data)
-        print("Main: Projections: done")
-        # Calculate autocorrelations
-        pca_runner.get_autocorrelations()
-        print("Main: Autocorrelations: done")
-        # Estimate equilibration time
-        te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
-        equilibration_times[lip] = te2 / parser.trj_len
-        print("Main: EQ time: done")
+    try:
+        # Download files
+        parser.download_traj()
+        # Prepare trajectory
+        parser.prepare_traj()
+        # Concatenate trajectory
+        parser.concatenate_traj()
+        equilibration_times = {}
+        # Iterate over trajectories for different lipids
+        for lip, traj in parser.concatenated_trajs.items():
+            print(f"Main: parsing lipid {lip}")
+            # Creat PCA for trajectory
+            pca_runner = nmrpca.PCA(traj[0], traj[1], traj[2], traj[3], parser.trj_len)
+            # Run PCA
+            data = pca_runner.PCA()
+            print("Main: PCA: done")
+            # Project trajectory on PC1
+            pca_runner.get_proj(data)
+            print("Main: Projections: done")
+            # Calculate autocorrelations
+            pca_runner.get_autocorrelations()
+            print("Main: Autocorrelations: done")
+            # Estimate equilibration time
+            te2 = nmrpca.TimeEstimator(pca_runner.autocorrelation).calculate_time()
+            equilibration_times[lip] = te2 / parser.trj_len
+            print("Main: EQ time: done")
 
-        print(te2 / parser.trj_len)
+            print(te2 / parser.trj_len)
 
-    parser.dump_data(equilibration_times)
-    gc.collect()
-    return RCODE_COMPUTED
+        parser.dump_data(equilibration_times)
+        gc.collect()
+    except Exception as e:
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
+        return RCODE_ERROR
+    else:
+        return RCODE_COMPUTED
 
 
 def computeAPL(  # noqa: N802 (API)
@@ -153,30 +166,36 @@ def computeAPL(  # noqa: N802 (API)
     print("Analyzing: ", path)
     print("Will write into: ", outfilename)
 
-    # calculates the total number of lipids
-    n_lipid = GetNlipids(system)
+    try:
+        # calculates the total number of lipids
+        n_lipid = GetNlipids(system)
 
-    # makes MDAnalysis universe from the system. This also downloads the data if not
-    # yet locally available
-    u = system2MDanalysisUniverse(system)
+        # makes MDAnalysis universe from the system. This also downloads the data if not
+        # yet locally available
+        u = system2MDanalysisUniverse(system)
 
-    if u is None:
-        print("Generation of MDAnalysis universe failed in folder", path)
+        if u is None:
+            print("Generation of MDAnalysis universe failed in folder", path)
+            return RCODE_ERROR
+
+        # this calculates the area per lipid as a function of time and stores it
+        # in the databank
+        apl = {}
+        for ts in tqdm(u.trajectory, desc="Scanning the trajectory"):
+            if u.trajectory.time >= system["TIMELEFTOUT"] * 1000:
+                dims = u.dimensions
+                apl_frame = dims[0] * dims[1] * 2 / n_lipid
+                apl[u.trajectory.time] = apl_frame
+
+        with open(outfilename, "w") as f:
+            json.dump(apl, f, cls=CompactJSONEncoder)
+    except Exception as e:
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
-
-    # this calculates the area per lipid as a function of time and stores it
-    # in the databank
-    apl = {}
-    for ts in tqdm(u.trajectory, desc="Scanning the trajectory"):
-        if u.trajectory.time >= system["TIMELEFTOUT"] * 1000:
-            dims = u.dimensions
-            apl_frame = dims[0] * dims[1] * 2 / n_lipid
-            apl[u.trajectory.time] = apl_frame
-
-    with open(outfilename, "w") as f:
-        json.dump(apl, f, cls=CompactJSONEncoder)
-
-    return RCODE_COMPUTED
+    else:
+        return RCODE_COMPUTED
 
 
 def computeTH(  # noqa: N802 (API)
@@ -209,9 +228,9 @@ def computeTH(  # noqa: N802 (API)
         with open(thick_fn, "w") as f:
             json.dump(thickness, f)
     except Exception as e:
-        print("Calculation failed for " + system["path"])
-        print(str(e))
-        print(traceback.format_exc())
+        logger.error("Calculation failed for " + system["path"])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
 
     return RCODE_COMPUTED
@@ -285,8 +304,8 @@ def computeOP(  # noqa: N802 (API)
             system, join_path=cur_path
         )
     except (ValueError, KeyError) as e:
-        sys.stderr.write("Error reading filenames from system dictionary.\n")
-        sys.stderr.write(str(type(e)) + " => " + str(e))
+        logger.error("Error reading filenames from system dictionary.\n")
+        logger.error(str(type(e)) + " => " + str(e))
         return RCODE_ERROR
 
     try:
@@ -351,50 +370,52 @@ def computeOP(  # noqa: N802 (API)
                 mapping_dict = system.content[key].mapping_dict
 
                 def_fname = os.path.join(NMLDB_SIMU_PATH, path, key + ".def")
-                def_file = open(def_fname, "w")
+                with open(def_fname, "w") as def_file:
+                    previous_line = ""
 
-                previous_line = ""
+                    regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")  # noqa: N806
+                    regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")  # noqa: N806
+                    regexp1_C = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")  # noqa: N806
+                    regexp2_C = re.compile(r"M_G[0-9]_M")  # noqa: N806
 
-                regexp1_H = re.compile(r"M_[A-Z0-9]*C[0-9]*H[0-9]*_M")  # noqa: N806
-                regexp2_H = re.compile(r"M_G[0-9]*H[0-9]*_M")  # noqa: N806
-                regexp1_C = re.compile(r"M_[A-Z0-9]*C[0-9]*_M")  # noqa: N806
-                regexp2_C = re.compile(r"M_G[0-9]_M")  # noqa: N806
+                    # Note that mapping_dict's keys must be ordered
+                    # C11 H111 H112 C12 H121 H122 ...
+                    # otherwize algorithm will fail
+                    for mapping_key in mapping_dict:
+                        if (regexp1_C.search(mapping_key) or
+                                regexp2_C.search(mapping_key)):
+                            atom_c = [mapping_key,
+                                      mapping_dict[mapping_key]["ATOMNAME"]]
+                            atom_h = []
+                        elif (regexp1_H.search(mapping_key) or
+                                regexp2_H.search(mapping_key)):
+                            atom_h = [mapping_key,
+                                      mapping_dict[mapping_key]["ATOMNAME"]]
+                        else:
+                            atom_c = []
+                            atom_h = []
 
-                # Note that mapping_dict's keys must be ordered
-                # C11 H111 H112 C12 H121 H122 ...
-                # otherwize algorithm will fail
-                for mapping_key in mapping_dict:
-                    if regexp1_C.search(mapping_key) or regexp2_C.search(mapping_key):
-                        atom_c = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-                        atom_h = []
-                    elif regexp1_H.search(mapping_key) or regexp2_H.search(mapping_key):
-                        atom_h = [mapping_key, mapping_dict[mapping_key]["ATOMNAME"]]
-                    else:
-                        atom_c = []
-                        atom_h = []
-
-                    if atom_h:
-                        assert atom_c
-                        items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
-                        def_line = (
-                            items[2]
-                            + "&"
-                            + items[3]
-                            + " "
-                            + key
-                            + " "
-                            + items[0]
-                            + " "
-                            + items[1]
-                            + "\n"
-                        )
-                        if def_line != previous_line:
-                            def_file.write(def_line)
-                            previous_line = def_line
-                def_file.close()
+                        if atom_h:
+                            assert atom_c
+                            items = [atom_c[1], atom_h[1], atom_c[0], atom_h[0]]
+                            def_line = (
+                                items[2]
+                                + "&"
+                                + items[3]
+                                + " "
+                                + key
+                                + " "
+                                + items[0]
+                                + " "
+                                + items[1]
+                                + "\n"
+                            )
+                            if def_line != previous_line:
+                                def_file.write(def_line)
+                                previous_line = def_line
 
                 # Add hydrogens to trajectory and calculate order parameters with buildH
-                op_file = os.path.join(
+                op_filepath = os.path.join(
                     NMLDB_SIMU_PATH, path, key + "OrderParameters.dat"
                 )
 
@@ -416,49 +437,51 @@ def computeOP(  # noqa: N802 (API)
                     lipid_type=system["UNITEDATOM_DICT"][key],
                     lipid_jsons=lipid_json_file,
                     traj_file=xtcwhole,
-                    out_file=f"{op_file}.buildH",
+                    out_file=f"{op_filepath}.buildH",
                     ignore_CH3s=True,
                 )
 
-                outfile = open(op_file, "w")
-                outfile.write("Atom     Average OP     OP stem\n")
+                with open(op_filepath + ".buildH") as op_file:
+                    bh_lines = op_file.readlines()
 
+                op_lines = []
                 data = {}
+                for line in bh_lines:
+                    if "#" in line:
+                        continue
+                    line2 = (
+                        line.split()[0].replace("&", " ")
+                        + "  "
+                        + line.split()[4]
+                        + "  "
+                        + line.split()[5]
+                        + " "
+                        + line.split()[6]
+                        + "\n"
+                    )
+                    op_lines.append(line2)
+
+                    op_name = line.split()[0].replace("&", " ")
+                    # -- line.split()[0] + " " + line.split()[1]
+                    op_values = [
+                        float(line.split()[4]),
+                        float(line.split()[5]),
+                        float(line.split()[6]),
+                    ]
+                    data[str(op_name)] = []
+                    data[str(op_name)].append(op_values)
+
+                # write ascii file (TODO: DO WE NEED IT?)
+                with open(op_filepath, "w") as outfile:
+                    outfile.write("Atom     Average OP     OP stem\n")
+                    outfile.writelines(op_lines)
+
+                # write json
                 outfile2 = os.path.join(
                     NMLDB_SIMU_PATH, path, key + "OrderParameters.json"
                 )
-
-                with open(op_file + ".buildH") as op_file:
-                    lines = op_file.readlines()
-                    for line in lines:
-                        if "#" in line:
-                            continue
-                        line2 = (
-                            line.split()[0].replace("&", " ")
-                            + "  "
-                            + line.split()[4]
-                            + "  "
-                            + line.split()[5]
-                            + " "
-                            + line.split()[6]
-                            + "\n"
-                        )
-                        outfile.write(line2)
-
-                        op_name = line.split()[0].replace("&", " ")
-                        # -- line.split()[0] + " " + line.split()[1]
-                        op_values = [
-                            float(line.split()[4]),
-                            float(line.split()[5]),
-                            float(line.split()[6]),
-                        ]
-                        data[str(op_name)] = []
-                        data[str(op_name)].append(op_values)
-
                 with open(outfile2, "w") as f:
                     json.dump(data, f, cls=CompactJSONEncoder)
-
-                outfile.close()
 
         # not united-atom cases
         else:
@@ -591,13 +614,13 @@ def computeMAICOS(  # noqa: N802 (API)
     for file in set_maicos_files.copy():
         if "Dielectric" in file:
             if (
-                os.path.isfile(system_path + os.sep + file + '_par.json') and
-                os.path.isfile(system_path + os.sep + file + '_per.json') and
+                os.path.isfile(os.path.join(system_path, file + '_par.json')) and
+                os.path.isfile(os.path.join(system_path, file + '_perp.json')) and
                 not recompute
             ):
                 set_maicos_files.remove(file)
         else:
-            if os.path.isfile(system_path + os.sep + file) and not recompute:
+            if os.path.isfile(os.path.join(system_path, file)) and not recompute:
                 set_maicos_files.remove(file)
     logger.info("Files to be computed: " + "|".join(set_maicos_files))
 
@@ -781,7 +804,7 @@ def computeMAICOS(  # noqa: N802 (API)
         # -- PHILIP code starts here --
         # We us a hardoced bin width
         bin_width = 0.3
-        
+
         # introduce elements attribute (if it's empty)
         # and make initial guess (just in case)
         u.guess_TopologyAttrs(force_guess=["elements"])
@@ -809,7 +832,7 @@ def computeMAICOS(  # noqa: N802 (API)
         zlim = {"zmin": zmin, "zmax": zmax}
         dens_options = {**zlim, **base_options}
 
-        prfx = os.path.join(NMLDB_SIMU_PATH, system['path']) + os.sep
+        spath = os.path.join(NMLDB_SIMU_PATH, system['path'])
 
         request_analysis = dict()
 
@@ -819,25 +842,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="electron",
                 **dens_options,
-                output=prfx + "TotalDensity.json",
+                output=os.path.join(spath, "TotalDensity.json"),
             )
             request_analysis["TotalDensity.json"] = dens_e_total
-        
+
         if "WaterDensity.json" in set_maicos_files:
             dens_e_water = DensityPlanar(
                 water,
                 dens="electron",
                 **dens_options,
-                output=prfx + "WaterDensity.json",
+                output=os.path.join(spath, "WaterDensity.json"),
             )
             request_analysis["WaterDensity.json"] = dens_e_water
-        
+
         if "LipidDensity.json" in set_maicos_files:
             dens_e_lipid = DensityPlanar(
                 lipid,
                 dens="electron",
                 **dens_options,
-                output=prfx + "LipidDensity.json",
+                output=os.path.join(spath, "LipidDensity.json"),
             )
             request_analysis["LipidDensity.json"] = dens_e_lipid
 
@@ -846,25 +869,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="mass",
                 **dens_options,
-                output=prfx + "TotalMassDensity.json",
+                output=os.path.join(spath, "TotalMassDensity.json"),
             )
             request_analysis["TotalMassDensity.json"] = dens_m_total
-        
+
         if "WaterMassDensity.json" in set_maicos_files:
             dens_m_water = DensityPlanar(
                 water,
                 dens="mass",
                 **dens_options,
-                output=prfx + "WaterMassDensity.json",
+                output=os.path.join(spath, "WaterMassDensity.json"),
             )
             request_analysis["WaterMassDensity.json"] = dens_m_water
-        
+
         if "LipidMassDensity.json" in set_maicos_files:
             dens_m_lipid = DensityPlanar(
                 lipid,
                 dens="mass",
                 **dens_options,
-                output=prfx + "LipidMassDensity.json",
+                output=os.path.join(spath, "LipidMassDensity.json"),
             )
             request_analysis["LipidMassDensity.json"] = dens_m_lipid
 
@@ -873,25 +896,25 @@ def computeMAICOS(  # noqa: N802 (API)
                 u.atoms,
                 dens="charge",
                 **dens_options,
-                output=prfx + "TotalChargeDensity.json",
+                output=os.path.join(spath, "TotalChargeDensity.json"),
             )
             request_analysis["TotalChargeDensity.json"] = dens_c_total
-        
+
         if "WaterChargeDensity.json" in set_maicos_files:
             dens_c_water = DensityPlanar(
                 water,
                 dens="charge",
                 **dens_options,
-                output=prfx + "WaterChargeDensity.json",
+                output=os.path.join(spath, "WaterChargeDensity.json"),
             )
             request_analysis["WaterChargeDensity.json"] = dens_c_water
-        
+
         if "LipidChargeDensity.json" in set_maicos_files:
             dens_c_lipid = DensityPlanar(
                 lipid,
                 dens="charge",
                 **dens_options,
-                output=prfx + "LipidChargeDensity.json",
+                output=os.path.join(spath, "LipidChargeDensity.json"),
             )
             request_analysis["LipidChargeDensity.json"] = dens_c_lipid
 
@@ -904,7 +927,7 @@ def computeMAICOS(  # noqa: N802 (API)
                 **base_options,
                 zmin=None,
                 zmax=None,
-                output=prfx + "FormFactor.json",
+                output=os.path.join(spath, "FormFactor.json"),
             )
             request_analysis["FormFactor.json"] = form_factor
 
@@ -915,7 +938,7 @@ def computeMAICOS(  # noqa: N802 (API)
                 water,
                 order_parameter="cos_theta",
                 **dens_options,
-                output=prfx + "DiporderWater.json",
+                output=os.path.join(spath, "DiporderWater.json"),
             )
             request_analysis["DiporderWater.json"] = cos_water
 
@@ -924,26 +947,29 @@ def computeMAICOS(  # noqa: N802 (API)
                 water,
                 order_parameter="cos_2_theta",
                 **dens_options,
-                output=prfx + "Diporder2Water.json",
+                output=os.path.join(spath, "Diporder2Water.json"),
             )
             request_analysis["Diporder2Water.json"] = cos2_water
 
         # Dielectric profiles
         if "DielectricTotal" in set_maicos_files:
             diel_total = DielectricPlanar(
-                u.atoms, **base_options, output_prefix=prfx + "DielectricTotal"
+                u.atoms, **base_options,
+                output_prefix=os.path.join(spath, "DielectricTotal")
             )
             request_analysis["DielectricTotal"] = diel_total
 
         if "DielectricWater" in set_maicos_files:
             diel_water = DielectricPlanar(
-                water, **base_options, output_prefix=prfx + "DielectricWater"
+                water, **base_options,
+                output_prefix=os.path.join(spath, "DielectricWater")
             )
             request_analysis["DielectricWater"] = diel_water
-        
+
         if "DielectricLipid" in set_maicos_files:
             diel_lipid = DielectricPlanar(
-                lipid, **base_options, output_prefix=prfx + "DielectricLipid"
+                lipid, **base_options,
+                output_prefix=os.path.join(spath, "DielectricLipid")
             )
             request_analysis["DielectricLipid"] = diel_lipid
 
@@ -959,8 +985,12 @@ def computeMAICOS(  # noqa: N802 (API)
                 print(f"Dielectric profiles not available for this system: {e}")
                 # create stub json-s to avoid recompute tries
                 for dfile in ["DielectricTotal", "DielectricWater", "DielectricLipid"]:
-                    open(system_path + os.sep + dfile + '_per.json', 'w').write('{}')
-                    open(system_path + os.sep + dfile + '_par.json', 'w').write('{}')
+                    with open(os.path.join(
+                            system_path, dfile + '_per.json'), 'w') as f:
+                        f.write('{}')
+                    with open(os.path.join(
+                            system_path, dfile + '_par.json'), 'w') as f:
+                        f.write('{}')
                     logger.info(f"Created empty dielectric profile JSONs for {dfile}.")
                 try:
                     del request_analysis["DielectricTotal"]
@@ -979,9 +1009,9 @@ def computeMAICOS(  # noqa: N802 (API)
 
     # finall catch
     except Exception as e:
-        print('Calculation failed for ' + system['path'])
-        print(str(e))
-        print(traceback.format_exc())
+        logger.error('Calculation failed for ' + system['path'])
+        logger.error(str(e))
+        logger.error(traceback.format_exc())
         return RCODE_ERROR
     else:
         return RCODE_COMPUTED
