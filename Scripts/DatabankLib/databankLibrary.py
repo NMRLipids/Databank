@@ -6,6 +6,7 @@ analyzing the NMRlipids databank
 import copy
 import urllib
 import logging
+import subprocess
 
 import json
 from deprecated import deprecated
@@ -374,12 +375,13 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
                     and "GROMACS_VERSION" in system["WARNINGS"]
                     and system["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
                 ):
-                    os.system(f"echo System | editconf -f {top_name} -o {struc_fname}")
+                    command = ['editconf', '-f', top_name, '-o', struc_fname]
                 else:
-                    os.system(
-                        f"echo System | gmx trjconv "
-                        f"-s {top_name} -f {trj_name} -dump 0 -o {struc_fname}"
-                    )
+                    command = ['gmx', 'trjconv', '-s', top_name, '-f', trj_name, '-dump', '0', '-o', struc_fname]
+                try:
+                    subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
                 # the last try!
                 u = mda.Universe(struc_fname, trj_name)
             else:
