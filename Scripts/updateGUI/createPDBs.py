@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import urllib.request
 from importlib import import_module
@@ -38,7 +39,11 @@ if __name__ == "__main__":
         except Exception:
             print("There is no TPR for this system. We will try GRO.")
         else:
-            os.system('gmx editconf -f ' + tpr_name + ' -o ' + outfilename)
+            command = ['gmx', 'editconf', '-f', tpr_name, '-o', outfilename]
+            try:
+                subprocess.run(command, check=True, capture_output=True, text=True)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"Command `{' '.join(command)}` failed with stderr: {e.stderr}") from e
             continue
 
         gro_name = None
@@ -52,5 +57,9 @@ if __name__ == "__main__":
         except Exception:
             print("There is no GRO for this system. We will skip it.")
         else:
-            os.system('gmx editconf -f ' + gro_name + ' -o ' + outfilename)
+            command = ['gmx', 'editconf', '-f', gro_name, '-o', outfilename]
+            try:
+                subprocess.run(command, check=True, capture_output=True, text=True)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"Command `{' '.join(command)}` failed with stderr: {e.stderr}") from e
             continue
