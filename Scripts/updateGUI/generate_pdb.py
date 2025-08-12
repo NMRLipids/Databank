@@ -8,6 +8,7 @@ TODO: Unite with createPDBs.py
 """
 
 import os
+import subprocess
 import sys
 import yaml
 import urllib.request
@@ -25,7 +26,7 @@ if len( sys.argv ) > 1:
             path = f"./Databank/Data/Simulations/{file}/"
             outpath = os.path.join(outpath_prefix, file)
             if not os.path.isdir( outpath ):
-                os.system( f"mkdir -p {outpath}" )
+                os.makedirs(outpath, exist_ok=True)
             readme = path + "README.yaml"
             data = yaml.load( open( readme, "r" ), Loader=yaml.FullLoader)
             if ( not os.path.isfile( path + data["TPR"][0][0] ) ):
@@ -37,9 +38,17 @@ if len( sys.argv ) > 1:
                     os.remove( f"{outpath}conf.pdb" )
                 if os.path.isfile( f"{outpath}conf.pdb.gz" ):
                     os.remove( f"{outpath}conf.pdb.gz" )
-                os.system( f'gmx editconf -f {path}{data["TPR"][0][0]} -o {outpath}conf.pdb' )
+                editconf_cmd = ['gmx', 'editconf', '-f', f'{path}{data["TPR"][0][0]}', '-o', f'{outpath}conf.pdb']
+                try:
+                    subprocess.run(editconf_cmd, check=True, capture_output=True, text=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"Command `{' '.join(editconf_cmd)}` failed with stderr: {e.stderr}") from e
                 os.remove( path + data["TPR"][0][0] )
-                os.system( f"gzip {outpath}conf.pdb" )
+                gzip_cmd = ['gzip', f'{outpath}conf.pdb']
+                try:
+                    subprocess.run(gzip_cmd, check=True, capture_output=True, text=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"Command `{' '.join(gzip_cmd)}` failed with stderr: {e.stderr}") from e
         except:
             FAILS.append( file )
     
