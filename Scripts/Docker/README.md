@@ -61,6 +61,7 @@ Go to the directory where you have the Databank repository. Then,
    
    # Run tests
    ./runtests.sh
+   ./runtests-regression.sh
    ```
 
    You can specify additional arguments to the `pytest` via
