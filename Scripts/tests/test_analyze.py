@@ -183,7 +183,7 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
 
     s = systems.loc(systemid)
     rCode = computeOP(s, logger)
-    assert rCode == rcodex
+    assert rCode == rcodex, f"rCode = {rCode} is not the same as rcodex = {rcodex}"
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
@@ -207,7 +207,7 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     from DatabankLib.analyze import computeMAICOS
     s = systems.loc(systemid)
     rCode = computeMAICOS(s, logger)
-    assert rCode == rcodex
+    assert rCode == rcodex, f"rCode = {rCode} is not the same as rcodex = {rcodex}"
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
