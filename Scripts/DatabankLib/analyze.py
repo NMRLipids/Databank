@@ -9,6 +9,7 @@ import os
 import re
 import traceback
 from logging import Logger
+import subprocess
 import buildh
 import urllib.request
 import socket
@@ -251,6 +252,7 @@ def computeOP(  # noqa: N802 (API)
     """
     path = system["path"]
 
+    
     # Check if order parameters are calculated or something in the system prevents
     # order parameter calculation
     for key in system["COMPOSITION"]:
@@ -295,8 +297,7 @@ def computeOP(  # noqa: N802 (API)
         and "GROMACS_VERSION" in system["WARNINGS"]
         and system["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
     )
-    trconv_command = "trjconv" if g3switch else "gmx trjconv"
-
+    
     cur_path = os.path.join(NMLDB_SIMU_PATH, path)
 
     try:
@@ -316,20 +317,17 @@ def computeOP(  # noqa: N802 (API)
 
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, "whole.xtc")
             if not os.path.isfile(xtcwhole):
-                exec_str = (
-                    f"echo System | {trconv_command} -f {trj_fname} "
-                    f"-s {top_fname} -o {xtcwhole} -pbc mol -b {str(eq_time)}"
-                )
-                print("Make molecules whole in the trajectory")
-                if united_atom and system["TRAJECTORY_SIZE"] > 15e9:
-                    print(
-                        "United atom trajectry larger than 15 Gb. "
-                        "Using only every third frame to reduce memory usage."
-                    )
-                    exec_str += " -skip 3"
-                rcode = os.system(exec_str)
-                if rcode != 0:
-                    raise RuntimeError("trjconv exited with error (see above)")
+                try:
+                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                    if g3switch:
+                        cmd_args = ['trjconv', '-f', trj_fname, '-s', top_fname, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)]
+                    else:
+                        cmd_args = ['gmx', 'trjconv', '-f', trj_fname, '-s', top_fname, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)]
+                    if united_atom and system["TRAJECTORY_SIZE"] > 15e9:
+                        cmd_args.extend(['-skip', '3'])
+                    subprocess.run(cmd_args, input=echo_proc.stdout, check=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError("trjconv exited with error (see above)") from e
         elif "openMM" in software or "NAMD" in software:
             if not os.path.isfile(struc_fname):
                 pdb_url = resolve_download_file_url(system.get("DOI"), struc_fname)
@@ -349,20 +347,22 @@ def computeOP(  # noqa: N802 (API)
                 raise ValueError("UNITED_ATOMS is supported only for GROMACS engine!")
             frame0struc = os.path.join(NMLDB_SIMU_PATH, path, "frame0.gro")
             if g3switch:
-                rcode = os.system(
-                    f"echo System | editconf -f {top_fname} -o {frame0struc}"
-                )
-                if rcode != 0:
-                    raise RuntimeError("editconf exited with error (see above)")
+                try:
+                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                    subprocess.run(['editconf', '-f', top_fname, '-o', frame0struc], input=echo_proc.stdout, check=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError("editconf exited with error (see above)") from e
             else:
-                rcode = os.system(
-                    f"echo System | {trconv_command} -f {xtcwhole}"
-                    f" -s {top_fname} -dump 0 -o {frame0struc}"
-                )
-                if rcode != 0:
+                try:
+                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                    if g3switch:
+                        subprocess.run(['trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc.stdout, check=True)
+                    else:
+                        subprocess.run(['gmx','trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc.stdout, check=True)
+                except subprocess.CalledProcessError as e:
                     raise RuntimeError(
-                        f"trjconv ({trconv_command}) exited with error (see above)"
-                    )
+                        f"trjconv ({'trjconv' if g3switch else 'gmx trjconv'}) exited with error (see above)"
+                    ) from e
 
             for key in system["UNITEDATOM_DICT"]:
                 # construct order parameter definition file for CH bonds from
@@ -490,16 +490,17 @@ def computeOP(  # noqa: N802 (API)
 
                 print("\n Making gro file")
                 if g3switch:
-                    rcode = os.system(f"echo System | editconf -f {top_fname} -o {gro}")
-                    if rcode != 0:
-                        raise RuntimeError("editconf exited with error (see above)")
+                    try:
+                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                        subprocess.run(['editconf', '-f', top_fname, '-o', gro], input=echo_proc.stdout, check=True)
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError("editconf exited with error (see above)") from e
                 else:
-                    rcode = os.system(
-                        f"echo System | gmx trjconv "
-                        f"-f {trj_fname} -s {top_fname} -dump 0 -o {gro}"
-                    )
-                    if rcode != 0:
-                        raise RuntimeError("trjconv exited with error (see above)")
+                    try:
+                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                        subprocess.run(['gmx', 'trjconv', '-f', trj_fname, '-s', top_fname, '-dump', '0', '-o', gro], input=echo_proc.stdout, check=True)
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError("trjconv exited with error (see above)") from e
 
             for key in system["COMPOSITION"]:
 
@@ -757,15 +758,20 @@ def computeMAICOS(  # noqa: N802 (API)
         # Center around one lipid tail CH3 to guarantee all lipids in the same box
         if 'gromacs' in system['SOFTWARE']:
 
-            trjconv_cmd = 'gmx trjconv'
-            makendx_cmd = 'gmx make_ndx'
-
-            os.system('rm foo.ndx')
-            os.system(f'echo "a {last_atom}\nq" | {makendx_cmd} -f {tpr_name} '
-                      f'-o foo.ndx')
-            os.system("tail -n1 foo.ndx | awk '{print $NF}'")
-            os.system('echo "[ centralAtom ]" >> foo.ndx')
-            os.system("tail -n2 foo.ndx | head -n1 |  awk '{print $NF}' >> foo.ndx")
+            try:
+                subprocess.run(['rm', '-f', 'foo.ndx'], check=True)
+                echo_input = f"a {last_atom}\nq\n".encode('utf-8')
+                subprocess.run(['gmx', 'make_ndx', '-f', tpr_name, '-o', 'foo.ndx'], input=echo_input, check=True)
+                tail_proc = subprocess.run(['tail', '-n1', 'foo.ndx'], capture_output=True, check=True)
+                subprocess.run(['awk', '{{print $NF}}'], input=tail_proc.stdout, check=True)
+                with open('foo.ndx', 'ab') as f:
+                    subprocess.run(['echo', '[ centralAtom ]'], stdout=f, check=True)
+                with open('foo.ndx', 'ab') as f:
+                    tail_proc = subprocess.run(['tail', '-n2', 'foo.ndx'], capture_output=True, check=True)
+                    head_proc = subprocess.run(['head', '-n1'], input=tail_proc.stdout, capture_output=True, check=True)
+                    subprocess.run(['awk', '{{print $NF}}'], input=head_proc.stdout, stdout=f, check=True)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"Subprocess failed during ndx file creation: {e}") from e
 
             xtcwhole = os.path.join(system_path, 'whole.xtc')
             xtcfoo = os.path.join(system_path, 'foo2.xtc')
@@ -773,25 +779,35 @@ def computeMAICOS(  # noqa: N802 (API)
             if (not os.path.isfile(xtccentered)):
                 print("Make molecules whole in the trajectory")
                 if not os.path.isfile(xtcwhole):
-                    os.system(f'echo System |  {trjconv_cmd} -f {trj_name} '
-                              f'-s {tpr_name} -o {xtcwhole} -pbc mol -b {str(eq_time)}')
+                    try:
+                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                        subprocess.run(['gmx','trjconv', '-f', trj_name, '-s', tpr_name, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)], input=echo_proc.stdout, check=True)
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(f"trjconv for whole failed: {e}") from e
 
                 if (not os.path.isfile(xtcfoo)):
-                    os.system(f'echo "centralAtom\nSystem" |  {trjconv_cmd} -center'
-                              f' -pbc mol -n foo.ndx -f {xtcwhole} -s {tpr_name}'
-                              f' -o {xtcfoo}')
+                    try:
+                        echo_input = "centralAtom\nSystem".encode('utf-8')
+                        subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', 'foo.ndx', '-f', xtcwhole, '-s', tpr_name, '-o', xtcfoo], input=echo_input, check=True)
+                    except subprocess.CalledProcessError as e:
+                        raise RuntimeError(f"trjconv for center failed: {e}") from e
 
-                os.system('rm foo.ndx')
-                os.system('rm ' + xtcwhole)
+                try:
+                    subprocess.run(['rm', '-f', 'foo.ndx'], check=True)
+                    subprocess.run(['rm', '-f', xtcwhole], check=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"Failed to remove temporary files: {e}") from e
 
                 # Center around the center of mass of all the g_3 carbons
                 # if (not os.path.isfile(xtccentered)):
-                os.system(f'echo "a {g3_atom}\nq" | {makendx_cmd}'
-                          f' -f {tpr_name} -o foo.ndx')
-                os.system(f'echo "{g3_atom}\nSystem" |  {trjconv_cmd} -center'
-                          f' -pbc mol -n foo.ndx -f {xtcfoo} -s {tpr_name}'
-                          f' -o {xtccentered}')
-                os.system('rm ' + xtcfoo)
+                try:
+                    echo_input = f"a {g3_atom}\nq\n".encode('utf-8')
+                    subprocess.run(['gmx','make_ndx', '-f', tpr_name, '-o', 'foo.ndx'], input=echo_input, check=True)
+                    echo_input = f"{g3_atom}\nSystem".encode('utf-8')
+                    subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', 'foo.ndx', '-f', xtcfoo, '-s', tpr_name, '-o', xtccentered], input=echo_input, check=True)
+                    subprocess.run(['rm', '-f', xtcfoo], check=True)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(f"Failed during centering on g3 carbons: {e}") from e
         else:
             print("Centering for other than Gromacs may not work if there are"
                   " jumps over periodic boundary conditions in z-direction.")
