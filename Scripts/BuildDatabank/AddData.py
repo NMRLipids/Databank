@@ -28,6 +28,7 @@ import yaml
 import logging
 import shutil
 import pprint
+import subprocess
 import traceback
 from datetime import date
 from random import randint
@@ -356,17 +357,14 @@ if __name__ == "__main__":
             sim["WARNINGS"] is not None and
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
-            exec_str = (
-                f"executing 'echo System | trjconv -s {top} -f {traj} "
-                f"-dump 0 -o {gro}'"
-            )
+            command = ["trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
         else:
-            exec_str = (
-                f"executing 'echo System | gmx trjconv -s {top} -f {traj}"
-                f" -dump 0 -o {gro}'"
-            )
-        logger.debug(exec_str)
-        os.system(exec_str)
+            command = ["gmx", "trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
+        logger.debug(f"executing 'echo System | {' '.join(command)}'")
+        try:
+            subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
         try:
             u = Universe(gro, traj)
             # write first frame into gro file
@@ -521,11 +519,17 @@ if __name__ == "__main__":
             "GROMACS_VERSION" in sim["WARNINGS"] and
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
-            os.system(f"echo System | gmxdump -s {top} > {file1}")
+            command = ['gmxdump', '-s', top]
             TemperatureKey = "ref_t"
         else:
-            os.system(f"echo System | gmx dump -s {top} > {file1}")
+            command = ['gmx', 'dump', '-s', top]
             TemperatureKey = "ref-t"
+        try:
+            result = subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+            with open(file1, "w") as f:
+                f.write(result.stdout)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
 
         with open(file1, "rt") as tpr_info:
             for line in tpr_info:
