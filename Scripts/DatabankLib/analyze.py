@@ -258,7 +258,6 @@ def computeOP(  # noqa: N802 (API)
     # order parameter calculation
     for key in system["COMPOSITION"]:
         outfilename = os.path.join(NMLDB_SIMU_PATH, path, key + "OrderParameters.json")
-        # print(outfilename)
         if os.path.isfile(outfilename) or (
             "WARNINGS" in system.keys()
             and type(system["WARNINGS"]) is dict
@@ -315,7 +314,6 @@ def computeOP(  # noqa: N802 (API)
         if "gromacs" in software:
             if top_fname is None:
                 raise ValueError("TPR is required for OP calculations!")
-
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, "whole.xtc")
             if not os.path.isfile(xtcwhole):
                 try:
@@ -756,9 +754,8 @@ def computeMAICOS(  # noqa: N802 (API)
 
         # Center around one lipid tail CH3 to guarantee all lipids in the same box
         if 'gromacs' in system['SOFTWARE']:
-
+            ndxpath = os.path.join(system_path, 'foo.ndx')
             try:
-                subprocess.run(['rm', '-f', 'foo.ndx'], check=True)
                 echo_input = f"a {last_atom}\nq\n".encode('utf-8')
                 subprocess.run(['gmx', 'make_ndx', '-f', tpr_name, '-o', ndxpath], input=echo_input, check=True)
                 try:
@@ -797,21 +794,24 @@ def computeMAICOS(  # noqa: N802 (API)
                         raise RuntimeError(f"trjconv for center failed: {e}") from e
 
                 try:
-                    subprocess.run(['rm', '-f', 'foo.ndx'], check=True)
-                    subprocess.run(['rm', '-f', xtcwhole], check=True)
+                    os.remove(ndxpath)
+                    os.remove(xtcwhole)
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"Failed to remove temporary files: {e}") from e
 
                 # Center around the center of mass of all the g_3 carbons
-                # if (not os.path.isfile(xtccentered)):
                 try:
                     echo_input = f"a {g3_atom}\nq\n".encode('utf-8')
-                    subprocess.run(['gmx','make_ndx', '-f', tpr_name, '-o', 'foo.ndx'], input=echo_input, check=True)
+                    subprocess.run(['gmx','make_ndx', '-f', tpr_name, '-o', ndxpath], input=echo_input, check=True)
                     echo_input = f"{g3_atom}\nSystem".encode('utf-8')
-                    subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', 'foo.ndx', '-f', xtcfoo, '-s', tpr_name, '-o', xtccentered], input=echo_input, check=True)
-                    subprocess.run(['rm', '-f', xtcfoo], check=True)
+                    subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', ndxpath, '-f', xtcfoo, '-s', tpr_name, '-o', xtccentered], input=echo_input, check=True)
+                    os.remove(xtcfoo)
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"Failed during centering on g3 carbons: {e}") from e
+            try:
+                os.remove(ndxpath)   
+            except Exception as e:
+                raise RuntimeError(f"Some error occurred during removing the {ndxpath}:{e}")
         else:
             print("Centering for other than Gromacs may not work if there are"
                   " jumps over periodic boundary conditions in z-direction.")
