@@ -758,22 +758,17 @@ def computeMAICOS(  # noqa: N802 (API)
             try:
                 echo_input = f"a {last_atom}\nq\n".encode('utf-8')
                 subprocess.run(['gmx', 'make_ndx', '-f', tpr_name, '-o', ndxpath], input=echo_input, check=True)
-                try:
-                    with open(ndxpath, 'r') as f:
-                        last_two_lines = deque(f,2)
-                except Exception as e:
-                    raise RuntimeError(f"Some error occurred while reading the foo.ndx {ndxpath}: {e}")
-                
-                tail_proc = last_two_lines[-1].encode('utf-8')
-                head_proc = last_two_lines[0].encode('utf-8')
-                subprocess.run(['awk', '{{print $NF}}'], input=tail_proc, check=True)
-                with open(ndxpath, 'ab') as f:
-                    subprocess.run(['echo', '[ centralAtom ]'], stdout=f, check=True)
-                with open(ndxpath, 'ab') as f:
-                    subprocess.run(['awk', '{{print $NF}}'], input=head_proc, stdout=f, check=True)
             except subprocess.CalledProcessError as e:
                 raise RuntimeError(f"Subprocess failed during ndx file creation: {e}") from e
-
+            try:
+                with open(ndxpath, 'r') as f:
+                    last_lines = deque(f,1)
+                last_atom_id = int(re.split(r'\s+', last_lines[0].strip())[-1])
+                with open(ndxpath, 'a') as f:
+                    f.write('[ centralAtom ]\n')
+                    f.write(f'{last_atom_id}\n')
+            except Exception as e:
+                raise RuntimeError(f"Some error occurred while reading the foo.ndx {ndxpath}: {e}") from e
             xtcwhole = os.path.join(system_path, 'whole.xtc')
             xtcfoo = os.path.join(system_path, 'foo2.xtc')
             xtccentered = os.path.join(system_path, 'centered.xtc')
@@ -782,14 +777,27 @@ def computeMAICOS(  # noqa: N802 (API)
                 if not os.path.isfile(xtcwhole):
                     try:
                         echo_proc = "System\n".encode('utf-8')
-                        subprocess.run(['gmx','trjconv', '-f', trj_name, '-s', tpr_name, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)], input=echo_proc, check=True)
+                        subprocess.run([
+                            'gmx','trjconv',
+                            '-f', trj_name,
+                            '-s', tpr_name,
+                            '-o', xtcwhole,
+                            '-pbc', 'mol',
+                            '-b', str(eq_time)], input=echo_proc, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError(f"trjconv for whole failed: {e}") from e
 
                 if (not os.path.isfile(xtcfoo)):
                     try:
                         echo_input = "centralAtom\nSystem".encode('utf-8')
-                        subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', ndxpath, '-f', xtcwhole, '-s', tpr_name, '-o', xtcfoo], input=echo_input, check=True)
+                        subprocess.run([
+                            'gmx','trjconv', 
+                            '-center', 
+                            '-pbc', 'mol', 
+                            '-n', ndxpath, 
+                            '-f', xtcwhole, 
+                            '-s', tpr_name, 
+                            '-o', xtcfoo], input=echo_input, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError(f"trjconv for center failed: {e}") from e
 
