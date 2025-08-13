@@ -319,14 +319,14 @@ def computeOP(  # noqa: N802 (API)
             xtcwhole = os.path.join(NMLDB_SIMU_PATH, path, "whole.xtc")
             if not os.path.isfile(xtcwhole):
                 try:
-                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
+                    echo_proc = "System\n".encode('utf-8')
                     if g3switch:
                         cmd_args = ['trjconv', '-f', trj_fname, '-s', top_fname, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)]
                     else:
                         cmd_args = ['gmx', 'trjconv', '-f', trj_fname, '-s', top_fname, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)]
                     if united_atom and system["TRAJECTORY_SIZE"] > 15e9:
                         cmd_args.extend(['-skip', '3'])
-                    subprocess.run(cmd_args, input=echo_proc.stdout, check=True)
+                    subprocess.run(cmd_args, input=echo_proc, check=True)
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError("trjconv exited with error (see above)") from e
         elif "openMM" in software or "NAMD" in software:
@@ -343,23 +343,23 @@ def computeOP(  # noqa: N802 (API)
         # Calculate order parameters
         # -----------------------------------
         # united-atom switch -> engine switch
+        echo_proc = "System\n".encode('utf-8')
         if united_atom:
             if "gromacs" not in software:
                 raise ValueError("UNITED_ATOMS is supported only for GROMACS engine!")
             frame0struc = os.path.join(NMLDB_SIMU_PATH, path, "frame0.gro")
+            
             if g3switch:
                 try:
-                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
-                    subprocess.run(['editconf', '-f', top_fname, '-o', frame0struc], input=echo_proc.stdout, check=True)
+                    subprocess.run(['editconf', '-f', top_fname, '-o', frame0struc], input=echo_proc, check=True)
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError("editconf exited with error (see above)") from e
             else:
                 try:
-                    echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
                     if g3switch:
-                        subprocess.run(['trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc.stdout, check=True)
+                        subprocess.run(['trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc, check=True)
                     else:
-                        subprocess.run(['gmx','trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc.stdout, check=True)
+                        subprocess.run(['gmx','trjconv', '-f', xtcwhole, '-s', top_fname, '-dump', '0', '-o', frame0struc], input=echo_proc, check=True)
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(
                         f"trjconv ({'trjconv' if g3switch else 'gmx trjconv'}) exited with error (see above)"
@@ -492,14 +492,12 @@ def computeOP(  # noqa: N802 (API)
                 print("\n Making gro file")
                 if g3switch:
                     try:
-                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
-                        subprocess.run(['editconf', '-f', top_fname, '-o', gro], input=echo_proc.stdout, check=True)
+                        subprocess.run(['editconf', '-f', top_fname, '-o', gro], input=echo_proc, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError("editconf exited with error (see above)") from e
                 else:
                     try:
-                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
-                        subprocess.run(['gmx', 'trjconv', '-f', trj_fname, '-s', top_fname, '-dump', '0', '-o', gro], input=echo_proc.stdout, check=True)
+                        subprocess.run(['gmx', 'trjconv', '-f', trj_fname, '-s', top_fname, '-dump', '0', '-o', gro], input=echo_proc, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError("trjconv exited with error (see above)") from e
 
@@ -786,15 +784,15 @@ def computeMAICOS(  # noqa: N802 (API)
                 print("Make molecules whole in the trajectory")
                 if not os.path.isfile(xtcwhole):
                     try:
-                        echo_proc = subprocess.run(['echo', 'System'], capture_output=True, check=True)
-                        subprocess.run(['gmx','trjconv', '-f', trj_name, '-s', tpr_name, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)], input=echo_proc.stdout, check=True)
+                        echo_proc = "System\n".encode('utf-8')
+                        subprocess.run(['gmx','trjconv', '-f', trj_name, '-s', tpr_name, '-o', xtcwhole, '-pbc', 'mol', '-b', str(eq_time)], input=echo_proc, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError(f"trjconv for whole failed: {e}") from e
 
                 if (not os.path.isfile(xtcfoo)):
                     try:
                         echo_input = "centralAtom\nSystem".encode('utf-8')
-                        subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', 'foo.ndx', '-f', xtcwhole, '-s', tpr_name, '-o', xtcfoo], input=echo_input, check=True)
+                        subprocess.run(['gmx','trjconv', '-center', '-pbc', 'mol', '-n', ndxpath, '-f', xtcwhole, '-s', tpr_name, '-o', xtcfoo], input=echo_input, check=True)
                     except subprocess.CalledProcessError as e:
                         raise RuntimeError(f"trjconv for center failed: {e}") from e
 
