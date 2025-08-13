@@ -13,6 +13,7 @@ import subprocess
 import buildh
 import urllib.request
 import socket
+from collections import deque
 
 from tqdm import tqdm
 import numpy as np
@@ -761,15 +762,20 @@ def computeMAICOS(  # noqa: N802 (API)
             try:
                 subprocess.run(['rm', '-f', 'foo.ndx'], check=True)
                 echo_input = f"a {last_atom}\nq\n".encode('utf-8')
-                subprocess.run(['gmx', 'make_ndx', '-f', tpr_name, '-o', 'foo.ndx'], input=echo_input, check=True)
-                tail_proc = subprocess.run(['tail', '-n1', 'foo.ndx'], capture_output=True, check=True)
-                subprocess.run(['awk', '{{print $NF}}'], input=tail_proc.stdout, check=True)
-                with open('foo.ndx', 'ab') as f:
+                subprocess.run(['gmx', 'make_ndx', '-f', tpr_name, '-o', ndxpath], input=echo_input, check=True)
+                try:
+                    with open(ndxpath, 'r') as f:
+                        last_two_lines = deque(f,2)
+                except Exception as e:
+                    raise RuntimeError(f"Some error occurred while reading the foo.ndx {ndxpath}: {e}")
+                
+                tail_proc = last_two_lines[-1].encode('utf-8')
+                head_proc = last_two_lines[0].encode('utf-8')
+                subprocess.run(['awk', '{{print $NF}}'], input=tail_proc, check=True)
+                with open(ndxpath, 'ab') as f:
                     subprocess.run(['echo', '[ centralAtom ]'], stdout=f, check=True)
-                with open('foo.ndx', 'ab') as f:
-                    tail_proc = subprocess.run(['tail', '-n2', 'foo.ndx'], capture_output=True, check=True)
-                    head_proc = subprocess.run(['head', '-n1'], input=tail_proc.stdout, capture_output=True, check=True)
-                    subprocess.run(['awk', '{{print $NF}}'], input=head_proc.stdout, stdout=f, check=True)
+                with open(ndxpath, 'ab') as f:
+                    subprocess.run(['awk', '{{print $NF}}'], input=head_proc, stdout=f, check=True)
             except subprocess.CalledProcessError as e:
                 raise RuntimeError(f"Subprocess failed during ndx file creation: {e}") from e
 
