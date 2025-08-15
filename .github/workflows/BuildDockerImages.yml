@@ -9,26 +9,13 @@ jobs:
   build_gromacs:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout GROMACS repo
-        uses: actions/checkout@v4
-        with:
-          repository: gromacs/gromacs
-          fetch-depth: 0
-          path: gromacs-src
-
-
-      - name: Get previous tag
-        id: tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        with: 
-          workingDirectory: gromacs-src
-     
-      - name: Strip leading 'v'
+      - name: Get latest gromacs release version 
         id: version
-        shell: bash
         run: |
-            TAG="${{ steps.tag.outputs.tag }}"
-            echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+            set -euo pipefail
+            tag="$(curl -fsSL "https://gitlab.com/api/v4/projects/gromacs%2Fgromacs/releases/permalink/latest" | jq -r .tag_name)"
+            echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+            echo "Latest tag: $tag" 
         
       - name: Checkout Databank repo
         uses: actions/checkout@v4
@@ -37,7 +24,7 @@ jobs:
         run: |
           docker build \
             -f Scripts/Docker/gromacs \
-            -t nmrlipids/gromacs:${{ steps.tag.outputs.tag }} \
+            -t nmrlipids/gromacs \
             --build-arg GROMACS_VERSION=${{ steps.version.outputs.version }} \
             .
 
@@ -49,21 +36,18 @@ jobs:
 
       - name: Push gromacs image
         run: |
-          docker push nmrlipids/gromacs:${{ steps.tag.outputs.tag }}
+          docker push nmrlipids/gromacs
 
   build_core:
     runs-on: ubuntu-latest
     needs: build_gromacs
     steps:
-      - name: Checkout Databank repo
+      - name: Checkout Databank repo 
         uses: actions/checkout@v4
 
       - name: Build core image
         run: |
-          docker build \
-            -f Scripts/Docker/core \
-            -t nmrlipids/core:latest \
-            .
+          docker build -f Scripts/Docker/core -t nmrlipids/core .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -72,6 +56,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push core image
-        run: |
-          docker push nmrlipids/core:latest
+        run: docker push nmrlipids/core
 
