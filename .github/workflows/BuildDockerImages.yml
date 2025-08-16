@@ -8,6 +8,7 @@ on:
 jobs:
   build_gromacs:
     runs-on: ubuntu-latest
+    if: github.repository == 'NMRLipids/Databank'
     steps:
       - name: Get latest gromacs release version 
         id: version
@@ -58,3 +59,22 @@ jobs:
       - name: Push core image
         run: docker push nmrlipids/core
 
+  build_doc_builder:
+     runs-on: ubuntu-latest
+     if: github.repository == 'NMRLipids/Databank'
+     steps:
+      - name: Checkout Databank repo 
+        uses: actions/checkout@v4
+
+      - name: Build doc-builder image
+        run: |
+          docker build -f Scripts/Docker/doc-builder -t nmrlipids/doc-builder .
+              
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push doc-builder image
+        run: docker push nmrlipids/doc-builder
