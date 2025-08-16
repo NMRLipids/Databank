@@ -6,10 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_gromacs:
+  build_gromacs_and_core:
     runs-on: ubuntu-latest
     if: github.repository == 'NMRLipids/Databank'
     steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Get latest gromacs release version 
         id: version
         run: |
@@ -28,33 +34,13 @@ jobs:
             -t nmrlipids/gromacs \
             --build-arg GROMACS_VERSION=${{ steps.version.outputs.version }} \
             .
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
       - name: Push gromacs image
         run: |
           docker push nmrlipids/gromacs
 
-  build_core:
-    runs-on: ubuntu-latest
-    needs: build_gromacs
-    steps:
-      - name: Checkout Databank repo 
-        uses: actions/checkout@v4
-
       - name: Build core image
         run: |
           docker build -f Scripts/Docker/core -t nmrlipids/core .
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push core image
         run: docker push nmrlipids/core
@@ -63,18 +49,18 @@ jobs:
      runs-on: ubuntu-latest
      if: github.repository == 'NMRLipids/Databank'
      steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          
       - name: Checkout Databank repo 
         uses: actions/checkout@v4
 
       - name: Build doc-builder image
         run: |
           docker build -f Scripts/Docker/doc-builder -t nmrlipids/doc-builder .
-              
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push doc-builder image
         run: docker push nmrlipids/doc-builder
