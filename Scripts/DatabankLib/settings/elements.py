@@ -30,12 +30,14 @@ def uname2element(mapping_name: str):
         name2 = "C"
 
     try:
-        _ = getattr(periodictable, name2).number
+        if name2 != "X":
+            # X is a placeholder for unknown element, we use 'X' as element name
+            _ = getattr(periodictable, name2).number
     except AttributeError as e:
         raise KeyError(
             "This mapping name cannot be read by our rules: {mapping_name}") from e
-
-    return name2
+    else:
+        return name2
 
 
 def guess_elements(system: System, u: mda.Universe) -> None:
