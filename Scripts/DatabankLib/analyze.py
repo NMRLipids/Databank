@@ -37,6 +37,7 @@ from DatabankLib.databankio import resolve_download_file_url
 from DatabankLib.databankop import find_OP
 from DatabankLib import analyze_nmrpca as nmrpca
 from DatabankLib.maicos import (
+    is_system_suitable_4_maicos,
     FormFactorPlanar,
     DielectricPlanar,
     DensityPlanar,
@@ -581,8 +582,9 @@ def computeOP(  # noqa: N802 (API)
 def computeMAICOS(  # noqa: N802 (API)
     system: System, logger: Logger, recompute: bool = False
 ) -> int:
-    logger.info("System title: " + system['SYSTEM'])
-    logger.info("System path: " + system['path'])
+    if not is_system_suitable_4_maicos(system):
+        return RCODE_SKIPPED
+    # otherwise continue 
     software = system['SOFTWARE']
     # download trajectory and gro files
     system_path = os.path.join(NMLDB_SIMU_PATH, system['path'])
@@ -593,16 +595,16 @@ def computeMAICOS(  # noqa: N802 (API)
 
     set_maicos_files = {
         "LipidMassDensity.json",
-        "DiporderWater.json",
-        "FormFactor.json",
-        "TotalChargeDensity.json",
-        "WaterChargeDensity.json",
-        "Diporder2Water.json",
         "TotalMassDensity.json",
-        "TotalDensity.json",
         "WaterMassDensity.json",
+        "TotalDensity.json",
         "LipidDensity.json",
         "WaterDensity.json",
+        "FormFactor.json",
+        "DiporderWater.json",
+        "Diporder2Water.json",
+        "TotalChargeDensity.json",
+        "WaterChargeDensity.json",
         "LipidChargeDensity.json",
         "DielectricLipid",  # Dielectric* files are treated
         "DielectricWater",  # slightly differently (see below)
@@ -620,43 +622,6 @@ def computeMAICOS(  # noqa: N802 (API)
         else:
             if os.path.isfile(os.path.join(system_path, file)) and not recompute:
                 set_maicos_files.remove(file)
-    logger.info("Files to be computed: " + "|".join(set_maicos_files))
-
-    if not set_maicos_files:
-        return RCODE_SKIPPED
-
-    if system['TYPEOFSYSTEM'] == 'miscellaneous':
-        return RCODE_SKIPPED
-
-    print('Analyzing', system_path)
-
-    try:
-        if system['UNITEDATOM_DICT']:
-            print('United atom simulation')
-    except KeyError:
-        pass
-
-    try:
-        if system['WARNINGS']['ORIENTATION']:
-            print('Skipping due to ORIENTATION warning:',
-                  system['WARNINGS']['ORIENTATION'])
-            return RCODE_SKIPPED
-    except (KeyError, TypeError):
-        pass
-
-    try:
-        if system['WARNINGS']['PBC'] == 'hexagonal-box':
-            print('Skipping due to PBC warning:', system['WARNINGS']['PBC'])
-            return RCODE_SKIPPED
-    except (KeyError, TypeError):
-        pass
-
-    try:
-        if system['WARNINGS']['NOWATER']:
-            print('Skipping because there is not water in the trajectory.')
-            return RCODE_SKIPPED
-    except (KeyError, TypeError):
-        pass
 
     try:
         struc, top, trj = get_struc_top_traj_fnames(system)
@@ -673,7 +638,22 @@ def computeMAICOS(  # noqa: N802 (API)
         logger.error("Error getting structure/topology/trajectory filenames.")
         logger.error(str(e))
         return RCODE_ERROR
+    
+    if top is None:
+        # No topology => no charge inforamtion
+        logger.info("Dielectric properties and charge densities are not accessible without topology.")
+        for file in set_maicos_files.copy():
+            if ("Dielectric" in file or "Charge" in file):
+                set_maicos_files.remove(file)
+            if ("Diporder" in file):
+                # TODO: impute charges!
+                set_maicos_files.remove(file)
 
+    if not set_maicos_files:
+        logger.info("All available MAICoS files are found. Skipping.")
+        return RCODE_SKIPPED
+    
+    logger.info("Files to be computed: " + "|".join(set_maicos_files))
     socket.setdefaulttimeout(15)
 
     try:

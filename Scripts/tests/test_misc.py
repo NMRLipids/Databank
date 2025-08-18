@@ -22,23 +22,19 @@ def test_uname2element():
     check.equal(uname2element("M_C1_M"), "C")
     check.equal(uname2element("M_G1_M"), "C")
     check.equal(uname2element("M_C1N3_M"), "N")
-    check.equal(uname2element("M_X_M"), "X")
+    check.equal(uname2element("M_X_M"), "Dummy")
 
     with pytest.raises(KeyError):
         uname2element("UnknownElement")
 
-
-def test_maicos_interface(tmpdir):
+@pytest.fixture
+def tip4p_trajectory(tmpdir):
     import MDAnalysis as mda
     from MDAnalysis.coordinates.memory import MemoryReader
-    from DatabankLib.maicos import DensityPlanar
     import numpy as np
+    import shutil
 
     folder = str(tmpdir)
-    # Skip unwrap/pack for speed - trajectories are already centered and whole
-    base_options = {"unwrap": False, "bin_width": 1, "pack": False}
-    zlim = {"zmin": 0, "zmax": 8.67623}
-    dens_options = {**zlim, **base_options}
 
     pdb_content = \
 """TITLE     Single 4-site water
@@ -71,16 +67,96 @@ END
     u.load_new(trajectory, order='fac', format=MemoryReader)
     for ts in u.trajectory:
         ts.dimensions = nul_dim
+    
+    yield u, folder
+    # tear down
+    shutil.rmtree(folder)
+
+
+def test_maicos_interface(tip4p_trajectory):
+    from DatabankLib.maicos import DensityPlanar
+
+    u, folder = tip4p_trajectory
+
     # Now we are done!
     u.add_TopologyAttr("elements")
-    u.atoms.elements = ['O', 'H', 'H', 'X']  # Assign elements manually
+    u.atoms.elements = ['O', 'H', 'H', 'Dummy']  # Assign elements manually
 
+    # Skip unwrap/pack for speed - trajectories are already centered and whole
+    base_options = {"unwrap": False, "bin_width": 1, "pack": False}
+    zlim = {"zmin": 0, "zmax": 8.67623}
+    dens_options = {**zlim, **base_options}
+    ofname = os.path.join(folder, "DiporderWater.json")
     # Simulate MAICoS calls
     cos_water = DensityPlanar(
         u.atoms,
         dens="electron",
         **dens_options,
-        output=os.path.join(folder, "DiporderWater.json"),
+        output=ofname,
     )
     cos_water.run()
-    assert True
+    cos_water.save()
+
+    fexists = os.path.isfile(ofname)
+    assert fexists
+
+
+def test_maicos_what_to_compute(caplog, logger):
+    from DatabankLib.analyze import computeMAICOS
+    from DatabankLib.core import System
+    import logging
+
+    s = System(
+        data={
+            "DOI": "00.0000/abcd",
+            "path": 'does-not-matter',
+            "TYPEOFSYSTEM": "lipid bilayer",
+            "SOFTWARE": "GROMACS",
+            "TPR": [["file.tpr"]],
+            "TRJ": [["file.xtc"]],
+            "COMPOSITION": {
+                "SOL": {
+                    "NAME": "SPC",
+                    "MAPPING": "mappingSPCwater.yaml",
+                    "COUNT": 1000
+                },
+                "DPPC": {
+                    "NAME": "DPPC",
+                    "MAPPING": "mappingDPPCberger.yaml",
+                    "COUNT": 100
+                },
+            },
+        }
+    )
+    caplog.clear()
+    logger.info("Testing MAICOS interface against GROMACS-like setup")
+    with caplog.at_level(logging.INFO):
+        rcode = computeMAICOS(s, logging.getLogger("test_logger"))
+    for line in caplog.text.splitlines():
+        if "Files to be computed:" in line:
+            break
+    check.is_in("TotalDensity", line)
+    check.is_in("DiporderWater", line)
+    check.equal(rcode, 2)
+
+    # Now it will be NAMD-like setup
+    logger.info("Testing MAICOS interface against NAMD-like setup")
+    del s["TPR"]
+    s["PDB"] = [["file.pdb"]]
+    s["SOFTWARE"] = "NAMD"
+    # and we will not compute DiporderWater, Dielectric and ChargeDensity
+
+    caplog.clear()
+    with caplog.at_level(logging.INFO):
+        rcode = computeMAICOS(s, logging.getLogger("test_logger"))
+    for line in caplog.text.splitlines():
+        if "Files to be computed:" in line:
+            break
+    check.is_in("TotalDensity", line)
+    check.is_not_in("DiporderWater", line)
+    check.is_not_in("Dielectric", line)
+    check.is_not_in("ChargeDensity", line)
+    check.equal(rcode, 2)
+
+
+
