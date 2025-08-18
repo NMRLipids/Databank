@@ -28,11 +28,12 @@ def uname2element(mapping_name: str):
 
     if name2 == "G":  # G is a glycerol carbon so change G to C
         name2 = "C"
+    elif name2 == "X":  # X is a placeholder for unknown element, we use 'X' as element name
+        name2 = "Dummy"  # Dummy is used for unknown elements in MDAnalysis
+        return name2
 
     try:
-        if name2 != "X":
-            # X is a placeholder for unknown element, we use 'X' as element name
-            _ = getattr(periodictable, name2).number
+        _ = getattr(periodictable, name2).number
     except AttributeError as e:
         raise KeyError(
             "This mapping name cannot be read by our rules: {mapping_name}") from e

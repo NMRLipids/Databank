@@ -6,8 +6,40 @@ from maicos.lib.weights import density_weights
 import numpy as np
 import MDAnalysis as mda
 
-from .jsonEncoders import CompactJSONEncoder
+from DatabankLib.core import System
+from DatabankLib.jsonEncoders import CompactJSONEncoder
 
+
+def is_system_suitable_4_maicos(system: System):
+    """
+Checks if the system is suitable for maicos calculations."
+
+    :param system: Databank System object (System)
+    :return: False if system should be skipped
+    """
+    if system['TYPEOFSYSTEM'] == 'miscellaneous':
+        return False
+    try:
+        if system['WARNINGS']['ORIENTATION']:
+            print('Skipping due to ORIENTATION warning:',
+                  system['WARNINGS']['ORIENTATION'])
+            return False
+    except (KeyError, TypeError):
+        pass
+    try:
+        if system['WARNINGS']['PBC'] == 'hexagonal-box':
+            print('Skipping due to PBC warning:', system['WARNINGS']['PBC'])
+            return False
+    except (KeyError, TypeError):
+        pass
+    try:
+        if system['WARNINGS']['NOWATER']:
+            print('Skipping because there is not water in the trajectory.')
+            return False
+    except (KeyError, TypeError):
+        pass
+    return True
+ 
 
 class NumpyArrayEncoder(CompactJSONEncoder):
     """Encoder for 2xN numpy arrays to be used with json.dump."""
