@@ -13,8 +13,12 @@ def get_variable_from_file(vname, filepath):
 
 
 def extract_multis_var(vname, filepath):
-    with open(filepath, 'r') as f:
-        content = f.read()
+    try:
+        with open(filepath, 'r') as f:
+            content = f.read()
+    except OSError as e:
+        raise RuntimeError("Could not read source file for extracting versioning"
+                           f" information {filepath}: {e}") from e
     pattern = re.compile(
         rf"__{vname}__\s*=\s*\((\s+[^)]+)\)", re.MULTILINE
     )
@@ -26,8 +30,11 @@ def extract_multis_var(vname, filepath):
 
 
 def parse_requirements(filename):
-    with open(filename, "r") as f:
-        return f.read().splitlines()
+    try:
+        with open(filename, "r") as f:
+            return f.read().splitlines()
+    except OSError as e:
+        raise RuntimeError(f"Could not read requirements file {filename}: {e}") from e
 
 
 init_fpath = path.join('.', 'Scripts', 'DatabankLib', '__init__.py')

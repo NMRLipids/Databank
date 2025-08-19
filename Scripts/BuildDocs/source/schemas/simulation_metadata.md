@@ -8,6 +8,7 @@ You can view examples in the [BilayerData GitHub repository](https://github.com/
 README files contain information that is manually entered into [info.yaml](info_files) files and automatically exctracted information by the ``AddData.py`` program. 
 Table below lists the manually entered compulsory and optional parameters, as well as automatically extracted information from simulation files.  
 
+--------------------
 key | description | type  
 ----|--------|------
 DOI | DOI from where the raw data is found | User-given 
@@ -16,11 +17,13 @@ TPR | Name of the topology file found from DOI |  User-given
 SOFTWARE | Software used to run the simulation |  User-given
 PREEQTIME | Pre-equilibrate time in nanoseconds. |  User-given
 TIMELEFTOUT | Equilibration period in the uploaded trajectory. | User-given
-COMPOSITION | Molecules names and mapping files. | Autofilled 
+DATEOFRUNNIG | Date when added into the databank | User-given 
 DIR\_WRK | Temporary local working directory | Deprecated 
 UNITEDATOM\_DICT | Hydrogen information for united atom simulations | User-given
 TYPEOFSYSTEM | Lipid bilayer or something else | User-given
 SYSTEM | System description in the free text format | User-given
+TEMPERATURE | Temperature of the simulation. | User-given 
+COMPOSITION | Molecules' names, mappings, number. | Mixed*
 ||
 PUBLICATION | Reference to a publication(s) related to the data. | User-given
 AUTHORS\_CONTACT | Name and email of the main author(s) of the data. |  User-given
@@ -29,7 +32,7 @@ SOFTWARE\_VERSION | Version of the used software |  User-given
 FF | Name of the used force field |  User-given
 FF\_SOURCE | Source of the force field parameters |  User-given
 FF\_DATE |  Date when force field parameters were accessed |  User-given
-FF{molename} | Molecule specific force field information. |  User-given
+FF{molname} | Molecule specific force field information. |  User-given
 CPT | Name of the Gromacs checkpoint file. |  User-given
 LOG | Name of the Gromacs log file. |  User-given
 TOP | Name of the Gromacs top file. |  User-given
@@ -38,13 +41,13 @@ EDR | Name of the Gromacs edr file. |  User-given
 ||
 TRAJECTORY\_SIZE | Size of the trajectory file in bytes | Autofilled 
 TRJLENGTH | Lenght of the trajectory (ps). |  Autofilled
-TEMPERATURE | Temperature of the simulation. | User-given 
 NUMBER\_OF\_ATOMS | Number of atoms in the simulation. |  Autofilled
-DATEOFRUNNIG | Date when added into the databank | User-given 
 EXPERIMENT | Potentially connected experimental data | Gen by tools
-COMPOSITION | Numbers of molecules in the system | Autofilled
 ||
 ID | Unique integer identifier of the simulation | Gen by CI/CD
+------------------
+
+_\* --- names and mappings are set by user whereas number of residues is autofilled_
 
 ## Fields description
 
