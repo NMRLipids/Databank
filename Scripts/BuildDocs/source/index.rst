@@ -45,7 +45,7 @@ The NMRlipids Databank is open for additions of simulation data by anyone. For d
 
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository.
 
-#. Create an `info.yaml` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmecontent` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
+#. Create an `info.yaml` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
 
 #. Save the created `info.yaml` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch.
 
@@ -64,22 +64,18 @@ Setup using conda as distribution:
 
 .. code-block:: bash
 
-    conda create --name databank python==3.7 MDAnalysis
+    conda create --name databank MDAnalysis
     conda activate databank
     (databank) pip install -e .
 
 
 .. toctree::
-   :maxdepth: 1
-   :caption: User information:
+   :maxdepth: 3
+   :caption: Contents
 
-   listOfFiles
-   READMEcontent
-   addingData
-   addingExpData
-   moleculesAndMapping
-   databankLibrary
-   exampleAndTutorials
+   dbstructure
+   dbcontribute
+   dbprograms
 
 .. toctree::
    :maxdepth: 1

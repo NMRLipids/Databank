@@ -1,12 +1,30 @@
 """
-For now we just need to declare this folder to be package.
-TODO: organize proper package structure
+DatabankLib package.
+
+Here we define the main package variables and constants used throughout the NMRlipids 
+Databank project.
+This includes _Package Information_, _Paths_, and _Return Codes_.
 """
 
-# TODO: think which modules should be imported at package-level
-# from . import some_module
-
 import os
+
+# Package Information
+
+__version__ = "1.3.0"
+
+__author__ = "NMRlipids open collaboration"
+
+__author_email__ = "samuli.ollila@helsinki.fi"
+
+__description__ = (
+    "NMRlipids Databank main package. "
+    "This package contains the core functionality for managing and accessing "
+    "the NMRlipids Databank."
+)
+
+__url__ = "https://github.com/NMRlipids/Databank"
+
+# Global Paths
 
 NMLDB_ROOT_PATH: str = os.environ.get(
     "NMLDB_ROOT_PATH",
@@ -39,7 +57,7 @@ if not os.path.isdir(NMLDB_DATA_PATH):
             "In this case you *must* set NMLDB_ROOT_PATH explicitly "
             "to git-clonned `Databank` folder.")
 
-# Universal success codes
+# Universal return codes
 
 RCODE_SKIPPED: int = 0
 """ Success code 0: calculation skipped """

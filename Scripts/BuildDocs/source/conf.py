@@ -13,6 +13,7 @@
 import os
 import sys
 from datetime import datetime
+import DatabankLib as dbl
 
 #Directory containing this conf.py
 here = os.path.dirname(__file__)  
@@ -25,8 +26,8 @@ year = datetime.now().year
 
 # -- Project information -----------------------------------------------------
 
-project = 'NMRlipids databank'
-author = 'NMRlipids open collaboration'
+project = f'NMRlipids Databank v{dbl.__version__}'
+author = dbl.__author__
 copyright = f"""{year}, {author} 
     OSI Approved: GNU General Public License v3 (GPLv3)
     This program is free software: you can redistribute it and/or modify
@@ -37,10 +38,10 @@ copyright = f"""{year}, {author}
 
 
 # The full version, including alpha/beta/rc tags
-release = '4.9.2023'
+release = dbl.__version__
 html_context = {
-    "copyright_link": "https://github.com/NMRLipids/Databank/blob/main/LICENSE.txt",
-    "repo_link":      "https://github.com/NMRLipids/Databank",
+    "copyright_link": dbl.__url__ + "/blob/main/LICENSE.txt",
+    "repo_link":      dbl.__url__,
 }
 
 # -- General configuration ---------------------------------------------------
