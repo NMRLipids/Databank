@@ -48,7 +48,7 @@ setup(
     url=get_variable_from_file('url', init_fpath),
     package_dir={"": "Scripts"},
     package_data={"": ["*.yaml"]},
-    packages=["DatabankLib"],
+    packages=["DatabankLib", "DatabankLib.settings"],
     install_requires=parse_requirements(
         path.join('.', 'Scripts', 'DatabankLib', 'requirements.txt')),
     classifiers=[
