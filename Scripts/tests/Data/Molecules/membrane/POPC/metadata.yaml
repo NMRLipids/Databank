@@ -1,0 +1,53 @@
+NMRlipids:
+  id: POPC
+  name: 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
+  charge: 0
+
+# Chemical identifiers for the molecule serving as a unique identifier
+  # The identifier.org prefix is used to look up the identifier in the identifiers.org database
+  # The value is the unique identifier for the molecule in that database
+  # For example, pubchem.compound: 5497103 means that the molecule can be found at https://identifiers.org/pubchem.compound/5497103
+  # The identifiers are used to link the molecule to other databases and resources
+sameAs:
+ #key names must correspond to the identifier.org prefix
+ # test lookup at https://identifiers.org/[prefix]/[value]
+  pubchem.compound: 5497103
+  chebi: CHEBI:73001
+  lipidmaps: LMGP01010005
+  metabolights: MTBLC34080
+  slm: SLM:000000651
+  pdb: LBN
+  unii: TE895536Y5
+  cas: 26853-31-6
+
+
+bioschema_properties:
+  name: '1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine'
+  # This is the IUPAC name, which is a systematic way to name chemical compounds
+  iupacName: '[(2R)-3-hexadecanoyloxy-2-[(Z)-octadec-9-enoyl]oxypropyl] 2-(trimethylazaniumyl)ethyl phosphate'
+  molecularFormula: C42H82NO8P
+  molecularWeight: 760.08
+  # InChI is a standard way to represent chemical substances
+  # It is a text string that encodes the molecular structure
+  # InChIKey is a hashed version of the InChI, used for easier searching
+  # Both are used to uniquely identify chemical substances
+  # In case that multiple protonation states exist, multiple InChis and
+  # InChIKeys may be provided
+  inChI: 'InChI=1S/C42H82NO8P/c1-6-8-10-12-14-16-18-20-21-23-25-27-29-31-33-35-42(45)51-40(39-50-52(46,47)49-37-36-43(3,4)5)38-48-41(44)34-32-30-28-26-24-22-19-17-15-13-11-9-7-2/h20-21,40H,6-19,22-39H2,1-5H3/b21-20-/t40-/m1/s1'
+  inChIKey: WTJKGGKOPKCXLL-VYOBOKEXSA-N
+  smiles: CCCCCCCCCCCCCCCC(=O)OC[C@H](COP(=O)([O-])OCC[N+](C)(C)C)OC(=O)CCCCCCC/C=C\CCCCCCCC
+  # Either a url or a file path to the 2D or 3D structure of the molecule
+  image: https://upload.wikimedia.org/wikipedia/commons/e/ee/Popc_details.svg
+  description: >
+    1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine (POPC) is a phosphatidylcholine with a palmitoyl group at the sn-1 position and an oleoyl group at the sn-2 position of the glycerol backbone. It is a major component of biological membranes and is widely used in model membrane studies.
+  alternateName:
+    - 1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine
+    - POPC
+    - 1-POPC
+    - PC(16:0/18:1(9Z))
+    - 1-palmitoyl-2-oleoylphosphatidylcholine
+    - 1-hexadecanoyl-2-(9Z-octadecenoyl)-sn-glycero-3-phosphocholine
+    - alpha-phosphatidylcholine-beta-oleoyl-gamma-palmitoyl
+
+# Additonal properties for the molecule, not covered by bioschema_properties
+properties:
