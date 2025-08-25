@@ -276,7 +276,7 @@ def resolve_download_file_url(
     """
     if "zenodo" in doi.lower():
         zenodo_entry_number = doi.split(".")[2]
-        uri = "https://zenodo.org/record/" + zenodo_entry_number + "/files/" + fi_name
+        uri = f"https://zenodo.org/record/{zenodo_entry_number}/files/{fi_name}"
 
         if validate_uri:
             try:
