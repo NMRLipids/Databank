@@ -44,13 +44,13 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
                 # --- New logic to handle non-retriable HTTP client errors ---
                 except urllib.error.HTTPError as e:
                     # Check if the error is a client error (4xx) which is not likely to be resolved by a retry.
-                    if 400 <= e.code < 500:
+                    if 400 <= e.code < 500 and e.code != 429:
                         logger.error(
                             f"Function {func.__name__} failed with non-retriable client error {e.code}: {e.reason}"
                         )
                         raise e  # Re-raise the HTTPError immediately
                     
-                    # For other errors (like 5xx server errors), proceed with retry logic.
+                    # For other errors (like 5xx server errors or 429), proceed with retry logic.
                     logger.warning(f"Caught retriable HTTPError {e.code}. Proceeding with retry...")
                     # Fall through to the generic exception handling below.
                 
