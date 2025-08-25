@@ -6,7 +6,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 """
 
 import os
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 import pytest
 
 # run only without mocking data
@@ -71,6 +71,75 @@ class TestResolveDoiUrl:
         # good DOI works properly
         assert ("https://doi.org/10.5281/zenodo.8435138" ==
                 dio.resolve_doi_url('10.5281/zenodo.8435138', True))
+
+    @staticmethod
+    def _create_mock_success_response(mocker):
+        mock_response = mocker.MagicMock()
+        mock_response.read.return_value = b"mocked content"
+        mock_response.getheader.return_value = "100" # Content-Length
+        mock_response.code = 200
+        mock_response.reason = "OK"
+        return mock_response
+
+    @pytest.mark.parametrize(
+        "name, side_effects_func, expected_exception, expected_call_count",
+        [
+            (
+                "transient URLError succeeds",
+                lambda m: [URLError('err1'), URLError('err2'), TestResolveDoiUrl._create_mock_success_response(m)],
+                None,
+                3,
+            ),
+            (
+                "persistent URLError fails",
+                lambda m: URLError('persistent error'),
+                ConnectionError,
+                5,
+            ),
+            (
+                "non-retriable 403 HTTPError fails immediately",
+                lambda m: HTTPError('url', 403, 'Forbidden', {}, None),
+                HTTPError,
+                1,
+            ),
+            (
+                "retriable 503 HTTPError succeeds",
+                lambda m: [HTTPError('url', 503, 'Service Unavailable', {}, None), HTTPError('url', 503, 'Service Unavailable', {}, None), TestResolveDoiUrl._create_mock_success_response(m)],
+                None,
+                3,
+            ),
+            (
+                "persistent 503 HTTPError fails",
+                lambda m: HTTPError('url', 503, 'Service Unavailable', {}, None),
+                ConnectionError,
+                5,
+            ),
+        ],
+    )
+    def test_retry_logic__resolve_doi_url(
+        self, name, side_effects_func, expected_exception, expected_call_count, mocker
+    ):
+        import DatabankLib.databankio as dio
+
+        mocker.patch('time.sleep', return_value=None)
+
+        side_effects = side_effects_func(mocker)
+
+        mock_urlopen = mocker.patch(
+            'DatabankLib.databankio.urllib.request.urlopen',
+            side_effect=side_effects
+        )
+
+        if expected_exception:
+            with pytest.raises(expected_exception) as excinfo:
+                dio.resolve_doi_url('10.5281/zenodo.8435138', True)
+            if expected_exception == HTTPError:
+                actual_http_error = side_effects[0] if isinstance(side_effects, list) else side_effects
+                assert excinfo.value.code == actual_http_error.code
+        else:
+            dio.resolve_doi_url('10.5281/zenodo.8435138', True)
+
+        assert mock_urlopen.call_count == expected_call_count, f"Test '{name}' failed on call count."
 
     # resolve_download_file_url
 
