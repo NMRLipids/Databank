@@ -395,6 +395,10 @@ def create_databank_directories(
         )
 
     if not dry_run_mode:
-        os.makedirs(directory_path, exist_ok=True)
+        try:
+            os.makedirs(directory_path, exist_ok=True)
+        except Exception as e:
+            raise RuntimeError(f"Could not create the output directory at {directory_path}: {e}")
+
 
     return directory_path
