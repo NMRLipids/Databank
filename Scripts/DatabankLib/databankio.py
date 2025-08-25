@@ -58,7 +58,6 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
                     # This block now primarily handles non-HTTP errors or retriable HTTP errors.
                     pass # Fall through to the retry logic below
 
-                # --- Existing retry logic ---
                 attempts += 1
                 if attempts < max_attempts:
                     logger.warning(
