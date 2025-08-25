@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["DOI", "TRJ","PREEQTIME","TIMELEFTOUT", "SOFTWARE", "SYSTEM", "COMPOSITION"],
+  "allOf": [
+    {
+      "if": { "properties": { "SOFTWARE": { "const": "gromacs" } } },
+      "then": { "required": ["TPR"] }
+    },
+    {
+      "if": { "properties": { "SOFTWARE": { "const": "NAMD" } } },
+      "then": { "required": ["PDB"] }
+    },
+    {
+      "if": { "properties": { "SOFTWARE": { "const": "openMM" } } },
+      "then": { "required": ["PDB"] }
+    }
+  ],
+  "properties": {
+    "DOI": { 
+      "type": "string" },
+    "TRJ": {
+       "type": "string" },
+    "TPR": { 
+      "type": "string" },
+    "SOFTWARE": {
+       "type": "string" ,
+       "enum": ["gromacs", "openMM", "NAMD"]},
+    "PREEQTIME": { 
+      "type": "integer" },
+    "TIMELEFTOUT": {
+       "type": "integer" },
+    "TEMPERATURE": {
+       "type": ["number", "null"]},
+    "DIR_WRK": {
+       "type": ["string", "null"] },
+    "UNITEDATOM_DICT": {
+      "type": ["object", "null"],
+      "additionalProperties": {
+        "type": ["string"] 
+      }
+    },
+    "TYPEOFSYSTEM": {
+       "type": ["string", "null"] },
+    "SYSTEM": {
+       "type": "string" },
+    "COMPOSITION": {
+      "type": "object",
+      "minProperties": 2,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "NAME": { "type": "string" },
+          "MAPPING": { "type": "string" }
+        },
+        "required": ["NAME", "MAPPING"]
+      }
+    },
+    "PUBLICATION": {
+       "type": ["string", "null"] },
+    "AUTHORS_CONTACT": {
+       "type": ["string", "null"] },
+   "SOFTWARE_VERSION": {
+       "type": ["string", "number", "null"] },
+    "FF": {
+       "type": ["string", "null"] },
+    "FF_SOURCE": {
+       "type": ["string", "null"] },
+    "FF_DATE": {
+       "type": ["string", "number", "null"]},
+    "CPT": {
+       "type": ["string", "null"] },
+    "LOG": {
+       "type": ["string", "null"] },
+    "TOP": {
+       "type": ["string", "null"] },
+    "GRO": {
+       "type": ["string", "null"] },
+    "EDR": {
+       "type": ["string", "null"] }
+  }
+
+}
