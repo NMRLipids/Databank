@@ -283,25 +283,9 @@ def resolve_download_file_url(
                 # Use the decorated helper to check if the URI exists
                 with _open_url_with_retry(uri):
                     pass
-            except urllib.error.HTTPError as hte:
-                # Special handling for 429 after retries have failed
-                if hte.code == 429:
-                    if sleep429 / 5 > 10:
-                        raise TimeoutError(
-                            "Too many iterations of increasing waiting time for 429 error!"
-                        )
-                    logger.warning(
-                        f"Site returned 429 (Too Many Requests) for URI: {uri}. "
-                        f"Sleeping {sleep429} seconds before retrying..."
-                    )
-                    time.sleep(sleep429)
-                    # Recursive call with increased sleep time
-                    return resolve_download_file_url(
-                        doi, fi_name, validate_uri, sleep429=sleep429 + 5
-                    )
-                else:
-                    # Other persistent HTTP errors are re-raised
-                    raise
+            except urllib.error.HTTPError:
+                # Other persistent HTTP errors are re-raised
+                raise
             except ConnectionError as ce:
                 # Catch the final failure from our decorator for other network issues
                 raise RuntimeError(f"Cannot open {uri}. Failed after multiple retries.") from ce
