@@ -200,7 +200,7 @@ def download_resource_from_uri(
                 out_file.write(chunk)
                 downloaded += len(chunk)
                 if downloaded >= next_report:
-                    print(f"  Downloaded {downloaded // (1024*1024)} MB ...")
+                    logger.info(f"  Downloaded {downloaded // (1024*1024)} MB ...")
                     next_report += 10 * 1024 * 1024
             logger.info(
                 "Dry-run: Finished, downloaded"
