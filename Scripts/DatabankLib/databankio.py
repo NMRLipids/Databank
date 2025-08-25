@@ -372,18 +372,25 @@ def create_databank_directories(
         RuntimeError: If the target output directory could not be created.
     """
     # resolve output dir naming
-    if sim["SOFTWARE"] == "gromacs":
-        head_dir = sim_hashes.get("TPR")[0][1][0:3]
-        sub_dir1 = sim_hashes.get("TPR")[0][1][3:6]
-        sub_dir2 = sim_hashes.get("TPR")[0][1]
-        sub_dir3 = sim_hashes.get("TRJ")[0][1]
-    elif sim["SOFTWARE"] == "openMM" or sim["SOFTWARE"] == "NAMD":
-        head_dir = sim_hashes.get("TRJ")[0][1][0:3]
-        sub_dir1 = sim_hashes.get("TRJ")[0][1][3:6]
-        sub_dir2 = sim_hashes.get("TRJ")[0][1]
-        sub_dir3 = sim_hashes.get("TRJ")[0][1]
-    else:
-        raise NotImplementedError(f"sim software '{sim['SOFTWARE']}' not supported")
+    software = sim.get("SOFTWARE")
+
+    SOFTWARE_CONFIG = {
+        "gromacs": {"primary": "TPR", "secondary": "TRJ"},
+        "openMM":  {"primary": "TRJ", "secondary": "TRJ"},
+        "NAMD":    {"primary": "TRJ", "secondary": "TRJ"},
+    }
+
+    config = SOFTWARE_CONFIG.get(software)
+    if not config:
+        raise NotImplementedError(f"sim software '{software}' not supported")
+
+    primary_hash = sim_hashes.get(config["primary"])[0][1]
+    secondary_hash = sim_hashes.get(config["secondary"])[0][1]
+
+    head_dir = primary_hash[:3]
+    sub_dir1 = primary_hash[3:6]
+    sub_dir2 = primary_hash
+    sub_dir3 = secondary_hash
 
     directory_path = os.path.join(out, head_dir, sub_dir1, sub_dir2, sub_dir3)
 
