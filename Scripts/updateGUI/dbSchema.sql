@@ -105,24 +105,33 @@ CREATE TABLE `ions` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `lipids`;
+CREATE TABLE `lipids` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `molecule` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mapping` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lipids_name_key` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
--- Table structure for table `lipids`
+-- Table structure for table `lipids_forcefields`
+-- This table is used to store the relationship between 
+-- lipids and forcefields. 
+-- Each lipid can be associated with multiple forcefields.
 --
 
 DROP TABLE IF EXISTS `lipids_forcefields`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `lipids` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `molecule` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `lipids_forcefields` (
+  `lipid_id` bigint unsigned NOT NULL,
   `forcefield_id` bigint unsigned NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mapping` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `forcefield_id` (`forcefield_id`),
-  CONSTRAINT `lipids_ibfk_1` FOREIGN KEY (`forcefield_id`) REFERENCES `forcefields` (`id`)
+  PRIMARY KEY (`lipid_id`,`forcefield_id`),
+  CONSTRAINT `lipids_forcefields_ibfk_1` FOREIGN KEY (`lipid_id`) REFERENCES `lipids` (`id`),
+  CONSTRAINT `lipids_forcefields_ibfk_1` FOREIGN KEY (`forcefield_id`) REFERENCES `forcefields` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
