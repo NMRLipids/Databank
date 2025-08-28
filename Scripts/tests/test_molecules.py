@@ -27,4 +27,4 @@ def test_lipids_metadata():
     assert metadata['NMRlipids']['name'] == '1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine', "POPE NMRlipids name should match expected value"
     assert metadata['bioschema_properties']['molecularWeight'] == 718, "POPE bioschema_properties molecularWeight should be 718.0"  
     assert metadata['bioschema_properties']['molecularFormula'] == 'C39H76NO8P', "POPE bioschema_properties formula should be 'C39H76NO8P'"
-    assert metadata['bioschema_properties']['smiles'] == 'CCCCCCCCCCCCCCCC(=O)OC[C@H](COP(=O)(O)OCCN)OC(=O)CCCCCCC/C=C\CCCCCCCC', "POPE bioschema_properties smiles should match expected value"
+    assert metadata['bioschema_properties']['smiles'] == 'CCCCCCCCCCCCCCCC(=O)OC[C@H](COP(=O)(O)OCCN)OC(=O)CCCCCCC/C=C\\CCCCCCCC', "POPE bioschema_properties smiles should match expected value"
