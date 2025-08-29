@@ -34,9 +34,21 @@ NMLDB_ROOT_PATH: str = os.environ.get(
 """ Path to the project root """
 
 NMLDB_DATA_PATH: str = os.environ.get(
-    "NMLDB_DATA_PATH",
-    os.path.join(NMLDB_ROOT_PATH, 'Data')
-)
+    "NMLDB_DATA_PATH")
+
+# If the environment variable is not set, we assume that the data folder is in the root path
+if NMLDB_DATA_PATH is None:
+    NMLDB_DATA_PATH = os.path.join(NMLDB_ROOT_PATH, 'BilayerData')
+
+# If the folder does not exist, we raise an error
+if not os.path.isdir(NMLDB_DATA_PATH):
+    raise RuntimeError(
+        "NMLDB_DATA_PATH environment variable not set or does not point to a valid folder. " \
+            "Please set the environment variable " \
+            "NMLDB_DATA_PATH explicitly " \
+            "to the folder containing the Bilayer data. " \
+            "e.g. clone https://github.com/NMRLipids/BilayerData.git to get the latest data.")
+
 """ Path to the project data folder """
 
 NMLDB_SIMU_PATH: str = os.environ.get(
@@ -51,11 +63,6 @@ NMLDB_MOL_PATH: str = os.path.join(NMLDB_DATA_PATH, 'Molecules')
 NMLDB_EXP_PATH: str = os.path.join(NMLDB_DATA_PATH, 'experiments')
 """ Path to the project experiments folder """
 
-if not os.path.isdir(NMLDB_DATA_PATH):
-    raise RuntimeError(
-            "Seems that you installed package in a non-debug mode. "
-            "In this case you *must* set NMLDB_ROOT_PATH explicitly "
-            "to git-clonned `Databank` folder.")
 
 # Universal return codes
 
