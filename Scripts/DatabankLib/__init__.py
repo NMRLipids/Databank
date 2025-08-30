@@ -38,7 +38,7 @@ NMLDB_DATA_PATH: str = os.environ.get(
 
 # If the environment variable is not set, we assume that the data folder is in the root path
 if NMLDB_DATA_PATH is None:
-    NMLDB_DATA_PATH = os.path.join(NMLDB_ROOT_PATH, 'BilayerData')
+    NMLDB_DATA_PATH = os.path.join(NMLDB_ROOT_PATH, 'Data')
 
 # If the folder does not exist, we raise an error
 if not os.path.isdir(NMLDB_DATA_PATH):
