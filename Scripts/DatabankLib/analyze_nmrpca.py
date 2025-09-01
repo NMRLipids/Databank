@@ -65,7 +65,11 @@ ALLOWLIPIDS = [
 ]
 
 merge_cutoff = 2.0
-trj_size_cutoff = 5000000000
+trj_size_cutoff = (
+    1500000000
+    if "MEM_CUTOFF" not in os.environ
+    else int(os.environ["MEM_CUTOFF"])
+)
 
 TAILSN1 = "sn-1"
 TAILSN2 = "sn-2"
@@ -221,10 +225,12 @@ class Parser:
 
         # Skip frames for large trajectories
         if self.size > trj_size_cutoff:
+            import math
+            _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
-                f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
+                f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip {_skip}"
             )
             self.trj_name = trj_out_name
 
@@ -249,6 +255,8 @@ class Parser:
     def prepare_OpenMM_traj(self):  # noqa: N802
         print("openMM or NAMD")
         if self.size > trj_size_cutoff:
+            import math
+            _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             if os.path.isfile(trj_out_name):
                 print("Parser: Short trajectory is found")
@@ -256,7 +264,7 @@ class Parser:
                 u = mda.Universe(self.tpr_name, self.trj_name)
                 with mda.Writer(trj_out_name,
                                 u.select_atoms("all").n_atoms) as mdaw:
-                    for ts in u.trajectory[::10]:
+                    for ts in u.trajectory[::_skip]:
                         mdaw.write(u.select_atoms("all"))
 
             self.trj_name = trj_out_name
