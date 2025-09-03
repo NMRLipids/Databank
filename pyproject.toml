@@ -1,4 +1,16 @@
-[build-system]
+[project]
 requires-python = ">=3.9"
+name = "NMRLipidsDatabank"
+version = "1.2.0"
+[build-system]
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
+[tool.ruff]
+# Set the maximum line length to 120
+line-length = 120
+ignore = ["TD","T201","G004","FIX002"]
+[tool.ruff.lint]
+select = ["ALL"]
+extend-select = ["E501"]
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
