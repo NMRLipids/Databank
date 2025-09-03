@@ -37,8 +37,7 @@ def uname2element(mapping_name: str):
     try:
         _ = getattr(periodictable, name2).number
     except AttributeError as e:
-        raise KeyError(
-            "This mapping name cannot be read by our rules: {mapping_name}") from e
+        raise KeyError("This mapping name cannot be read by our rules: {mapping_name}") from e
     else:
         return name2
 
@@ -61,9 +60,7 @@ def guess_elements(system: System, u: mda.Universe) -> None:
         _moltype = f"moltype {comp['MOLTYPE']} and " if "MOLTYPE" in comp else ""
 
         try:
-            ua_dict_f = os.path.join(
-                NMLDB_DATA_PATH, "lipid_json_buildH",
-                system["UNITEDATOM_DICT"][_mol]+".json")
+            ua_dict_f = os.path.join(NMLDB_DATA_PATH, "lipid_json_buildH", system["UNITEDATOM_DICT"][_mol] + ".json")
             with open(ua_dict_f) as f:
                 ua_dict = json.load(f)
         except (KeyError, TypeError):
@@ -91,9 +88,8 @@ def guess_elements(system: System, u: mda.Universe) -> None:
                     elname = uname2element(uname)
             else:
                 # if not united-atom, ALL atoms must be present
-                assert selection.n_atoms > 0, \
-                    f"Selection '{selstr}' did not match any atoms in the universe."
+                assert selection.n_atoms > 0, f"Selection '{selstr}' did not match any atoms in the universe."
                 elname = uname2element(uname)
-            selection.atoms.elements = selection.n_atoms*[elname]
+            selection.atoms.elements = selection.n_atoms * [elname]
         # end mapping loop
     # end molecules loop

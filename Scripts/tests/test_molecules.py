@@ -4,10 +4,12 @@ import pytest
 # run only on sim2 mocking data
 pytestmark = pytest.mark.sim2
 
+
 def test_lipids_metadata():
     import DatabankLib
     from DatabankLib.settings.molecules import lipids_set
-    #from molecules import lipids, nonlipids,lipids_set, nonlipids_set
+
+    # from molecules import lipids, nonlipids,lipids_set, nonlipids_set
     print(DatabankLib.NMLDB_MOL_PATH)
     print(lipids_set)
 
@@ -22,7 +24,16 @@ def test_lipids_metadata():
     assert metadata is not None, "POPE metadata should not be None"
     assert metadata["bioschema_properties"] is not None, "POPE bioschema_properties should not be None"
     assert metadata["NMRlipids"]["id"] == "POPE", "POPE bioschema_properties name should be 'POPE'"
-    assert metadata["NMRlipids"]["name"] == "1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine", "POPE NMRlipids name should match expected value"
-    assert metadata["bioschema_properties"]["molecularWeight"] == 718, "POPE bioschema_properties molecularWeight should be 718.0"
-    assert metadata["bioschema_properties"]["molecularFormula"] == "C39H76NO8P", "POPE bioschema_properties formula should be 'C39H76NO8P'"
-    assert metadata["bioschema_properties"]["smiles"] == "CCCCCCCCCCCCCCCC(=O)OC[C@H](COP(=O)(O)OCCN)OC(=O)CCCCCCC/C=C\\CCCCCCCC", "POPE bioschema_properties smiles should match expected value"
+    assert metadata["NMRlipids"]["name"] == "1-palmitoyl-2-oleoyl-sn-glycero-3-phosphoethanolamine", (
+        "POPE NMRlipids name should match expected value"
+    )
+    assert metadata["bioschema_properties"]["molecularWeight"] == 718, (
+        "POPE bioschema_properties molecularWeight should be 718.0"
+    )
+    assert metadata["bioschema_properties"]["molecularFormula"] == "C39H76NO8P", (
+        "POPE bioschema_properties formula should be 'C39H76NO8P'"
+    )
+    assert (
+        metadata["bioschema_properties"]["smiles"]
+        == "CCCCCCCCCCCCCCCC(=O)OC[C@H](COP(=O)(O)OCCN)OC(=O)CCCCCCC/C=C\\CCCCCCCC"
+    ), "POPE bioschema_properties smiles should match expected value"

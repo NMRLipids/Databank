@@ -88,8 +88,7 @@ class _OrderParameter:
             self.stem = None
         else:
             warnings.warn(
-                f"Number of optional positional arguments is {len(args)}, not 0 or 2. "
-                f"Args: {args}\nWrong file format?",
+                f"Number of optional positional arguments is {len(args)}, not 0 or 2. Args: {args}\nWrong file format?",
             )
 
         self.traj = []  # For storing final OP results.
@@ -110,7 +109,9 @@ class _OrderParameter:
 
 
 def _read_trajs_calc_OPs(
-    op_obj_list: list[_OrderParameter], top: str, trajs: list[str],
+    op_obj_list: list[_OrderParameter],
+    top: str,
+    trajs: list[str],
 ):
     """Creates an MDAnalysis Universe, reads trajectories, and calculates Order Parameters ("S").
 
@@ -135,8 +136,7 @@ def _read_trajs_calc_OPs(
 
         if not selection_by_residue:
             warnings.warn(
-                f"Selection is empty: [{sel_str}]. "
-                "Check residue and atom names in the mapping file.",
+                f"Selection is empty: [{sel_str}]. Check residue and atom names in the mapping file.",
                 UserWarning,
             )
             improper_ops.append(i)
@@ -157,7 +157,8 @@ def _read_trajs_calc_OPs(
 
         if not valid_selection:
             warnings.warn(
-                f"No valid atom pairs found for selection: [{sel_str}]", UserWarning,
+                f"No valid atom pairs found for selection: [{sel_str}]",
+                UserWarning,
             )
             improper_ops.append(i)
             continue
@@ -209,7 +210,9 @@ def _read_trajs_calc_OPs(
             d2_valid = d2[valid_mask]
             vec_valid = vec[valid_mask]
             cos2[valid_mask] = np.divide(
-                vec_valid[:, 2] ** 2, d2_valid, where=d2_valid != 0,
+                vec_valid[:, 2] ** 2,
+                d2_valid,
+                where=d2_valid != 0,
             )
 
             # Calculate order parameters for all residues
@@ -278,7 +281,10 @@ def _parse_op_input(mapping_dict: dict, lipid_resname: str):
 
 
 def find_OP(
-    mdict: dict, top_fname: str, traj_fname: str, lipid_name: str,
+    mdict: dict,
+    top_fname: str,
+    traj_fname: str,
+    lipid_name: str,
 ):
     """Externally used function for computing OP values.
 

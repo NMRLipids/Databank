@@ -86,7 +86,7 @@ def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
         with open(eq_times_path) as f:
             eq_time_dict = json.load(f)
     except Exception:
-        raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
+        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}")
 
     for i in eq_time_dict:
         print(i + ":", eq_time_dict[i])
@@ -108,7 +108,7 @@ def GetEquilibrationTimes(system: System):  # noqa: N802 (API name)
         with open(eq_times_path) as f:
             eq_time_dict = json.load(f)
     except Exception:
-        raise FileNotFoundError(f'eq_times.json not found for {system["ID"]}')
+        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}")
 
     return eq_time_dict
 
@@ -208,7 +208,9 @@ def getAtoms(system: System, lipid: str):  # noqa: N802 (API name)
 
 
 def getUniversalAtomName(  # noqa: N802 (API name)
-    system: System, atom_name: str, molname: str,
+    system: System,
+    atom_name: str,
+    molname: str,
 ):
     """
     Returns the universal atom name corresponding the simulation specific ``atomName``
@@ -364,8 +366,7 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
                 struc_fname = os.path.join(system_path, "conf.gro")
 
                 print(
-                    "Generating conf.gro because MDAnalysis cannot "
-                    "(probably!) read tpr version",
+                    "Generating conf.gro because MDAnalysis cannot (probably!) read tpr version",
                 )
                 if (
                     "WARNINGS" in system
@@ -378,7 +379,9 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
                 try:
                     subprocess.run(command, input="System\n", text=True, check=True, capture_output=True)
                 except subprocess.CalledProcessError as e:
-                    raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
+                    raise RuntimeError(
+                        f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}",
+                    ) from e
                 # the last try!
                 u = mda.Universe(struc_fname, trj_name)
             else:
@@ -388,7 +391,10 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
 
 
 def read_trj_PN_angles(  # noqa: N802 (API name)
-    molname: str, atom1: str, atom2: str, mda_universe: mda.Universe,
+    molname: str,
+    atom1: str,
+    atom2: str,
+    mda_universe: mda.Universe,
 ):
     """
     Calculates the P-N vector angles with respect to membrane normal from the
@@ -477,17 +483,13 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
             f"Simulation uses unsupported software '{sim['SOFTWARE'].upper()}'",
         )
 
-    software_sim = software_dict[
-        sim["SOFTWARE"].upper()
-    ]  # related to dicts in this file
+    software_sim = software_dict[sim["SOFTWARE"].upper()]  # related to dicts in this file
 
     # STEP 2 - check required keys defined by sim software used
     software_required_keys = [k for k, v in software_sim.items() if v["REQUIRED"]]
 
     # are ALL required keys are present in sim dict and defined (not of NoneType) ?
-    if not all(
-        (k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys
-    ):
+    if not all((k in list(sim.keys())) and (sim[k] is not None) for k in software_required_keys):
         missing_keys = [k for k in software_required_keys if k not in list(sim.keys())]
         raise YamlBadConfigException(
             f"Required '{sim['SOFTWARE'].upper()}' sim keys missing or "
@@ -495,8 +497,7 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
         )
 
     logger.debug(
-        f"all {len(software_required_keys)} required"
-        f" '{sim['SOFTWARE'].upper()}' sim keys are present",
+        f"all {len(software_required_keys)} required '{sim['SOFTWARE'].upper()}' sim keys are present",
     )
 
     # STEP 4 - Check that all entry keys provided for each simulation are valid
@@ -519,32 +520,25 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
             and (key_sim.upper() not in molecule_ff_set)
         ):
             logger.error(
-                f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' "
-                f": {key_sim.upper() in software_sim.keys()}",
+                f"key_sim '{key_sim}' in {sim['SOFTWARE'].lower()}_dict' : {key_sim.upper() in software_sim.keys()}",
             )
             logger.error(
-                f"key_sim '{key_sim}' in molecules_dict "
-                f": {key_sim.upper() in molecules_set}",
+                f"key_sim '{key_sim}' in molecules_dict : {key_sim.upper() in molecules_set}",
             )
             logger.error(
-                f"key_sim '{key_sim}' in lipids_dict "
-                f": {key_sim.upper() in lipids_set}",
+                f"key_sim '{key_sim}' in lipids_dict : {key_sim.upper() in lipids_set}",
             )
             logger.error(
-                f"key_sim '{key_sim}' in molecule_ff_dict "
-                f": {key_sim.upper() in molecule_ff_set}",
+                f"key_sim '{key_sim}' in molecule_ff_dict : {key_sim.upper() in molecule_ff_set}",
             )
             raise YamlBadConfigException(
                 f"'{key_sim}' not supported: Not found in "
                 f"'{sim['SOFTWARE'].lower()}_dict', 'molecules_dict',"
                 f" 'lipids_dict' and 'molecule_ff_dict'",
             )
-        if (
-            key_sim.upper() not in software_sim.keys()
-        ):  # hotfix for unkown yaml keys. TODO improve check 4.1?
+        if key_sim.upper() not in software_sim.keys():  # hotfix for unkown yaml keys. TODO improve check 4.1?
             logger.warning(
-                f"ignoring yaml entry '{key_sim}', not found "
-                f"in '{sim['SOFTWARE'].lower()}_dict'",
+                f"ignoring yaml entry '{key_sim}', not found in '{sim['SOFTWARE'].lower()}_dict'",
             )
             continue
 
@@ -567,17 +561,14 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
 
                     if len(value_sim_splitted) == 0:
                         raise YamlBadConfigException(
-                            f"found no file to download for "
-                            f"entry '{key_sim}:{software_sim[key_sim]}'",
+                            f"found no file to download for entry '{key_sim}:{software_sim[key_sim]}'",
                         )
                     # in case there are multiple files for one entry
                     if len(value_sim_splitted) > 1:
                         files_list = []
                         for file_provided in value_sim.split(";"):
                             files_list.append([file_provided.strip()])
-                        sim[key_sim] = (
-                            files_list  # replace ; separated string with list
-                        )
+                        sim[key_sim] = files_list  # replace ; separated string with list
                     else:
                         # print(f"value_sim_splitted = {value_sim_splitted}")
                         sim[key_sim] = [
@@ -593,8 +584,7 @@ def parse_valid_config_settings(info_yaml: dict) -> tuple[dict, list[str]]:
                 # TODO add dict entry param "unique" instead?
                 if key_sim.upper() in ["PSF", "TPR", "PDB"] and len(sim[key_sim]) > 1:
                     raise YamlBadConfigException(
-                        f"only one '{key_sim}' entry file allowed,"
-                        f" but got {len(sim[key_sim])}: {sim[key_sim]}",
+                        f"only one '{key_sim}' entry file allowed, but got {len(sim[key_sim])}: {sim[key_sim]}",
                     )
 
         else:
@@ -668,7 +658,8 @@ def averageOrderParameters(system):  # noqa: N802 (API name)
     for lipid in system["COMPOSITION"]:
         if lipid in lipids_set and "CHOL" not in lipid:
             OP_path_sim = os.path.join(  # noqa: N806
-                path, lipid + "OrderParameters.json",
+                path,
+                lipid + "OrderParameters.json",
             )
             with open(OP_path_sim) as json_file:
                 OP_sim = json.load(json_file)  # noqa: N806

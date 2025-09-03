@@ -6,7 +6,7 @@
               file.
 
 Usage:
-    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run] 
+    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run]
 
 :param: ``-h``, ``--help`` show this help message and exit
 :param: ``-f FILE``, ``--file``  Input config file in yaml format.
@@ -65,21 +65,25 @@ if __name__ == "__main__":
         description="Add a new dataset to the NMRLipids databank",
     )
     parser.add_argument(
-        "-f", "--file",
+        "-f",
+        "--file",
         help="Input config file in yaml format.",
     )
     parser.add_argument(
-        "-d", "--debug",
+        "-d",
+        "--debug",
         help="enable debug logging output",
         action="store_true",
     )
     parser.add_argument(
-        "-n", "--no-cache",
+        "-n",
+        "--no-cache",
         help="always redownload repository files",
         action="store_true",
     )
     parser.add_argument(
-        "-w", "--work-dir",
+        "-w",
+        "--work-dir",
         help="set custom temporary working directory [not set = /tmp]",
         default="/tmp",
     )
@@ -108,7 +112,8 @@ if __name__ == "__main__":
     # open input file for reading and writing
     with open(input_path) as yaml_file:
         info_yaml = yaml.load(
-            yaml_file, Loader=yaml.FullLoader,
+            yaml_file,
+            Loader=yaml.FullLoader,
         )  # TODO may throw yaml.YAMLError
 
     # Show the input read
@@ -126,8 +131,7 @@ if __name__ == "__main__":
         quit(1)
     except Exception as e:
         logger.error(
-            f"an '{type(e).__name__}' occured while performing validity check"
-            f" '{input_path}', script has been aborted",
+            f"an '{type(e).__name__}' occured while performing validity check '{input_path}', script has been aborted",
         )
         logger.error(e)
         quit(1)
@@ -145,8 +149,7 @@ if __name__ == "__main__":
         # mapping files are registered here!
     except Exception as e:
         logger.error(
-            f"an '{type(e).__name__}' occured while processing dict->System"
-            f" '{input_path}', script has been aborted",
+            f"an '{type(e).__name__}' occured while processing dict->System '{input_path}', script has been aborted",
         )
         logger.error(e)
         quit(1)
@@ -181,7 +184,9 @@ if __name__ == "__main__":
 
         for url, fi in zip(download_links, files):
             download_resource_from_uri(
-                url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache,
+                url,
+                os.path.join(dir_tmp, fi),
+                override_if_exists=args.no_cache,
                 dry_run_mode=args.dry_run,
             )
 
@@ -190,17 +195,14 @@ if __name__ == "__main__":
     except HTTPError as e:
         if e.code == 404:
             logger.error(
-                f"ressource not found on server '{e.url}' (404)."
-                " Wrong DOI link or file name?",
+                f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?",
             )
         else:
-            logger.error(f"HTTPError {e.code} while trying to "
-                         f"download the file '{e.url}'")
+            logger.error(f"HTTPError {e.code} while trying to download the file '{e.url}'")
         quit(3)
     except URLError as e:
         logger.error(
-            f"couldn't resolve network adress: {e.reason}."
-            " Please check your internet connection.",
+            f"couldn't resolve network adress: {e.reason}. Please check your internet connection.",
         )
         quit(3)
     except Exception as e:
@@ -221,7 +223,8 @@ if __name__ == "__main__":
 
     # Make empty dataframe with the desired columns
     df_files = pd.DataFrame(
-        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"], dtype=object,
+        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"],
+        dtype=object,
     )
 
     for key_sim, value_sim in sim_hashes.items():
@@ -238,9 +241,7 @@ if __name__ == "__main__":
 
         if "file" in entry_type:
             files_list = []
-            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim][
-                "REQUIRED"
-            ]
+            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim]["REQUIRED"]
 
             if not is_required and value_sim is None:
                 continue  # skip not required NoneType (empty) file entries
@@ -249,7 +250,7 @@ if __name__ == "__main__":
                 file_name = os.path.join(dir_tmp, file_provided[0])
                 logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
                 file_hash = calc_file_sha1_hash(file_name)
-                file_size_mb = f"{(os.path.getsize(file_name)/1024/1024):.2f}"
+                file_size_mb = f"{(os.path.getsize(file_name) / 1024 / 1024):.2f}"
 
                 df_files = pd.concat(
                     [
@@ -296,8 +297,7 @@ if __name__ == "__main__":
         "center of mass of the membrane and lipids.",
     )
     logger.info(
-        "If a lipid molecule is split to multiple residues, the centre of mass of"
-        " the headgroup is used.",
+        "If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.",
     )
 
     try:
@@ -339,14 +339,9 @@ if __name__ == "__main__":
     # GROMACS can try making struc from top!
     if fail_from_top and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
         logger.info(
-            "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
-            "read tpr version ...",
+            "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ...",
         )
-        if (
-            "WARNINGS" in sim and
-            sim["WARNINGS"] is not None and
-            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-           ):
+        if "WARNINGS" in sim and sim["WARNINGS"] is not None and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
             command = ["trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
         else:
             command = ["gmx", "trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
@@ -443,11 +438,12 @@ if __name__ == "__main__":
             selection = selection.rstrip(" or ")
             logger.debug(f"Selection: `{selection}`")
             molecules = u0.select_atoms(selection)
-            logger.debug("Resnames: " +
-                         ", ".join(molecules.residues.resnames) +
-                         " | ResIDs: " +
-                         ", ".join(map(str, molecules.residues.resids)),
-                         )
+            logger.debug(
+                "Resnames: "
+                + ", ".join(molecules.residues.resnames)
+                + " | ResIDs: "
+                + ", ".join(map(str, molecules.residues.resids)),
+            )
 
             if molecules.n_residues > 0:
                 for mol in molecules.residues:
@@ -504,11 +500,11 @@ if __name__ == "__main__":
 
         logger.info("Exporting information with gmx dump")
         if (
-            "WARNINGS" in sim and
-            sim["WARNINGS"] is not None and
-            "GROMACS_VERSION" in sim["WARNINGS"] and
-            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-           ):
+            "WARNINGS" in sim
+            and sim["WARNINGS"] is not None
+            and "GROMACS_VERSION" in sim["WARNINGS"]
+            and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
+        ):
             command = ["gmxdump", "-s", top]
             TemperatureKey = "ref_t"
         else:
@@ -551,9 +547,7 @@ if __name__ == "__main__":
         else:
             mapping_file_length = len(mol.mapping_dict)
 
-        number_of_atoms += (
-                np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
-            )
+        number_of_atoms += np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
 
     if number_of_atoms != natoms_trj:
         stop = input(
@@ -566,8 +560,7 @@ if __name__ == "__main__":
             os._exit("Interrupted because atomnumbers did not match")
         if stop == "y":
             logger.warning(
-                "Progressed even thought that atom numbers did not match."
-                " CHECK RESULTS MANUALLY!",
+                "Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!",
             )
 
     sim["NUMBER_OF_ATOMS"] = natoms_trj
@@ -600,8 +593,11 @@ if __name__ == "__main__":
     # Try to create final directory
     try:
         directory_path = create_databank_directories(
-            sim, sim_hashes, DatabankLib.NMLDB_SIMU_PATH, dry_run_mode=args.dry_run,
-            )
+            sim,
+            sim_hashes,
+            DatabankLib.NMLDB_SIMU_PATH,
+            dry_run_mode=args.dry_run,
+        )
     except NotImplementedError as e:
         logger.error(e)
         quit(4)
@@ -613,23 +609,21 @@ if __name__ == "__main__":
 
     # copy previously downloaded files
     if not args.dry_run:
-        logger.info(
-            "Copying files to the output directory [try hardlink for the traj.]...")
+        logger.info("Copying files to the output directory [try hardlink for the traj.]...")
         try:
             os.link(
                 traj,
                 os.path.join(directory_path, os.path.basename(traj)),
-                )
+            )
         except OSError:
             logger.warning(
-                f"Could not hardlink trajectory file '{traj}' to the output directory."
-                " Copying instead.",
+                f"Could not hardlink trajectory file '{traj}' to the output directory. Copying instead.",
             )
             shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
         shutil.copyfile(
             top,
             os.path.join(directory_path, os.path.basename(top)),
-            )
+        )
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),
             os.path.join(directory_path, "README.yaml"),

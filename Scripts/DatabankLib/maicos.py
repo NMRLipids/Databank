@@ -21,8 +21,7 @@ def is_system_suitable_4_maicos(system: System):
         return False
     try:
         if system["WARNINGS"]["ORIENTATION"]:
-            print("Skipping due to ORIENTATION warning:",
-                  system["WARNINGS"]["ORIENTATION"])
+            print("Skipping due to ORIENTATION warning:", system["WARNINGS"]["ORIENTATION"])
             return False
     except (KeyError, TypeError):
         pass

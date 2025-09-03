@@ -39,10 +39,7 @@ def showTable(sorted_qualities, quality):  # noqa: N802 (API)
         mol_numbers = ""
         for lipid in i["system"]["COMPOSITION"]:
             molecules = molecules + lipid + ":"
-            mol_numbers = (
-                mol_numbers +
-                str(np.sum(i["system"]["COMPOSITION"][lipid]["COUNT"])) +
-                ":")
+            mol_numbers = mol_numbers + str(np.sum(i["system"]["COMPOSITION"][lipid]["COUNT"])) + ":"
         stored_to_table["Molecules"] = molecules[:-1]
         stored_to_table["Number of molecules"] = " (" + mol_numbers[:-1] + ")"
         stored_to_table["Temperature"] = i["system"]["TEMPERATURE"]

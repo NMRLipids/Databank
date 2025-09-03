@@ -55,16 +55,28 @@ def systems():
     # TEARDOWN SYSTEMS
     logger.info("Wiping temporary calculation data.")
     for _s in s:
-        def gbGen(x): return glob.glob(
-                    os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s["path"], x))
+
+        def gbGen(x):
+            return glob.glob(os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s["path"], x))
+
         clear_list = []
         if "NMLDB_TEST_NOWIPE" in os.environ:
             # leave JSONs
             pass
         else:
             clear_list = ["*.json"]
-        clear_list += ["*.dat", "conf.gro", "frame0.gro", "*.dat",
-                     "*.buildH", ".*", "#*", "*.def", "whole.xtc", "centered.xtc"]
+        clear_list += [
+            "*.dat",
+            "conf.gro",
+            "frame0.gro",
+            "*.dat",
+            "*.buildH",
+            ".*",
+            "#*",
+            "*.def",
+            "whole.xtc",
+            "centered.xtc",
+        ]
         for pat in clear_list:
             for f in gbGen(pat):
                 logger.debug(f"Removing file: {f}")
@@ -136,8 +148,7 @@ def compareJSONsBtwSD(jsfn: str):
     assert type(j1) is type(j2)
 
     if type(j1) is list:
-        assert len(j1) == len(j2), \
-            f"Problem in {jsfn} comparison: lists has different lengths!"
+        assert len(j1) == len(j2), f"Problem in {jsfn} comparison: lists has different lengths!"
         # to process further list as dict
         j1 = dict(enumerate(j1))
         j2 = dict(enumerate(j2))
@@ -149,11 +160,7 @@ def compareJSONsBtwSD(jsfn: str):
                 np.array(j1[k1]),
                 np.array(j2[k1]),
                 rtol=MAXRELERR_COMPARE_THRESHOLD,
-                err_msg=(
-                    f"Problem in {jsfn} comparison: {k1} line.\n"
-                     f"Computed: {j1[k1]!s} \n"
-                     f"Pre-computed: {j2[k1]!s}"
-                ),
+                err_msg=(f"Problem in {jsfn} comparison: {k1} line.\nComputed: {j1[k1]!s} \nPre-computed: {j2[k1]!s}"),
             )
 
     logger.info(f"Data {jsfn} was compared against precomputed!")
@@ -176,7 +183,8 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
 
 
 @pytest.mark.parametrize(
-    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
+    "systemid, rcodex",
+    [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
 )
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
@@ -191,32 +199,28 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
 
     for lip in set(s["COMPOSITION"].keys()).intersection(set(lipids_set.names)):
         cFile = os.path.join(
-            DatabankLib.NMLDB_SIMU_PATH, s["path"], lip + "OrderParameters.json",
+            DatabankLib.NMLDB_SIMU_PATH,
+            s["path"],
+            lip + "OrderParameters.json",
         )
         assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
         assert os.path.getsize(cFile) > 1e3, f"File {cFile} for {lip} is less than 1K!"
         compareJSONsBtwSD(os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH))
 
 
-@pytest.mark.parametrize("systemid, rcodex",
-                         [(281, 1),
-                          (566, 1),
-                          (787, 2),
-                          (243, 1),
-                          (86,  1)])
+@pytest.mark.parametrize("systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)])
 def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
     from DatabankLib.analyze import computeMAICOS
+
     s = systems.loc(systemid)
     rCode = computeMAICOS(s, logger)
     assert rCode == rcodex, f"rCode = {rCode} is not the same as rcodex = {rcodex}"
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for fn in ["WaterDensity.json","LipidDensity.json",
-               "TotalDensity.json","FormFactor.json"]:
-        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                             s["path"], fn)
+    for fn in ["WaterDensity.json", "LipidDensity.json", "TotalDensity.json", "FormFactor.json"]:
+        cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], fn)
         check.is_true(os.path.isfile(cFile))
         check.is_true(os.path.getsize(cFile) > 1e3)
         try:
@@ -229,7 +233,8 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
 
 
 @pytest.mark.parametrize(
-    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
+    "systemid, rcodex",
+    [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
 )
 def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib

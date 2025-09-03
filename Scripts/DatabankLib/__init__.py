@@ -1,7 +1,7 @@
 """
 DatabankLib package.
 
-Here we define the main package variables and constants used throughout the NMRlipids 
+Here we define the main package variables and constants used throughout the NMRlipids
 Databank project.
 This includes _Package Information_, _Paths_, and _Return Codes_.
 """
@@ -28,8 +28,7 @@ __url__ = "https://github.com/NMRlipids/Databank"
 
 NMLDB_ROOT_PATH: str = os.environ.get(
     "NMLDB_ROOT_PATH",
-    os.path.dirname(os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__)))),
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
 )
 """ Path to the project root """
 
@@ -53,9 +52,10 @@ NMLDB_EXP_PATH: str = os.path.join(NMLDB_DATA_PATH, "experiments")
 
 if not os.path.isdir(NMLDB_DATA_PATH):
     raise RuntimeError(
-            "Seems that you installed package in a non-debug mode. "
-            "In this case you *must* set NMLDB_ROOT_PATH explicitly "
-            "to git-clonned `Databank` folder.")
+        "Seems that you installed package in a non-debug mode. "
+        "In this case you *must* set NMLDB_ROOT_PATH explicitly "
+        "to git-clonned `Databank` folder.",
+    )
 
 # Universal return codes
 

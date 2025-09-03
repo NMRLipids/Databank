@@ -18,10 +18,10 @@ def extract_multis_var(vname, filepath):
         with open(filepath) as f:
             content = f.read()
     except OSError as e:
-        raise RuntimeError("Could not read source file for extracting versioning"
-                           f" information {filepath}: {e}") from e
+        raise RuntimeError(f"Could not read source file for extracting versioning information {filepath}: {e}") from e
     pattern = re.compile(
-        rf"__{vname}__\s*=\s*\((\s+[^)]+)\)", re.MULTILINE,
+        rf"__{vname}__\s*=\s*\((\s+[^)]+)\)",
+        re.MULTILINE,
     )
     match = pattern.search(content)
     if not match:
@@ -50,8 +50,7 @@ setup(
     package_dir={"": "Scripts"},
     package_data={"": ["*.yaml"]},
     packages=["DatabankLib", "DatabankLib.settings"],
-    install_requires=parse_requirements(
-        path.join(".", "Scripts", "DatabankLib", "requirements.txt")),
+    install_requires=parse_requirements(path.join(".", "Scripts", "DatabankLib", "requirements.txt")),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",

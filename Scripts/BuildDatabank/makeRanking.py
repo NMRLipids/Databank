@@ -36,12 +36,12 @@ if __name__ == "__main__":
             except Exception:
                 continue
 
-        if (os.path.isfile(total_quality_file_path)):
+        if os.path.isfile(total_quality_file_path):
             with open(total_quality_file_path) as json_file:
                 fragment_Q["TotalQuality"] = json.load(json_file)
 
         ff_quality_fpath = os.path.join(path, "FormFactorQuality.json")
-        if (os.path.isfile(ff_quality_fpath)):
+        if os.path.isfile(ff_quality_fpath):
             with open(ff_quality_fpath) as json_file:
                 FFq = json.load(json_file)
             try:
@@ -69,11 +69,9 @@ if __name__ == "__main__":
             except (KeyError, TypeError):
                 continue
 
-        sorted_qualities = sorted(
-            new_qualities, key=lambda i: i["TotalQuality"][sort_based_on], reverse=True)
+        sorted_qualities = sorted(new_qualities, key=lambda i: i["TotalQuality"][sort_based_on], reverse=True)
 
-        outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking",
-                                  "SYSTEM_" + sort_based_on + "_Ranking.json")
+        outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking", "SYSTEM_" + sort_based_on + "_Ranking.json")
         with open(outputfile, "w") as fp:
             json.dump(sorted_qualities, fp, default=str, cls=CompactJSONEncoder)
         print(f"Sorted based on {sort_based_on} quality and saved to {outputfile}")
@@ -86,11 +84,9 @@ if __name__ == "__main__":
         except (KeyError, TypeError):
             continue
 
-    sorted_qualities = sorted(new_qualities,
-                              key=lambda i: i["TotalQuality"]["FFQuality"])
+    sorted_qualities = sorted(new_qualities, key=lambda i: i["TotalQuality"]["FFQuality"])
 
-    outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking",
-                              "SYSTEM_FormFactor_Ranking.json")
+    outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking", "SYSTEM_FormFactor_Ranking.json")
     with open(outputfile, "w") as fp:
         json.dump(sorted_qualities, fp, default=str, cls=CompactJSONEncoder)
     print("Sorted based on form factor quality and saved to", outputfile)
@@ -108,13 +104,10 @@ if __name__ == "__main__":
                 except (KeyError, TypeError):
                     continue
 
-            sorted_qualities = sorted(
-                new_qualities, key=lambda i: i[lipid][sort_based_on], reverse=True)
+            sorted_qualities = sorted(new_qualities, key=lambda i: i[lipid][sort_based_on], reverse=True)
 
             if sorted_qualities:
-                outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking",
-                                          lipid + "_" + sort_based_on + "_Ranking.json")
+                outputfile = os.path.join(NMLDB_DATA_PATH, "Ranking", lipid + "_" + sort_based_on + "_Ranking.json")
                 with open(outputfile, "w") as fp:
                     json.dump(sorted_qualities, fp, default=str, cls=CompactJSONEncoder)
-                print(f"Quality of {sort_based_on} of {lipid} "
-                      f"sorted and saved to {outputfile}")
+                print(f"Quality of {sort_based_on} of {lipid} sorted and saved to {outputfile}")

@@ -485,8 +485,10 @@ software_dict = {
 
 
 def get_struc_top_traj_fnames(
-        system: System, allow_structure=False,
-        join_path=None) -> tuple[Optional[str], Optional[str], Optional[str]]:
+    system: System,
+    allow_structure=False,
+    join_path=None,
+) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """Returns filenames of structure/topology/trajectory according to system's engine.
 
     Args:
@@ -506,20 +508,17 @@ def get_struc_top_traj_fnames(
     sft_spec = software_dict[sft.upper()]
     trj_fn = None
     for k, v in sft_spec.items():
-        if ("CATEGORY" in v and v["CATEGORY"] == "trajectory" and
-                k in system and system[k] is not None):
+        if "CATEGORY" in v and v["CATEGORY"] == "trajectory" and k in system and system[k] is not None:
             trj_fn = system[k]
             break
     top_fn = None
     for k, v in sft_spec.items():
-        if ("CATEGORY" in v and v["CATEGORY"] == "topology" and
-                k in system and system[k] is not None):
+        if "CATEGORY" in v and v["CATEGORY"] == "topology" and k in system and system[k] is not None:
             top_fn = system[k]
             break
     struc_fn = None
     for k, v in sft_spec.items():
-        if ("CATEGORY" in v and v["CATEGORY"] == "structure"
-                and k in system and system[k] is not None):
+        if "CATEGORY" in v and v["CATEGORY"] == "structure" and k in system and system[k] is not None:
             struc_fn = system[k]
             break
 

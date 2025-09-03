@@ -75,18 +75,10 @@ class CompactJSONEncoder(json.JSONEncoder):
             o = dict(sorted(o.items(), key=lambda x: x[0]))
 
         if self._put_on_single_line(o):
-            return (
-                "{ "
-                + ", ".join(
-                    f"{json.dumps(k)}: {self.encode(el)}" for k, el in o.items()
-                )
-                + " }"
-            )
+            return "{ " + ", ".join(f"{json.dumps(k)}: {self.encode(el)}" for k, el in o.items()) + " }"
 
         self.indentation_level += 1
-        output = [
-            f"{self.indent_str}{json.dumps(k)}: {self.encode(v)}" for k, v in o.items()
-        ]
+        output = [f"{self.indent_str}{json.dumps(k)}: {self.encode(v)}" for k, v in o.items()]
         self.indentation_level -= 1
 
         return "{\n" + ",\n".join(output) + "\n" + self.indent_str + "}"
@@ -96,11 +88,7 @@ class CompactJSONEncoder(json.JSONEncoder):
         return self.encode(o)
 
     def _put_on_single_line(self, o):
-        return (
-            self._primitives_only(o)
-            and len(o) <= self.MAX_ITEMS
-            and len(str(o)) - 2 <= self.MAX_WIDTH
-        )
+        return self._primitives_only(o) and len(o) <= self.MAX_ITEMS and len(str(o)) - 2 <= self.MAX_WIDTH
 
     def _primitives_only(self, o: list | tuple | dict):
         if isinstance(o, (list, tuple)):

@@ -15,12 +15,11 @@ logger = logging.getLogger("__name__")
 # TODO: move ions list into Data
 ions_list = ["POT", "SOD", "CLA", "CAL"]  # should contain names of all ions
 
-LIP_CONC_REL_THRESHOLD = 0.15   # relative acceptable error for determination
+LIP_CONC_REL_THRESHOLD = 0.15  # relative acceptable error for determination
 # of the hydration in ssNMR
 
 
 class SearchSystem:
-
     system: dict
     idx_path: str
 
@@ -58,8 +57,7 @@ class SearchSystem:
         lipids2 = []
         if exp_counter_ions and n_molecule != 0:
             for lipid in lipids1:
-                if (molecule in exp_counter_ions.keys() and
-                        lipid == exp_counter_ions[molecule]):
+                if molecule in exp_counter_ions.keys() and lipid == exp_counter_ions[molecule]:
                     n_lipid = self.system["COMPOSITION"][lipid]["COUNT"]
                     lipids2.append(sum(n_lipid))
 
@@ -88,13 +86,14 @@ class SearchSystem:
             print(self.system)
         return tot_lipid_c
 
+
 ##################
 
 
 class Experiment:
     def __init__(self, readme: dict, molname: str, data_path: str, exptype: str):
         self.readme = readme
-        self.molname = molname    # <- the dictionary about existence of data files
+        self.molname = molname  # <- the dictionary about existence of data files
         self.dataPath = data_path  # .... for particular lipids
         self.exptype = exptype
 
@@ -149,8 +148,7 @@ def load_experiments(exp_type: str) -> List[Experiment]:
     elif exp_type == "FormFactors":
         data_file = "_FormFactor.json"
     else:
-        raise NotImplementedError(
-            "Only OrderParameters and FormFactors types are implemented.")
+        raise NotImplementedError("Only OrderParameters and FormFactors types are implemented.")
 
     print("Build experiments [%s] index..." % exp_type, end="")
     rm_idx = []
@@ -180,8 +178,7 @@ def load_experiments(exp_type: str) -> List[Experiment]:
                     molecule_name = fname.replace(data_file, "")
                 elif exp_type == "FormFactors":
                     molecule_name = "system"
-                experiments.append(Experiment(
-                    exp_readme, molecule_name, subdir, exp_type))
+                experiments.append(Experiment(exp_readme, molecule_name, subdir, exp_type))
 
     return experiments
 
@@ -200,53 +197,48 @@ def find_pairs(experiments: List[Experiment], simulations: List[SearchSystem]):
             sim_molar_fractions[lipid] = simulation.molar_fraction(lipid)
 
         for experiment in experiments:
-
             # check lipid composition matches the simulation
             exp_lipids = experiment.get_lipids()
 
-            exp_total_lipid_concentration = \
-                experiment.readme["TOTAL_LIPID_CONCENTRATION"]
+            exp_total_lipid_concentration = experiment.readme["TOTAL_LIPID_CONCENTRATION"]
             exp_ions = experiment.get_ions(ions_list)
             exp_counter_ions = experiment.readme["COUNTER_IONS"]
 
             # calculate simulation ion concentrations
             sim_concentrations = {}
             for molecule in ions_list:
-                sim_concentrations[molecule] = simulation.ion_conc(
-                    molecule, exp_counter_ions)
+                sim_concentrations[molecule] = simulation.ion_conc(molecule, exp_counter_ions)
 
             # continue if lipid compositions are the same
             if set(sim_lipids) == set(exp_lipids):
                 # compare molar fractions
                 mf_ok = 0
                 for key in sim_lipids:
-                    if ((experiment.readme["MOLAR_FRACTIONS"][key] >=
-                         sim_molar_fractions[key] - 0.03) and
-                        (experiment.readme["MOLAR_FRACTIONS"][key] <=
-                         sim_molar_fractions[key] + 0.03)):
+                    if (experiment.readme["MOLAR_FRACTIONS"][key] >= sim_molar_fractions[key] - 0.03) and (
+                        experiment.readme["MOLAR_FRACTIONS"][key] <= sim_molar_fractions[key] + 0.03
+                    ):
                         mf_ok += 1
 
                 # compare ion concentrations
                 c_ok = 0
                 if set(sim_ions) == set(exp_ions):
                     for key in sim_ions:
-                        if ((experiment.readme["ION_CONCENTRATIONS"][key] >=
-                             sim_concentrations[key] - 0.05) and
-                            (experiment.readme["ION_CONCENTRATIONS"][key] <=
-                             sim_concentrations[key] + 0.05)):
+                        if (experiment.readme["ION_CONCENTRATIONS"][key] >= sim_concentrations[key] - 0.05) and (
+                            experiment.readme["ION_CONCENTRATIONS"][key] <= sim_concentrations[key] + 0.05
+                        ):
                             c_ok += 1
 
                 switch = 0
 
-                if (isinstance(exp_total_lipid_concentration, (int, float)) and
-                        isinstance(sim_total_lipid_concentration, (int, float))):
-                    if ((exp_total_lipid_concentration / sim_total_lipid_concentration >
-                         1 - LIP_CONC_REL_THRESHOLD) and
-                        (exp_total_lipid_concentration / sim_total_lipid_concentration <
-                         1 + LIP_CONC_REL_THRESHOLD)):
+                if isinstance(exp_total_lipid_concentration, (int, float)) and isinstance(
+                    sim_total_lipid_concentration,
+                    (int, float),
+                ):
+                    if (
+                        exp_total_lipid_concentration / sim_total_lipid_concentration > 1 - LIP_CONC_REL_THRESHOLD
+                    ) and (exp_total_lipid_concentration / sim_total_lipid_concentration < 1 + LIP_CONC_REL_THRESHOLD):
                         switch = 1
-                elif ((type(exp_total_lipid_concentration) is str) and
-                      (type(sim_total_lipid_concentration) is str)):
+                elif (type(exp_total_lipid_concentration) is str) and (type(sim_total_lipid_concentration) is str):
                     if exp_total_lipid_concentration == sim_total_lipid_concentration:
                         switch = 1
 
@@ -254,10 +246,12 @@ def find_pairs(experiments: List[Experiment], simulations: List[SearchSystem]):
                     # check temperature +/- 2 degrees
                     t_exp = experiment.readme["TEMPERATURE"]
 
-                    if ((mf_ok == len(sim_lipids)) and
-                        (c_ok == len(sim_ions)) and
-                        (t_exp > float(t_sim) - 2.5) and
-                            (t_exp < float(t_sim) + 2.5)):
+                    if (
+                        (mf_ok == len(sim_lipids))
+                        and (c_ok == len(sim_ions))
+                        and (t_exp > float(t_sim) - 2.5)
+                        and (t_exp < float(t_sim) + 2.5)
+                    ):
                         # !we found the match!
                         pairs.append([simulation, experiment])
 
@@ -266,10 +260,11 @@ def find_pairs(experiments: List[Experiment], simulations: List[SearchSystem]):
                         exp_doi = experiment.readme["DOI"]
                         exp_path = os.path.relpath(
                             experiment.dataPath,
-                            start=os.path.join(NMLDB_EXP_PATH, experiment.exptype))
+                            start=os.path.join(NMLDB_EXP_PATH, experiment.exptype),
+                        )
                         if experiment.exptype == "OrderParameters":
                             lipid = experiment.molname
-                            simulation.system['EXPERIMENT']['ORDERPARAMETER'][lipid][exp_doi] = exp_path # noqa
+                            simulation.system["EXPERIMENT"]["ORDERPARAMETER"][lipid][exp_doi] = exp_path
                         elif experiment.exptype == "FormFactors":
                             simulation.system["EXPERIMENT"]["FORMFACTOR"] = exp_path
                     else:
@@ -284,11 +279,10 @@ def find_pairs(experiments: List[Experiment], simulations: List[SearchSystem]):
             sort_dict = dict(sorted(unsort_dict.items()))
             cur_exp["ORDERPARAMETER"][_lipid] = sort_dict.copy()
 
-        outfile_dict = os.path.join(
-            NMLDB_SIMU_PATH, simulation.idx_path, "README.yaml")
+        outfile_dict = os.path.join(NMLDB_SIMU_PATH, simulation.idx_path, "README.yaml")
         with open(outfile_dict, "w") as f:
             if "path" in simulation.system.keys():
-                del (simulation.system["path"])
+                del simulation.system["path"]
             yaml.dump(simulation.system.readme, f, sort_keys=False, allow_unicode=True)
 
     return pairs
@@ -340,8 +334,7 @@ def main():
         for lipid in simulation.get_lipids():
             simulation.system["EXPERIMENT"]["ORDERPARAMETER"][lipid] = {}
 
-        readme_path = os.path.join(
-            NMLDB_SIMU_PATH, simulation.idx_path, "README.yaml")
+        readme_path = os.path.join(NMLDB_SIMU_PATH, simulation.idx_path, "README.yaml")
         with open(readme_path, "w") as f:
             yaml.dump(simulation.system.readme, f, sort_keys=False, allow_unicode=True)
 

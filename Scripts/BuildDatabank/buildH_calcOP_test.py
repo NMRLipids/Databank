@@ -29,8 +29,7 @@ Note2: sometimes numpy is slow on small arrays, thus we wrote a few "in-house"
 functions for vectorial operations (e.g. cross product).
 """
 
-__authors__ = ("Patrick Fuchs", "Amélie Bâcle", "Hubert Santuz",
-               "Pierre Poulain")
+__authors__ = ("Patrick Fuchs", "Amélie Bâcle", "Hubert Santuz", "Pierre Poulain")
 __contact__ = ("patrickfuchs", "abacle", "hublot", "pierrepo")  # on github
 __version__ = "1.0.3"
 __copyright__ = "BSD"
@@ -52,7 +51,7 @@ from MDAnalysis.coordinates import XTC
 LENGTH_CH_BOND = 1.09  # in Angst
 # From https://en.wikipedia.org/wiki/Tetrahedron, tetrahedral angle equals
 # arccos(-1/3) ~ 1.9106 rad ~ 109.47 deg.
-TETRAHEDRAL_ANGLE = np.arccos(-1/3)
+TETRAHEDRAL_ANGLE = np.arccos(-1 / 3)
 # For debugging.
 DEBUG = False
 # For pickling results (useful for future analyses, e.g. drawing distributions).
@@ -89,8 +88,8 @@ def calc_OP(C, H):
     """
     vec = H - C
     d2 = np.square(vec).sum()
-    cos2 = vec[2]**2/d2
-    S = 0.5*(3.0*cos2 - 1.0)
+    cos2 = vec[2] ** 2 / d2
+    S = 0.5 * (3.0 * cos2 - 1.0)
     return S
 
 
@@ -142,7 +141,7 @@ def calc_angle(atom1, atom2, atom3):
     """
     vec1 = atom1 - atom2
     vec2 = atom3 - atom2
-    costheta = np.dot(vec1, vec2)/(norm(vec1)*norm(vec2))
+    costheta = np.dot(vec1, vec2) / (norm(vec1) * norm(vec2))
     if costheta > 1.0 or costheta < -1.0:
         raise ValueError("Cosine cannot be larger than 1.0 or less than -1.0")
     return np.arccos(costheta)
@@ -163,8 +162,8 @@ def vec2quaternion(vec, theta):
     numpy 1D-array
         The full quaternion (4 elements).
     """
-    w = np.cos(theta/2)
-    x, y, z = np.sin(theta/2) * normalize(vec)
+    w = np.cos(theta / 2)
+    x, y, z = np.sin(theta / 2) * normalize(vec)
     q = np.array([w, x, y, z])
     return q
 
@@ -187,13 +186,13 @@ def calc_rotation_matrix(quaternion):
     w, x, y, z = quaternion
     # Compute rotation matrix.
     matrix[0, 0] = w**2 + x**2 - y**2 - z**2
-    matrix[1, 0] = 2 * (x*y + w*z)
-    matrix[2, 0] = 2 * (x*z - w*y)
-    matrix[0, 1] = 2 * (x*y - w*z)
+    matrix[1, 0] = 2 * (x * y + w * z)
+    matrix[2, 0] = 2 * (x * z - w * y)
+    matrix[0, 1] = 2 * (x * y - w * z)
     matrix[1, 1] = w**2 - x**2 + y**2 - z**2
-    matrix[2, 1] = 2 * (y*z + w*x)
-    matrix[0, 2] = 2 * (x*z + w*y)
-    matrix[1, 2] = 2 * (y*z - w*x)
+    matrix[2, 1] = 2 * (y * z + w * x)
+    matrix[0, 2] = 2 * (x * z + w * y)
+    matrix[1, 2] = 2 * (y * z - w * x)
     matrix[2, 2] = w**2 - x**2 - y**2 + z**2
     return matrix
 
@@ -249,21 +248,49 @@ def pandasdf2pdb(df):
         # "seg" means segment identifier
         # "elt" means element symbol
         if len(atname) == 4:
-            s += ("{record_type:6s}{atnum:5d} {atname:<4s}{alt:1s}{resname:>4s}"
-                  "{chain:1s}{resnum:>4d}{code:1s}   {x:>8.3f}{y:>8.3f}{z:>8.3f}"
-                  "{occupancy:>6.2f}{temp_fact:>6.2f}          {seg:<2s}{elt:>2s}\n"
-                  .format(record_type="ATOM", atnum=atnum, atname=atname, alt="",
-                          resname=resname, chain=chain, resnum=resnum, code="",
-                          x=x, y=y, z=z, occupancy=1.0, temp_fact=0.0, seg="",
-                          elt=atname[0]))
+            s += (
+                "{record_type:6s}{atnum:5d} {atname:<4s}{alt:1s}{resname:>4s}"
+                "{chain:1s}{resnum:>4d}{code:1s}   {x:>8.3f}{y:>8.3f}{z:>8.3f}"
+                "{occupancy:>6.2f}{temp_fact:>6.2f}          {seg:<2s}{elt:>2s}\n".format(
+                    record_type="ATOM",
+                    atnum=atnum,
+                    atname=atname,
+                    alt="",
+                    resname=resname,
+                    chain=chain,
+                    resnum=resnum,
+                    code="",
+                    x=x,
+                    y=y,
+                    z=z,
+                    occupancy=1.0,
+                    temp_fact=0.0,
+                    seg="",
+                    elt=atname[0],
+                )
+            )
         else:
-            s += ("{record_type:6s}{atnum:5d}  {atname:<3s}{alt:1s}{resname:>4s}"
-                  "{chain:1s}{resnum:>4d}{code:1s}   {x:>8.3f}{y:>8.3f}{z:>8.3f}"
-                  "{occupancy:>6.2f}{temp_fact:>6.2f}          {seg:<2s}{elt:>2s}\n"
-                  .format(record_type="ATOM", atnum=atnum, atname=atname, alt="",
-                          resname=resname, chain=chain, resnum=resnum, code="",
-                          x=x, y=y, z=z, occupancy=1.0, temp_fact=0.0, seg="",
-                          elt=atname[0]))
+            s += (
+                "{record_type:6s}{atnum:5d}  {atname:<3s}{alt:1s}{resname:>4s}"
+                "{chain:1s}{resnum:>4d}{code:1s}   {x:>8.3f}{y:>8.3f}{z:>8.3f}"
+                "{occupancy:>6.2f}{temp_fact:>6.2f}          {seg:<2s}{elt:>2s}\n".format(
+                    record_type="ATOM",
+                    atnum=atnum,
+                    atname=atname,
+                    alt="",
+                    resname=resname,
+                    chain=chain,
+                    resnum=resnum,
+                    code="",
+                    x=x,
+                    y=y,
+                    z=z,
+                    occupancy=1.0,
+                    temp_fact=0.0,
+                    seg="",
+                    elt=atname[0],
+                )
+            )
     return s
 
 
@@ -286,9 +313,9 @@ def cross_product(A, B):
     numpy 1D-array
         Cross product of A^B.
     """
-    x = (A[1]*B[2]) - (A[2]*B[1])
-    y = (A[0]*B[2]) - (A[2]*B[0])
-    z = (A[0]*B[1]) - (A[1]*B[0])
+    x = (A[1] * B[2]) - (A[2] * B[1])
+    y = (A[0] * B[2]) - (A[2] * B[0])
+    z = (A[0] * B[1]) - (A[1] * B[0])
     return np.array((x, -y, z))
 
 
@@ -323,11 +350,9 @@ def get_CH2(atom, helper1, helper2):
     # vec_to_rotate = normalize(np.cross(v4, rotation_axis))
     vec_to_rotate = normalize(cross_product(v4, rotation_axis))
     # Reconstruct the two hydrogens.
-    unit_vect_H1 = apply_rotation(vec_to_rotate, rotation_axis,
-                                  -TETRAHEDRAL_ANGLE/2)
+    unit_vect_H1 = apply_rotation(vec_to_rotate, rotation_axis, -TETRAHEDRAL_ANGLE / 2)
     hcoor_H1 = LENGTH_CH_BOND * unit_vect_H1 + atom
-    unit_vect_H2 = apply_rotation(vec_to_rotate, rotation_axis,
-                                  TETRAHEDRAL_ANGLE/2)
+    unit_vect_H2 = apply_rotation(vec_to_rotate, rotation_axis, TETRAHEDRAL_ANGLE / 2)
     hcoor_H2 = LENGTH_CH_BOND * unit_vect_H2 + atom
     return (hcoor_H1, hcoor_H2)
 
@@ -428,14 +453,14 @@ def get_CH3(atom, helper1, helper2):
     unit_vect_He = apply_rotation(v2, rotation_axis, theta)
     coor_He = LENGTH_CH_BOND * unit_vect_He + atom
     # -- Build CH3r.
-    theta = (2/3) * np.pi
+    theta = (2 / 3) * np.pi
     rotation_axis = normalize(helper1 - atom)
     v4 = normalize(coor_He - atom)
     # Now we rotate atom->He bond around atom->helper1 bond by 2pi/3.
     unit_vect_Hr = apply_rotation(v4, rotation_axis, theta)
     coor_Hr = LENGTH_CH_BOND * unit_vect_Hr + atom
     # -- Build CH3s.
-    theta = -(2/3) * np.pi
+    theta = -(2 / 3) * np.pi
     rotation_axis = normalize(helper1 - atom)
     v5 = normalize(coor_He - atom)
     # Last we rotate atom->He bond around atom->helper1 bond by -2pi/3.
@@ -494,26 +519,28 @@ def buildHs_on_1C(atom, dic_lipid):
     if typeofH2build == "CH":
         # If we reconstruct a single H, we have a 3rd helper.
         helper3_coor = sel(f"name {helper3_name}")[0].position
-        H1_coor = get_CH(atom.position, helper1_coor, helper2_coor,
-                         helper3_coor)
+        H1_coor = get_CH(atom.position, helper1_coor, helper2_coor, helper3_coor)
         return (H1_coor,)
     if typeofH2build == "CHdoublebond":
-        H1_coor = get_CH_double_bond(atom.position, helper1_coor,
-                                     helper2_coor)
+        H1_coor = get_CH_double_bond(atom.position, helper1_coor, helper2_coor)
         return (H1_coor,)
     if typeofH2build == "CH3":
-        H1_coor, H2_coor, H3_coor = get_CH3(atom.position,
-                                            helper1_coor, helper2_coor)
+        H1_coor, H2_coor, H3_coor = get_CH3(atom.position, helper1_coor, helper2_coor)
         return (H1_coor, H2_coor, H3_coor)
-    raise UserWarning("Wrong code for typeofH2build, expected 'CH2', 'CH'"
-                      f", 'CHdoublebond' or 'CH3', got {typeofH2build}.",
-                      )
+    raise UserWarning(
+        f"Wrong code for typeofH2build, expected 'CH2', 'CH', 'CHdoublebond' or 'CH3', got {typeofH2build}.",
+    )
 
 
-def build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,
-                         universe_wH=None, dic_OP=None,
-                         dic_corresp_numres_index_dic_OP=None,
-                         return_coors=False):
+def build_all_Hs_calc_OP(
+    universe_woH,
+    dic_lipid,
+    dic_Cname2Hnames,
+    universe_wH=None,
+    dic_OP=None,
+    dic_corresp_numres_index_dic_OP=None,
+    return_coors=False,
+):
     """Main function that builds all hydrogens and calculates order parameters.
 
     This function shall be used in two modes :
@@ -604,14 +631,10 @@ def build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,
             # Append atom to the new list.
             # 0      1       2        3       4  5  6
             # atnum, atname, resname, resnum, x, y, z
-            newrows.append([new_atom_num, name, resname, resnum]
-                           + list(atom.position))
+            newrows.append([new_atom_num, name, resname, resnum] + list(atom.position))
             new_atom_num += 1
         # Build new H(s)?
-        if (
-            atom.name in dic_lipid and
-            atom.residue.resname == dic_lipid["resname"]
-           ):
+        if atom.name in dic_lipid and atom.residue.resname == dic_lipid["resname"]:
             # Build Hs and store them in a list of numpy 1D-arrays Hs_coor.
             # The "s" in Hs_coor means there can be more than 1 H:
             # For CH2, Hs_coor will contain: [H1_coor, H2_coor].
@@ -642,8 +665,7 @@ def build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,
                             print(atom.name, H_coor, "OP:", op)
                 if return_coors:
                     # Add them to newrows.
-                    newrows.append([new_atom_num, Hname, resname, resnum]
-                                   + list(H_coor))
+                    newrows.append([new_atom_num, Hname, resname, resnum] + list(H_coor))
                     new_atom_num += 1
                 if universe_wH:
                     # Update the position of the current H in the universe with H.
@@ -657,9 +679,7 @@ def build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,
         print("Final dic_OP: ", dic_OP, "\n")
     if return_coors:
         # Create a dataframe to store the mlc with added hydrogens.
-        new_df_atoms = pd.DataFrame(newrows, columns=["atnum", "atname",
-                                                      "resname", "resnum",
-                                                      "x", "y", "z"])
+        new_df_atoms = pd.DataFrame(newrows, columns=["atnum", "atname", "resname", "resnum", "x", "y", "z"])
         return new_df_atoms
 
 
@@ -700,37 +720,32 @@ def fast_buildHs_on_1C(dic_lipids_with_indexes, ts, Cname, ix_first_atom_res):
     """
     # Get nb of H to build and helper names (we can have 2 or 3 helpers).
     if len(dic_lipids_with_indexes[Cname]) == 6:
-        typeofH2build, _, _, Cname_ix, helper1_ix, helper2_ix = \
-            dic_lipids_with_indexes[Cname]
+        typeofH2build, _, _, Cname_ix, helper1_ix, helper2_ix = dic_lipids_with_indexes[Cname]
     else:
-        typeofH2build, _, _, _, Cname_ix, helper1_ix, helper2_ix, helper3_ix = \
-            dic_lipids_with_indexes[Cname]
+        typeofH2build, _, _, _, Cname_ix, helper1_ix, helper2_ix, helper3_ix = dic_lipids_with_indexes[Cname]
     # Get Cname coordinates.
-    Cname_position = ts[Cname_ix+ix_first_atom_res]
+    Cname_position = ts[Cname_ix + ix_first_atom_res]
     # Get helper coordinates
-    helper1_coor = ts[helper1_ix+ix_first_atom_res]
-    helper2_coor = ts[helper2_ix+ix_first_atom_res]
+    helper1_coor = ts[helper1_ix + ix_first_atom_res]
+    helper2_coor = ts[helper2_ix + ix_first_atom_res]
     # Build new H(s) and get coordinates.
     if typeofH2build == "CH2":
         H1_coor, H2_coor = get_CH2(Cname_position, helper1_coor, helper2_coor)
         return (H1_coor, H2_coor)
     if typeofH2build == "CH":
         # If we reconstruct a single H, we have a 3rd helper.
-        helper3_coor = ts[helper3_ix+ix_first_atom_res]
-        H1_coor = get_CH(Cname_position, helper1_coor, helper2_coor,
-                         helper3_coor)
+        helper3_coor = ts[helper3_ix + ix_first_atom_res]
+        H1_coor = get_CH(Cname_position, helper1_coor, helper2_coor, helper3_coor)
         return (H1_coor,)
     if typeofH2build == "CHdoublebond":
-        H1_coor = get_CH_double_bond(Cname_position, helper1_coor,
-                                     helper2_coor)
+        H1_coor = get_CH_double_bond(Cname_position, helper1_coor, helper2_coor)
         return (H1_coor,)
     if typeofH2build == "CH3":
-        H1_coor, H2_coor, H3_coor = get_CH3(Cname_position,
-                                            helper1_coor, helper2_coor)
+        H1_coor, H2_coor, H3_coor = get_CH3(Cname_position, helper1_coor, helper2_coor)
         return (H1_coor, H2_coor, H3_coor)
-    raise UserWarning("Wrong code for typeofH2build, expected 'CH2', 'CH'"
-                      f", 'CHdoublebond' or 'CH3', got {typeofH2build}.",
-                      )
+    raise UserWarning(
+        f"Wrong code for typeofH2build, expected 'CH2', 'CH', 'CHdoublebond' or 'CH3', got {typeofH2build}.",
+    )
 
 
 def get_indexes(atom, universe_woH, dic_lipid):
@@ -814,9 +829,10 @@ def make_dic_lipids_with_indexes(universe_woH, dic_OP, dic_lipid):
     # Get index of this atom.
     first_atom_ix = first_lipid_residue.atoms[0].ix
     if DEBUG:
-        print(f"resname: {resname}, first encountered residue: {first_lipid_residue},\n"
-              f"resnum_1st_lipid: {resnum_1st_lipid}, first_atom_name: {first_atom_name}, first_atom_ix: {first_atom_ix}",
-              )
+        print(
+            f"resname: {resname}, first encountered residue: {first_lipid_residue},\n"
+            f"resnum_1st_lipid: {resnum_1st_lipid}, first_atom_name: {first_atom_name}, first_atom_ix: {first_atom_ix}",
+        )
         print()
     # Keep only carbons on which we want to build Hs.
     carbons2keep = []
@@ -838,12 +854,9 @@ def make_dic_lipids_with_indexes(universe_woH, dic_OP, dic_lipid):
         for Catom in universe_woH.select_atoms(selection):
             # Get the (absolute) index of helpers.
             if dic_lipid[Cname][0] == "CH":
-                helper1_ix, helper2_ix, helper3_ix = get_indexes(Catom,
-                                                                 universe_woH,
-                                                                 dic_lipid)
+                helper1_ix, helper2_ix, helper3_ix = get_indexes(Catom, universe_woH, dic_lipid)
             else:
-                helper1_ix, helper2_ix = get_indexes(Catom, universe_woH,
-                                                     dic_lipid)
+                helper1_ix, helper2_ix = get_indexes(Catom, universe_woH, dic_lipid)
             # If the first lipid doesn't start at residue 1 we must
             # substract the index of the first atom of that lipid.
             Catom_ix_inres = Catom.ix - first_atom_ix
@@ -852,16 +865,15 @@ def make_dic_lipids_with_indexes(universe_woH, dic_OP, dic_lipid):
             # Then add these indexes to dic_lipids_with_indexes.
             if dic_lipid[Cname][0] == "CH":
                 helper3_ix_inres = helper3_ix - first_atom_ix
-                tmp_tuple = (Catom_ix_inres, helper1_ix_inres,
-                             helper2_ix_inres, helper3_ix_inres)
+                tmp_tuple = (Catom_ix_inres, helper1_ix_inres, helper2_ix_inres, helper3_ix_inres)
                 dic_lipids_with_indexes[Cname] += tmp_tuple
             else:
-                tmp_tuple = (Catom_ix_inres, helper1_ix_inres,
-                             helper2_ix_inres)
+                tmp_tuple = (Catom_ix_inres, helper1_ix_inres, helper2_ix_inres)
                 dic_lipids_with_indexes[Cname] += tmp_tuple
     if DEBUG:
-        print(f"Everything is based on the following dic_lipids_with_indexes\n{dic_lipids_with_indexes}",
-              )
+        print(
+            f"Everything is based on the following dic_lipids_with_indexes\n{dic_lipids_with_indexes}",
+        )
         print()
     return dic_lipids_with_indexes
 
@@ -905,8 +917,7 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
     # - (possibly helper3) with respect to the first atom
     # - (e.g. 0 is index of C1, N4 is 3 atoms away from C1, etc).
     # -
-    dic_lipids_with_indexes = make_dic_lipids_with_indexes(universe_woH, dic_OP,
-                                                           dic_lipid)
+    dic_lipids_with_indexes = make_dic_lipids_with_indexes(universe_woH, dic_OP, dic_lipid)
     # Get lipid name.
     resname = dic_lipid["resname"]
     # Select first residue of that lipid.
@@ -920,8 +931,9 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
     # -
     # Loop over frames (ts is a Timestep instance).
     for ts in universe_woH.trajectory:
-        print(f"Dealing with frame {ts.frame} at {universe_woH.trajectory.time} ps.",
-              )
+        print(
+            f"Dealing with frame {ts.frame} at {universe_woH.trajectory.time} ps.",
+        )
         if DEBUG:
             print("Looping now over residues...")
             print()
@@ -929,8 +941,7 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
         # residues* (first_lipid_atom is an Atom instance, lipid_ix is an int
         # that will be used for storing OPs in dic_OP).
         selection = f"resname {resname} and name {first_atom_name}"
-        for lipid_ix, first_lipid_atom in \
-                enumerate(universe_woH.select_atoms(selection)):
+        for lipid_ix, first_lipid_atom in enumerate(universe_woH.select_atoms(selection)):
             if DEBUG:
                 print("Dealing with Cname", first_lipid_atom)
                 print("which is part of residue", first_lipid_atom.residue)
@@ -943,12 +954,10 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
             for Cname in dic_lipids_with_indexes.keys():
                 # Get Cname coords.
                 if len(dic_lipids_with_indexes[Cname]) == 6:
-                    _, _, _, Cname_ix, helper1_ix, helper2_ix = \
-                        dic_lipids_with_indexes[Cname]
+                    _, _, _, Cname_ix, helper1_ix, helper2_ix = dic_lipids_with_indexes[Cname]
                 else:
-                    _, _, _, _, Cname_ix, helper1_ix, helper2_ix, helper3_ix = \
-                        dic_lipids_with_indexes[Cname]
-                Cname_position = ts[Cname_ix+ix_first_atom_res]
+                    _, _, _, _, Cname_ix, helper1_ix, helper2_ix, helper3_ix = dic_lipids_with_indexes[Cname]
+                Cname_position = ts[Cname_ix + ix_first_atom_res]
                 if DEBUG:
                     print("Dealing with Cname", Cname)
                     sel = first_lipid_atom.residue.atoms.select_atoms
@@ -966,17 +975,13 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
                         helper3_atom = sel(f"name {helper3_name}")[0]
                         print("helper3", helper3_atom, helper3_atom.position)
                 # Get newly built H(s) on that atom.
-                Hs_coor = fast_buildHs_on_1C(dic_lipids_with_indexes, ts,
-                                             Cname, ix_first_atom_res)
+                Hs_coor = fast_buildHs_on_1C(dic_lipids_with_indexes, ts, Cname, ix_first_atom_res)
                 if DEBUG:
                     print("Cname_position with fast indexing:", Cname_position)
-                    print("helper1_position with fast indexing:",
-                          ts[helper1_ix+ix_first_atom_res])
-                    print("helper2_position with fast indexing:",
-                          ts[helper2_ix+ix_first_atom_res])
+                    print("helper1_position with fast indexing:", ts[helper1_ix + ix_first_atom_res])
+                    print("helper2_position with fast indexing:", ts[helper2_ix + ix_first_atom_res])
                     if len(dic_lipid[Cname]) == 4:
-                        print("helper3_position with fast indexing:",
-                              ts[helper3_ix+ix_first_atom_res])
+                        print("helper3_position with fast indexing:", ts[helper3_ix + ix_first_atom_res])
                 # To retrieve Hname, we need a counter.
                 counter4Hname = 0
                 # Loop over all Hs.
@@ -984,7 +989,7 @@ def fast_build_all_Hs_calc_OP(universe_woH, dic_OP, dic_lipid, dic_Cname2Hnames)
                     # Retrieve name of newly built H.
                     Hname = dic_Cname2Hnames[Cname][counter4Hname]
                     # Calc and store OP for that couple C-H.
-                    Cname_position = ts[Cname_ix+ix_first_atom_res]
+                    Cname_position = ts[Cname_ix + ix_first_atom_res]
                     op = calc_OP(Cname_position, H_coor)
                     # Old way: dic_OP[(Cname, Hname)].append(op)
                     if (Cname, Hname) in dic_OP:
@@ -1030,14 +1035,12 @@ def make_dic_atname2genericname(filename):
                 name = name1 + " " + name2
                 dic[(C, H)] = name
     except Exception:
-        raise UserWarning("Can't read order parameter definition in "
-                          f"file {filename}")
+        raise UserWarning(f"Can't read order parameter definition in file {filename}")
     return dic
 
 
 def init_dic_OP(universe_woH, dic_lipid, dic_atname2genericname):
-    """TODO Complete docstring.
-    """
+    """TODO Complete docstring."""
     # - To calculate the error, we need to first average over the
     # - trajectory, then over residues.
     # - Thus in dic_OP, we want for each key a list of lists, for example:
@@ -1070,8 +1073,7 @@ def init_dic_OP(universe_woH, dic_lipid, dic_atname2genericname):
 
 
 def make_dic_Cname2Hnames(dic_OP):
-    """TODO Complete Docstring.
-    """
+    """TODO Complete Docstring."""
     dic = {}
     for Cname, Hname in dic_OP.keys():
         if Cname not in dic:
@@ -1086,7 +1088,6 @@ def make_dic_Cname2Hnames(dic_OP):
 # Anne: Modification to use buildH_calcOP.py also as a module within another python
 # script
 def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
-
     # Get the dictionary with helper info using residue name (args.lipid
     # argument). Beware, this dict is then called `dic_lipid` *without s*,
     # while `dic_lipids.py` (with an s) is a module with many different dicts
@@ -1094,8 +1095,9 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
     try:
         dic_lipid = getattr(dic_lipids_UA, lipid)
     except Exception:
-        raise UserWarning(f"Lipid dictionnary {lipid} doesn't exist in dic_lipids.py",
-                          )
+        raise UserWarning(
+            f"Lipid dictionnary {lipid} doesn't exist in dic_lipids.py",
+        )
 
     print("Constructing the system...")
 
@@ -1104,7 +1106,7 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
     except Exception:
         raise UserWarning(
             f"Can't create MDAnalysis universe with files {topfile} and {trajfile}",
-            )
+        )
 
     print(f"System has {len(universe_woH.coord)} atoms")
     # 2) Initialize dic for storing OP.
@@ -1112,8 +1114,7 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
     # {('C1', 'H11'): 'gamma1_1', ...}.
     dic_atname2genericname = make_dic_atname2genericname(def_file)
     # Initialize dic_OP (see function init_dic_OP() for the format).
-    dic_OP, dic_corresp_numres_index_dic_OP = init_dic_OP(universe_woH, dic_lipid,
-                                                          dic_atname2genericname)
+    dic_OP, dic_corresp_numres_index_dic_OP = init_dic_OP(universe_woH, dic_lipid, dic_atname2genericname)
     # Initialize dic_Cname2Hnames.
     dic_Cname2Hnames = make_dic_Cname2Hnames(dic_OP)
 
@@ -1128,10 +1129,12 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
             if atname != "resname":
                 # Check if carbon is present in the definition file.
                 if atname not in dic_Cname2Hnames:
-                    print("Error: When -opx option is used, the order param "
-                          "definition file (passed with -d arg) must contain "
-                          "all possible carbons on which we want to rebuild "
-                          "hydrogens.")
+                    print(
+                        "Error: When -opx option is used, the order param "
+                        "definition file (passed with -d arg) must contain "
+                        "all possible carbons on which we want to rebuild "
+                        "hydrogens.",
+                    )
                     print("Found:", list(dic_Cname2Hnames.keys()))
                     print("Needs:", list(dic_lipid.keys()))
                     raise UserWarning("Order param definition file incomplete.")
@@ -1140,20 +1143,22 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
                 tmp_dic = {"CH": 1, "CHdoublebond": 1, "CH2": 2, "CH3": 3}
                 correct_nb_of_Hs = tmp_dic[dic_lipid[atname][0]]
                 if correct_nb_of_Hs != nbHs_in_def_file:
-                    print("Error: When -opx option is used, the order param "
-                          "definition file (passed with -d arg) must contain "
-                          "all possible C-H pairs to rebuild.")
-                    print(f"Expected {correct_nb_of_Hs} hydrogen(s) to rebuild for carbon {atname}, "
-                          f"got {dic_Cname2Hnames[atname]} in definition file {def_file}.",
-                          )
+                    print(
+                        "Error: When -opx option is used, the order param "
+                        "definition file (passed with -d arg) must contain "
+                        "all possible C-H pairs to rebuild.",
+                    )
+                    print(
+                        f"Expected {correct_nb_of_Hs} hydrogen(s) to rebuild for carbon {atname}, "
+                        f"got {dic_Cname2Hnames[atname]} in definition file {def_file}.",
+                    )
                     raise UserWarning("Wrong number of Hs to rebuild.")
         # Create filenames.
         pdbout_filename = opdbxtc + ".pdb"
         xtcout_filename = opdbxtc + ".xtc"
         # Build a new universe with H.
         # Build a pandas df with H.
-        new_df_atoms = build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames,
-                                            return_coors=True)
+        new_df_atoms = build_all_Hs_calc_OP(universe_woH, dic_lipid, dic_Cname2Hnames, return_coors=True)
         # Create a new universe with H using that df.
         print("Writing new pdb with hydrogens.")
         # Write pdb with H to disk.
@@ -1170,13 +1175,17 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
         # 4) Loop over all frames of the traj *without* H, build Hs and
         # calc OP (ts is a Timestep instance).
         for ts in universe_woH.trajectory:
-            print(f"Dealing with frame {ts.frame} at {universe_woH.trajectory.time} ps.",
-                  )
+            print(
+                f"Dealing with frame {ts.frame} at {universe_woH.trajectory.time} ps.",
+            )
             # Build H and update their positions in the universe *with* H (in place).
             # Calculate OPs on the fly while building Hs  (dic_OP changed in place).
             build_all_Hs_calc_OP(
-                universe_woH, dic_lipid, dic_Cname2Hnames,
-                universe_wH=universe_wH, dic_OP=dic_OP,
+                universe_woH,
+                dic_lipid,
+                dic_Cname2Hnames,
+                universe_wH=universe_wH,
+                dic_OP=dic_OP,
                 dic_corresp_numres_index_dic_OP=dic_corresp_numres_index_dic_OP,
             )
             # Write new frame to xtc.
@@ -1201,16 +1210,20 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
         # with open("OP.pickle", "rb") as f:
         #    dic_OP = pickle.load(f)
     # Output to a file.
-    with open(f"{outOP}.jmelcr_style.out", "w") as f, \
-            open(f"{outOP}.apineiro_style.out", "w") as f2:
+    with open(f"{outOP}.jmelcr_style.out", "w") as f, open(f"{outOP}.apineiro_style.out", "w") as f2:
         # J. Melcr output style.
         f.write(
-            "# {:30s} {:7s} {:5s} {:5s}  {:7s} {:7s} {:7s}\n"
-            .format("OP_name", "resname", "atom1", "atom2", "OP_mean",
-                    "OP_stddev", "OP_stem"),
+            "# {:30s} {:7s} {:5s} {:5s}  {:7s} {:7s} {:7s}\n".format(
+                "OP_name",
+                "resname",
+                "atom1",
+                "atom2",
+                "OP_mean",
+                "OP_stddev",
+                "OP_stem",
+            ),
         )
-        f.write("#-------------------------------"
-                "-------------------------------------\n")
+        f.write("#--------------------------------------------------------------------\n")
         # Loop over each pair (C, H).
         for Cname, Hname in dic_atname2genericname.keys():
             name = dic_atname2genericname[(Cname, Hname)]
@@ -1224,8 +1237,7 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
             # --                     ...]
             a = np.array(dic_OP[(Cname, Hname)])
             if DEBUG:
-                print("Final OP array has shape (nb_lipids, nb_frames):",
-                      a.shape)
+                print("Final OP array has shape (nb_lipids, nb_frames):", a.shape)
                 print()
             # General mean over lipids and over frames (for that (C, H) pair).
             mean = np.mean(a)
@@ -1237,10 +1249,18 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
             # Calc standard deviation and STEM (std error of the mean).
             std_dev = np.std(means)
             stem = np.std(means) / np.sqrt(len(means))
-            f.write("{:30s} {:7s} {:5s} {:5s} {: 2.5f} {: 2.5f} {: 2.5f}\n"
-                    .format(name, dic_lipid["resname"], Cname, Hname, mean,
-                            std_dev, stem))
-#######################################################################################
+            f.write(
+                "{:30s} {:7s} {:5s} {:5s} {: 2.5f} {: 2.5f} {: 2.5f}\n".format(
+                    name,
+                    dic_lipid["resname"],
+                    Cname,
+                    Hname,
+                    mean,
+                    std_dev,
+                    stem,
+                ),
+            )
+        #######################################################################################
         # A. Pineiro output style.
         f2.write("Atom_name  Hydrogen\tOP\t      STD\t   STDmean\n")
         list_unique_Cnames = []
@@ -1264,21 +1284,17 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
                 std_dev = np.std(means)
                 stem = np.std(means) / np.sqrt(len(means))
                 if i == 0:
-                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n"
-                             .format(Cname, "HR", mean, std_dev, stem))
+                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n".format(Cname, "HR", mean, std_dev, stem))
                 elif i == 1:
-                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n"
-                             .format("", "HS", mean, std_dev, stem))
+                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n".format("", "HS", mean, std_dev, stem))
                 elif i == 2:
-                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n"
-                             .format("", "HT", mean, std_dev, stem))
+                    f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n".format("", "HT", mean, std_dev, stem))
             a = np.array(cumulative_list_for_that_carbon)
             mean = np.mean(a)
             means = np.mean(a, axis=1)
             std_dev = np.std(means)
             stem = np.std(means) / np.sqrt(len(means))
-            f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n\n"
-                     .format("", "AVG", mean, std_dev, stem))
+            f2.write("{:>7s}\t{:>8s}  {:10.5f}\t{:10.5f}\t{:10.5f}\n\n".format("", "AVG", mean, std_dev, stem))
 
     print(f"Results written to {outOP}")
 
@@ -1286,26 +1302,33 @@ def main(topfile, lipid, def_file, trajfile, outOP, opdbxtc=""):
 def parseCommandLineArgs(message):
     parser = argparse.ArgumentParser(description=message)
     # Avoid tpr for topology cause there's no .coord there!
-    parser.add_argument("topfile", type=str,
-                        help="Topology file (pdb or gro).")
-    parser.add_argument("-x", "--xtc", help="Input trajectory file in xtc "
-                        "format.")
-    parser.add_argument("-l", "--lipid", help="Residue name of lipid to "
-                        "calculate the OP on (e.g. POPC).")
+    parser.add_argument("topfile", type=str, help="Topology file (pdb or gro).")
+    parser.add_argument("-x", "--xtc", help="Input trajectory file in xtc format.")
+    parser.add_argument("-l", "--lipid", help="Residue name of lipid to calculate the OP on (e.g. POPC).")
     parser.add_argument(
-        "-d", "--defop",
+        "-d",
+        "--defop",
         help="Order parameter definition "
         "file. Can be found on NMRlipids MATCH repository:"
-        "https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs")
-    parser.add_argument("-opx", "--opdbxtc", help="Base name for trajectory "
-                        "output with hydrogens. File extension will be "
-                        "automatically added. For example -opx trajH will "
-                        "generate trajH.pdb and trajH.xtc. "
-                        "So far only xtc is supported.")
-    parser.add_argument("-o", "--out", help="Output base name for storing "
-                        'order parameters. Extention ".out" will be '
-                        "automatically added. Default name is OP_buildH.out.",
-                        default="OP_buildH.out")
+        "https://github.com/NMRLipids/MATCH/tree/master/scripts/orderParm_defs",
+    )
+    parser.add_argument(
+        "-opx",
+        "--opdbxtc",
+        help="Base name for trajectory "
+        "output with hydrogens. File extension will be "
+        "automatically added. For example -opx trajH will "
+        "generate trajH.pdb and trajH.xtc. "
+        "So far only xtc is supported.",
+    )
+    parser.add_argument(
+        "-o",
+        "--out",
+        help="Output base name for storing "
+        'order parameters. Extention ".out" will be '
+        "automatically added. Default name is OP_buildH.out.",
+        default="OP_buildH.out",
+    )
     args = parser.parse_args()
     return args
 
@@ -1323,15 +1346,12 @@ if __name__ == "__main__":
     # "args.pdbout", xtc output file is "args.xtcout".
     # Check topology file extension.
     if not args.topfile.endswith("pdb") and not args.topfile.endswith("gro"):
-        raise argparse.ArgumentTypeError("Topology must be given in pdb"
-                                         " or gro format")
+        raise argparse.ArgumentTypeError("Topology must be given in pdb or gro format")
     # Check residue name validity.
     if not args.lipid:
-        raise argparse.ArgumentTypeError("Lipid resname is a mandatory "
-                                         "argument (option -l).")
+        raise argparse.ArgumentTypeError("Lipid resname is a mandatory argument (option -l).")
     # Check if order param def file has been passed.
     if not args.defop:
-        raise argparse.ArgumentTypeError("Order parameter definition file is "
-                                         "a mandatory argument (option -d).")
+        raise argparse.ArgumentTypeError("Order parameter definition file is a mandatory argument (option -d).")
     # Pass arguments to main function
     main(args.topfile, args.lipid, args.defop, args.xtc, args.out, args.opdbxtc)

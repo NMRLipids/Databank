@@ -46,8 +46,7 @@ class System(collections.abc.MutableMapping):
             elif k in molecules_set:
                 mol = NonLipid(k)
             else:
-                raise ValueError(
-                    f"Molecule {k} is not in the set of lipids or molecules.")
+                raise ValueError(f"Molecule {k} is not in the set of lipids or molecules.")
             mol.register_mapping(v["MAPPING"])
             self._content[k] = mol
 
@@ -178,8 +177,7 @@ def print_README(system):  # noqa: N802 (API)
     """
     if system == "example":
         current_folder = os.path.dirname(os.path.realpath(__file__))
-        readme_path = os.path.join(
-            current_folder, "settings", "READMEexplanations.yaml")
+        readme_path = os.path.join(current_folder, "settings", "READMEexplanations.yaml")
         with open(readme_path) as file:
             readme_file = yaml.safe_load(file)
     else:

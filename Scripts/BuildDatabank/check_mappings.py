@@ -21,11 +21,9 @@ if __name__ == "__main__":
     for system in tqdm(systems):
         try:
             if "TPR" not in system.readme.keys():
-                sys.stderr.write(
-                    f"Skipping {system['SYSTEM']} because there is no TPR\n")
+                sys.stderr.write(f"Skipping {system['SYSTEM']} because there is no TPR\n")
                 continue
-            tpr_name = os.path.join(NMLDB_SIMU_PATH,
-                                    system["path"], system["TPR"][0][0])
+            tpr_name = os.path.join(NMLDB_SIMU_PATH, system["path"], system["TPR"][0][0])
             if not os.path.exists(tpr_name):
                 sys.stderr.write(f"""
         Skipping {system["SYSTEM"]} because TPR is not downloaded
@@ -49,15 +47,17 @@ if __name__ == "__main__":
                 # go over all records
                 for mk in mapping_dict:
                     selection = (
-                        "resname " + system["COMPOSITION"][molecule]["NAME"] +
-                        " and name " + mapping_dict[mk]["ATOMNAME"])
+                        "resname "
+                        + system["COMPOSITION"][molecule]["NAME"]
+                        + " and name "
+                        + mapping_dict[mk]["ATOMNAME"]
+                    )
                     NatomsFromMapping = len(u.select_atoms(selection))
                     NatomsFromREADME = system["COMPOSITION"][molecule]["COUNT"]
-                    if NatomsFromMapping != NatomsFromREADME and \
-                            molecule not in lipids_set:
+                    if NatomsFromMapping != NatomsFromREADME and molecule not in lipids_set:
                         print(f"""
-        Found problematic system: {system['SYSTEM']}
-        Molecule named {system['COMPOSITION'][molecule]['NAME']}
+        Found problematic system: {system["SYSTEM"]}
+        Molecule named {system["COMPOSITION"][molecule]["NAME"]}
         MDA selection: "{selection}"
         Atoms from mapping/in readme: {NatomsFromMapping} / {NatomsFromREADME}
                         """)

@@ -6,18 +6,18 @@ from DatabankLib.core import initialize_databank
 
 
 def run_analysis(
-        method: Callable,
-        logger: Logger,
-        id_range=(None, None),
-        ):
+    method: Callable,
+    logger: Logger,
+    id_range=(None, None),
+):
     """
     Apply analysis ``method`` to the entire databank.
 
     :param method: (Callable) will be called as ``fun(system, logger)``
     :param logger: (Logger) reference to Logger initialized by the top script
-    :param id_range: (A,B) filter for systems to analyze, default is 
+    :param id_range: (A,B) filter for systems to analyze, default is
                      (None, None) which means all systems. Can be also (None, -1)
-                     which means all new systems, or (0, None) which means all 
+                     which means all new systems, or (0, None) which means all
                      old systems.
 
     :return: None
@@ -32,10 +32,7 @@ def run_analysis(
     logger.info("Filtering systems by range: " + str(id_range))
     logger.info("Number of systems in databank: " + str(len(list_ids)))
 
-    result_dict = {
-        RCODE_COMPUTED: 0,
-        RCODE_SKIPPED: 0,
-        RCODE_ERROR: 0}
+    result_dict = {RCODE_COMPUTED: 0, RCODE_SKIPPED: 0, RCODE_ERROR: 0}
 
     for id in list_ids:
         system = systems.loc(id)

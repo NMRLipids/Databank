@@ -25,6 +25,7 @@ from tqdm import tqdm
 logger = logging.getLogger(__name__)
 MAX_DRYRUN_SIZE = 50 * 1024 * 1024  # 50 MB, max size for dry-run download
 
+
 def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
     """Decorator that retries a function with exponential backoff.
 
@@ -33,6 +34,7 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
         delay_seconds (int): The initial delay between retries in seconds.
             The delay doubles after each failed attempt. Defaults to 1.
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -57,7 +59,7 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
 
                 except (urllib.error.URLError, socket.timeout):
                     # This block now primarily handles non-HTTP errors or retriable HTTP errors.
-                    pass # Fall through to the retry logic below
+                    pass  # Fall through to the retry logic below
 
                 attempts += 1
                 if attempts < max_attempts:
@@ -75,10 +77,14 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
                     raise ConnectionError(
                         f"Function {func.__name__} failed after {max_attempts} attempts.",
                     )
+
         return wrapper
+
     return decorator
 
+
 # --- Decorated Helper Functions for Network Requests ---
+
 
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def _open_url_with_retry(uri: str, timeout: int = 10):
@@ -93,6 +99,7 @@ def _open_url_with_retry(uri: str, timeout: int = 10):
         The response object from urllib.request.urlopen.
     """
     return urllib.request.urlopen(uri, timeout=timeout)
+
 
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def get_file_size_with_retry(uri: str) -> int:
@@ -110,6 +117,7 @@ def get_file_size_with_retry(uri: str) -> int:
         content_length = response.getheader("Content-Length")
         return int(content_length) if content_length else 0
 
+
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None:
     """Downloads a file with a progress bar and retry logic.
@@ -122,6 +130,7 @@ def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None
         fi_name (str): The name of the file, used for the progress bar
             description.
     """
+
     class RetrieveProgressBar(tqdm):
         def update_retrieve(self, b=1, bsize=1, tsize=None):
             if tsize is not None:
@@ -129,14 +138,22 @@ def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None
             return self.update(b * bsize - self.n)
 
     with RetrieveProgressBar(
-        unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        miniters=1,
+        desc=fi_name,
     ) as u:
         urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
 
+
 # --- Main Functions ---
 
+
 def download_resource_from_uri(
-    uri: str, dest: str, override_if_exists: bool = False,
+    uri: str,
+    dest: str,
+    override_if_exists: bool = False,
     dry_run_mode: bool = False,
 ) -> int:
     """Download file resource from a URI to a local destination.
@@ -192,9 +209,7 @@ def download_resource_from_uri(
             downloaded = 0
             chunk_size = 8192
             next_report = 10 * 1024 * 1024
-            logger.info(
-                "Dry-run: Downloading up to"
-                f" {total // (1024*1024)} MB of {fi_name} ...")
+            logger.info(f"Dry-run: Downloading up to {total // (1024 * 1024)} MB of {fi_name} ...")
             while downloaded < total:
                 to_read = min(chunk_size, total - downloaded)
                 chunk = response.read(to_read)
@@ -203,11 +218,9 @@ def download_resource_from_uri(
                 out_file.write(chunk)
                 downloaded += len(chunk)
                 if downloaded >= next_report:
-                    logger.info(f"  Downloaded {downloaded // (1024*1024)} MB ...")
+                    logger.info(f"  Downloaded {downloaded // (1024 * 1024)} MB ...")
                     next_report += 10 * 1024 * 1024
-            logger.info(
-                "Dry-run: Finished, downloaded"
-                f" {downloaded // (1024*1024)} MB of {fi_name}")
+            logger.info(f"Dry-run: Finished, downloaded {downloaded // (1024 * 1024)} MB of {fi_name}")
         return 0
 
     # Download with progress bar and check for final size match
@@ -219,6 +232,7 @@ def download_resource_from_uri(
         raise OSError(f"Downloaded filesize mismatch ({size}/{url_size} B)")
 
     return 0
+
 
 def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     """Resolves a DOI to a full URL and validates that it is reachable.
@@ -258,8 +272,8 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
 
     return res
 
-def resolve_download_file_url(
-        doi: str, fi_name: str, validate_uri: bool = True) -> str:
+
+def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True) -> str:
     """:meta private:
     Resolves a download file URI from a supported DOI and filename.
 
@@ -301,6 +315,7 @@ def resolve_download_file_url(
         "Repository not validated. Please upload the data for example to zenodo.org",
     )
 
+
 def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -> str:
     """Calculates the SHA1 hash of a file.
 
@@ -331,12 +346,13 @@ def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -
                     pbar.update(1)
     return sha1_hash.hexdigest()
 
+
 def create_databank_directories(
-        sim: Mapping,
-        sim_hashes: Mapping,
-        out: str,
-        dry_run_mode: bool = False,
-        ) -> str:
+    sim: Mapping,
+    sim_hashes: Mapping,
+    out: str,
+    dry_run_mode: bool = False,
+) -> str:
     """Creates a nested output directory structure to save simulation results.
 
     The directory structure is generated based on the hashes of the simulation
@@ -369,8 +385,8 @@ def create_databank_directories(
 
     SOFTWARE_CONFIG = {
         "gromacs": {"primary": "TPR", "secondary": "TRJ"},
-        "openMM":  {"primary": "TRJ", "secondary": "TRJ"},
-        "NAMD":    {"primary": "TRJ", "secondary": "TRJ"},
+        "openMM": {"primary": "TRJ", "secondary": "TRJ"},
+        "NAMD": {"primary": "TRJ", "secondary": "TRJ"},
     }
 
     config = SOFTWARE_CONFIG.get(software)
@@ -399,6 +415,5 @@ def create_databank_directories(
             os.makedirs(directory_path, exist_ok=True)
         except Exception as e:
             raise RuntimeError(f"Could not create the output directory at {directory_path}: {e}")
-
 
     return directory_path

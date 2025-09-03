@@ -16,12 +16,12 @@ from datetime import datetime
 
 import DatabankLib as dbl
 
-#Directory containing this conf.py
+# Directory containing this conf.py
 here = os.path.dirname(__file__)
-#Scripts directory
-repo_root = os.path.abspath(os.path.join(here, "..", "..",".."))
+# Scripts directory
+repo_root = os.path.abspath(os.path.join(here, "..", "..", ".."))
 
-#Add to path:
+# Add to path:
 sys.path.insert(0, repo_root)
 year = datetime.now().year
 
@@ -42,7 +42,7 @@ copyright = f"""{year}, {author}
 release = dbl.__version__
 html_context = {
     "copyright_link": dbl.__url__ + "/blob/main/LICENSE.txt",
-    "repo_link":      dbl.__url__,
+    "repo_link": dbl.__url__,
 }
 
 # -- General configuration ---------------------------------------------------
@@ -63,7 +63,7 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["**tests**","*__init__.py"]
+exclude_patterns = ["**tests**", "*__init__.py"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -71,8 +71,8 @@ exclude_patterns = ["**tests**","*__init__.py"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'sphinxdoc'
-#html_theme = 'classic'
+# html_theme = 'sphinxdoc'
+# html_theme = 'classic'
 html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -87,4 +87,3 @@ source_suffix = {
 }
 
 autodoc_member_order = "bysource"
-

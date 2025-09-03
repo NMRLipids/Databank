@@ -18,6 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
+
 def run_command(command, error_message="Command failed", working_dir=None):
     """
     Run a shell command and exit on failure.
@@ -38,6 +39,7 @@ def run_command(command, error_message="Command failed", working_dir=None):
     except subprocess.SubprocessError as e:
         logger.error(f"{error_message}, caught SubprocessError: {e}")
         sys.exit(1)
+
 
 def run_python_script(script_path, args=None, error_message="Python script failed", working_dir=None):
     """
@@ -73,6 +75,7 @@ def run_python_script(script_path, args=None, error_message="Python script faile
         logger.error(f"{error_message}, caught SubprocessError: {e}")
         sys.exit(1)
 
+
 def get_databank_paths(NMLDB_ROOT_PATH):
     """
     Retrieve relevant paths from databank.
@@ -98,6 +101,7 @@ def get_databank_paths(NMLDB_ROOT_PATH):
         "QualityEvaluation_path": QualityEvaluation_path,
         "makeRanking_path": makeRanking_path,
     }
+
 
 def delete_info_file(info_file_path):
     """

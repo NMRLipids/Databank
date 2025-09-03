@@ -3,7 +3,7 @@
 Test data is stored in `./Data/Simulations.2`
 
 -------------------------------------------------------------------------------
-NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
 """
 
@@ -28,6 +28,7 @@ def test_uname2element():
     with pytest.raises(KeyError):
         uname2element("UnknownElement")
 
+
 @pytest.fixture
 def tip4p_trajectory(tmpdir):
     import shutil
@@ -38,8 +39,7 @@ def tip4p_trajectory(tmpdir):
 
     folder = str(tmpdir)
 
-    pdb_content = \
-"""TITLE     Single 4-site water
+    pdb_content = """TITLE     Single 4-site water
 CRYST1   63.646   63.646   86.762  90.00  90.00  90.00 P 1           1
 ATOM      1  OW  wate    1       4.370  31.010  61.030  1.00  0.00            
 ATOM      2  HW1 wate    1       3.800  30.820  61.780  1.00  0.00            
@@ -160,6 +160,3 @@ def test_maicos_what_to_compute(caplog, logger):
     check.is_not_in("Dielectric", line)
     check.is_not_in("ChargeDensity", line)
     check.equal(rcode, 2)
-
-
-

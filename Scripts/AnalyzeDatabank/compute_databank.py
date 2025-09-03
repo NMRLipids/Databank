@@ -54,7 +54,8 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
-        "--OP", "--op",
+        "--OP",
+        "--op",
         help="Compute Order Parameter for all systems",
         action="store_true",
     )
@@ -111,20 +112,25 @@ if __name__ == "__main__":
     if args.apl:
         logger.info("Computing APL (Area Per Lipid) for all systems")
         from DatabankLib.analyze import computeAPL
+
         run_analysis(computeAPL, logger, id_range=id_range)
     if args.nmrpca:
         logger.info("Computing NMR PCA for all systems")
         from DatabankLib.analyze import computeNMRPCA
+
         run_analysis(computeNMRPCA, logger, id_range=id_range)
     if args.maicos:
         logger.info("Computing MAICOS for all systems")
         from DatabankLib.analyze import computeMAICOS
+
         run_analysis(computeMAICOS, logger, id_range=id_range)
     if args.thickness:
         logger.info("Computing Thickness for all systems")
         from DatabankLib.analyze import computeTH
+
         run_analysis(computeTH, logger, id_range=id_range)
     if args.OP:
         logger.info("Computing Order Parameter for all systems")
         from DatabankLib.analyze import computeOP
+
         run_analysis(computeOP, logger, id_range=id_range)

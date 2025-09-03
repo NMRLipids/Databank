@@ -12,7 +12,7 @@ if __name__ == "__main__":
             f = open(WaterDensity_name)
             # print('Density file not found')
             WaterDensity = json.load(f)
-            center = round(len(WaterDensity)/2)
+            center = round(len(WaterDensity) / 2)
             # print(WaterDensity[center][1], WaterDensity[0][1])
             if WaterDensity[center][1] > WaterDensity[0][1]:
                 print(system["path"])

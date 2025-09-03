@@ -1,7 +1,7 @@
 """
 `test_adddata.py` perform regression testing of adding-data functionality
 
-NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it 
+NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
 """
 
@@ -26,15 +26,13 @@ def tmp_work_dir():
 
 
 class TestAddData:
-
     @classmethod
     def setup_class(cls):
         import DatabankLib
+
         if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, ".notest")):
             pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
-        cls.exe = os.path.join(
-            DatabankLib.NMLDB_ROOT_PATH, "Scripts",
-            "BuildDatabank", "AddData.py")
+        cls.exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "Scripts", "BuildDatabank", "AddData.py")
         cls.out_dir = DatabankLib.NMLDB_SIMU_PATH
         os.mkdir(cls.out_dir)
 
@@ -47,17 +45,20 @@ class TestAddData:
         """
         Testing `AddData.py -h` behavior
         """
-        result = subprocess.run([
-            self.exe,
-            "-h",
-        ], check=False, capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                self.exe,
+                "-h",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
         print(result.stdout)
         assert "--dry-run", "Expected --dry-run option in help output"
         assert result.returncode == 0
 
-    @pytest.mark.parametrize(
-            "infofn, debug", [("info566.yaml", False),
-                              ("info566.yaml", True)])
+    @pytest.mark.parametrize("infofn, debug", [("info566.yaml", False), ("info566.yaml", True)])
     def test_add_data_addgood(self, infofn, debug, tmp_work_dir, capsys, request):
         """
         Testing `AddData.py -f <filename> -w <dirname> -o <dirname>` which should
@@ -84,13 +85,10 @@ class TestAddData:
         time.sleep(1)
         if debug:
             "[DEBUG]" in result.stderr
-            check.is_in("[DEBUG]", result.stderr,
-                        msg="Expected [DEBUG] in stderr when debug mode is on")
+            check.is_in("[DEBUG]", result.stderr, msg="Expected [DEBUG] in stderr when debug mode is on")
         else:
-            check.is_not_in("[DEBUG]", result.stderr,
-                            msg="Expected no [DEBUG] in stderr when debug mode is off")
-        check.is_in("[INFO]", result.stderr,
-                    msg="Expected [INFO] in stderr")
+            check.is_not_in("[DEBUG]", result.stderr, msg="Expected no [DEBUG] in stderr when debug mode is off")
+        check.is_in("[INFO]", result.stderr, msg="Expected [INFO] in stderr")
         self._check_new_readme(capsys)
         check.equal(result.returncode, 0)
         TestAddData.teardown_class()  # clean up to run the same test again
@@ -98,25 +96,30 @@ class TestAddData:
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
     def test_add_data_fail(self, infofn, tmp_work_dir, capsys):
         fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
-        result = subprocess.run([
-            self.exe,
-            "-f",
-            fn,
-            "-w",
-            tmp_work_dir,
-            "-d",
-        ], check=False, capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                self.exe,
+                "-f",
+                fn,
+                "-w",
+                tmp_work_dir,
+                "-d",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
         print(result.stderr)
         assert "[ERROR]" in result.stderr, "Expected an error message in stderr"
         assert result.returncode == 1
 
     def _check_new_readme(self, capsys):
         from DatabankLib.core import initialize_databank
+
         ss = initialize_databank()
         captured = capsys.readouterr()
         if "!!README LOAD ERROR!!" in captured.err:
             pytest.fail("There was an error in the captured output: " + captured.err)
         for s in ss:
             print(s["DOI"])
-        check.is_true(len(ss) > 0,
-                      msg="No systems found in the databank after adding data.")
+        check.is_true(len(ss) > 0, msg="No systems found in the databank after adding data.")

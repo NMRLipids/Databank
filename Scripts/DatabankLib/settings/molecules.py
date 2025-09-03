@@ -27,7 +27,7 @@ class Molecule(ABC):
     specific operations for handling molecule data.
     """
 
-    _molname: (str | None) = None
+    _molname: str | None = None
 
     @abstractmethod
     def _get_path(self) -> str:
@@ -67,7 +67,6 @@ class Molecule(ABC):
         self._mapping_fpath = None
         self._mapping_dict = None
 
-
     @staticmethod
     def __check_name(name: str) -> None:
         """
@@ -89,11 +88,10 @@ class Molecule(ABC):
     def _populate_meta_data(self) -> None:
         """
         Populates metadata for the molecule from its YAML file.
-        
+
         This method should be implemented in subclasses to load specific
         metadata related to the molecule.
         """
-
 
     @property
     def metadata(self) -> dict:
@@ -102,7 +100,6 @@ class Molecule(ABC):
 
         :return: dict with metadata
         """
-
 
     @property
     def name(self) -> str:
@@ -122,7 +119,6 @@ class Molecule(ABC):
 
     def __repr__(self):
         return f"{type(self).__name__}({self.name})"
-
 
 
 class Lipid(Molecule):
@@ -220,9 +216,8 @@ class MoleculeSet(MutableSet[Molecule], ABC):
         """
         Check if a lipid is in the set.
         """
-        return (
-                (self._test_item_type(item) and item in self._items) or
-                (isinstance(item, str) and item.upper() in self._names)
+        return (self._test_item_type(item) and item in self._items) or (
+            isinstance(item, str) and item.upper() in self._names
         )
 
     def __iter__(self):
@@ -245,8 +240,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
             self._items.add(self._create_item(item))  # here we call Lipid constructor
             self._names.add(item.upper())
         else:
-            raise TypeError(
-                f"Only proper instances can be added to {type(self).__name__}.")
+            raise TypeError(f"Only proper instances can be added to {type(self).__name__}.")
 
     def discard(self, item):
         """
@@ -267,7 +261,6 @@ class MoleculeSet(MutableSet[Molecule], ABC):
             self._items.discard(ifound)
             self._names.discard(item.upper())
 
-
     def get(self, key: str, default=None) -> Molecule | None:
         """
         Get a molecule by its name.
@@ -279,8 +272,6 @@ class MoleculeSet(MutableSet[Molecule], ABC):
                 if item.name.upper() == key.upper():
                     return item
         return default
-
-
 
     def __repr__(self):
         return f"{type(self).__name__}[{self._names}]"
@@ -311,10 +302,7 @@ class LipidSet(MoleculeSet):
         """
         lset = LipidSet()
         path = Lipid._lipids_dir
-        sub_dirs = [
-            name for name in os.listdir(path)
-            if os.path.isdir(os.path.join(path, name))
-        ]
+        sub_dirs = [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
         for name in sub_dirs:
             lset.add(name)
         return lset
@@ -341,10 +329,7 @@ class NonLipidSet(MoleculeSet):
         """
         lset = NonLipidSet()
         path = NonLipid._nonlipids_dir
-        sub_dirs = [
-            name for name in os.listdir(path)
-            if os.path.isdir(os.path.join(path, name))
-        ]
+        sub_dirs = [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
         for name in sub_dirs:
             lset.add(name)
         return lset
