@@ -8,10 +8,9 @@ tqdm>=4.5.0
 periodictable>=1.5.0
 Deprecated
 scipy
-pep8-naming
+jsonschema 
 pytest
 pytest-check
 pytest-mock
-jsonschema 
 pre-commit
 ruff==0.12.11

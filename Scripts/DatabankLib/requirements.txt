@@ -8,7 +8,4 @@ tqdm>=4.5.0
 periodictable>=1.5.0
 Deprecated
 scipy
-pre-commit
-ruff==0.12.11
 jsonschema
-pytest-mock
