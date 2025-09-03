@@ -115,7 +115,7 @@ Berger_POPE = {
         "C47": ("CH2", "C46", "C48"),
         "C48": ("CH2", "C47", "C49"),
         "C49": ("CH2", "C48", "C50"),
-        "C50": ("CH3", "C49", "C48")
+        "C50": ("CH3", "C49", "C48"),
         # helper1 is the first C connected to CH3,
         # helper is 2 atoms away
         }
@@ -129,7 +129,7 @@ Berger_DOPE = {
         # glycerol
         "C12": ("CH2", "O11", "C13"),
         "C13": ("CH", "C12", "C34", "O14"),
-        "C34": ("CH2", "C13", "O35")
+        "C34": ("CH2", "C13", "O35"),
         }
 
 OPLSua_POPE = {
@@ -141,7 +141,7 @@ OPLSua_POPE = {
         # glycerol
         "C12": ("CH2", "O11", "C13"),
         "C13": ("CH", "C12", "C34", "O14"),
-        "C34": ("CH2", "C13", "O35")
+        "C34": ("CH2", "C13", "O35"),
         }
 
 GROMOS_CKP_DPPE = {
@@ -153,7 +153,7 @@ GROMOS_CKP_DPPE = {
         # glycerol
         "C12": ("CH2", "O11", "C13"),
         "C13": ("CH", "C12", "C34", "O14"),
-        "C34": ("CH2", "C13", "O35")
+        "C34": ("CH2", "C13", "O35"),
         }
 
 # CHARMM POPC.
@@ -206,7 +206,7 @@ CHARMM_POPC = {
         "C313": ("CH2", "C312", "C314"),
         "C314": ("CH2", "C313", "C315"),
         "C315": ("CH2", "C314", "C316"),
-        "C316": ("CH3", "C315", "C314")
+        "C316": ("CH3", "C315", "C314"),
         # helper1 is the first C connected to CH3,
         # helper is 2 atoms away
         }
@@ -220,7 +220,7 @@ GROMOS43A1_S3_POPE = {
         # glycerol
         "C12": ("CH2", "OS11", "C13"),
         "C13": ("CH", "C12", "C34", "OS14"),
-        "C34": ("CH2", "C13", "OS35")
+        "C34": ("CH2", "C13", "OS35"),
         }
 
 GROMOS_CKP_POPC = {
@@ -321,6 +321,6 @@ GROMOS_CKP_POPG = {
         "C47": ("CH2", "C46", "C48"),
         "C48": ("CH2", "C47", "C49"),
         "C49": ("CH2", "C48", "C50"),
-        "C50": ("CH3", "C49", "C48")
+        "C50": ("CH3", "C49", "C48"),
         # helper1 is the first C connected to CH3, helper is 2 atoms away
         }

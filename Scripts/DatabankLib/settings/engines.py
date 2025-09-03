@@ -50,7 +50,7 @@ gromacs_dict = {
         "REQUIRED": True,
         "TYPE": "files",
         "CATEGORY": "trajectory",
-        "EXTENSION": ("xtc", "trr",),
+        "EXTENSION": ("xtc", "trr"),
     },
     "TPR": {
         "REQUIRED": True,
@@ -164,12 +164,12 @@ gromacs_dict = {
     },
     "TYPEOFSYSTEM": {
         "REQUIRED": False,
-        "TYPE": "string"
+        "TYPE": "string",
     },
     "BATCHID": {
         "REQUIRED": False,
-        "TYPE": "string"
-    }
+        "TYPE": "string",
+    },
 }
 
 # Amber
@@ -178,13 +178,13 @@ amber_dict = {
         "REQUIRED": True,
         "TYPE": "files",
         "CATEGORY": "trajectory",
-        "EXTENSION": ("nc", "ncdf", "trj", "mdcrd",),
+        "EXTENSION": ("nc", "ncdf", "trj", "mdcrd"),
     },
     "TOP": {
         "REQUIRED": False,
         "CATEGORY": "topology",
         "TYPE": "file",
-        "EXTENSION": ("prmtop", "top", "parm7",),
+        "EXTENSION": ("prmtop", "top", "parm7"),
     },
     "FF": {
         "REQUIRED": False,
@@ -498,7 +498,8 @@ def get_struc_top_traj_fnames(
     Returns ((string, string, string)): structure filename, topology filename,
             trajectory filename
 
-    Raises:
+    Raises
+    ------
         ValueError: function
     """
     sft = system["SOFTWARE"]

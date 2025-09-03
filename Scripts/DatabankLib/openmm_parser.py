@@ -7,7 +7,7 @@ def openmm_input(input, type):
 
         return read_inp_input(input)
 
-    elif type == "xml":
+    if type == "xml":
 
         return read_xml_input(input)
 
@@ -16,14 +16,14 @@ def read_inp_input(input):
 
     try:
 
-        filename = open(input, "r")
+        filename = open(input)
         print(filename.name)
 
     except FileNotFoundError:
 
         print("File does not exist")
 
-    with open(filename.name, "r") as f:
+    with open(filename.name) as f:
 
         tmp_type = []
         tmp_value = []
@@ -44,7 +44,7 @@ def read_xml_input(input):
 
     try:
 
-        filename = open(input, "r")
+        filename = open(input)
 
     except FileNotFoundError:
 

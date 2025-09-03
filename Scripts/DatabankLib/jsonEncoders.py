@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+
 import numpy as np
 
 
@@ -42,8 +43,7 @@ class CompactJSONEncoder(json.JSONEncoder):
                 # !very important. Otherwise it will put "nan" with lowercase,
                 # which is not recognized by standard json DEcoder
                 return "NaN"
-            else:
-                return format(o, "g")
+            return format(o, "g")
         return json.dumps(
             o,
             skipkeys=self.skipkeys,
@@ -105,19 +105,18 @@ class CompactJSONEncoder(json.JSONEncoder):
     def _primitives_only(self, o: list | tuple | dict):
         if isinstance(o, (list, tuple)):
             return not any(isinstance(el, self.CONTAINER_TYPES) for el in o)
-        elif isinstance(o, dict):
+        if isinstance(o, dict):
             return not any(isinstance(el, self.CONTAINER_TYPES) for el in o.values())
 
     @property
     def indent_str(self) -> str:
         if isinstance(self.indent, int):
             return " " * (self.indentation_level * self.indent)
-        elif isinstance(self.indent, str):
+        if isinstance(self.indent, str):
             return self.indentation_level * self.indent
-        else:
-            raise ValueError(
-                f"indent must either be of type int or str (is: {type(self.indent)})"
-            )
+        raise ValueError(
+            f"indent must either be of type int or str (is: {type(self.indent)})",
+        )
 
 
 if __name__ == "__main__":

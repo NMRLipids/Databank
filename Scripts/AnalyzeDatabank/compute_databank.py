@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: utf-8
 
 """
 :program: compute_databank.py
@@ -24,15 +23,15 @@ MAICOS (density profiles, water orientation, dielectric profiles, X-ray form fac
 :param help: Show this help message and exit.
 """
 
-import logging
 import argparse
+import logging
 
 from DatabankLib.utils import run_analysis
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="compute_databank.py Script",
-        description="Compute computable properties"
+        description="Compute computable properties",
     )
     parser.add_argument(
         "--apl",
@@ -44,7 +43,7 @@ if __name__ == "__main__":
         help="Compute NMR PCA for all systems",
         action="store_true",
     )
-    parser.add_argument(    
+    parser.add_argument(
         "--maicos",
         help="Compute MAICOS for all systems",
         action="store_true",
@@ -65,13 +64,13 @@ if __name__ == "__main__":
         help="Range of system IDs to analyze, e.g. 0-1000",
         type=str,
         default=None,
-        metavar="ID_RANGE"
+        metavar="ID_RANGE",
     )
     parser.add_argument(
         "-d",
         "--debug",
         help="Enable debug logging",
-        action="store_true"
+        action="store_true",
     )
     args = parser.parse_args()
 

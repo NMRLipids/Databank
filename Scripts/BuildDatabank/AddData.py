@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: utf-8
 
 """
 :program: AddData.py
@@ -22,45 +21,36 @@ Returning error codes:
     3 - network accessing errors
 """
 
-import os
 import argparse
-import yaml
 import logging
-import shutil
+import os
 import pprint
+import shutil
 import subprocess
 import traceback
+from copy import deepcopy
 from datetime import date
 from random import randint
-from urllib.error import URLError, HTTPError
-from copy import deepcopy
-import pandas as pd
-import numpy as np
-
-from MDAnalysis import Universe
+from urllib.error import HTTPError, URLError
 
 # import databank dictionaries
 import DatabankLib
-from DatabankLib.core import (
-    System,
-    initialize_databank
-    )
-from DatabankLib.databankLibrary import (
-    lipids_set,
-    molecules_set
-)
+import numpy as np
+import pandas as pd
+import yaml
+from DatabankLib.core import System, initialize_databank
+
 # helpers
 from DatabankLib.databankio import (
     calc_file_sha1_hash,
     create_databank_directories,
     download_resource_from_uri,
-    resolve_download_file_url
+    resolve_download_file_url,
 )
-from DatabankLib.databankLibrary import (
-    parse_valid_config_settings
-)
-from DatabankLib.settings.molecules import Lipid, NonLipid
+from DatabankLib.databankLibrary import lipids_set, molecules_set, parse_valid_config_settings
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
+from DatabankLib.settings.molecules import Lipid, NonLipid
+from MDAnalysis import Universe
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -72,31 +62,31 @@ if __name__ == "__main__":
     # parse input yaml file
     parser = argparse.ArgumentParser(
         prog="AddData.py Script",
-        description="Add a new dataset to the NMRLipids databank"
+        description="Add a new dataset to the NMRLipids databank",
     )
     parser.add_argument(
         "-f", "--file",
-        help="Input config file in yaml format."
+        help="Input config file in yaml format.",
     )
     parser.add_argument(
         "-d", "--debug",
         help="enable debug logging output",
-        action="store_true"
+        action="store_true",
     )
     parser.add_argument(
         "-n", "--no-cache",
         help="always redownload repository files",
-        action="store_true"
+        action="store_true",
     )
     parser.add_argument(
         "-w", "--work-dir",
         help="set custom temporary working directory [not set = /tmp]",
-        default="/tmp"
+        default="/tmp",
     )
     parser.add_argument(
         "--dry-run",
         help="perform a dry-run download of the files with 50MB limit",
-        action="store_true"
+        action="store_true",
     )
 
     args = parser.parse_args()
@@ -118,7 +108,7 @@ if __name__ == "__main__":
     # open input file for reading and writing
     with open(input_path) as yaml_file:
         info_yaml = yaml.load(
-            yaml_file, Loader=yaml.FullLoader
+            yaml_file, Loader=yaml.FullLoader,
         )  # TODO may throw yaml.YAMLError
 
     # Show the input read
@@ -137,13 +127,13 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(
             f"an '{type(e).__name__}' occured while performing validity check"
-            f" '{input_path}', script has been aborted"
+            f" '{input_path}', script has been aborted",
         )
         logger.error(e)
         quit(1)
     else:
         logger.info(
-            "all entries in simulation are understood and will be further processed"
+            "all entries in simulation are understood and will be further processed",
         )
         logger.debug("valid sim entry keys:")
         pp = pprint.PrettyPrinter(width=41, compact=True)
@@ -156,7 +146,7 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(
             f"an '{type(e).__name__}' occured while processing dict->System"
-            f" '{input_path}', script has been aborted"
+            f" '{input_path}', script has been aborted",
         )
         logger.error(e)
         quit(1)
@@ -175,7 +165,7 @@ if __name__ == "__main__":
         os.makedirs(dir_tmp, exist_ok=True)
     except OSError as e:
         logger.error(
-            f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}"
+            f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}",
         )
         quit(2)
 
@@ -192,7 +182,7 @@ if __name__ == "__main__":
         for url, fi in zip(download_links, files):
             download_resource_from_uri(
                 url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache,
-                dry_run_mode=args.dry_run
+                dry_run_mode=args.dry_run,
             )
 
         logger.info(f"Download of {len(files)} files was successful")
@@ -201,7 +191,7 @@ if __name__ == "__main__":
         if e.code == 404:
             logger.error(
                 f"ressource not found on server '{e.url}' (404)."
-                " Wrong DOI link or file name?"
+                " Wrong DOI link or file name?",
             )
         else:
             logger.error(f"HTTPError {e.code} while trying to "
@@ -210,12 +200,12 @@ if __name__ == "__main__":
     except URLError as e:
         logger.error(
             f"couldn't resolve network adress: {e.reason}."
-            " Please check your internet connection."
+            " Please check your internet connection.",
         )
         quit(3)
     except Exception as e:
         logger.error(
-            f"'{type(e).__name__}' while attempting to download ressources, aborting"
+            f"'{type(e).__name__}' while attempting to download ressources, aborting",
         )
         logger.error(traceback.format_exc())
         quit(3)
@@ -231,7 +221,7 @@ if __name__ == "__main__":
 
     # Make empty dataframe with the desired columns
     df_files = pd.DataFrame(
-        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"], dtype=object
+        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"], dtype=object,
     )
 
     for key_sim, value_sim in sim_hashes.items():
@@ -272,8 +262,8 @@ if __name__ == "__main__":
                                     "REQUIRED": is_required,
                                     "SIZE_MB": file_size_mb,
                                     "HASH": file_hash,
-                                }
-                            ]
+                                },
+                            ],
                         ),
                     ],
                     ignore_index=True,
@@ -303,11 +293,11 @@ if __name__ == "__main__":
 
     logger.info(
         "Calculating the numbers of lipid molecules in each leaflet based on the "
-        "center of mass of the membrane and lipids."
+        "center of mass of the membrane and lipids.",
     )
     logger.info(
         "If a lipid molecule is split to multiple residues, the centre of mass of"
-        " the headgroup is used."
+        " the headgroup is used.",
     )
 
     try:
@@ -350,7 +340,7 @@ if __name__ == "__main__":
     if fail_from_top and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
         logger.info(
             "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
-            "read tpr version ..."
+            "read tpr version ...",
         )
         if (
             "WARNINGS" in sim and
@@ -362,7 +352,7 @@ if __name__ == "__main__":
             command = ["gmx", "trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
         logger.debug(f"executing 'echo System | {' '.join(command)}'")
         try:
-            subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+            subprocess.run(command, input="System\n", text=True, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
         try:
@@ -410,17 +400,17 @@ if __name__ == "__main__":
         if molecules.n_residues > 0:
             lipids.append(u0.select_atoms(selection))
 
-    assert len(lipids)
+    assert lipids
     # join all the selected the lipids together to make a selection of the entire
     # membrane and calculate the z component of the centre of mass of
     # the membrane
     membrane = u0.select_atoms("")
     R_membrane_z = 0
     if lipids:
-        for i in range(0, len(lipids)):
+        for i in range(len(lipids)):
             membrane = membrane + lipids[i]
         R_membrane_z = membrane.center_of_mass()[2]
-    logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
+    logger.info(f"Center of the mass of the membrane: {R_membrane_z!s}")
 
     # ---- number of each lipid per leaflet
     # TODO: remove code duplication block!
@@ -456,7 +446,7 @@ if __name__ == "__main__":
             logger.debug("Resnames: " +
                          ", ".join(molecules.residues.resnames) +
                          " | ResIDs: " +
-                         ", ".join(map(str, molecules.residues.resids))
+                         ", ".join(map(str, molecules.residues.resids)),
                          )
 
             if molecules.n_residues > 0:
@@ -473,8 +463,8 @@ if __name__ == "__main__":
         except KeyError:
             continue
         else:
-            logger.info(f"Number of '{key_mol}' in upper leaflet: {str(leaflet1)}")
-            logger.info(f"Number of '{key_mol}' in lower leaflet: {str(leaflet2)}")
+            logger.info(f"Number of '{key_mol}' in upper leaflet: {leaflet1!s}")
+            logger.info(f"Number of '{key_mol}' in lower leaflet: {leaflet2!s}")
 
     # ----- numbers of other molecules
 
@@ -487,7 +477,7 @@ if __name__ == "__main__":
             mol_number = u0.select_atoms("resname " + mol_name).n_residues
             sim["COMPOSITION"][key_mol]["COUNT"] = mol_number
             logger.info(
-                f"Number of '{key_mol}': {str(sim['COMPOSITION'][key_mol]['COUNT'])}"
+                f"Number of '{key_mol}': {sim['COMPOSITION'][key_mol]['COUNT']!s}",
             )
 
     # Anne: Read trajectory size and length
@@ -519,26 +509,26 @@ if __name__ == "__main__":
             "GROMACS_VERSION" in sim["WARNINGS"] and
             sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
            ):
-            command = ['gmxdump', '-s', top]
+            command = ["gmxdump", "-s", top]
             TemperatureKey = "ref_t"
         else:
-            command = ['gmx', 'dump', '-s', top]
+            command = ["gmx", "dump", "-s", top]
             TemperatureKey = "ref-t"
         try:
-            result = subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+            result = subprocess.run(command, input="System\n", text=True, check=True, capture_output=True)
             with open(file1, "w") as f:
                 f.write(result.stdout)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
 
-        with open(file1, "rt") as tpr_info:
+        with open(file1) as tpr_info:
             for line in tpr_info:
                 if TemperatureKey in line:
                     sim["TEMPERATURE"] = float(line.split()[1])
 
     logger.info("Parameters read from input files:")
-    logger.info(f"TEMPERATURE: {str(sim['TEMPERATURE'])}")
-    logger.info(f"LENGTH OF THE TRAJECTORY: {str(sim['TRJLENGTH'])}")
+    logger.info(f"TEMPERATURE: {sim['TEMPERATURE']!s}")
+    logger.info(f"LENGTH OF THE TRAJECTORY: {sim['TRJLENGTH']!s}")
 
     # Check that the number of atoms between data and README.yaml match
 
@@ -570,18 +560,18 @@ if __name__ == "__main__":
             f"Number of atoms in trajectory {natoms_trj} and README.yaml "
             f"{number_of_atoms} do no match. Check the mapping files and molecule"
             f" names. {os.linesep} If you know what you are doing, you can still "
-            "continue the running the script. Do you want to (y/n)?"
+            "continue the running the script. Do you want to (y/n)?",
         )
         if stop == "n":
             os._exit("Interrupted because atomnumbers did not match")
         if stop == "y":
             logger.warning(
                 "Progressed even thought that atom numbers did not match."
-                " CHECK RESULTS MANUALLY!"
+                " CHECK RESULTS MANUALLY!",
             )
 
     sim["NUMBER_OF_ATOMS"] = natoms_trj
-    logger.info(f"Number of atoms in the system: {str(sim['NUMBER_OF_ATOMS'])}")
+    logger.info(f"Number of atoms in the system: {sim['NUMBER_OF_ATOMS']!s}")
 
     # ---- DATE OF RUNNING ----
     today = date.today().strftime("%d/%m/%Y")
@@ -610,7 +600,7 @@ if __name__ == "__main__":
     # Try to create final directory
     try:
         directory_path = create_databank_directories(
-            sim, sim_hashes, DatabankLib.NMLDB_SIMU_PATH, dry_run_mode=args.dry_run
+            sim, sim_hashes, DatabankLib.NMLDB_SIMU_PATH, dry_run_mode=args.dry_run,
             )
     except NotImplementedError as e:
         logger.error(e)
@@ -628,17 +618,17 @@ if __name__ == "__main__":
         try:
             os.link(
                 traj,
-                os.path.join(directory_path, os.path.basename(traj))
+                os.path.join(directory_path, os.path.basename(traj)),
                 )
         except OSError:
             logger.warning(
                 f"Could not hardlink trajectory file '{traj}' to the output directory."
-                " Copying instead."
+                " Copying instead.",
             )
             shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
         shutil.copyfile(
             top,
-            os.path.join(directory_path, os.path.basename(top))
+            os.path.join(directory_path, os.path.basename(top)),
             )
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),

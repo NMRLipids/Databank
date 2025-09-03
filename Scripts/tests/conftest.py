@@ -1,6 +1,7 @@
-import os
-import pytest
 import logging
+import os
+
+import pytest
 
 # Pytest HOOKS
 # -------------------------------------------------------------------
@@ -9,7 +10,7 @@ import logging
 def pytest_addoption(parser):
     parser.addoption(
         "--cmdopt", action="store", default="sim1",
-        help="Two test groups: sim1|sim2|nodata"
+        help="Two test groups: sim1|sim2|nodata",
     )
 
 

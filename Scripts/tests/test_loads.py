@@ -7,6 +7,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 
 import os
 from urllib.error import HTTPError, URLError
+
 import pytest
 
 # run only without mocking data
@@ -14,7 +15,7 @@ pytestmark = pytest.mark.nodata
 
 class TestDownloadResourceFromUri:
 
-    TESTFILENAME = 't.tpr'
+    TESTFILENAME = "t.tpr"
 
     def test_justdl__download_resource_from_uri(self):
         import DatabankLib.databankio as dio
@@ -23,21 +24,21 @@ class TestDownloadResourceFromUri:
         # first-time download
         assert dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
-                './' + self.TESTFILENAME) == 0
+                "./" + self.TESTFILENAME) == 0
         # repeat download
         assert dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
-                './' + self.TESTFILENAME) == 1
+                "./" + self.TESTFILENAME) == 1
         os.remove(self.TESTFILENAME)
 
     def test_corrupted__download_resource_from_uri(self):
         import DatabankLib.databankio as dio
         # redownload corrupted file
-        with open(self.TESTFILENAME, 'w') as f:
-            f.write('BABABA')
+        with open(self.TESTFILENAME, "w") as f:
+            f.write("BABABA")
         assert dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
-                './' + self.TESTFILENAME) == 2
+                "./" + self.TESTFILENAME) == 2
         os.remove(self.TESTFILENAME)
 
     def test_errs__download_resource_from_uri(self):
@@ -46,12 +47,12 @@ class TestDownloadResourceFromUri:
         with pytest.raises(IsADirectoryError) as _:
             dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
-                './')
+                "./")
         # ask to write to file which you don't have an access
         with pytest.raises(PermissionError) as _:
             dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
-                '/no-rights.tpr')
+                "/no-rights.tpr")
 
 
 # resolve_doi_url
@@ -60,17 +61,17 @@ class TestResolveDoiUrl:
     def test_badDOI__resolve_doi_url(self):
         import DatabankLib.databankio as dio
         # test if bad DOI fails
-        with pytest.raises(HTTPError, match='404') as _:
-            dio.resolve_doi_url('10.5281/zenodo.8435a', True)
+        with pytest.raises(HTTPError, match="404") as _:
+            dio.resolve_doi_url("10.5281/zenodo.8435a", True)
         # bad DOI doesn't fail if not to check
-        assert ("https://doi.org/10.5281/zenodo.8435a" ==
-                dio.resolve_doi_url('10.5281/zenodo.8435a', False))
+        assert (dio.resolve_doi_url("10.5281/zenodo.8435a", False) ==
+                "https://doi.org/10.5281/zenodo.8435a")
 
     def test_goodDOI__resolve_doi_url(self):
         import DatabankLib.databankio as dio
         # good DOI works properly
-        assert ("https://doi.org/10.5281/zenodo.8435138" ==
-                dio.resolve_doi_url('10.5281/zenodo.8435138', True))
+        assert (dio.resolve_doi_url("10.5281/zenodo.8435138", True) ==
+                "https://doi.org/10.5281/zenodo.8435138")
 
     @staticmethod
     def _create_mock_success_response(mocker):
@@ -86,58 +87,58 @@ class TestResolveDoiUrl:
         [
             (
                 "transient URLError succeeds",
-                lambda m: [URLError('err1'), URLError('err2'), TestResolveDoiUrl._create_mock_success_response(m)],
+                lambda m: [URLError("err1"), URLError("err2"), TestResolveDoiUrl._create_mock_success_response(m)],
                 None,
                 3,
             ),
             (
                 "persistent URLError fails",
-                lambda m: URLError('persistent error'),
+                lambda m: URLError("persistent error"),
                 ConnectionError,
                 5,
             ),
             (
                 "non-retriable 403 HTTPError fails immediately",
-                lambda m: HTTPError('url', 403, 'Forbidden', {}, None),
+                lambda m: HTTPError("url", 403, "Forbidden", {}, None),
                 HTTPError,
                 1,
             ),
             (
                 "retriable 503 HTTPError succeeds",
-                lambda m: [HTTPError('url', 503, 'Service Unavailable', {}, None), HTTPError('url', 503, 'Service Unavailable', {}, None), TestResolveDoiUrl._create_mock_success_response(m)],
+                lambda m: [HTTPError("url", 503, "Service Unavailable", {}, None), HTTPError("url", 503, "Service Unavailable", {}, None), TestResolveDoiUrl._create_mock_success_response(m)],
                 None,
                 3,
             ),
             (
                 "persistent 503 HTTPError fails",
-                lambda m: HTTPError('url', 503, 'Service Unavailable', {}, None),
+                lambda m: HTTPError("url", 503, "Service Unavailable", {}, None),
                 ConnectionError,
                 5,
             ),
         ],
     )
     def test_retry_logic__resolve_doi_url(
-        self, name, side_effects_func, expected_exception, expected_call_count, mocker
+        self, name, side_effects_func, expected_exception, expected_call_count, mocker,
     ):
         import DatabankLib.databankio as dio
 
-        mocker.patch('time.sleep', return_value=None)
+        mocker.patch("time.sleep", return_value=None)
 
         side_effects = side_effects_func(mocker)
 
         mock_urlopen = mocker.patch(
-            'DatabankLib.databankio.urllib.request.urlopen',
-            side_effect=side_effects
+            "DatabankLib.databankio.urllib.request.urlopen",
+            side_effect=side_effects,
         )
 
         if expected_exception:
             with pytest.raises(expected_exception) as excinfo:
-                dio.resolve_doi_url('10.5281/zenodo.8435138', True)
+                dio.resolve_doi_url("10.5281/zenodo.8435138", True)
             if expected_exception == HTTPError:
                 actual_http_error = side_effects[0] if isinstance(side_effects, list) else side_effects
                 assert excinfo.value.code == actual_http_error.code
         else:
-            dio.resolve_doi_url('10.5281/zenodo.8435138', True)
+            dio.resolve_doi_url("10.5281/zenodo.8435138", True)
 
         assert mock_urlopen.call_count == expected_call_count, f"Test '{name}' failed on call count."
 

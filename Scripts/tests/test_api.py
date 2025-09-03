@@ -12,6 +12,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 
 import os
 import sys
+
 import pytest
 import pytest_check as check
 
@@ -25,11 +26,11 @@ MAXRELERR_COMPARE_THRESHOLD = 1e-2
 def systems():
     import DatabankLib
     from DatabankLib.core import initialize_databank
-    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, '.notest')):
+    if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, ".notest")):
         pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
     s = initialize_databank()
     print(f"Loaded: {len(s)} systems")
-    yield s
+    return s
 
 
 def test_initialize_n(systems):
@@ -41,11 +42,11 @@ def test_print_README(systems, capsys):
     sys0 = systems[0]
     print_README(sys0)
     output: str = capsys.readouterr().out.rstrip()
-    check.not_equal( output.find('DOI:'), -1 )
-    check.not_equal( output.find('TEMPERATURE:'), -1)
-    print_README('example')
+    check.not_equal( output.find("DOI:"), -1 )
+    check.not_equal( output.find("TEMPERATURE:"), -1)
+    print_README("example")
     output = capsys.readouterr().out.rstrip()
-    check.is_in('Gromacs, Amber, NAMD', output)
+    check.is_in("Gromacs, Amber, NAMD", output)
 
 
 @pytest.mark.parametrize("systemid, result",
@@ -93,8 +94,8 @@ def test_GetNLipids(systems, systemid, result):
                           (243, [0.281, 0.423, 0.638]),
                           (86,  [0.264, 0.419, 0.623])])
 def test_GetFormFactorMin(systems, systemid, result):
-    from DatabankLib.databankLibrary import GetFormFactorMin
     import numpy as np
+    from DatabankLib.databankLibrary import GetFormFactorMin
     sys0 = systems.loc(systemid)
     ffl = GetFormFactorMin(sys0)
     np.testing.assert_allclose(
@@ -103,8 +104,8 @@ def test_GetFormFactorMin(systems, systemid, result):
             rtol=MAXRELERR_COMPARE_THRESHOLD,
             err_msg=(
                      "Problem in FFMIN comparison:\n"
-                  + f"Computed: {str(ffl[:3])} \n"
-                  + f"Pre-computed: {str(result)}"
+                   f"Computed: {ffl[:3]!s} \n"
+                   f"Pre-computed: {result!s}"
                 ),
     )
 
@@ -123,15 +124,15 @@ def test_getHydrationLevel(systems, systemid, result):
 
 
 @pytest.mark.parametrize("systemid, lipid, result",
-                         [(281, ['POPC'], [1]),
-                          (566, ['POPC', 'CHOL'], [.9375, .0625]),
-                          (787, ['TOCL', 'POPC', 'POPE'], [0.25, 0.5, 0.25]),
-                          (243, ['DPPC'], [1]),
-                          (86,  ['POPE'], [1])])
+                         [(281, ["POPC"], [1]),
+                          (566, ["POPC", "CHOL"], [.9375, .0625]),
+                          (787, ["TOCL", "POPC", "POPE"], [0.25, 0.5, 0.25]),
+                          (243, ["DPPC"], [1]),
+                          (86,  ["POPE"], [1])])
 def test_calcLipidFraction(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import calcLipidFraction
     sys0 = systems.loc(systemid)
-    assert calcLipidFraction(sys0, 'SOPC') == 0  # absent lipid
+    assert calcLipidFraction(sys0, "SOPC") == 0  # absent lipid
     err = 0
     i = 0
     for lip in lipid:
@@ -154,29 +155,29 @@ def test_averageOrderParameters(systems, systemid, result):
 # Tests behavior when averageOrderParameters cannot find calculated OP data
 
 
-@pytest.mark.parametrize("systemid", [787], )
+@pytest.mark.parametrize("systemid", [787] )
 def test_raises_averageOrderParameters(systems, systemid):
     from DatabankLib.databankLibrary import averageOrderParameters
     sys0 = systems.loc(systemid)
     with pytest.raises(FileNotFoundError) as exc_info:
         # sn1, sn2 = ..
         averageOrderParameters(sys0)
-    assert 'OrderParameters.json' in str(exc_info.value)
+    assert "OrderParameters.json" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
         "systemid, lipid, result",
-        [(281, ['POPC/P'], ['M_G3P2_M']),
-         (566, ['POPC/P31', 'CHOL/C1'], ['M_G3P2_M', 'M_C1_M']),
-         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P1_M', 'M_G3P2_M', 'M_G3P2_M']),
-         (243, ['DPPC/P8'], ['M_G3P2_M']),
-         (86,  ['POPE/P8'], ['M_G3P2_M'])])
+        [(281, ["POPC/P"], ["M_G3P2_M"]),
+         (566, ["POPC/P31", "CHOL/C1"], ["M_G3P2_M", "M_C1_M"]),
+         (787, ["TOCL/P3", "POPC/P", "POPE/P"], ["M_G13P1_M", "M_G3P2_M", "M_G3P2_M"]),
+         (243, ["DPPC/P8"], ["M_G3P2_M"]),
+         (86,  ["POPE/P8"], ["M_G3P2_M"])])
 def test_getUniversalAtomName(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import getUniversalAtomName
     sys0 = systems.loc(systemid)
     i = 0
     for lipat in lipid:
-        lip, atom = tuple(lipat.split('/'))
+        lip, atom = tuple(lipat.split("/"))
         uname = getUniversalAtomName(sys0, atom, lip)
         assert uname == result[i]
         i += 1
@@ -186,12 +187,12 @@ def test_getUniversalAtomName(systems, systemid, lipid, result):
 
 @pytest.mark.parametrize(
         "systemid, lipat, result",
-        [(243, 'DPPC/nonExisting', "Atom was not found"),
-         (243, 'nonExisting/P8', "was not found in the system")])
+        [(243, "DPPC/nonExisting", "Atom was not found"),
+         (243, "nonExisting/P8", "was not found in the system")])
 def test_bad_getUniversalAtomName(systems, systemid, lipat, result, capsys):
     from DatabankLib.databankLibrary import getUniversalAtomName
     sys0 = systems.loc(systemid)
-    lip, atom = tuple(lipat.split('/'))
+    lip, atom = tuple(lipat.split("/"))
     uname = getUniversalAtomName(sys0, atom, lip)
     output = capsys.readouterr().err.rstrip()
     assert result in output
@@ -199,8 +200,8 @@ def test_bad_getUniversalAtomName(systems, systemid, lipat, result, capsys):
 
 
 @pytest.mark.parametrize("systemid, lipid, result",
-                         [(243, 'DPPC', "44ea5"),
-                          (787, 'TOCL', "78629")])
+                         [(243, "DPPC", "44ea5"),
+                          (787, "TOCL", "78629")])
 def test_getAtoms(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import getAtoms
     sys0 = systems.loc(systemid)
@@ -208,7 +209,7 @@ def test_getAtoms(systems, systemid, lipid, result):
     atoms = ",".join(sorted(atoms))
     import hashlib
     md5_hash = hashlib.md5()
-    md5_hash.update(atoms.encode('ascii'))
+    md5_hash.update(atoms.encode("ascii"))
     hx = md5_hash.hexdigest()[:5]
     assert hx == result
 
@@ -216,30 +217,30 @@ def test_getAtoms(systems, systemid, lipid, result):
 @pytest.mark.xfail(reason="Completely deprecated function", run=True,
                    raises=NotImplementedError, strict=True)
 @pytest.mark.parametrize("systemid, lipid, result",
-                         [(281, ['POPC'], [134])])
+                         [(281, ["POPC"], [134])])
 def test_raise_loadMappingFile(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import loadMappingFile
     sys0 = systems.loc(systemid)
     i = 0
     for lip in lipid:
-        mpf = loadMappingFile(sys0['COMPOSITION'][lip]['MAPPING'])
+        mpf = loadMappingFile(sys0["COMPOSITION"][lip]["MAPPING"])
         assert len(mpf) == result[i]
         i += 1
 
 
 @pytest.mark.parametrize(
         "systemid, lipid, result",
-        [(281, ['POPC/P'], ['M_G3P2_M']),
-         (566, ['POPC/P31', 'CHOL/C1'], ['M_G3P2_M', 'M_C1_M']),
-         (787, ['TOCL/P3', 'POPC/P', 'POPE/P'], ['M_G13P1_M', 'M_G3P2_M', 'M_G3P2_M']),
-         (243, ['DPPC/P8'], ['M_G3P2_M']),
-         (86,  ['POPE/P8'], ['M_G3P2_M'])])
+        [(281, ["POPC/P"], ["M_G3P2_M"]),
+         (566, ["POPC/P31", "CHOL/C1"], ["M_G3P2_M", "M_C1_M"]),
+         (787, ["TOCL/P3", "POPC/P", "POPE/P"], ["M_G13P1_M", "M_G3P2_M", "M_G3P2_M"]),
+         (243, ["DPPC/P8"], ["M_G3P2_M"]),
+         (86,  ["POPE/P8"], ["M_G3P2_M"])])
 def test_simulation2universal_atomnames(systems, systemid, lipid, result):
     from DatabankLib.databankLibrary import simulation2universal_atomnames
     sys0 = systems.loc(systemid)
     i = 0
     for lipat in lipid:
-        lip, atom = tuple(lipat.split('/'))
+        lip, atom = tuple(lipat.split("/"))
         sname = simulation2universal_atomnames(sys0, lip, result[i])
         assert sname == atom
         i += 1
@@ -247,12 +248,12 @@ def test_simulation2universal_atomnames(systems, systemid, lipid, result):
 
 @pytest.mark.parametrize(
         "systemid, lipat, result",
-        [(243, 'DPPC/nonExisting', "was not found from mappingDPPCberger.yaml"),
-         (243, 'nonExisting/M_G1_M', "was not found in the system!")])
+        [(243, "DPPC/nonExisting", "was not found from mappingDPPCberger.yaml"),
+         (243, "nonExisting/M_G1_M", "was not found in the system!")])
 def test_bad_simulation2universal_atomnames(systems, systemid, lipat, result, capsys):
     from DatabankLib.databankLibrary import simulation2universal_atomnames
     sys0 = systems.loc(systemid)
-    lip, atom = tuple(lipat.split('/'))
+    lip, atom = tuple(lipat.split("/"))
     sname = simulation2universal_atomnames(sys0, lip, atom)
     output = capsys.readouterr().err.rstrip()
     assert result in output
@@ -273,7 +274,7 @@ def test_getLipids(systems, systemid, result):
     assert gl == result
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def wipeth(systems):
     import DatabankLib
     # TD-FIXTURE FOR REMOVING THICKNESS AFTER TEST CALCULATIONS
@@ -281,7 +282,7 @@ def wipeth(systems):
     # TEARDOWN
     for sid in [243, 281]:
         sys0 = systems.loc(sid)
-        fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, sys0['path'], 'thickness.json')
+        fn = os.path.join(DatabankLib.NMLDB_SIMU_PATH, sys0["path"], "thickness.json")
         try:
             os.remove(fn)
         except FileNotFoundError:
@@ -302,9 +303,9 @@ def test_analyze_th(systems, systemid, result, wipeth, thickres, logger):
     assert rc == result
     fn = os.path.join(
         DatabankLib.NMLDB_SIMU_PATH,
-        sys0['path'], 'thickness.json')
+        sys0["path"], "thickness.json")
     assert os.path.isfile(fn)
-    with open(fn, 'r') as file:
+    with open(fn) as file:
         data = float(file.read().rstrip())
     assert abs(data - thickres) < 1e-5
 
@@ -343,7 +344,7 @@ def test_GetEquilibrationTimes(systems, systemid, result):
             continue  # for them eq_times are not computed
         assert lip in eq_times.keys()
         assert result == eq_times[lip]
-    
+
 @pytest.mark.xfail(reason="EQtimes were not computed", run=True,
                    raises=FileNotFoundError, strict=True)
 def test_GetEquilibrationTimes_fail(systems):

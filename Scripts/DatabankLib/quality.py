@@ -4,17 +4,18 @@ TODO: add tests
 TODO: remove code duplication and commented code
 """
 
-from typing import List
-from DatabankLib import NMLDB_SIMU_PATH
-from DatabankLib.core import System, initialize_databank, lipids_set
-
-import re
 import decimal as dc
-import numpy as np
-import scipy.stats
-import scipy.signal
 import json
 import os
+import re
+from typing import List
+
+import numpy as np
+import scipy.signal
+import scipy.stats
+
+from DatabankLib import NMLDB_SIMU_PATH
+from DatabankLib.core import System, initialize_databank, lipids_set
 
 
 # TODO: inherit from System
@@ -27,14 +28,14 @@ class QualSimulation:
         self.idx_path = idx_path
 
     def get_lipids(self, molecules=lipids_set):
-        lipids = [k for k in self.system['COMPOSITION'] if k in molecules]
+        lipids = [k for k in self.system["COMPOSITION"] if k in molecules]
         return lipids
 
     # fraction of each lipid with respect to total amount of lipids (only for lipids!)
     def molar_fraction(self, molecule, molecules=lipids_set) -> float:
-        cmps = self.system['COMPOSITION']
-        number = sum(cmps[molecule]['COUNT'])
-        all_counts = [i['COUNT'] for k, i in cmps.items() if k in molecules]
+        cmps = self.system["COMPOSITION"]
+        number = sum(cmps[molecule]["COUNT"])
+        all_counts = [i["COUNT"] for k, i in cmps.items() if k in molecules]
         return number / sum(map(sum, all_counts))
 
 
@@ -58,7 +59,8 @@ def prob_S_in_g(OP_exp: float, exp_error: float,
         OP_sim (float): Simulated OP value
         op_sim_sd (float): Standard deviation from simulation
 
-    Returns:
+    Returns
+    -------
         float: single-OP quality value or NaN
     """
     # normal distribution N(s, OP_sim, op_sim_sd)
@@ -86,15 +88,15 @@ def get_fragments(mapping_dict: dict):
 
     for key_m, value in mapping_dict.items():
         try:
-            key_f = value['FRAGMENT']
+            key_f = value["FRAGMENT"]
         except KeyError:
-            key_f = 'n/d'
+            key_f = "n/d"
         fragments.setdefault(key_f, []).append(key_m)
 
     # merge glycerol backbone fragment into headgroup fragment
-    if 'glycerol backbone' in fragments.keys() and 'headgroup' in fragments.keys():
-        fragments['headgroup'] += fragments['glycerol backbone']
-        fragments.pop('glycerol backbone')
+    if "glycerol backbone" in fragments and "headgroup" in fragments:
+        fragments["headgroup"] += fragments["glycerol backbone"]
+        fragments.pop("glycerol backbone")
 
     return fragments
 
@@ -196,12 +198,12 @@ def fragmentQuality(fragments, exp_op_data, sim_op_data):
             else:
                 fragment_quality[fragment_key] = np.nan
 
-    print('fragment quality ', fragment_quality)
+    print("fragment quality ", fragment_quality)
     return fragment_quality
 
 
 def fragmentQualityAvg(
-    lipid, fragment_qual_dict, fragments
+    lipid, fragment_qual_dict, fragments,
 ):  # handles one lipid at a time
     sums_dict = {}
 
@@ -225,7 +227,7 @@ def fragmentQualityAvg(
     # calculate total quality over all fragment quality averages
     if [
         x
-        for x in avg_total_quality.keys()
+        for x in avg_total_quality
         if (checkForCH(x, fragments) and not np.isnan(avg_total_quality[x]))
         or (not checkForCH(x, fragments))
     ]:
@@ -269,24 +271,24 @@ def systemQuality(system_fragment_qualities, simulation):
 
     for lipid_key in system_dict:
         for key, value in system_dict[lipid_key].items():
-            if key == 'total':
+            if key == "total":
                 total += value
-            elif key == 'headgroup':
+            elif key == "headgroup":
                 headgroup += value
-            elif key == 'sn-1' or key == 'sn-2':
+            elif key == "sn-1" or key == "sn-2":
                 tails += value/2
             else:
                 tails += value
 
     if np.prod(w_nan) > 0:
         # multiply all elements of w_nan and divide the sum by the product
-        system_quality['headgroup'] = headgroup * np.prod(w_nan)
-        system_quality['tails'] = tails * np.prod(w_nan)
-        system_quality['total'] = total * np.prod(w_nan)
+        system_quality["headgroup"] = headgroup * np.prod(w_nan)
+        system_quality["tails"] = tails * np.prod(w_nan)
+        system_quality["total"] = total * np.prod(w_nan)
     else:
-        system_quality['headgroup'] = headgroup
-        system_quality['tails'] = tails
-        system_quality['total'] = total
+        system_quality["headgroup"] = headgroup
+        system_quality["tails"] = tails
+        system_quality["total"] = total
 
     print("system_quality")
     print(system_quality)
@@ -296,7 +298,8 @@ def systemQuality(system_fragment_qualities, simulation):
 
 def calc_k_e(SimExpData):
     """Scaling factor as defined by Kučerka et al. 2008b,
-       doi:10.1529/biophysj.107.122465"""
+    doi:10.1529/biophysj.107.122465
+    """
     sum1 = 0
     sum2 = 0
 
@@ -311,8 +314,7 @@ def calc_k_e(SimExpData):
 
     if len(SimExpData) > 0:
         return k_e
-    else:
-        return ""
+    return ""
 
 
 def FormFactorMinFromData(FormFactor):
@@ -341,8 +343,8 @@ def FormFactorMinFromData(FormFactor):
 
 def formfactorQuality(simFFdata, expFFdata):
     """Calculate form factor quality for a simulation as defined by
-    Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5"""
-
+    Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5
+    """
     # SAMULI: This creates a array containing experiments and simualtions with
     # the overlapping x-axis values
     SimExpData = []
@@ -350,7 +352,7 @@ def formfactorQuality(simFFdata, expFFdata):
         for ExpValues in expFFdata:
             if np.abs(SimValues[0] - ExpValues[0]) < 0.0005:  # and ExpValues[0] < 0.41:
                 SimExpData.append(
-                    [ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]]
+                    [ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]],
                 )
 
     # Calculates the scaling factor for plotting
@@ -367,14 +369,13 @@ def formfactorQuality(simFFdata, expFFdata):
 
     if N > 0:
         return khi2, k_e
-    else:
-        return ""
+    return ""
 
 
 def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
     """Calculate form factor quality for a simulation as defined by
-    Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5"""
-
+    Kučerka et al. 2010, doi:10.1007/s00232-010-9254-5
+    """
     # SAMULI: This creates a array containing experiments and simualtions with
     # the overlapping x-axis values
     SimExpData = []
@@ -382,14 +383,14 @@ def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
         for ExpValues in expFFdata:
             if np.abs(SimValues[0] - ExpValues[0]) < 0.0005:  # and ExpValues[0] < 0.41:
                 SimExpData.append(
-                    [ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]]
+                    [ExpValues[0], ExpValues[1], ExpValues[2], SimValues[1]],
                 )
 
     k_e = calc_k_e(SimExpData)
 
     sum1 = 0
     N = len(SimExpData)
-    for i in range(0, len(SimExpData)):
+    for i in range(len(SimExpData)):
         F_e = SimExpData[i][1]
         deltaF_e = expFFdata[i][2]
         F_s = SimExpData[i][3]
@@ -400,8 +401,7 @@ def formfactorQualitySIMtoEXP(simFFdata, expFFdata):
 
     if N > 0:
         return khi2, k_e
-    else:
-        return ""
+    return ""
 
 
 def loadSimulations() -> List[QualSimulation]:
@@ -422,7 +422,7 @@ def loadSimulations() -> List[QualSimulation]:
                     if lipMol not in lipids_set:
                         continue
                     filename2 = os.path.join(
-                        NMLDB_SIMU_PATH, system["path"], lipMol + "OrderParameters.json"
+                        NMLDB_SIMU_PATH, system["path"], lipMol + "OrderParameters.json",
                     )
                     OPdata = {}
                     try:
@@ -435,7 +435,7 @@ def loadSimulations() -> List[QualSimulation]:
 
                 simFFdata = {}  # form factor data
                 filename2 = os.path.join(
-                    NMLDB_SIMU_PATH, system["path"], "FormFactor.json"
+                    NMLDB_SIMU_PATH, system["path"], "FormFactor.json",
                 )
                 try:
                     with open(filename2) as json_file:
@@ -444,7 +444,7 @@ def loadSimulations() -> List[QualSimulation]:
                     # FormFactor data for this system is missed
                     pass
                 simulations.append(
-                    QualSimulation(system, simOPdata, simFFdata, system["path"])
+                    QualSimulation(system, simOPdata, simFFdata, system["path"]),
                 )
             else:
                 print("The simulation does not have experimental data.")

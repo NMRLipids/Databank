@@ -1,7 +1,8 @@
+import logging
+import os
 import subprocess
 import sys
-import os
-import logging
+
 """
 Contains methods used for python scripts related to workflows.
 
@@ -60,7 +61,7 @@ def run_python_script(script_path, args=None, error_message="Python script faile
         subprocess.run(
             [sys.executable, script_path, *args],
             check=True,
-            cwd=working_dir  
+            cwd=working_dir,
         )
     except OSError as e:
         logger.error(f"{error_message}, caught OSError: {e}")
@@ -95,9 +96,9 @@ def get_databank_paths(NMLDB_ROOT_PATH):
         "compute_databank_path": compute_databank_path,
         "searchDATABANK_path": searchDATABANK_path,
         "QualityEvaluation_path": QualityEvaluation_path,
-        "makeRanking_path": makeRanking_path
+        "makeRanking_path": makeRanking_path,
     }
-            
+
 def delete_info_file(info_file_path):
     """
     Delete an info file at the specified path.

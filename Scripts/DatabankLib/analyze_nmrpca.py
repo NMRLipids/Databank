@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 This code aims to calculate the relaxation time based on the
 PCAlipids analysis.
@@ -34,25 +33,24 @@ Patrik Kula
 Alexander Kuzmin
 """
 
-import os
 import json
-import numpy as np
-from scipy import signal
+import os
+import warnings
+
 import MDAnalysis as mda
+import numpy as np
 from deprecated import deprecated
+from MDAnalysis.analysis.base import AnalysisFromFunction
+from scipy import signal
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import System
+from DatabankLib.databankio import download_resource_from_uri, resolve_download_file_url
 from DatabankLib.databankLibrary import lipids_set
-from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
-
-from MDAnalysis.analysis.base import AnalysisFromFunction
-import warnings
-
 from DatabankLib.settings.molecules import Lipid
 
 # suppress some MDAnalysis warnings issued from mda.analysis.align
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 from MDAnalysis.analysis import align  # noqa
 
 # TODO: now there are only regular phospholipids.
@@ -61,7 +59,7 @@ ALLOWLIPIDS = [
     "POPC", "POPG", "POPS", "POPE", "PYPC", "DMPC", "DPPC", "DPPE", "DPPG",
     "DEPC", "DRPC", "DYPC", "DLPC", "DLIPC", "DOPC", "DOPE", "DDOPC", "DOPS",
     "DSPC", "DAPC", "SDPE", "SOPC", "POPI", "SAPI", "SAPI24", "SAPI25",
-    "SLPI"
+    "SLPI",
 ]
 
 merge_cutoff = 2.0
@@ -97,7 +95,6 @@ class Parser:
             path          - name of a particular trajectory
             v             - verbosity for testing
         """
-
         # Technical
         self.verbose = v
         self.error = 0
@@ -108,7 +105,7 @@ class Parser:
 
         # Extracting data from readme
         self._path = os.path.join(self.root, system["path"])
-        print('Indexing path:', self._path)
+        print("Indexing path:", self._path)
         if self.verbose:
             print(f"Parser: Processing trajectory {self._path}")
         self.doi = system["DOI"]
@@ -156,12 +153,12 @@ class Parser:
         if self.error > 0:
             # This is an error message. Printing even in silent mode
             print(
-                "Parser: Can't read TPR/PDB and TRJ from README for " +
+                "Parser: Can't read TPR/PDB and TRJ from README for "
                 f"{self._path}")
         if self.verbose and not self.path:
             print(
                 "Parser: Iterating over all trajectories. "
-                + f"Current trajectory is {self._path}"
+                 f"Current trajectory is {self._path}",
             )
             # return
         # if self.path == self.indexingPath:
@@ -215,7 +212,7 @@ class Parser:
             trj_out_name = os.path.join(self._path, "whole.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
-                f"{self.tpr_name} -pbc mol -o {trj_out_name}"
+                f"{self.tpr_name} -pbc mol -o {trj_out_name}",
             )
             self.trj_name = trj_out_name
 
@@ -224,7 +221,7 @@ class Parser:
             trj_out_name = os.path.join(self._path, "short.xtc")
             os.system(
                 f"echo System | gmx trjconv -f {self.trj_name} -s "
-                f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10"
+                f"{self.tpr_name} -pbc mol -o {trj_out_name} -skip 10",
             )
             self.trj_name = trj_out_name
 
@@ -236,7 +233,7 @@ class Parser:
             print("Parser: Making a gro file from the first frame")
             os.system(
                 f"echo System | gmx trjconv -s {self.tpr_name} "
-                f" -f {self.trj_name} -dump 0 -o {self.gro_name}"
+                f" -f {self.trj_name} -dump 0 -o {self.gro_name}",
             )
 
         # Loading trajectory
@@ -274,7 +271,6 @@ class Parser:
         Create Concatenator and corresponding concatenated trajectories for
         all lipids available for the trajectory.
         """
-
         self.concatenated_trajs = {}
         for lipid_name, lipid in self.lipids.items():
             if lipid_name not in ALLOWLIPIDS:
@@ -283,7 +279,7 @@ class Parser:
             topology = Topology(
                 self.traj,
                 self.composition[lipid_name]["NAME"],
-                lipid.mapping_dict
+                lipid.mapping_dict,
             )
             concatenator = Concatenator(topology,
                                         self.traj,
@@ -322,7 +318,6 @@ class Topology:
             lipid_resname - resname of the lipid
             mapping_dict  - preloaded mapping_dict
         """
-
         self.lipid_resname = lipid_resname
         self.traj = traj
         self.mapping = mapping_dict
@@ -345,7 +340,6 @@ class Topology:
         mapping file.
         NOTE: This has to be changed if the content of mapping file changes
         """
-
         if "RESIDUE" not in self.mapping[list(self.mapping.keys())[0]].keys():
             return False
         resnames = []
@@ -369,8 +363,7 @@ class Topology:
         # How can we end up here?
         # Since currently we only call this function when Merge is needed,
         # this is a place for checking if everything is ok and we can raise
-        else:
-            return self.lipid_resname
+        return self.lipid_resname
 
     def assign_resnames(self, resnames):
         """
@@ -392,13 +385,13 @@ class Topology:
                 resname = self.mapping[key]["RESIDUE"]
                 if (
                     TAILSN1 not in resname_dict
-                    and TAILSN1 == self.mapping[key]["FRAGMENT"]
+                    and self.mapping[key]["FRAGMENT"] == TAILSN1
                     and not resname_dict[HEADGRP] == resname
                 ):
                     resname_dict[TAILSN1] = resname
                 if (
                     TAILSN2 not in resname_dict
-                    and TAILSN2 == self.mapping[key]["FRAGMENT"]
+                    and self.mapping[key]["FRAGMENT"] == TAILSN2
                     and not resname_dict[HEADGRP] == resname
                 ):
                     resname_dict[TAILSN2] = resname
@@ -407,8 +400,7 @@ class Topology:
             # TODO: add check that all resnames from input are in the dict
             return resname_dict
         # How can we end up here?
-        else:
-            return None
+        return None
 
     def run_merger(self):
         """
@@ -419,29 +411,28 @@ class Topology:
         groups differ
         TODO: get the correspondence from structure
         """
-
         resnames = self.get_lipid_resnames()
         resname_dict = self.assign_resnames(resnames)
         head_residues = [
             r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
-                f"not name H* and resname {resname_dict[HEADGRP]}"
+                f"not name H* and resname {resname_dict[HEADGRP]}",
             ).residues
         ]
         sn_1_residues = [
             r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resname_dict[TAILSN1]} and "
-                + f"around {merge_cutoff} (resname {resname_dict[HEADGRP]} "
-                + "and not name H*)"
+                 f"around {merge_cutoff} (resname {resname_dict[HEADGRP]} "
+                 "and not name H*)",
             ).residues
         ]
         sn_2_residues = [
             r.atoms.select_atoms("not name H* and prop mass > 0.8")
             for r in self.traj.select_atoms(
                 f"not name H* and resname {resname_dict[TAILSN2]} and "
-                + f"around {merge_cutoff} (resname {resname_dict[HEADGRP]} "
-                + "and not name H*)"
+                 f"around {merge_cutoff} (resname {resname_dict[HEADGRP]} "
+                 "and not name H*)",
             ).residues
         ]
         return head_residues, sn_1_residues, sn_2_residues
@@ -480,7 +471,7 @@ class Concatenator:
 
     def concatenate_traj(self):
         """
-        concatenateTraj performs basic trajectory concatination. First, it extracts
+        ConcatenateTraj performs basic trajectory concatination. First, it extracts
         coordinates from trajectory, next, it reshapes the coordinate array, swaps
         time and resid axes to obtain continuous trajectories of individual lipids
         (this is needed for autocorrelation time analysis), and finally merges
@@ -490,7 +481,7 @@ class Concatenator:
         n_frames = len(traj)
 
         heavy_atoms_topology = self.traj.select_atoms(
-            f"resname {self.lipid_resname} and not name H*"
+            f"resname {self.lipid_resname} and not name H*",
         )
 
         n_atoms_lipid = len(self.topology.atom_names())
@@ -517,7 +508,7 @@ class Concatenator:
         # Creating new Universe from the concatenated coordinates
         atom_resindex = np.repeat(0, n_atoms_lipid)
         concatenated_traj = mda.Universe.empty(
-            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True
+            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True,
         )
         concatenated_traj.add_TopologyAttr("resname", [self.lipid_resname])
         concatenated_traj.load_new(coords, in_memory=False)
@@ -526,7 +517,7 @@ class Concatenator:
 
     def concatenate_traj_with_merging(self):
         """
-        concatenateTrajWithMerging performs basic trajectory concatination. In
+        ConcatenateTrajWithMerging performs basic trajectory concatination. In
         contrast to basic concatenateTraj it additionally merges splitted lipids.
         First, it creates extracts coordinates from trajectory, next, it reshapes
         the coordinate array, swaps time and resid axes to obtain continuous
@@ -542,7 +533,7 @@ class Concatenator:
             self.tail2list[0]
 
         for head, sn1, sn2 in zip(
-            self.headlist[1:], self.tail1list[1:], self.tail2list[1:]
+            self.headlist[1:], self.tail1list[1:], self.tail2list[1:],
         ):
             heavy_atoms_topology = heavy_atoms_topology.union(head + sn1 + sn2)
 
@@ -571,7 +562,7 @@ class Concatenator:
         # Creating new Universe from the concatenated coordinates
         atom_resindex = np.repeat(0, n_atoms_lipid)
         concatenated_traj = mda.Universe.empty(
-            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True
+            n_atoms_lipid, 1, atom_resindex=atom_resindex, trajectory=True,
         )
         concatenated_traj.add_TopologyAttr("resname", [self.lipid_resname])
         concatenated_traj.load_new(coords, in_memory=False)
@@ -592,7 +583,7 @@ class Concatenator:
         coords = (
             AnalysisFromFunction(
                 lambda ag: ag.positions.copy(),
-                concatenated_traj.select_atoms("all")
+                concatenated_traj.select_atoms("all"),
             )
             .run()
             .results["timeseries"]
@@ -707,7 +698,7 @@ class PCA:
         # calculate autocorrelations for individual lipids
         r = np.array(
             [self.get_lipid_autocorrelation(x, variance, mean)
-                for x in separate_projs]
+                for x in separate_projs],
         )
         r = r.mean(axis=0)
         t = np.arange(len(r)) * self.traj_time / len(r)
@@ -775,7 +766,7 @@ class TimeEstimator:
         # Get timeseries for autocorrelation
         t_pic = np.array([time[i] for i in points if autocorrelation[i] > 0.0])
         r_pic = np.array(
-            [autocorrelation[i] for i in points if autocorrelation[i] > 0.0]
+            [autocorrelation[i] for i in points if autocorrelation[i] > 0.0],
         )
         # Calculate logs for time and autocorrelation arrays
         # We use log since in log-log scale autocorrelation is closer to linear

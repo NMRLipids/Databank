@@ -1,10 +1,10 @@
 import json
 
 import maicos
+import MDAnalysis as mda
+import numpy as np
 from maicos.core import ProfilePlanarBase
 from maicos.lib.weights import density_weights
-import numpy as np
-import MDAnalysis as mda
 
 from DatabankLib.core import System
 from DatabankLib.jsonEncoders import CompactJSONEncoder
@@ -12,34 +12,34 @@ from DatabankLib.jsonEncoders import CompactJSONEncoder
 
 def is_system_suitable_4_maicos(system: System):
     """
-Checks if the system is suitable for maicos calculations."
+    Checks if the system is suitable for maicos calculations."
 
     :param system: Databank System object (System)
     :return: False if system should be skipped
     """
-    if system['TYPEOFSYSTEM'] == 'miscellaneous':
+    if system["TYPEOFSYSTEM"] == "miscellaneous":
         return False
     try:
-        if system['WARNINGS']['ORIENTATION']:
-            print('Skipping due to ORIENTATION warning:',
-                  system['WARNINGS']['ORIENTATION'])
+        if system["WARNINGS"]["ORIENTATION"]:
+            print("Skipping due to ORIENTATION warning:",
+                  system["WARNINGS"]["ORIENTATION"])
             return False
     except (KeyError, TypeError):
         pass
     try:
-        if system['WARNINGS']['PBC'] == 'hexagonal-box':
-            print('Skipping due to PBC warning:', system['WARNINGS']['PBC'])
+        if system["WARNINGS"]["PBC"] == "hexagonal-box":
+            print("Skipping due to PBC warning:", system["WARNINGS"]["PBC"])
             return False
     except (KeyError, TypeError):
         pass
     try:
-        if system['WARNINGS']['NOWATER']:
-            print('Skipping because there is not water in the trajectory.')
+        if system["WARNINGS"]["NOWATER"]:
+            print("Skipping because there is not water in the trajectory.")
             return False
     except (KeyError, TypeError):
         pass
     return True
- 
+
 
 class NumpyArrayEncoder(CompactJSONEncoder):
     """Encoder for 2xN numpy arrays to be used with json.dump."""
@@ -47,8 +47,7 @@ class NumpyArrayEncoder(CompactJSONEncoder):
     def encode(self, o):
         if isinstance(o, np.ndarray):
             return CompactJSONEncoder.encode(self, o.tolist())
-        else:
-            return CompactJSONEncoder.encode(self, o)
+        return CompactJSONEncoder.encode(self, o)
 
 
 class FormFactorPlanar(ProfilePlanarBase):
@@ -117,13 +116,13 @@ class FormFactorPlanar(ProfilePlanarBase):
         super()._conclude()
 
         self.results.form_factor = np.sqrt(
-            self.means.ff_real**2 + self.means.ff_imag**2
+            self.means.ff_real**2 + self.means.ff_imag**2,
         )
 
         # error from error propagation of the form factor
         self.results.dform_factor = np.sqrt(
             (self.sems.ff_real * self.means.ff_real / self.results.form_factor) ** 2
-            + (self.sems.ff_imag * self.means.ff_imag / self.results.form_factor) ** 2
+            + (self.sems.ff_imag * self.means.ff_imag / self.results.form_factor) ** 2,
         )
 
     def save(self):
@@ -134,7 +133,7 @@ class FormFactorPlanar(ProfilePlanarBase):
                 self.results.scattering_vectors,
                 self.results.form_factor * 1e2,
                 self.results.dform_factor * 1e2,
-            ]
+            ],
         ).T
         with open(self.output, "w") as f:
             json.dump(output, f, cls=NumpyArrayEncoder)
@@ -148,7 +147,7 @@ class DensityPlanar(maicos.DensityPlanar):
                 self.results.bin_pos / 10,
                 self.results.profile * 1e3,
                 self.results.dprofile * 1e3,
-            ]
+            ],
         ).T
         with open(self.output, "w") as f:
             json.dump(outdata, f, cls=NumpyArrayEncoder)
@@ -161,7 +160,7 @@ class DielectricPlanar(maicos.DielectricPlanar):
                 self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.eps_perp,
                 self.results.deps_perp,
-            ]
+            ],
         ).T
 
         with open(f"{self.output_prefix}_perp.json", "w") as f:
@@ -172,7 +171,7 @@ class DielectricPlanar(maicos.DielectricPlanar):
                 self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.eps_par,
                 self.results.deps_par,
-            ]
+            ],
         ).T
 
         with open(f"{self.output_prefix}_par.json", "w") as f:
@@ -186,7 +185,7 @@ class DiporderPlanar(maicos.DiporderPlanar):
                 self.results.bin_pos / 10,  # Convert from Å to nm
                 self.results.profile,
                 self.results.dprofile,
-            ]
+            ],
         ).T
         with open(self.output, "w") as f:
             json.dump(outdata, f, cls=NumpyArrayEncoder)

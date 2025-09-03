@@ -1,5 +1,6 @@
 from DatabankLib import NMLDB_ROOT_PATH
-from WorkflowScripts.Workflow_utils import *  
+from WorkflowScripts.Workflow_utils import *
+
 """
 Executes pipeline of analysis methods that work globally on simulations.
 
@@ -8,7 +9,7 @@ Executes pipeline of analysis methods that work globally on simulations.
    Users of the Databank repository can safely ignore it.
 """
 
-def main():    
+def main():
     path_dict = get_databank_paths(NMLDB_ROOT_PATH)
     run_python_script(path_dict["searchDATABANK_path"], error_message="SearchDatabank failed")
     run_python_script(path_dict["QualityEvaluation_path"], error_message="QualityEvaluation failed")

@@ -1,7 +1,9 @@
-from DatabankLib import NMLDB_ROOT_PATH
-from WorkflowScripts.Workflow_utils import *  
-import os 
 import argparse
+import os
+
+from DatabankLib import NMLDB_ROOT_PATH
+from WorkflowScripts.Workflow_utils import *
+
 """
 Executes standard pipeline of processing for an info file.
 
@@ -10,7 +12,7 @@ Executes standard pipeline of processing for an info file.
    Users of the Databank repository can safely ignore it.
 """
 
-def main(info_file_path): 
+def main(info_file_path):
     path_dict = get_databank_paths(NMLDB_ROOT_PATH)
     parent_folder = os.path.dirname(NMLDB_ROOT_PATH)
 
@@ -20,24 +22,24 @@ def main(info_file_path):
     try:
         os.makedirs(work_directory_dry, exist_ok=True)
         os.makedirs(work_directory_real, exist_ok=True)
-    except OSError as e:
-        logger.error(f"Failed to create work directories")
+    except OSError:
+        logger.error("Failed to create work directories")
         sys.exit(1)
 
     run_python_script(
         path_dict["AddData_path"],
         args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
-        error_message="AddData dry run failed"
+        error_message="AddData dry run failed",
     )
     run_python_script(
         path_dict["AddData_path"],
         args=["-f", info_file_path, "-w", work_directory_real],
-        error_message="AddData failed"
+        error_message="AddData failed",
     )
     run_python_script(
         path_dict["compute_databank_path"],
         args = ["--nmrpca", "--maicos", "--op", "--thickness","--apl", "--range", "*-0"],
-        error_message="Compute_databank failed"
+        error_message="Compute_databank failed",
     )
     delete_info_file(info_file_path)
 

@@ -8,10 +8,11 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
 """
 
-import os
 import glob
-import pytest
 import logging
+import os
+
+import pytest
 import pytest_check as check
 
 # Set up logging
@@ -55,15 +56,15 @@ def systems():
     logger.info("Wiping temporary calculation data.")
     for _s in s:
         def gbGen(x): return glob.glob(
-                    os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s['path'], x))
+                    os.path.join(DatabankLib.NMLDB_SIMU_PATH, _s["path"], x))
         clear_list = []
         if "NMLDB_TEST_NOWIPE" in os.environ:
             # leave JSONs
             pass
         else:
-            clear_list = ['*.json']
-        clear_list += ['*.dat', 'conf.gro', 'frame0.gro', '*.dat',
-                     '*.buildH', '.*', '#*', '*.def', 'whole.xtc', 'centered.xtc']
+            clear_list = ["*.json"]
+        clear_list += ["*.dat", "conf.gro", "frame0.gro", "*.dat",
+                     "*.buildH", ".*", "#*", "*.def", "whole.xtc", "centered.xtc"]
         for pat in clear_list:
             for f in gbGen(pat):
                 logger.debug(f"Removing file: {f}")
@@ -83,20 +84,20 @@ def systemLoadTraj(systems):
     yield
     # TEARDOWN SYSTEM-LOADING
     if "NMLDB_TEST_NOWIPE" in os.environ:
-        logger.info('DBG: Skipping trajectory data wipe.')
+        logger.info("DBG: Skipping trajectory data wipe.")
     else:
-        print('DBG: Wiping trajectory data.')
+        print("DBG: Wiping trajectory data.")
         for s in systems:
             logger.debug("Skipping localhost system")
-            if s.get('DOI') == 'localhost':
+            if s.get("DOI") == "localhost":
                 continue  # don't remove in this case!
-            for wp in ['GRO', 'TPR', 'TRJ']:
+            for wp in ["GRO", "TPR", "TRJ"]:
                 try:
                     file_ = s[wp][0][0]
                 except (KeyError, TypeError):
                     logger.warning(f"No {wp} file found for system")
                     continue
-                file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s['path'], file_)
+                file_ = os.path.join(DatabankLib.NMLDB_SIMU_PATH, s["path"], file_)
                 logger.debug(f"Checking file: {file_}")
                 if os.path.exists(file_):
                     os.remove(file_)
@@ -117,6 +118,7 @@ def compareJSONsBtwSD(jsfn: str):
         jsfn (_type_): relative path from simulation folder
     """
     import json
+
     import numpy as np
 
     logger.info(f"Comparing JSON files for: {jsfn}")
@@ -149,8 +151,8 @@ def compareJSONsBtwSD(jsfn: str):
                 rtol=MAXRELERR_COMPARE_THRESHOLD,
                 err_msg=(
                     f"Problem in {jsfn} comparison: {k1} line.\n"
-                    + f"Computed: {str(j1[k1])} \n"
-                    + f"Pre-computed: {str(j2[k1])}"
+                     f"Computed: {j1[k1]!s} \n"
+                     f"Pre-computed: {j2[k1]!s}"
                 ),
             )
 
@@ -174,7 +176,7 @@ def test_analyze_apl(systems, systemLoadTraj, systemid, logger):
 
 
 @pytest.mark.parametrize(
-    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)]
+    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
 )
 def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
@@ -189,7 +191,7 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
 
     for lip in set(s["COMPOSITION"].keys()).intersection(set(lipids_set.names)):
         cFile = os.path.join(
-            DatabankLib.NMLDB_SIMU_PATH, s["path"], lip + "OrderParameters.json"
+            DatabankLib.NMLDB_SIMU_PATH, s["path"], lip + "OrderParameters.json",
         )
         assert os.path.isfile(cFile), f"File {cFile} wasn't created for {lip}!"
         assert os.path.getsize(cFile) > 1e3, f"File {cFile} for {lip} is less than 1K!"
@@ -201,7 +203,7 @@ def test_analyze_op(systems, systemLoadTraj, systemid, rcodex, logger):
                           (566, 1),
                           (787, 2),
                           (243, 1),
-                          (86,  1)],)
+                          (86,  1)])
 def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib
     from DatabankLib.analyze import computeMAICOS
@@ -211,15 +213,15 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
     if rcodex == DatabankLib.RCODE_ERROR:
         return
 
-    for fn in ['WaterDensity.json','LipidDensity.json',
-               'TotalDensity.json','FormFactor.json']:
+    for fn in ["WaterDensity.json","LipidDensity.json",
+               "TotalDensity.json","FormFactor.json"]:
         cFile = os.path.join(DatabankLib.NMLDB_SIMU_PATH,
-                             s['path'], fn)
+                             s["path"], fn)
         check.is_true(os.path.isfile(cFile))
         check.is_true(os.path.getsize(cFile) > 1e3)
         try:
             compareJSONsBtwSD(
-                os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH)
+                os.path.relpath(cFile, DatabankLib.NMLDB_SIMU_PATH),
             )
         except AssertionError as e:
             check.is_true(False, msg=str(e))
@@ -227,7 +229,7 @@ def test_analyze_maicos(systems, systemLoadTraj, systemid, rcodex, logger):
 
 
 @pytest.mark.parametrize(
-    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)]
+    "systemid, rcodex", [(281, 1), (566, 1), (787, 2), (243, 1), (86, 1)],
 )
 def test_analyze_nmrpca(systems, systemLoadTraj, systemid, rcodex, logger):
     import DatabankLib

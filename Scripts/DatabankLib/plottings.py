@@ -3,12 +3,13 @@
 Network communication. Downloading files. Checking links etc.
 """
 
-import os
 import json
-import numpy as np
-import matplotlib.pyplot as plt
+import os
 
-from DatabankLib import NMLDB_SIMU_PATH, NMLDB_EXP_PATH
+import matplotlib.pyplot as plt
+import numpy as np
+
+from DatabankLib import NMLDB_EXP_PATH, NMLDB_SIMU_PATH
 
 
 def plotFormFactor(  # noqa: N802
@@ -174,7 +175,7 @@ def plotOrderParameters(OPsim, OPexp):  # noqa
                 pass
     plt.rc("font", size=15)
     plt.errorbar(
-        xValuesHGexp, yValuesHGexp, yerr=0.02, fmt=".", color="black", markersize=25
+        xValuesHGexp, yValuesHGexp, yerr=0.02, fmt=".", color="black", markersize=25,
     )
     plt.errorbar(
         xValuesHG,
@@ -204,7 +205,7 @@ def plotOrderParameters(OPsim, OPexp):  # noqa
         markersize=25,
     )
     plt.errorbar(
-        xValuesSN1exp, yValuesSN1exp, yerr=0.02, fmt=".", color="black", markersize=20
+        xValuesSN1exp, yValuesSN1exp, yerr=0.02, fmt=".", color="black", markersize=20,
     )
     plt.ylabel(r"$S_{CH}$", size=25)
     plt.xticks(size=20)
@@ -217,10 +218,10 @@ def plotOrderParameters(OPsim, OPexp):  # noqa
     plt.plot(xValuesSN2, yValuesSN2sim, color="red")
     plt.plot(xValuesSN2exp, yValuesSN2exp, color="black")
     plt.errorbar(
-        xValuesSN2, yValuesSN2sim, yValuesSN2simERR, fmt=".", color="red", markersize=25
+        xValuesSN2, yValuesSN2sim, yValuesSN2simERR, fmt=".", color="red", markersize=25,
     )
     plt.errorbar(
-        xValuesSN2exp, yValuesSN2exp, yerr=0.02, fmt=".", color="black", markersize=20
+        xValuesSN2exp, yValuesSN2exp, yerr=0.02, fmt=".", color="black", markersize=20,
     )
     plt.xlabel("Carbon", size=25)
     plt.ylabel(r"$S_{CH}$", size=25)
@@ -239,36 +240,36 @@ def plotSimulation(system, lipid: str):  # noqa: N802
     :param lipid: universal molecul name of the lipid
 
     """
-    path = os.path.join(NMLDB_SIMU_PATH, system['path'])
-    ff_path_sim = os.path.join(path, 'FormFactor.json')
-    op_path_sim = os.path.join(path, lipid + 'OrderParameters.json')
-    ffqual_fpath = os.path.join(path, 'FormFactorQuality.json')
+    path = os.path.join(NMLDB_SIMU_PATH, system["path"])
+    ff_path_sim = os.path.join(path, "FormFactor.json")
+    op_path_sim = os.path.join(path, lipid + "OrderParameters.json")
+    ffqual_fpath = os.path.join(path, "FormFactorQuality.json")
 
-    print('DOI: ', system['DOI'])
+    print("DOI: ", system["DOI"])
 
     try:
         with open(ffqual_fpath) as json_file:
             ff_quality = json.load(json_file)
-        print('Form factor quality: ', ff_quality[0])
-        ffdir = os.path.join(NMLDB_EXP_PATH, 'FormFactors',
-                             system['EXPERIMENT']['FORMFACTOR'])
+        print("Form factor quality: ", ff_quality[0])
+        ffdir = os.path.join(NMLDB_EXP_PATH, "FormFactors",
+                             system["EXPERIMENT"]["FORMFACTOR"])
         for subdir, dirs, files in os.walk(ffdir):
             for filename in files:
-                if filename.endswith('_FormFactor.json'):
-                    ff_path_exp = subdir + '/' + filename
+                if filename.endswith("_FormFactor.json"):
+                    ff_path_exp = subdir + "/" + filename
         with open(ff_path_exp) as json_file:
             ff_exp = json.load(json_file)
     except Exception:
-        print('Force field quality not found')
+        print("Force field quality not found")
 
     with open(op_path_sim) as json_file:
         op_sim = json.load(json_file)
 
     op_exp = {}
-    for exp_op_folder in list(system['EXPERIMENT']['ORDERPARAMETER'][lipid].values()):
+    for exp_op_folder in list(system["EXPERIMENT"]["ORDERPARAMETER"][lipid].values()):
         op_path_exp = os.path.join(
-            NMLDB_EXP_PATH, 'OrderParameters', exp_op_folder,
-            lipid + '_Order_Parameters.json')
+            NMLDB_EXP_PATH, "OrderParameters", exp_op_folder,
+            lipid + "_Order_Parameters.json")
         with open(op_path_exp) as json_file:
             op_exp.update(json.load(json_file))
 
@@ -280,6 +281,6 @@ def plotSimulation(system, lipid: str):  # noqa: N802
         plt.show()
     except Exception:
         plt.show()
-        print('Form factor plotting failed')
+        print("Form factor plotting failed")
 
     plotOrderParameters(op_sim, op_exp)
