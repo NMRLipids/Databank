@@ -6,9 +6,10 @@ version = "1.2.0"
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 [tool.ruff]
+target-version = "py39"
 # Set the maximum line length to 120
 line-length = 120
-ignore = ["TD","T201","G004","FIX002"]
+ignore = ["TD","T201","G004","FIX002", "D105", "PTH118", "PTH123", "PTH120"]
 [tool.ruff.lint]
 select = ["ALL"]
 extend-select = ["E501"]
