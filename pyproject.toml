@@ -9,9 +9,13 @@ build-backend = "setuptools.build_meta"
 target-version = "py39"
 # Set the maximum line length to 120
 line-length = 120
-ignore = ["TD","T201","G004","FIX002", "D105", "PTH118", "PTH123", "PTH120","PTH"]
+ignore = ["TD", "FIX002", 
+          "TRY003",             # exception handling
+          "D105", "D400",       # docstring style issues
+          "PTH",                # until we migrate to Pathlib
+          "T201", "G004", "S603"]       # logging currently ignored
 [tool.ruff.lint]
 select = ["ALL"]
 extend-select = ["E501"]
 [tool.ruff.lint.pydocstyle]
-convention = "numpy"
+convention = "pep257"

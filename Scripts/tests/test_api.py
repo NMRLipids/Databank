@@ -1,4 +1,6 @@
 """
+Test module test_api.py
+
 `test_api` contains tests of API those functions, which doesn't require making
 MDAnalysis Universe and recomputing something. These functions just read README
 files and precomputed JSON data.
@@ -21,10 +23,12 @@ pytestmark = pytest.mark.sim2
 
 # for vector comparisons with np.testing.assert_allclose
 MAXRELERR_COMPARE_THRESHOLD = 1e-2
-
+# testable constants
+N_SYSTEMS_IN_TESTSET = 5
 
 @pytest.fixture(scope="module")
 def systems():
+    """Fixture for loading the toy databank once per module."""
     import DatabankLib
     from DatabankLib.core import initialize_databank
 
@@ -36,7 +40,8 @@ def systems():
 
 
 def test_initialize_n(systems):
-    assert len(systems) == 5
+    """Check that we have 5 systems in the test set."""
+    assert len(systems) == N_SYSTEMS_IN_TESTSET
 
 
 def test_print_README(systems, capsys):
@@ -52,13 +57,22 @@ def test_print_README(systems, capsys):
     check.is_in("Gromacs, Amber, NAMD", output)
 
 
-@pytest.mark.parametrize("systemid, result", [(281, 64.722), (566, 61.306), (787, 78.237), (243, 62.276), (86, 60.460)])
+@pytest.mark.parametrize(
+    "systemid, result",
+    [
+        (281, 64.722),
+        (566, 61.306),  # 1
+        (787, 78.237),
+        (243, 62.276),  # 2
+        (86, 60.460),
+    ],
+)
 def test_CalcAreaPerMolecule(systems, systemid, result):
     from DatabankLib.databankLibrary import CalcAreaPerMolecule
 
     sys0 = systems.loc(systemid)
     apm = CalcAreaPerMolecule(sys0)
-    assert abs(apm - result) < 6e-4
+    assert apm == pytest.approx(result, abs=6e-4)
 
 
 @pytest.mark.parametrize(
@@ -70,7 +84,7 @@ def test_calcArea(systems, systemid, result):
 
     sys0 = systems.loc(systemid)
     area = calcArea(sys0)
-    assert abs(area - result) < 6e-4
+    assert area == pytest.approx(result, abs=6e-4)
 
 
 @pytest.mark.parametrize("systemid, result", [(281, 128), (566, 128), (787, 120), (243, 72), (86, 128)])
@@ -111,7 +125,7 @@ def test_getHydrationLevel(systems, systemid, result):
 
     sys0 = systems.loc(systemid)
     hl = getHydrationLevel(sys0)
-    assert abs(hl - result) < 1e-4
+    assert hl == pytest.approx(result, 1e-4)
 
 
 @pytest.mark.parametrize(
@@ -131,22 +145,26 @@ def test_calcLipidFraction(systems, systemid, lipid, result):
     assert calcLipidFraction(sys0, "SOPC") == 0  # absent lipid
     err = 0
     i = 0
-    for lip in lipid:
+    for i,lip in enumerate(lipid):
         err += (calcLipidFraction(sys0, lip) - result[i]) ** 2
-        i += 1
-    assert err < 1e-4
+    assert err == pytest.approx(0, rel=1e-4)
 
 
 @pytest.mark.parametrize(
     "systemid, result",
-    [(281, [-0.1610, -0.1217]), (566, [-0.1714, -0.1142]), (243, [-0.1764, -0.1784]), (86, [-0.1933, -0.1568])],
+    [
+        (281, [-0.1610, -0.1217]),  # 1
+        (566, [-0.1714, -0.1142]),  # 2
+        (243, [-0.1764, -0.1784]),  # 3
+        (86, [-0.1933, -0.1568]),
+    ],
 )
 def test_averageOrderParameters(systems, systemid, result):
     from DatabankLib.databankLibrary import averageOrderParameters
 
     sys0 = systems.loc(systemid)
     sn1, sn2 = averageOrderParameters(sys0)
-    assert (sn1 - result[0]) ** 2 + (sn2 - result[1]) ** 2 < 1e-5
+    assert (sn1 - result[0]) ** 2 + (sn2 - result[1]) ** 2 == pytest.approx(0, abs=1e-5)
 
 
 # Tests behavior when averageOrderParameters cannot find calculated OP data
@@ -178,11 +196,10 @@ def test_getUniversalAtomName(systems, systemid, lipid, result):
 
     sys0 = systems.loc(systemid)
     i = 0
-    for lipat in lipid:
+    for i,lipat in enumerate(lipid):
         lip, atom = tuple(lipat.split("/"))
         uname = getUniversalAtomName(sys0, atom, lip)
-        assert uname == result[i]
-        i += 1
+        check.equal(uname, result[i])
 
 
 # Test fail-behavior of getUniversalAtomName
@@ -225,10 +242,9 @@ def test_raise_loadMappingFile(systems, systemid, lipid, result):
 
     sys0 = systems.loc(systemid)
     i = 0
-    for lip in lipid:
+    for i, lip in enumerate(lipid):
         mpf = loadMappingFile(sys0["COMPOSITION"][lip]["MAPPING"])
-        assert len(mpf) == result[i]
-        i += 1
+        check.equal(len(mpf), result[i])
 
 
 @pytest.mark.parametrize(
@@ -246,11 +262,10 @@ def test_simulation2universal_atomnames(systems, systemid, lipid, result):
 
     sys0 = systems.loc(systemid)
     i = 0
-    for lipat in lipid:
+    for i, lipat in enumerate(lipid):
         lip, atom = tuple(lipat.split("/"))
         sname = simulation2universal_atomnames(sys0, lip, result[i])
-        assert sname == atom
-        i += 1
+        check.equal(sname, atom)
 
 
 @pytest.mark.parametrize(
@@ -320,7 +335,7 @@ def test_analyze_th(systems, systemid, result, wipeth, thickres, logger):
     assert os.path.isfile(fn)
     with open(fn) as file:
         data = float(file.read().rstrip())
-    assert abs(data - thickres) < 1e-5
+    assert data == pytest.approx(thickres, abs=1e-5)
 
 
 @pytest.mark.parametrize("systemid, result", [(281, None), (243, None), (566, 4.2576), (787, None), (86, 4.1327)])
@@ -329,7 +344,9 @@ def test_GetThickness(systems, systemid, result):
 
     sys0 = systems.loc(systemid)
     th = GetThickness(sys0)
-    assert (th is None and result is None) or abs(float(th) - float(result)) < 1e-4
+    if (th is None and result is None):
+        return
+    assert float(th) == pytest.approx(float(result), abs=1e-4)
 
 
 @pytest.mark.parametrize(
@@ -351,8 +368,8 @@ def test_GetEquilibrationTimes(systems, systemid, result):
     for lip in lips:
         if lip in ["CHOL", "DCHOL"]:
             continue  # for them eq_times are not computed
-        assert lip in eq_times.keys()
-        assert result == eq_times[lip]
+        check.is_in(lip, eq_times.keys())
+        check.equal(result, eq_times[lip])
 
 
 @pytest.mark.xfail(reason="EQtimes were not computed", run=True, raises=FileNotFoundError, strict=True)

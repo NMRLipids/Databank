@@ -56,10 +56,10 @@ class System(MutableMapping):
             mol.register_mapping(v["MAPPING"])
             self._content[k] = mol
 
-    def __getitem__(self, key: str) -> Any:
+    def __getitem__(self, key: str):  # noqa: ANN204
         return self._store[key]
 
-    def __setitem__(self, key: str, value: Any) -> None:
+    def __setitem__(self, key: str, value) -> None:  # noqa: ANN001
         self._store[key] = value
 
     def __delitem__(self, key: str) -> None:

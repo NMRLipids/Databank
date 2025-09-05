@@ -1,5 +1,6 @@
 """
 :module: settings/molecules.py
+
 :description: Module file with definition of different global-level dictionaries.
 
 There is a dictionary of lipids, ions, etc. If you add a lipid which is not yet
@@ -32,7 +33,7 @@ class Molecule(ABC):
     @abstractmethod
     def _get_path(self) -> str:
         """
-        Returns absolute path to molecule-related files.
+        Return absolute path to molecule-related files.
 
         :return: str path
         """
@@ -70,7 +71,7 @@ class Molecule(ABC):
     @staticmethod
     def __check_name(name: str) -> None:
         """
-        Checks if the provided name contains only valid characters.
+        Check if the provided name contains only valid characters.
 
         This static method verifies that the input name string complies with
         the defined regular expression pattern, which restricts it to alphanumeric
@@ -111,7 +112,7 @@ class Molecule(ABC):
     # comparison by name to behave in a set
     # It's case-insesitive as folder structure should work on mac/win
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return isinstance(other, type(self)) and self.name.upper() == other.name.upper()
 
     def __hash__(self):
@@ -213,9 +214,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
         """
 
     def __contains__(self, item: Molecule):
-        """
-        Check if a lipid is in the set.
-        """
+        """Check if a lipid is in the set."""
         return (self._test_item_type(item) and item in self._items) or (
             isinstance(item, str) and item.upper() in self._names
         )

@@ -1,30 +1,38 @@
 #!/usr/bin/env python3
+r"""
+Program **compute_databank.py**
 
-"""
-:program: compute_databank.py
-:description: Script to compute various properties for systems of the databank.
+Script to compute various properties for systems of the databank. It allows you to
+compute properties: APL, thickness, PCA relaxation times, MAICOS (density profiles,
+water orientation, dielectric profiles, X-ray form factor).
 
-Usage:
+**Usage:**
+
+.. code-block:: console
+
     ./compute_databank.py [--apl] [--nmrpca] [--maicos] [--thickness] \
         [--OP] [--range 0-1000] [--debug] [-h]
 
-This script allows you to compute properties: APL, thickness, PCA relaxation times,
-MAICOS (density profiles, water orientation, dielectric profiles, X-ray form factor).
 
-:param range: Range of system IDs to analyze, e.g. 0-1000. The interval can be
-              opened at either end, e.g. *-50 or 25-*. Use *-0 to analyze all 
-              just-added systems.
-:param apl: Compute APL (Area Per Lipid) for all systems.
-:param nmrpca: Compute NMR PCA for all systems.
-:param maicos: Compute MAICOS for all systems.
-:param thickness: Compute Thickness for all systems.
-:param OP: Compute Order Parameter for all systems.
-:param debug: Enable debug logging.
-:param help: Show this help message and exit.
+**Command line arguments:**
+
+--range=ID_RANGE
+    Range of system IDs to analyze, e.g. 0-1000. The interval `ID_RANGE` \
+    can be opened at either end, e.g. ``*-50`` or ``25-*``. Use ``*-0`` to analyze all \
+    just-added systems.
+--apl        Compute APL (Area Per Lipid) for all systems.
+--nmrpca     Compute NMR PCA for all systems.
+--maicos     Compute MAICOS profiles for all systems.
+--thickness  Compute Thickness for all systems.
+--OP         Compute Order Parameter for all systems.
+--debug      Enable debug logging.
+--help       Show this help message and exit.
+
 """
 
 import argparse
 import logging
+import sys
 
 from DatabankLib.utils import run_analysis
 
@@ -93,21 +101,21 @@ if __name__ == "__main__":
             try:
                 id_range = (None, int(args.range[2:]))
             except ValueError:
-                logger.error("Invalid ID range format. Use 'start-end' format.")
-                exit(1)
+                logger.exception("Invalid ID range format. Use 'start-end' format.")
+                sys.exit(1)
         elif args.range.endswith("-*"):
             try:
                 id_range = (int(args.range[:-2]), None)
             except ValueError:
-                logger.error("Invalid ID range format. Use 'start-end' format.")
-                exit(1)
+                logger.exception("Invalid ID range format. Use 'start-end' format.")
+                sys.exit(1)
         else:
             # assume format is start-end
             try:
                 id_range = tuple(map(int, args.range.split("-")))
             except ValueError:
-                logger.error("Invalid ID range format. Use 'start-end' format.")
-                exit(1)
+                logger.exception("Invalid ID range format. Use 'start-end' format.")
+                sys.exit(1)
 
     if args.apl:
         logger.info("Computing APL (Area Per Lipid) for all systems")
