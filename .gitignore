@@ -17,3 +17,6 @@ test.py
 **/*gro
 **/*tpr
 **/*xtc
+
+#Setup files
+*.egg-info
