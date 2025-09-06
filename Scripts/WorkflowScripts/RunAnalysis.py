@@ -7,7 +7,7 @@ Execute pipeline of analysis methods that work globally on simulations.
 """
 
 from DatabankLib import NMLDB_ROOT_PATH
-from WorkflowScripts.Workflow_utils import get_databank_paths,run_python_script
+from WorkflowScripts.Workflow_utils import get_databank_paths, run_python_script
 
 
 def main() -> None:

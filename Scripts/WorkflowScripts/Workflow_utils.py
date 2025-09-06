@@ -21,7 +21,7 @@ logger = logging.getLogger()
 
 def run_python_script(
      script_path: str, args: list|None  = None,
-     error_message: str="Python script failed", working_dir: str|None =None) ->None:
+     error_message: str="Python script failed", working_dir: str|None = None) ->None:
     """
     Execute a Python script with the current interpreter and optional arguments.
 
@@ -35,11 +35,11 @@ def run_python_script(
         args = []
 
     if not os.path.isfile(script_path):
-        logger.info(f"Script not found: {script_path}")
+        logger.error(f"Script not found: {script_path}")
         sys.exit(1)
 
     try:
-        logger.exception(f"Running python script with path {script_path}")
+        logger.info(f"Running python script with path {script_path}")
         subprocess.run(
             [sys.executable, script_path, *args],
             check=True,
@@ -97,4 +97,4 @@ def delete_info_file(info_file_path:str) -> None:
     except OSError:
         logger.exception(f"Could not delete {info_file_path}")
     else:
-        logger.exception(f"Deleted info file: {info_file_path}")
+        logger.info(f"Deleted info file: {info_file_path}")
