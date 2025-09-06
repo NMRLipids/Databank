@@ -33,7 +33,7 @@ experiments compared.
 
 # Installation
 
-The code has been tested in Linux and MacOS environment with python 3.9 or newer. Recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version should be available in the system. All dependecies are listed in [requirements.txt](Scripts/DatabankLib/requirements.txt).
+The code has been tested in Linux and MacOS environment with python 3.10 or newer. Recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version should be available in the system. All dependecies are listed in [requirements.txt](Scripts/DatabankLib/requirements.txt).
 
 Note that the data is stored as a submodule repository and should be loaded after clonning. Default data storage is [BilayerData](https://github.com/NMRLipids/BilayerData), and it is loaded automatically by using
 ```

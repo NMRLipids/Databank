@@ -5,8 +5,6 @@ Imported by `databankLibrary` by default.
 Can be imported without additional libraries to scan Databank system file tree!
 """
 
-from __future__ import annotations
-
 import os
 import sys
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, Sequence
