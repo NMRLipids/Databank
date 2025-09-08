@@ -8,24 +8,22 @@
 
 import os
 import sys
-import MDAnalysis as mda
-from tqdm import tqdm
 import traceback
 
+import MDAnalysis as mda
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import initialize_databank, lipids_set
+from tqdm import tqdm
 
 if __name__ == "__main__":
     systems = initialize_databank()
 
     for system in tqdm(systems):
         try:
-            if 'TPR' not in system.readme.keys():
-                sys.stderr.write(
-                    f"Skipping {system['SYSTEM']} because there is no TPR\n")
+            if "TPR" not in system.readme.keys():
+                sys.stderr.write(f"Skipping {system['SYSTEM']} because there is no TPR\n")
                 continue
-            tpr_name = os.path.join(NMLDB_SIMU_PATH,
-                                    system['path'], system['TPR'][0][0])
+            tpr_name = os.path.join(NMLDB_SIMU_PATH, system["path"], system["TPR"][0][0])
             if not os.path.exists(tpr_name):
                 sys.stderr.write(f"""
         Skipping {system["SYSTEM"]} because TPR is not downloaded
@@ -42,22 +40,24 @@ if __name__ == "__main__":
                 sys.stderr.write(f"Problem openening {tpr_name} with MDAnalysis!\n")
                 sys.stderr.write(str(e))
                 continue
-            for molecule in system['COMPOSITION']:
+            for molecule in system["COMPOSITION"]:
                 errnum = 0
-                m_file = system['COMPOSITION'][molecule]['MAPPING']
+                m_file = system["COMPOSITION"][molecule]["MAPPING"]
                 mapping_dict = system.content[molecule].mapping_dict
                 # go over all records
                 for mk in mapping_dict:
                     selection = (
-                        'resname ' + system['COMPOSITION'][molecule]['NAME'] +
-                        ' and name ' + mapping_dict[mk]['ATOMNAME'])
+                        "resname "
+                        + system["COMPOSITION"][molecule]["NAME"]
+                        + " and name "
+                        + mapping_dict[mk]["ATOMNAME"]
+                    )
                     NatomsFromMapping = len(u.select_atoms(selection))
-                    NatomsFromREADME = system['COMPOSITION'][molecule]['COUNT']
-                    if NatomsFromMapping != NatomsFromREADME and \
-                            molecule not in lipids_set:
+                    NatomsFromREADME = system["COMPOSITION"][molecule]["COUNT"]
+                    if NatomsFromMapping != NatomsFromREADME and molecule not in lipids_set:
                         print(f"""
-        Found problematic system: {system['SYSTEM']}
-        Molecule named {system['COMPOSITION'][molecule]['NAME']}
+        Found problematic system: {system["SYSTEM"]}
+        Molecule named {system["COMPOSITION"][molecule]["NAME"]}
         MDA selection: "{selection}"
         Atoms from mapping/in readme: {NatomsFromMapping} / {NatomsFromREADME}
                         """)

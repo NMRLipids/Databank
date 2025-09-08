@@ -1,7 +1,3 @@
-import subprocess
-import sys
-import os
-import logging
 """
 Contains methods used for python scripts related to workflows.
 
@@ -10,6 +6,11 @@ Contains methods used for python scripts related to workflows.
    repository can safely ignore it.
 """
 
+import logging
+import os
+import subprocess
+import sys
+
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s]: %(message)s",
     datefmt="%I:%M:%S %p",
@@ -17,28 +18,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-def run_command(command, error_message="Command failed", working_dir=None):
-    """
-    Run a shell command and exit on failure.
 
-    :param command: The shell command to execute (string).
-    :param error_message: Message to display if the command fails.
-    :param working_dir: Optional working directory in which to run the command.
-    :raises SystemExit: Exits with code 1 if the command fails.
-    """
-    try:
-        subprocess.run(command, shell=True, check=True, cwd=working_dir)
-    except OSError as e:
-        logger.error(f"{error_message}, caught OSError: {e}")
-        sys.exit(1)
-    except ValueError as e:
-        logger.error(f"{error_message}, caught ValueError: {e}")
-        sys.exit(1)
-    except subprocess.SubprocessError as e:
-        logger.error(f"{error_message}, caught SubprocessError: {e}")
-        sys.exit(1)
-
-def run_python_script(script_path, args=None, error_message="Python script failed", working_dir=None):
+def run_python_script(
+     script_path: str, args: list|None  = None,
+     error_message: str="Python script failed", working_dir: str|None = None) ->None:
     """
     Execute a Python script with the current interpreter and optional arguments.
 
@@ -60,45 +43,47 @@ def run_python_script(script_path, args=None, error_message="Python script faile
         subprocess.run(
             [sys.executable, script_path, *args],
             check=True,
-            cwd=working_dir  
+            cwd=working_dir,
         )
-    except OSError as e:
-        logger.error(f"{error_message}, caught OSError: {e}")
+    except OSError:
+        logger.exception(f"{error_message}, caught OSError")
         sys.exit(1)
-    except ValueError as e:
-        logger.error(f"{error_message}, caught ValueError: {e}")
+    except ValueError:
+        logger.exception(f"{error_message}, caught ValueError")
         sys.exit(1)
-    except subprocess.SubprocessError as e:
-        logger.error(f"{error_message}, caught SubprocessError: {e}")
+    except subprocess.SubprocessError:
+        logger.exception(f"{error_message}, caught SubprocessError:")
         sys.exit(1)
 
-def get_databank_paths(NMLDB_ROOT_PATH):
+
+def get_databank_paths(nmlb_root_path:str) -> dict:
     """
     Retrieve relevant paths from databank.
 
-    :param NMLDB_ROOT_PATH: Root path of the database repository.
+    :param nmlb_root_path: Root path of the database repository.
     :return: Dictionary mapping descriptive keys to full paths of databank components.
     :rtype: dict
     """
-    Builddatabank_path = os.path.join(NMLDB_ROOT_PATH, "Scripts", "BuildDatabank")
-    AddData_path = os.path.join(Builddatabank_path, "AddData.py")
-    AnalyzeDatabank_path = os.path.join(NMLDB_ROOT_PATH, "Scripts", "AnalyzeDatabank")
-    compute_databank_path = os.path.join(AnalyzeDatabank_path, "compute_databank.py")
-    searchDATABANK_path = os.path.join(Builddatabank_path, "searchDATABANK.py")
-    QualityEvaluation_path = os.path.join(Builddatabank_path, "QualityEvaluation.py")
-    makeRanking_path = os.path.join(Builddatabank_path, "makeRanking.py")
+    builddatabank_path = os.path.join(nmlb_root_path, "Scripts", "BuildDatabank")
+    adddata_path = os.path.join(builddatabank_path, "AddData.py")
+    analyzedatabank_path = os.path.join(nmlb_root_path, "Scripts", "AnalyzeDatabank")
+    compute_databank_path = os.path.join(analyzedatabank_path, "compute_databank.py")
+    searchdatabank_path = os.path.join(builddatabank_path, "searchDATABANK.py")
+    qualityevaluation_path = os.path.join(builddatabank_path, "QualityEvaluation.py")
+    makeranking_path = os.path.join(builddatabank_path, "makeRanking.py")
 
     return {
-        "Builddatabank_path": Builddatabank_path,
-        "AddData_path": AddData_path,
-        "AnalyzeDatabank_path": AnalyzeDatabank_path,
+        "builddatabank_path": builddatabank_path,
+        "adddata_path": adddata_path,
+        "analyzedatabank_path": analyzedatabank_path,
         "compute_databank_path": compute_databank_path,
-        "searchDATABANK_path": searchDATABANK_path,
-        "QualityEvaluation_path": QualityEvaluation_path,
-        "makeRanking_path": makeRanking_path
+        "searchdatabank_path": searchdatabank_path,
+        "qualityevaluation_path": qualityevaluation_path,
+        "makeranking_path": makeranking_path,
     }
-            
-def delete_info_file(info_file_path):
+
+
+def delete_info_file(info_file_path:str) -> None:
     """
     Delete an info file at the specified path.
 
@@ -108,8 +93,8 @@ def delete_info_file(info_file_path):
     try:
         os.remove(info_file_path)
     except FileNotFoundError:
-        logger.error(f"Info file not found, nothing to delete: {info_file_path}")
-    except OSError as e:
-        logger.error(f"Could not delete {info_file_path}: {e}")
+        logger.exception(f"Info file not found, nothing to delete: {info_file_path}")
+    except OSError:
+        logger.exception(f"Could not delete {info_file_path}")
     else:
         logger.info(f"Deleted info file: {info_file_path}")

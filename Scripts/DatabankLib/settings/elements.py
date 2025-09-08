@@ -5,11 +5,13 @@ from existing mapping files and element guesser.
 
 import json
 import os
-from DatabankLib import NMLDB_DATA_PATH
-from DatabankLib.core import System
+import re
+
 import MDAnalysis as mda
 import periodictable
-import re
+
+from DatabankLib import NMLDB_DATA_PATH
+from DatabankLib.core import System
 
 
 def uname2element(mapping_name: str):
@@ -35,8 +37,7 @@ def uname2element(mapping_name: str):
     try:
         _ = getattr(periodictable, name2).number
     except AttributeError as e:
-        raise KeyError(
-            "This mapping name cannot be read by our rules: {mapping_name}") from e
+        raise KeyError("This mapping name cannot be read by our rules: {mapping_name}") from e
     else:
         return name2
 
@@ -50,26 +51,24 @@ def guess_elements(system: System, u: mda.Universe) -> None:
     :param u: MDAnalysis Universe object
     :type u: mda.Universe
     """
-    for _mol, comp in system['COMPOSITION'].items():
+    for _mol, comp in system["COMPOSITION"].items():
         # get the name of molecule used in simulation files
-        mol_simu_name = comp['NAME']
+        mol_simu_name = comp["NAME"]
         mol = system.content[_mol]
 
         # if lipid is split to multiple residues
-        _moltype = f"moltype {comp['MOLTYPE']} and " if 'MOLTYPE' in comp else ""
+        _moltype = f"moltype {comp['MOLTYPE']} and " if "MOLTYPE" in comp else ""
 
         try:
-            ua_dict_f = os.path.join(
-                NMLDB_DATA_PATH, "lipid_json_buildH",
-                system["UNITEDATOM_DICT"][_mol]+".json")
-            with open(ua_dict_f, 'r') as f:
+            ua_dict_f = os.path.join(NMLDB_DATA_PATH, "lipid_json_buildH", system["UNITEDATOM_DICT"][_mol] + ".json")
+            with open(ua_dict_f) as f:
                 ua_dict = json.load(f)
         except (KeyError, TypeError):
             ua_dict = False
 
         for uname, props in mol.mapping_dict.items():
             try:
-                res = str(props['RESIDUE'])
+                res = str(props["RESIDUE"])
             except KeyError:
                 res = ""
             _residue = f"resname {mol_simu_name if res == '' else res} and "
@@ -77,23 +76,20 @@ def guess_elements(system: System, u: mda.Universe) -> None:
             selstr = _moltype + _residue + _name
             selection = u.select_atoms(selstr)
             if ua_dict:
-                if props['ATOMNAME'] in ua_dict:
-                    elname = ua_dict[props['ATOMNAME']][0]
+                if props["ATOMNAME"] in ua_dict:
+                    elname = ua_dict[props["ATOMNAME"]][0]
                     if elname == "CH":
                         elname = "CH1"
                     if elname == "CHdoublebond":
                         elname = "CH1"
+                elif selection.n_atoms == 0:
+                    continue  # this is an implicit atom
                 else:
-                    if selection.n_atoms == 0:
-                        continue  # this is an implicit atom
-                    else:
-                        elname = uname2element(uname)
+                    elname = uname2element(uname)
             else:
                 # if not united-atom, ALL atoms must be present
-                assert selection.n_atoms > 0, \
-                    f"Selection '{selstr}' did not match any atoms in the universe."
+                assert selection.n_atoms > 0, f"Selection '{selstr}' did not match any atoms in the universe."
                 elname = uname2element(uname)
-            selection.atoms.elements = selection.n_atoms*[elname]
+            selection.atoms.elements = selection.n_atoms * [elname]
         # end mapping loop
     # end molecules loop
-    return

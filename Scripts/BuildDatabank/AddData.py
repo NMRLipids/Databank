@@ -1,66 +1,59 @@
 #!/usr/bin/env python3
-# coding: utf-8
+r"""
+Program **AddData.py**
 
-"""
-:program: AddData.py
-:description: The script adds a simulation into the Databank based on ``info.yaml``
-              file.
+The script adds a simulation into the Databank based on ``info.yaml`` file.
 
-Usage:
-    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run] 
+**Usage:**
+    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run]
 
-:param: ``-h``, ``--help`` show this help message and exit
-:param: ``-f FILE``, ``--file``  Input config file in yaml format.
-:param: ``-d``, ``--debug`` enable debug logging output
-:param: ``-n``, ``--no-cache`` always redownload repository files
-:param: ``-w WORK_DIR``, ``--work-dir`` set custom temporary working directory
+-h, --help             Show this help message and exit
+-f FILE, --file=FILE   Input config file in yaml format.
+-d, --debug            Enable debug logging output
+-n, --no-cache         Always redownload repository files
+-w WORK_DIR, --work-dir=WORK_DIR  Set custom temporary working directory \
         [not set = read from YAML]
 
-Returning error codes:
-    1 - input YAML parsing errors
-    2 - filesystem writting errors
-    3 - network accessing errors
+**Returns** error codes:
+
+- 0 - success
+- 1 - input YAML parsing errors
+- 2 - filesystem writting errors
+- 3 - network accessing errors
+
 """
 
-import os
 import argparse
-import yaml
+import datetime
 import logging
-import shutil
+import os
 import pprint
+import shutil
 import subprocess
-import traceback
-from datetime import date
-from random import randint
-from urllib.error import URLError, HTTPError
+import sys
+import tempfile
 from copy import deepcopy
-import pandas as pd
-import numpy as np
-
-from MDAnalysis import Universe
+from random import randint
+from urllib.error import HTTPError, URLError
 
 # import databank dictionaries
 import DatabankLib
-from DatabankLib.core import (
-    System,
-    initialize_databank
-    )
-from DatabankLib.databankLibrary import (
-    lipids_set,
-    molecules_set
-)
+import numpy as np
+import pandas as pd
+import yaml
+from DatabankLib.core import System, initialize_databank
+
 # helpers
 from DatabankLib.databankio import (
     calc_file_sha1_hash,
     create_databank_directories,
     download_resource_from_uri,
-    resolve_download_file_url
+    resolve_download_file_url,
 )
-from DatabankLib.databankLibrary import (
-    parse_valid_config_settings
-)
-from DatabankLib.settings.molecules import Lipid, NonLipid
+from DatabankLib.databankLibrary import lipids_set, molecules_set, parse_valid_config_settings
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
+from DatabankLib.settings.molecules import Lipid, NonLipid
+from MDAnalysis import Universe
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -72,31 +65,35 @@ if __name__ == "__main__":
     # parse input yaml file
     parser = argparse.ArgumentParser(
         prog="AddData.py Script",
-        description="Add a new dataset to the NMRLipids databank"
+        description="Add a new dataset to the NMRLipids databank",
     )
     parser.add_argument(
-        "-f", "--file",
-        help="Input config file in yaml format."
+        "-f",
+        "--file",
+        help="Input config file in yaml format.",
     )
     parser.add_argument(
-        "-d", "--debug",
+        "-d",
+        "--debug",
         help="enable debug logging output",
-        action="store_true"
+        action="store_true",
     )
     parser.add_argument(
-        "-n", "--no-cache",
+        "-n",
+        "--no-cache",
         help="always redownload repository files",
-        action="store_true"
+        action="store_true",
     )
     parser.add_argument(
-        "-w", "--work-dir",
+        "-w",
+        "--work-dir",
         help="set custom temporary working directory [not set = /tmp]",
-        default="/tmp"
+        default=tempfile.gettempdir(),
     )
     parser.add_argument(
         "--dry-run",
         help="perform a dry-run download of the files with 50MB limit",
-        action="store_true"
+        action="store_true",
     )
 
     args = parser.parse_args()
@@ -118,7 +115,8 @@ if __name__ == "__main__":
     # open input file for reading and writing
     with open(input_path) as yaml_file:
         info_yaml = yaml.load(
-            yaml_file, Loader=yaml.FullLoader
+            yaml_file,
+            Loader=yaml.FullLoader,  # noqa: S506
         )  # TODO may throw yaml.YAMLError
 
     # Show the input read
@@ -130,20 +128,17 @@ if __name__ == "__main__":
     # validate yaml entries and return updated sim dict
     try:
         sim_dict, files = parse_valid_config_settings(info_yaml)
-    except KeyError as e:
-        logger.error(f"missing entry key in yaml config: {e}, aborting")
-        logger.error(traceback.format_exc())
-        quit(1)
+    except KeyError:
+        logger.exception("Missing entry key in yaml config, aborting..")
+        sys.exit(1)
     except Exception as e:
-        logger.error(
-            f"an '{type(e).__name__}' occured while performing validity check"
-            f" '{input_path}', script has been aborted"
+        logger.exception(
+            f"an '{type(e).__name__}' occured while performing validity check '{input_path}', script has been aborted",
         )
-        logger.error(e)
-        quit(1)
+        sys.exit(1)
     else:
         logger.info(
-            "all entries in simulation are understood and will be further processed"
+            "all entries in simulation are understood and will be further processed",
         )
         logger.debug("valid sim entry keys:")
         pp = pprint.PrettyPrinter(width=41, compact=True)
@@ -154,30 +149,25 @@ if __name__ == "__main__":
         sim = System(sim_dict)
         # mapping files are registered here!
     except Exception as e:
-        logger.error(
-            f"an '{type(e).__name__}' occured while processing dict->System"
-            f" '{input_path}', script has been aborted"
+        logger.exception(
+            f"an '{type(e).__name__}' occured while processing dict->System '{input_path}', script has been aborted",
         )
-        logger.error(e)
-        quit(1)
+        sys.exit(1)
     else:
         logger.info(f"System object is successfully created from '{input_path}' file")
 
     # Create temporary directory where to download files and analyze them
     dir_wrk = args.work_dir
-    dir_tmp = (
-        os.path.join(dir_wrk, "tmp_6-" + str(randint(100000, 999999)))
-        if args.no_cache
-        else os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
-    )
-    logger.info(f"The data will be processed in directory path '{dir_tmp}'")
     try:
-        os.makedirs(dir_tmp, exist_ok=True)
-    except OSError as e:
-        logger.error(
-            f"couldn't create temporary working directory '{dir_tmp}': {e.args[1]}"
-        )
-        quit(2)
+        if args.no_cache:
+            dir_tmp = tempfile.mkdtemp(prefix="tmp_6-", dir=dir_wrk)
+        else:
+            dir_tmp = os.path.join(dir_wrk, f"{sim['DOI'].split('/')[-1]}_download")
+            os.makedirs(dir_tmp, exist_ok=True)
+    except OSError:
+        logger.exception("Couldn't create temporary working directory '%s'.", dir_tmp)
+        sys.exit(2)
+    logger.info(f"The data will be processed in directory path '{dir_tmp}'")
 
     # Check link status and download files
     try:
@@ -191,34 +181,32 @@ if __name__ == "__main__":
 
         for url, fi in zip(download_links, files):
             download_resource_from_uri(
-                url, os.path.join(dir_tmp, fi), override_if_exists=args.no_cache,
-                dry_run_mode=args.dry_run
+                url,
+                os.path.join(dir_tmp, fi),
+                override_if_exists=args.no_cache,
+                dry_run_mode=args.dry_run,
             )
 
         logger.info(f"Download of {len(files)} files was successful")
 
     except HTTPError as e:
         if e.code == 404:
-            logger.error(
-                f"ressource not found on server '{e.url}' (404)."
-                " Wrong DOI link or file name?"
+            logger.exception(
+                f"ressource not found on server '{e.url}' (404). Wrong DOI link or file name?",
             )
         else:
-            logger.error(f"HTTPError {e.code} while trying to "
-                         f"download the file '{e.url}'")
-        quit(3)
+            logger.exception(f"HTTPError {e.code} while trying to download the file '{e.url}'")
+        sys.exit(3)
     except URLError as e:
-        logger.error(
-            f"couldn't resolve network adress: {e.reason}."
-            " Please check your internet connection."
+        logger.exception(
+            f"couldn't resolve network adress: {e.reason}. Please check your internet connection.",
         )
-        quit(3)
+        sys.exit(3)
     except Exception as e:
-        logger.error(
-            f"'{type(e).__name__}' while attempting to download ressources, aborting"
+        logger.exception(
+            f"'{type(e).__name__}' while attempting to download ressources, aborting",
         )
-        logger.error(traceback.format_exc())
-        quit(3)
+        sys.exit(3)
 
     # -- Calculate hash of downloaded files
 
@@ -231,7 +219,8 @@ if __name__ == "__main__":
 
     # Make empty dataframe with the desired columns
     df_files = pd.DataFrame(
-        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"], dtype=object
+        columns=["NAME", "TYPE", "REQUIRED", "SIZE_MB", "HASH"],
+        dtype=object,
     )
 
     for key_sim, value_sim in sim_hashes.items():
@@ -248,9 +237,7 @@ if __name__ == "__main__":
 
         if "file" in entry_type:
             files_list = []
-            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim][
-                "REQUIRED"
-            ]
+            is_required = software_dict[sim_hashes["SOFTWARE"].upper()][key_sim]["REQUIRED"]
 
             if not is_required and value_sim is None:
                 continue  # skip not required NoneType (empty) file entries
@@ -259,7 +246,7 @@ if __name__ == "__main__":
                 file_name = os.path.join(dir_tmp, file_provided[0])
                 logger.info(f"calculating sha1 hash of '{file_provided[0]}'...")
                 file_hash = calc_file_sha1_hash(file_name)
-                file_size_mb = f"{(os.path.getsize(file_name)/1024/1024):.2f}"
+                file_size_mb = f"{(os.path.getsize(file_name) / 1024 / 1024):.2f}"
 
                 df_files = pd.concat(
                     [
@@ -272,8 +259,8 @@ if __name__ == "__main__":
                                     "REQUIRED": is_required,
                                     "SIZE_MB": file_size_mb,
                                     "HASH": file_hash,
-                                }
-                            ]
+                                },
+                            ],
                         ),
                     ],
                     ignore_index=True,
@@ -287,7 +274,7 @@ if __name__ == "__main__":
                 sim_hashes[key_sim] = files_list  # TODO Problematic
 
     logger.info(f"Summary of downloaded files: {os.linesep}")
-    logger.info("\n" + df_files.to_string())
+    logger.info(df_files.to_string())
 
     # Calculate the hash of a file contaning the hashes of each of the required files
     # This should be always invariant as it will be used unique identifier for a
@@ -303,22 +290,20 @@ if __name__ == "__main__":
 
     logger.info(
         "Calculating the numbers of lipid molecules in each leaflet based on the "
-        "center of mass of the membrane and lipids."
+        "center of mass of the membrane and lipids.",
     )
     logger.info(
-        "If a lipid molecule is split to multiple residues, the centre of mass of"
-        " the headgroup is used."
+        "If a lipid molecule is split to multiple residues, the centre of mass of the headgroup is used.",
     )
 
     try:
         struc, top, traj = get_struc_top_traj_fnames(sim, join_path=dir_tmp)
-    except (ValueError, KeyError) as e:
-        logger.error(str(type(e)) + " => " + str(e))
-        quit(1)
-    except Exception as e:
-        logger.error("Unkonwn error during `get_3major_fnames..`")
-        logger.error(str(type(e)) + " => " + str(e))
-        quit(4)
+    except (ValueError, KeyError) as _:
+        logger.exception("Some of fields required for Universe forming were not found.")
+        sys.exit(1)
+    except Exception as _:
+        logger.exception("Unkonwn error during `get_3major_fnames..`")
+        sys.exit(4)
 
     leaflet1 = 0  # total number of lipids in upper leaflet
     leaflet2 = 0  # total number of lipids in lower leaflet
@@ -331,7 +316,7 @@ if __name__ == "__main__":
         u = Universe(top, traj)
         u.atoms.write(gro, frames=u.trajectory[[0]])
     except Exception as e:
-        logger.warning(str(type(e)) + " => " + str(e))
+        logger.warning("%s: %s", e.__class__.__name__, e)
         fail_from_top = True
 
     # if previous fails then try the same from struc + trajectory
@@ -340,37 +325,32 @@ if __name__ == "__main__":
             logger.info(f"MDAnalysis tries to use {struc} and {traj}")
             u = Universe(struc, traj)
             u.atoms.write(gro, frames=u.trajectory[[0]])
-        except Exception as e:
-            logger.error("Cannot initialize MDAnalysis using given structure file!")
-            logger.error(str(type(e)) + " => " + e)
-            quit(2)
+        except Exception as _:
+            logger.exception("Cannot initialize MDAnalysis using given structure file!")
+            sys.exit(2)
 
     # if there is no struc and MDAnalysis doesn't start from TOP, then
     # GROMACS can try making struc from top!
     if fail_from_top and struc is None and sim["SOFTWARE"].upper() == "GROMACS":
         logger.info(
-            "Now generating frame0.gro with Gromacs because MDAnalysis cannot "
-            "read tpr version ..."
+            "Now generating frame0.gro with Gromacs because MDAnalysis cannot read tpr version ...",
         )
-        if (
-            "WARNINGS" in sim and
-            sim["WARNINGS"] is not None and
-            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-           ):
+        if "WARNINGS" in sim and sim["WARNINGS"] is not None and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3":
             command = ["trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
         else:
             command = ["gmx", "trjconv", "-s", top, "-f", traj, "-dump", "0", "-o", gro]
         logger.debug(f"executing 'echo System | {' '.join(command)}'")
         try:
-            subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+            subprocess.run(command, input="System\n", text=True, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
+            FAIL_MSG = f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}"
+            raise RuntimeError(FAIL_MSG) from e
         try:
             u = Universe(gro, traj)
             # write first frame into gro file
             u.atoms.write(gro, frames=u.trajectory[[0]])
         except Exception as e:
-            logger.warning(e)
+            logger.warning("%s: %s", e.__class__.__name__, e)
         struc = gro
 
     # if there is a topology and MDAnalysis reads it, we can use zero-frame
@@ -405,22 +385,23 @@ if __name__ == "__main__":
                 else:
                     selection = "resname " + sim["COMPOSITION"][key_mol]["NAME"]
                     break
-        selection = selection.rstrip(" or ")
+        selection = selection.removesuffix(" or ")
         molecules = u0.select_atoms(selection)
         if molecules.n_residues > 0:
             lipids.append(u0.select_atoms(selection))
 
-    assert len(lipids)
+    if not lipids:
+        raise RuntimeError("No lipids were found in the composition!")
     # join all the selected the lipids together to make a selection of the entire
     # membrane and calculate the z component of the centre of mass of
     # the membrane
     membrane = u0.select_atoms("")
     R_membrane_z = 0
     if lipids:
-        for i in range(0, len(lipids)):
+        for i in range(len(lipids)):
             membrane = membrane + lipids[i]
         R_membrane_z = membrane.center_of_mass()[2]
-    logger.info(f"Center of the mass of the membrane: {str(R_membrane_z)}")
+    logger.info(f"Center of the mass of the membrane: {R_membrane_z!s}")
 
     # ---- number of each lipid per leaflet
     # TODO: remove code duplication block!
@@ -428,7 +409,7 @@ if __name__ == "__main__":
         leaflet1 = 0
         leaflet2 = 0
 
-        selection = ""
+        selection: str = ""
         if key_mol in sim["COMPOSITION"]:
             lip = Lipid(key_mol)
             m_file = sim["COMPOSITION"][key_mol]["MAPPING"]
@@ -450,14 +431,14 @@ if __name__ == "__main__":
 
         # if lipid was found then selection is not empty
         if selection != "":
-            selection = selection.rstrip(" or ")
+            selection = selection.removesuffix(" or ")
             logger.debug(f"Selection: `{selection}`")
             molecules = u0.select_atoms(selection)
-            logger.debug("Resnames: " +
-                         ", ".join(molecules.residues.resnames) +
-                         " | ResIDs: " +
-                         ", ".join(map(str, molecules.residues.resids))
-                         )
+            logger.debug(
+                "Resnames: %s | ResIDs: %s",
+                ", ".join(molecules.residues.resnames),
+                ", ".join(map(str, molecules.residues.resids)),
+            )
 
             if molecules.n_residues > 0:
                 for mol in molecules.residues:
@@ -473,8 +454,8 @@ if __name__ == "__main__":
         except KeyError:
             continue
         else:
-            logger.info(f"Number of '{key_mol}' in upper leaflet: {str(leaflet1)}")
-            logger.info(f"Number of '{key_mol}' in lower leaflet: {str(leaflet2)}")
+            logger.info(f"Number of '{key_mol}' in upper leaflet: {leaflet1!s}")
+            logger.info(f"Number of '{key_mol}' in lower leaflet: {leaflet2!s}")
 
     # ----- numbers of other molecules
 
@@ -487,7 +468,7 @@ if __name__ == "__main__":
             mol_number = u0.select_atoms("resname " + mol_name).n_residues
             sim["COMPOSITION"][key_mol]["COUNT"] = mol_number
             logger.info(
-                f"Number of '{key_mol}': {str(sim['COMPOSITION'][key_mol]['COUNT'])}"
+                f"Number of '{key_mol}': {sim['COMPOSITION'][key_mol]['COUNT']!s}",
             )
 
     # Anne: Read trajectory size and length
@@ -514,31 +495,32 @@ if __name__ == "__main__":
 
         logger.info("Exporting information with gmx dump")
         if (
-            "WARNINGS" in sim and
-            sim["WARNINGS"] is not None and
-            "GROMACS_VERSION" in sim["WARNINGS"] and
-            sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
-           ):
-            command = ['gmxdump', '-s', top]
+            "WARNINGS" in sim
+            and sim["WARNINGS"] is not None
+            and "GROMACS_VERSION" in sim["WARNINGS"]
+            and sim["WARNINGS"]["GROMACS_VERSION"] == "gromacs3"
+        ):
+            command = ["gmxdump", "-s", top]
             TemperatureKey = "ref_t"
         else:
-            command = ['gmx', 'dump', '-s', top]
+            command = ["gmx", "dump", "-s", top]
             TemperatureKey = "ref-t"
         try:
-            result = subprocess.run(command, input='System\n', text=True, check=True, capture_output=True)
+            result = subprocess.run(command, input="System\n", text=True, check=True, capture_output=True)
             with open(file1, "w") as f:
                 f.write(result.stdout)
         except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}") from e
+            FAIL_MSG = f"Command 'echo System | {' '.join(command)}' failed with error: {e.stderr}"
+            raise RuntimeError(FAIL_MSG) from e
 
-        with open(file1, "rt") as tpr_info:
+        with open(file1) as tpr_info:
             for line in tpr_info:
                 if TemperatureKey in line:
                     sim["TEMPERATURE"] = float(line.split()[1])
 
     logger.info("Parameters read from input files:")
-    logger.info(f"TEMPERATURE: {str(sim['TEMPERATURE'])}")
-    logger.info(f"LENGTH OF THE TRAJECTORY: {str(sim['TRJLENGTH'])}")
+    logger.info(f"TEMPERATURE: {sim['TEMPERATURE']!s}")
+    logger.info(f"LENGTH OF THE TRAJECTORY: {sim['TRJLENGTH']!s}")
 
     # Check that the number of atoms between data and README.yaml match
 
@@ -561,30 +543,27 @@ if __name__ == "__main__":
         else:
             mapping_file_length = len(mol.mapping_dict)
 
-        number_of_atoms += (
-                np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
-            )
+        number_of_atoms += np.sum(sim["COMPOSITION"][key_mol]["COUNT"]) * mapping_file_length
 
     if number_of_atoms != natoms_trj:
         stop = input(
             f"Number of atoms in trajectory {natoms_trj} and README.yaml "
             f"{number_of_atoms} do no match. Check the mapping files and molecule"
             f" names. {os.linesep} If you know what you are doing, you can still "
-            "continue the running the script. Do you want to (y/n)?"
+            "continue the running the script. Do you want to (y/n)?",
         )
         if stop == "n":
             os._exit("Interrupted because atomnumbers did not match")
         if stop == "y":
             logger.warning(
-                "Progressed even thought that atom numbers did not match."
-                " CHECK RESULTS MANUALLY!"
+                "Progressed even thought that atom numbers did not match. CHECK RESULTS MANUALLY!",
             )
 
     sim["NUMBER_OF_ATOMS"] = natoms_trj
-    logger.info(f"Number of atoms in the system: {str(sim['NUMBER_OF_ATOMS'])}")
+    logger.info(f"Number of atoms in the system: {sim['NUMBER_OF_ATOMS']!s}")
 
     # ---- DATE OF RUNNING ----
-    today = date.today().strftime("%d/%m/%Y")
+    today = datetime.datetime.now().date().strftime("%d/%m/%Y")  # noqa: DTZ005
     sim["DATEOFRUNNING"] = today
 
     logger.info(f"Date of adding to the databank: {sim['DATEOFRUNNING']}")
@@ -598,7 +577,7 @@ if __name__ == "__main__":
     ss = initialize_databank()
     id_list = [s["ID"] for s in ss] + [0]
     sim["ID"] = min(id_list) - 1
-    logger.info("Inserting ID: " + str(sim["ID"]))
+    logger.info("Inserting ID: %s", str(sim["ID"]))
     del ss
 
     # dictionary saved in yaml format
@@ -610,36 +589,37 @@ if __name__ == "__main__":
     # Try to create final directory
     try:
         directory_path = create_databank_directories(
-            sim, sim_hashes, DatabankLib.NMLDB_SIMU_PATH, dry_run_mode=args.dry_run
-            )
-    except NotImplementedError as e:
-        logger.error(e)
-        quit(4)
+            sim,
+            sim_hashes,
+            DatabankLib.NMLDB_SIMU_PATH,
+            dry_run_mode=args.dry_run,
+        )
+    except NotImplementedError:
+        logger.exception("[deprecated] Special error during directory creation (not implemented)")
+        sys.exit(4)
     except OSError as e:
-        logger.error(f"couldn't create output directory: {e.args[1]}")
-        quit(2)
+        logger.exception("couldn't create output directory: %s", e.args[1])
+        sys.exit(2)
 
-    logger.info(f"Databank entry will be registered into '{directory_path}'")
+    logger.info("Databank entry will be registered into '%s'", directory_path)
 
     # copy previously downloaded files
     if not args.dry_run:
-        logger.info(
-            "Copying files to the output directory [try hardlink for the traj.]...")
+        logger.info("Copying files to the output directory [try hardlink for the traj.]...")
         try:
             os.link(
                 traj,
-                os.path.join(directory_path, os.path.basename(traj))
-                )
+                os.path.join(directory_path, os.path.basename(traj)),
+            )
         except OSError:
             logger.warning(
-                f"Could not hardlink trajectory file '{traj}' to the output directory."
-                " Copying instead."
+                f"Could not hardlink trajectory file '{traj}' to the output directory. Copying instead.",
             )
             shutil.copyfile(traj, os.path.join(directory_path, os.path.basename(traj)))
         shutil.copyfile(
             top,
-            os.path.join(directory_path, os.path.basename(top))
-            )
+            os.path.join(directory_path, os.path.basename(top)),
+        )
         shutil.copyfile(
             os.path.join(dir_tmp, "README.yaml"),
             os.path.join(directory_path, "README.yaml"),

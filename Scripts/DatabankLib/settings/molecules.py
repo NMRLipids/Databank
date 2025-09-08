@@ -1,17 +1,19 @@
 """
 :module: settings/molecules.py
+
 :description: Module file with definition of different global-level dictionaries.
 
 There is a dictionary of lipids, ions, etc. If you add a lipid which is not yet
 in the databank, you have to add it here!
 """
 
-from collections.abc import MutableSet
-from abc import ABC, abstractmethod
 import os
-from typing import Any
-import yaml
 import re
+from abc import ABC, abstractmethod
+from collections.abc import MutableSet
+from typing import Any
+
+import yaml
 
 from DatabankLib import NMLDB_MOL_PATH
 
@@ -26,16 +28,15 @@ class Molecule(ABC):
     specific operations for handling molecule data.
     """
 
-    _molname: (str | None) = None
+    _molname: str | None = None
 
     @abstractmethod
     def _get_path(self) -> str:
         """
-        Returns absolute path to molecule-related files.
+        Return absolute path to molecule-related files.
 
         :return: str path
         """
-        pass
 
     def register_mapping(self, fname: str) -> None:
         """
@@ -51,7 +52,7 @@ class Molecule(ABC):
     def mapping_dict(self) -> dict:
         # preload on first call
         if self._mapping_dict is None:
-            with open(self._mapping_fpath, "r") as yaml_file:
+            with open(self._mapping_fpath) as yaml_file:
                 self._mapping_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
         return self._mapping_dict
 
@@ -66,12 +67,11 @@ class Molecule(ABC):
         self._molname = name
         self._mapping_fpath = None
         self._mapping_dict = None
-        
 
     @staticmethod
     def __check_name(name: str) -> None:
         """
-        Checks if the provided name contains only valid characters.
+        Check if the provided name contains only valid characters.
 
         This static method verifies that the input name string complies with
         the defined regular expression pattern, which restricts it to alphanumeric
@@ -85,17 +85,15 @@ class Molecule(ABC):
         pat = r"[A-Za-z0-9_]+"
         if not re.match(pat, name):
             raise ValueError(f"Only {pat} symbols are allowed in Molecule name.")
-    
+
     def _populate_meta_data(self) -> None:
         """
         Populates metadata for the molecule from its YAML file.
-        
+
         This method should be implemented in subclasses to load specific
         metadata related to the molecule.
         """
-        pass
 
-    
     @property
     def metadata(self) -> dict:
         """
@@ -103,8 +101,6 @@ class Molecule(ABC):
 
         :return: dict with metadata
         """
-        pass
-
 
     @property
     def name(self) -> str:
@@ -116,7 +112,7 @@ class Molecule(ABC):
     # comparison by name to behave in a set
     # It's case-insesitive as folder structure should work on mac/win
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return isinstance(other, type(self)) and self.name.upper() == other.name.upper()
 
     def __hash__(self):
@@ -124,8 +120,7 @@ class Molecule(ABC):
 
     def __repr__(self):
         return f"{type(self).__name__}({self.name})"
-    
-    
+
 
 class Lipid(Molecule):
     """
@@ -138,7 +133,7 @@ class Lipid(Molecule):
 
     def _get_path(self) -> str:
         return os.path.join(self._lipids_dir, self.name)
-    
+
     def _populate_meta_data(self) -> None:
         """
         Populates metadata for the lipid from its YAML file.
@@ -146,7 +141,7 @@ class Lipid(Molecule):
         self._metadata = {}
         meta_path = os.path.join(self._get_path(), "metadata.yaml")
         if os.path.isfile(meta_path):
-            with open(meta_path, "r") as yaml_file:
+            with open(meta_path) as yaml_file:
                 self._metadata = yaml.load(yaml_file, Loader=yaml.FullLoader)
         else:
             raise FileNotFoundError(f"Metadata file not found for {self.name}.")
@@ -158,9 +153,9 @@ class Lipid(Molecule):
 
         :return: dict with metadata
         """
-        if not hasattr(self, '_metadata'):
+        if not hasattr(self, "_metadata"):
             self._populate_meta_data()
-        return self._metadata 
+        return self._metadata
 
     def __init__(self, name: str) -> None:
         """
@@ -171,12 +166,13 @@ class Lipid(Molecule):
         """
         super().__init__(name)
         self._populate_meta_data()
-        
+
 
 class NonLipid(Molecule):
     """
     Class for non-bilayer molecules: solvent, ions, etc.
     """
+
     _nonlipids_dir: str = os.path.join(NMLDB_MOL_PATH, "solution")
     """Directory containing all lipid-subdirs"""
 
@@ -207,7 +203,6 @@ class MoleculeSet(MutableSet[Molecule], ABC):
         :param item: any type variable
         :return: bool answer
         """
-        pass
 
     @abstractmethod
     def _create_item(self, name: str) -> Molecule:
@@ -217,15 +212,11 @@ class MoleculeSet(MutableSet[Molecule], ABC):
         :param name: unique name of the molecule
         :return: constructed Molecule
         """
-        pass
 
     def __contains__(self, item: Molecule):
-        """
-        Check if a lipid is in the set.
-        """
-        return (
-                (self._test_item_type(item) and item in self._items) or
-                (isinstance(item, str) and item.upper() in self._names)
+        """Check if a lipid is in the set."""
+        return (self._test_item_type(item) and item in self._items) or (
+            isinstance(item, str) and item.upper() in self._names
         )
 
     def __iter__(self):
@@ -248,8 +239,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
             self._items.add(self._create_item(item))  # here we call Lipid constructor
             self._names.add(item.upper())
         else:
-            raise TypeError(
-                f"Only proper instances can be added to {type(self).__name__}.")
+            raise TypeError(f"Only proper instances can be added to {type(self).__name__}.")
 
     def discard(self, item):
         """
@@ -270,7 +260,6 @@ class MoleculeSet(MutableSet[Molecule], ABC):
             self._items.discard(ifound)
             self._names.discard(item.upper())
 
-
     def get(self, key: str, default=None) -> Molecule | None:
         """
         Get a molecule by its name.
@@ -282,8 +271,6 @@ class MoleculeSet(MutableSet[Molecule], ABC):
                 if item.name.upper() == key.upper():
                     return item
         return default
-    
-
 
     def __repr__(self):
         return f"{type(self).__name__}[{self._names}]"
@@ -314,10 +301,7 @@ class LipidSet(MoleculeSet):
         """
         lset = LipidSet()
         path = Lipid._lipids_dir
-        sub_dirs = [
-            name for name in os.listdir(path)
-            if os.path.isdir(os.path.join(path, name))
-        ]
+        sub_dirs = [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
         for name in sub_dirs:
             lset.add(name)
         return lset
@@ -344,10 +328,7 @@ class NonLipidSet(MoleculeSet):
         """
         lset = NonLipidSet()
         path = NonLipid._nonlipids_dir
-        sub_dirs = [
-            name for name in os.listdir(path)
-            if os.path.isdir(os.path.join(path, name))
-        ]
+        sub_dirs = [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
         for name in sub_dirs:
             lset.add(name)
         return lset

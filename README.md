@@ -33,7 +33,7 @@ experiments compared.
 
 # Installation
 
-The code has been tested in Linux and MacOS environment with python 3.9 or newer. Recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version should be available in the system. All dependecies are listed in [requirements.txt](Scripts/DatabankLib/requirements.txt).
+The code has been tested in Linux and MacOS environment with python 3.10 or newer. Recent [Gromacs](https://manual.gromacs.org/current/install-guide/index.html) version should be available in the system. All dependecies are listed in [requirements.txt](Scripts/DatabankLib/requirements.txt).
 
 Note that the data is stored as a submodule repository and should be loaded after clonning. Default data storage is [BilayerData](https://github.com/NMRLipids/BilayerData), and it is loaded automatically by using
 ```
@@ -65,4 +65,13 @@ For code development, please use extended requirements described in `requirement
 ```
  $ (databank) pip install -e . -r Scripts/DatabankLib/requirements-dev.txt
 ```
-It will install `pytest` for unit tests and `flake8` for syntax check.
+It will install `pytest` for unit tests and `ruff` for syntax check.
+
+We are using `ruff` for ensuring the same code quality and formatting across the project. Your contributions will not be reviewed until they pass the `ruff` check. To facilitate quicker fixes, we suggest installing the `pre-commit` hooks via
+
+```
+pre-commit install
+```
+
+This will make sure that no code can be committed to the repository until it satisfies the `ruff` check.
+

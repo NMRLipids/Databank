@@ -1,0 +1,16 @@
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+# Update the list of ignored rules
+# to satisfy pytest styles
+ignore = ["INP001", "PLC0415","S101","ANN001", "ANN201","PT006",
+          "TD", "FIX002", 
+          "TRY003",                 # exception handling
+          "D105", "D400",           # docstring style issues
+          "PTH",                    # until we migrate to Pathlib
+          "T201", "G004", "S603"]   # logging currently ignored
+[tool.ruff.lint]
+select = ["ALL"]
+extend-select = ["E501"]
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"

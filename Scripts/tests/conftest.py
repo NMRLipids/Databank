@@ -1,6 +1,7 @@
-import os
-import pytest
 import logging
+import os
+
+import pytest
 
 # Pytest HOOKS
 # -------------------------------------------------------------------
@@ -8,8 +9,10 @@ import logging
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--cmdopt", action="store", default="sim1",
-        help="Two test groups: sim1|sim2|nodata"
+        "--cmdopt",
+        action="store",
+        default="sim1",
+        help="Two test groups: sim1|sim2|nodata",
     )
 
 
@@ -40,9 +43,9 @@ def header_module_scope(request):
         pytest.exit(f"Unknown --cmdopt {cmdopt}")
     os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
     if sim is not None:
-        os.environ["NMLDB_SIMU_PATH"] = os.path.join(
-            os.path.dirname(__file__), "Data", sim)
+        os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", sim)
     import DatabankLib
+
     print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
     print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
     yield
@@ -54,8 +57,7 @@ def logger():
     logger = logging.getLogger("test_logger")
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
 
     if not logger.handlers:  # Avoid adding multiple handlers during pytest runs

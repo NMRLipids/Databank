@@ -5,10 +5,9 @@
 # https://gist.github.com/jannismain/e96666ca4f059c3e5bc28abb711b5c92
 #
 
-from __future__ import annotations
-
 import json
 import math
+
 import numpy as np
 
 
@@ -42,8 +41,7 @@ class CompactJSONEncoder(json.JSONEncoder):
                 # !very important. Otherwise it will put "nan" with lowercase,
                 # which is not recognized by standard json DEcoder
                 return "NaN"
-            else:
-                return format(o, "g")
+            return format(o, "g")
         return json.dumps(
             o,
             skipkeys=self.skipkeys,
@@ -75,18 +73,10 @@ class CompactJSONEncoder(json.JSONEncoder):
             o = dict(sorted(o.items(), key=lambda x: x[0]))
 
         if self._put_on_single_line(o):
-            return (
-                "{ "
-                + ", ".join(
-                    f"{json.dumps(k)}: {self.encode(el)}" for k, el in o.items()
-                )
-                + " }"
-            )
+            return "{ " + ", ".join(f"{json.dumps(k)}: {self.encode(el)}" for k, el in o.items()) + " }"
 
         self.indentation_level += 1
-        output = [
-            f"{self.indent_str}{json.dumps(k)}: {self.encode(v)}" for k, v in o.items()
-        ]
+        output = [f"{self.indent_str}{json.dumps(k)}: {self.encode(v)}" for k, v in o.items()]
         self.indentation_level -= 1
 
         return "{\n" + ",\n".join(output) + "\n" + self.indent_str + "}"
@@ -96,28 +86,23 @@ class CompactJSONEncoder(json.JSONEncoder):
         return self.encode(o)
 
     def _put_on_single_line(self, o):
-        return (
-            self._primitives_only(o)
-            and len(o) <= self.MAX_ITEMS
-            and len(str(o)) - 2 <= self.MAX_WIDTH
-        )
+        return self._primitives_only(o) and len(o) <= self.MAX_ITEMS and len(str(o)) - 2 <= self.MAX_WIDTH
 
     def _primitives_only(self, o: list | tuple | dict):
         if isinstance(o, (list, tuple)):
             return not any(isinstance(el, self.CONTAINER_TYPES) for el in o)
-        elif isinstance(o, dict):
+        if isinstance(o, dict):
             return not any(isinstance(el, self.CONTAINER_TYPES) for el in o.values())
 
     @property
     def indent_str(self) -> str:
         if isinstance(self.indent, int):
             return " " * (self.indentation_level * self.indent)
-        elif isinstance(self.indent, str):
+        if isinstance(self.indent, str):
             return self.indentation_level * self.indent
-        else:
-            raise ValueError(
-                f"indent must either be of type int or str (is: {type(self.indent)})"
-            )
+        raise ValueError(
+            f"indent must either be of type int or str (is: {type(self.indent)})",
+        )
 
 
 if __name__ == "__main__":

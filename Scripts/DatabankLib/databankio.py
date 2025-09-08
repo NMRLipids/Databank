@@ -9,20 +9,22 @@
     - Calculating file hashes.
 """
 
+import functools
+import hashlib
 import logging
 import math
-import hashlib
 import os
-import time
 import socket
-from typing import Mapping
+import time
 import urllib.error
-from tqdm import tqdm
 import urllib.request
-import functools
+from collections.abc import Mapping
+
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 MAX_DRYRUN_SIZE = 50 * 1024 * 1024  # 50 MB, max size for dry-run download
+
 
 def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
     """Decorator that retries a function with exponential backoff.
@@ -32,6 +34,7 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
         delay_seconds (int): The initial delay between retries in seconds.
             The delay doubles after each failed attempt. Defaults to 1.
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -40,44 +43,48 @@ def retry_with_exponential_backoff(max_attempts=3, delay_seconds=1):
             while attempts < max_attempts:
                 try:
                     return func(*args, **kwargs)
-                
+
                 # --- New logic to handle non-retriable HTTP client errors ---
                 except urllib.error.HTTPError as e:
                     # Check if the error is a client error (4xx) which is not likely to be resolved by a retry.
                     if 400 <= e.code < 500 and e.code != 429:
                         logger.error(
-                            f"Function {func.__name__} failed with non-retriable client error {e.code}: {e.reason}"
+                            f"Function {func.__name__} failed with non-retriable client error {e.code}: {e.reason}",
                         )
                         raise e  # Re-raise the HTTPError immediately
-                    
+
                     # For other errors (like 5xx server errors or 429), proceed with retry logic.
                     logger.warning(f"Caught retriable HTTPError {e.code}. Proceeding with retry...")
                     # Fall through to the generic exception handling below.
-                
-                except (urllib.error.URLError, socket.timeout) as e:
+
+                except (urllib.error.URLError, socket.timeout):
                     # This block now primarily handles non-HTTP errors or retriable HTTP errors.
-                    pass # Fall through to the retry logic below
+                    pass  # Fall through to the retry logic below
 
                 attempts += 1
                 if attempts < max_attempts:
                     logger.warning(
                         f"Attempt {attempts}/{max_attempts} for {func.__name__} failed. "
-                        f"Retrying in {current_delay:.1f} seconds..."
+                        f"Retrying in {current_delay:.1f} seconds...",
                     )
                     time.sleep(current_delay)
                     current_delay *= 2
                 else:
                     logger.error(
-                        f"Function {func.__name__} failed after {max_attempts} attempts."
+                        f"Function {func.__name__} failed after {max_attempts} attempts.",
                     )
                     # Re-raise the last exception caught to be handled by the caller
                     raise ConnectionError(
-                        f"Function {func.__name__} failed after {max_attempts} attempts."
+                        f"Function {func.__name__} failed after {max_attempts} attempts.",
                     )
+
         return wrapper
+
     return decorator
 
+
 # --- Decorated Helper Functions for Network Requests ---
+
 
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def _open_url_with_retry(uri: str, timeout: int = 10):
@@ -87,10 +94,12 @@ def _open_url_with_retry(uri: str, timeout: int = 10):
         uri (str): The URL to open.
         timeout (int): The timeout for the request in seconds. Defaults to 10.
 
-    Returns:
+    Returns
+    -------
         The response object from urllib.request.urlopen.
     """
     return urllib.request.urlopen(uri, timeout=timeout)
+
 
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def get_file_size_with_retry(uri: str) -> int:
@@ -99,13 +108,15 @@ def get_file_size_with_retry(uri: str) -> int:
     Args:
         uri (str): The URL of the file.
 
-    Returns:
+    Returns
+    -------
         int: The size of the file in bytes, or 0 if the 'Content-Length'
             header is not present.
     """
     with _open_url_with_retry(uri) as response:
-        content_length = response.getheader('Content-Length')
+        content_length = response.getheader("Content-Length")
         return int(content_length) if content_length else 0
+
 
 @retry_with_exponential_backoff(max_attempts=5, delay_seconds=2)
 def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None:
@@ -119,6 +130,7 @@ def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None
         fi_name (str): The name of the file, used for the progress bar
             description.
     """
+
     class RetrieveProgressBar(tqdm):
         def update_retrieve(self, b=1, bsize=1, tsize=None):
             if tsize is not None:
@@ -126,15 +138,23 @@ def download_with_progress_with_retry(uri: str, dest: str, fi_name: str) -> None
             return self.update(b * bsize - self.n)
 
     with RetrieveProgressBar(
-        unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=fi_name
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        miniters=1,
+        desc=fi_name,
     ) as u:
         urllib.request.urlretrieve(uri, dest, reporthook=u.update_retrieve)
 
+
 # --- Main Functions ---
 
+
 def download_resource_from_uri(
-    uri: str, dest: str, override_if_exists: bool = False,
-    dry_run_mode: bool = False
+    uri: str,
+    dest: str,
+    override_if_exists: bool = False,
+    dry_run_mode: bool = False,
 ) -> int:
     """Download file resource from a URI to a local destination.
 
@@ -149,13 +169,15 @@ def download_resource_from_uri(
         dry_run_mode (bool): If True, only a partial download is performed
             (up to MAX_DRYRUN_SIZE). Defaults to False.
 
-    Returns:
+    Returns
+    -------
         int: A status code indicating the result.
             0: Download was successful.
             1: Download was skipped because the file already exists.
             2: File was re-downloaded due to a size mismatch.
 
-    Raises:
+    Raises
+    ------
         ConnectionError: An error occurred after multiple download attempts.
         OSError: The downloaded file size does not match the expected size.
     """
@@ -168,17 +190,16 @@ def download_resource_from_uri(
             if fi_size == os.path.getsize(dest):
                 logger.info(f"{dest}: file already exists, skipping")
                 return 1
-            else:
-                logger.warning(
-                    f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ..."
-                )
-                return 2
-        except (ConnectionError, FileNotFoundError) as e:
-            logger.error(
-                f"Failed to verify file size for {fi_name}: {e}. Proceeding with redownload."
+            logger.warning(
+                f"{fi_name} filesize mismatch of local file '{fi_name}', redownloading ...",
             )
             return 2
-    
+        except (ConnectionError, FileNotFoundError) as e:
+            logger.error(
+                f"Failed to verify file size for {fi_name}: {e}. Proceeding with redownload.",
+            )
+            return 2
+
     # Download file in dry run mode
     if dry_run_mode:
         url_size = get_file_size_with_retry(uri)
@@ -188,9 +209,7 @@ def download_resource_from_uri(
             downloaded = 0
             chunk_size = 8192
             next_report = 10 * 1024 * 1024
-            logger.info(
-                "Dry-run: Downloading up to"
-                f" {total // (1024*1024)} MB of {fi_name} ...")
+            logger.info(f"Dry-run: Downloading up to {total // (1024 * 1024)} MB of {fi_name} ...")
             while downloaded < total:
                 to_read = min(chunk_size, total - downloaded)
                 chunk = response.read(to_read)
@@ -199,11 +218,9 @@ def download_resource_from_uri(
                 out_file.write(chunk)
                 downloaded += len(chunk)
                 if downloaded >= next_report:
-                    logger.info(f"  Downloaded {downloaded // (1024*1024)} MB ...")
+                    logger.info(f"  Downloaded {downloaded // (1024 * 1024)} MB ...")
                     next_report += 10 * 1024 * 1024
-            logger.info(
-                "Dry-run: Finished, downloaded"
-                f" {downloaded // (1024*1024)} MB of {fi_name}")
+            logger.info(f"Dry-run: Finished, downloaded {downloaded // (1024 * 1024)} MB of {fi_name}")
         return 0
 
     # Download with progress bar and check for final size match
@@ -213,8 +230,9 @@ def download_resource_from_uri(
     size = os.path.getsize(dest)
     if url_size != 0 and url_size != size:
         raise OSError(f"Downloaded filesize mismatch ({size}/{url_size} B)")
-    
+
     return 0
+
 
 def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
     """Resolves a DOI to a full URL and validates that it is reachable.
@@ -224,10 +242,12 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
         validate_uri (bool): If True, checks if the resolved URL is a valid
             and reachable address. Defaults to True.
 
-    Returns:
+    Returns
+    -------
         str: The full, validated DOI link (e.g., "https://doi.org/...").
 
-    Raises:
+    Raises
+    ------
         urllib.error.HTTPError: If the DOI resolves to a URL, but the server
             returns an HTTP error code (e.g., 404 Not Found).
         ConnectionError: If the server cannot be reached after multiple retries.
@@ -249,11 +269,11 @@ def resolve_doi_url(doi: str, validate_uri: bool = True) -> str:
             # (e.g., DNS failure, connection refused).
             logger.error(f"Could not connect to <{res}> after multiple attempts.")
             raise e
-            
+
     return res
 
-def resolve_download_file_url(
-        doi: str, fi_name: str, validate_uri: bool = True) -> str:
+
+def resolve_download_file_url(doi: str, fi_name: str, validate_uri: bool = True) -> str:
     """:meta private:
     Resolves a download file URI from a supported DOI and filename.
 
@@ -266,10 +286,12 @@ def resolve_download_file_url(
         validate_uri (bool): If True, checks if the resolved URL is a valid
             and reachable address. Defaults to True.
 
-    Returns:
+    Returns
+    -------
         str: The full, direct download URL for the file.
 
-    Raises:
+    Raises
+    ------
         RuntimeError: If the URL cannot be opened after multiple retries.
         NotImplementedError: If the DOI provider is not supported.
     """
@@ -289,10 +311,10 @@ def resolve_download_file_url(
                 # Catch the final failure from our decorator for other network issues
                 raise RuntimeError(f"Cannot open {uri}. Failed after multiple retries.") from ce
         return uri
-    else:
-        raise NotImplementedError(
-            "Repository not validated. Please upload the data for example to zenodo.org"
-        )
+    raise NotImplementedError(
+        "Repository not validated. Please upload the data for example to zenodo.org",
+    )
+
 
 def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -> str:
     """Calculates the SHA1 hash of a file.
@@ -307,7 +329,8 @@ def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -
             If False, reads the entire file in chunks of `step` bytes.
             Defaults to True.
 
-    Returns:
+    Returns
+    -------
         str: The hexadecimal SHA1 hash of the file content.
     """
     sha1_hash = hashlib.sha1()
@@ -323,12 +346,13 @@ def calc_file_sha1_hash(fi: str, step: int = 67108864, one_block: bool = True) -
                     pbar.update(1)
     return sha1_hash.hexdigest()
 
+
 def create_databank_directories(
-        sim: Mapping, 
-        sim_hashes: Mapping, 
-        out: str,
-        dry_run_mode: bool = False
-        ) -> str:
+    sim: Mapping,
+    sim_hashes: Mapping,
+    out: str,
+    dry_run_mode: bool = False,
+) -> str:
     """Creates a nested output directory structure to save simulation results.
 
     The directory structure is generated based on the hashes of the simulation
@@ -345,10 +369,12 @@ def create_databank_directories(
         dry_run_mode (bool): If True, the directory path is resolved but
             not created. Defaults to False.
 
-    Returns:
+    Returns
+    -------
         str: The full path to the created output directory.
 
-    Raises:
+    Raises
+    ------
         FileExistsError: If the target output directory already exists and is
             not empty.
         NotImplementedError: If the simulation software is not supported.
@@ -359,8 +385,8 @@ def create_databank_directories(
 
     SOFTWARE_CONFIG = {
         "gromacs": {"primary": "TPR", "secondary": "TRJ"},
-        "openMM":  {"primary": "TRJ", "secondary": "TRJ"},
-        "NAMD":    {"primary": "TRJ", "secondary": "TRJ"},
+        "openMM": {"primary": "TRJ", "secondary": "TRJ"},
+        "NAMD": {"primary": "TRJ", "secondary": "TRJ"},
     }
 
     config = SOFTWARE_CONFIG.get(software)
@@ -381,7 +407,7 @@ def create_databank_directories(
 
     if os.path.exists(directory_path) and os.listdir(directory_path):
         raise FileExistsError(
-            f"Output directory '{directory_path}' is not empty. Delete it if you wish."
+            f"Output directory '{directory_path}' is not empty. Delete it if you wish.",
         )
 
     if not dry_run_mode:
@@ -389,6 +415,5 @@ def create_databank_directories(
             os.makedirs(directory_path, exist_ok=True)
         except Exception as e:
             raise RuntimeError(f"Could not create the output directory at {directory_path}: {e}")
-
 
     return directory_path
