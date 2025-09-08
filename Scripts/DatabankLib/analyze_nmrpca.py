@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
 """
-This code aims to calculate the relaxation time based on the
-PCAlipids analysis.
+NMRPCA module calculate the relaxation time based on the PCAlipids analysis.
 
 For details check:
 
-Principal Component Analysis of Lipid Molecule Conformational Changes in Molecular Dynamics Simulations 
-Pavel Buslaev, Valentin Gordeliy, Sergei Grudinin, and Ivan Gushchin.  
+Principal Component Analysis of Lipid Molecule Conformational Changes in Molecular Dynamics Simulations
+Pavel Buslaev, Valentin Gordeliy, Sergei Grudinin, and Ivan Gushchin.
 *Journal of Chemical Theory and Computation* (2016), 12(3), 1019–1028.
 DOI: `10.1021/acs.jctc.5b01106 <https://doi.org/10.1021/acs.jctc.5b01106>`_
 
@@ -26,16 +24,16 @@ transform are calculated based on the trajectories from NMRlipids
 databank.
 
 The initial code was developed by
-Dr. Pavel Buslaev (pavel.i.buslaev@jyu.fi), 
-Dr. Samuli Olilla, 
-Patrik Kula, 
+Dr. Pavel Buslaev (pavel.i.buslaev@jyu.fi),
+Dr. Samuli Olilla,
+Patrik Kula,
 Alexander Kuzmin
 
 .. envvar:: MEM_CUTOFF
    :noindex:
 
-   Environmental variable which sets the trajectory size cutoff (in Bytes) 
-   after which the algorithm will start skipping frames for in-memory 
+   Environmental variable which sets the trajectory size cutoff (in Bytes)
+   after which the algorithm will start skipping frames for in-memory
    representation for computing ACF.
 
    Default: ``1,500,000,000``.
@@ -59,7 +57,7 @@ from DatabankLib.settings.molecules import Lipid
 
 # suppress some MDAnalysis warnings issued from mda.analysis.align
 warnings.filterwarnings("ignore")
-from MDAnalysis.analysis import align  # noqa
+from MDAnalysis.analysis import align  # noqa: E402
 
 # TODO: now there are only regular phospholipids.
 # The list should be verified by method authors.
@@ -95,7 +93,7 @@ ALLOWLIPIDS = [
 
 merge_cutoff = 2.0
 trj_size_cutoff = (
-    1500000000
+    1500000000  # This is the boundary set empirically by @pbuslaev
     if "MEM_CUTOFF" not in os.environ
     else int(os.environ["MEM_CUTOFF"])
 )
@@ -126,13 +124,6 @@ class Parser:
     """
 
     def __init__(self, system: System, eq_time_fname="eq_times.json", path=None, v=True):
-        """
-        Constructor for Parser:
-            system        - simulation data
-            eq_time_fname - name of the output file
-            path          - name of a particular trajectory
-            v             - verbosity for testing
-        """
         # Technical
         self.verbose = v
         self.error = 0
@@ -185,7 +176,7 @@ class Parser:
         2. If path is not provided, parser is iterating over all trajectories.
         3. If path is provided and current path is equal to the provided one,
            parser reports that it finds the trajectory for the analysis.
-        
+
         TODO: must be removed. Substitute path-validation part.
         """
         if self.error > 0:
@@ -252,12 +243,11 @@ class Parser:
         # Skip frames for large trajectories
         if self.size > trj_size_cutoff:
             import math
+
             _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             os.system(
-
                 f"echo System | gmx trjconv -f {self.trj_name} -s {self.tpr_name} -pbc mol -o {trj_out_name} -skip 10",
-
             )
             self.trj_name = trj_out_name
 
@@ -282,6 +272,7 @@ class Parser:
         print("openMM or NAMD")
         if self.size > trj_size_cutoff:
             import math
+
             _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             if os.path.isfile(trj_out_name):
@@ -322,9 +313,7 @@ class Parser:
             self.concatenated_trajs[lipid_name] = concatenator.concatenate()
 
     def dump_data(self, data):
-        """
-        Write data to json file
-        """
+        """Write data to json file."""
         with open(os.path.join(self._path, self.eq_time_fname), "w") as f:
             json.dump(data, f)
 
@@ -350,14 +339,6 @@ class Topology:
     """
 
     def __init__(self, traj, lipid_resname: str, mapping_dict: dict):
-
-        """
-        Constructor for Topology:
-            traj          - MDAnalysis trajectory
-            lipid_resname - resname of the lipid
-            mapping_dict  - preloaded mapping_dict
-        """
-
         self.lipid_resname = lipid_resname
         self.traj = traj
         self.mapping = mapping_dict
@@ -606,13 +587,6 @@ class Concatenator:
 
         return concatenated_traj, n_lipid, n_frames * n_lipid
 
-
-    """
-    alignTraj alignes the concatenated trajectory in two steps: (1) it computes
-    average structure after alignment to the first frame, and (2) it alignes
-    the structure to the calculated average structure in (1).
-    """
-
     def align_traj(self, concatenated_traj):
         """
         alignTraj alignes the concatenated trajectory in two steps: (1) it computes
@@ -634,15 +608,8 @@ class Concatenator:
         )
         return coords.reshape(-1, 3), coords.mean(axis=0).reshape(1, -1)
 
-
-    """
-    Simple enveloping function to perform concatenation
-    """
-
     def concatenate(self):
-        """
-        Simple enveloping function to perform concatenation
-        """
+        """Simple enveloping function to perform concatenation."""
         print(f"Concatenator: Concatenating lipid with resname {self.lipid_resname}")
         if not self.topology.is_merge_needed():
             # Merging is not needed
@@ -707,9 +674,7 @@ class PCA:
         return x
 
     def get_proj(self, cdata):
-        """
-        Projecting the trajectory on the 1st principal component
-        """
+        """Projecting the trajectory on the 1st principal component."""
         # projection on PC1
         proj = np.tensordot(cdata, self.eig_vecs[0:1], axes=(1, 1)).T
         proj = np.concatenate(np.array(proj), axis=None)
@@ -717,9 +682,7 @@ class PCA:
         self.proj = proj
 
     def get_lipid_autocorrelation(self, data, variance, mean):
-        """
-        Autocorrelation calculation for individual lipid.
-        """
+        """Autocorrelation calculation for individual lipid."""
         # Centering the data
         data -= mean
         # Convolve the data
@@ -728,9 +691,7 @@ class PCA:
         return r / (variance * (np.arange(len(data), 0, -1)))
 
     def get_autocorrelations(self):
-        """
-        Autocorrelation calculation for the trajectory.
-        """
+        """Autocorrelation calculation for the trajectory."""
         variance = self.proj.var()
         mean = self.proj.mean()
         # extract the trajectories for individual lipids
@@ -750,7 +711,7 @@ class PCA:
 class TimeEstimator:
     """
     Class TimeEstimator is a class that estimates equilbration time from
-    autocorrelation data. 
+    autocorrelation data.
     It includes the following methods:
 
     1. Simple constructor, which sets the autocorrelation data
@@ -759,7 +720,7 @@ class TimeEstimator:
     3. :meth:`timerelax` method calculates the logarithms of autocorrelation and
        calculates the decay time
     4. :meth:`calculate_time` method calculates the estimated equilibration time
-    
+
     :param autocorrelation: autocorrelation data
     """
 
@@ -793,9 +754,7 @@ class TimeEstimator:
         return a, b
 
     def timerelax(self):
-        """
-        Estimates autocorrelation decay time.
-        """
+        """ Estimates autocorrelation decay time. """
         time = self.autocorrelation[:, 0]
         autocorrelation = self.autocorrelation[:, 1]
 
