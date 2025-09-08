@@ -5,20 +5,19 @@ PCAlipids analysis.
 
 For details check:
 
-[Principal Component Analysis of Lipid Molecule Conformational
-Changes in Molecular Dynamics Simulations
-Pavel Buslaev, Valentin Gordeliy, Sergei Grudinin, and Ivan Gushchin
-Journal of Chemical Theory and Computation 2016 12 (3), 1019-1028
-DOI: 10.1021/acs.jctc.5b01106 ]
+Principal Component Analysis of Lipid Molecule Conformational Changes in Molecular Dynamics Simulations 
+Pavel Buslaev, Valentin Gordeliy, Sergei Grudinin, and Ivan Gushchin.  
+*Journal of Chemical Theory and Computation* (2016), 12(3), 1019–1028.
+DOI: `10.1021/acs.jctc.5b01106 <https://doi.org/10.1021/acs.jctc.5b01106>`_
 
 and
 
-[Principal component analysis highlights the influence of temperature,
+Principal component analysis highlights the influence of temperature,
 curvature and cholesterol on conformational dynamics of lipids
 Pavel Buslaev, Khalid Mustafin, and Ivan Gushchin
-Biochimica et Biophysica Acta (BBA) - Biomembranes
+*Biochimica et Biophysica Acta (BBA) - Biomembranes*
 Volume 1862, Issue 7, 1 July 2020, 183253
-DOI: 10.1016/j.bbamem.2020.183253]
+DOI: `10.1016/j.bbamem.2020.183253 <https://doi.org/10.1016/j.bbamem.2020.183253>`_
 
 The main idea is to run PCA on concatenated lipid trajectory,
 calculate the autocorrelation times, which are linearly related
@@ -26,11 +25,20 @@ to equilibration times of individual lipids. The parameters of linear
 transform are calculated based on the trajectories from NMRlipids
 databank.
 
-The code was developed by
-Dr. Pavel Buslaev, pavel.i.buslaev@jyu.fi
-Dr. Samuli Olilla
-Patrik Kula
+The initial code was developed by
+Dr. Pavel Buslaev (pavel.i.buslaev@jyu.fi), 
+Dr. Samuli Olilla, 
+Patrik Kula, 
 Alexander Kuzmin
+
+.. envvar:: MEM_CUTOFF
+   :noindex:
+
+   Environmental variable which sets the trajectory size cutoff (in Bytes) 
+   after which the algorithm will start skipping frames for in-memory 
+   representation for computing ACF.
+
+   Default: ``1,500,000,000``.
 """
 
 import json
@@ -86,7 +94,11 @@ ALLOWLIPIDS = [
 ]
 
 merge_cutoff = 2.0
-trj_size_cutoff = 5000000000
+trj_size_cutoff = (
+    1500000000
+    if "MEM_CUTOFF" not in os.environ
+    else int(os.environ["MEM_CUTOFF"])
+)
 
 TAILSN1 = "sn-1"
 TAILSN2 = "sn-2"
@@ -102,10 +114,15 @@ class Parser:
     for preparing trajectories:
 
     1. Checking if simulation has a correct name
-    2. Checking if trajectory is downloaded. Downloading, if not
+    2. Checking if trajectory is downloaded. Downloading, if not.
     3. Calling AmberMerger to merge head groups and tails for Amber
-    trajectories
+       trajectories
     4. Concatenate trajectories
+
+    :param system: simulation data
+    :param eq_time_fname: name of the output file
+    :param path: name of a particular trajectory
+    :param v: verbosity for testing
     """
 
     def __init__(self, system: System, eq_time_fname="eq_times.json", path=None, v=True):
@@ -161,12 +178,14 @@ class Parser:
     def validate_path(self):
         """
         Path validation. Behaviour depends on the input.
+
         1. If ther were any errors, validation fails. Currently the only
-        error tested is that .xtc and .tpr files are not present. This
-        is the case for non-GROMACS trajectories.
+           error tested is that .xtc and .tpr files are not present. This
+           is the case for non-GROMACS trajectories.
         2. If path is not provided, parser is iterating over all trajectories.
         3. If path is provided and current path is equal to the provided one,
-        parser reports that it finds the trajectory for the analysis.
+           parser reports that it finds the trajectory for the analysis.
+        
         TODO: must be removed. Substitute path-validation part.
         """
         if self.error > 0:
@@ -190,6 +209,7 @@ class Parser:
     def download_traj(self):
         """
         TODO: must be removed. We don't download trajectory in the analysis part
+
         Basic trajectory and TPR download.
         """
         print("Downloading")
@@ -231,9 +251,13 @@ class Parser:
 
         # Skip frames for large trajectories
         if self.size > trj_size_cutoff:
+            import math
+            _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             os.system(
+
                 f"echo System | gmx trjconv -f {self.trj_name} -s {self.tpr_name} -pbc mol -o {trj_out_name} -skip 10",
+
             )
             self.trj_name = trj_out_name
 
@@ -257,11 +281,14 @@ class Parser:
     def prepare_OpenMM_traj(self):  # noqa: N802
         print("openMM or NAMD")
         if self.size > trj_size_cutoff:
+            import math
+            _skip = math.ceil(1.1 * self.size / trj_size_cutoff)
             trj_out_name = os.path.join(self._path, "short.xtc")
             if os.path.isfile(trj_out_name):
                 print("Parser: Short trajectory is found")
             else:
                 u = mda.Universe(self.tpr_name, self.trj_name)
+
                 with mda.Writer(trj_out_name, u.select_atoms("all").n_atoms) as mdaw:
                     for ts in u.trajectory[::10]:
                         mdaw.write(u.select_atoms("all"))
@@ -309,22 +336,28 @@ class Topology:
     residue types. It has the following methods:
 
     1. Simple constructor, which sets the force field,residue names, trajectory,
-    and loads mapping_file
+       and loads mapping_file
     2. Mapping file loader
     3. Function that outputs atomNames
     4. Checker if the merge is needed. Currently defunct
     5. Runner, that returns lists for head, tail1, tail2 orders for merging
 
-    Currently defunct
+    Currently defunct.
+
+    :param traj: MDAnalysis trajectory
+    :param lipid_resname: resname of the lipid (str)
+    :param mapping_dict: preloaded mapping_dict
     """
 
     def __init__(self, traj, lipid_resname: str, mapping_dict: dict):
+
         """
         Constructor for Topology:
             traj          - MDAnalysis trajectory
             lipid_resname - resname of the lipid
             mapping_dict  - preloaded mapping_dict
         """
+
         self.lipid_resname = lipid_resname
         self.traj = traj
         self.mapping = mapping_dict
@@ -345,6 +378,7 @@ class Topology:
         """
         Checker for merge. Currently it checks if the RESIDUE key is in the
         mapping file.
+
         NOTE: This has to be changed if the content of mapping file changes
         """
         if "RESIDUE" not in self.mapping[list(self.mapping.keys())[0]].keys():
@@ -375,6 +409,7 @@ class Topology:
     def assign_resnames(self, resnames):
         """
         Helper function that finds head, sn-1 and sn-2 tails
+
         NOTE: currently there are only lipids with 2 different tails available in
         databank: e.g. POPC or POPG. This leads to different names of tails. This
         won't be the case for DOPC. Currently the algorithm is using that all three
@@ -412,10 +447,12 @@ class Topology:
     def run_merger(self):
         """
         Find lipid tails that correspond to a particular head-group.
+
         NOTE: currently there are only lipids with 2 different tails available in
         databank: e.g. POPC or POPG. This leads to different names of tails. This
         won't be the case for DOPC. Currently the algorithm is using that all three
         groups differ
+
         TODO: get the correspondence from structure
         """
         resnames = self.get_lipid_resnames()
@@ -449,20 +486,19 @@ class Concatenator:
     """
     Class Concatenator is a class needed to concatenate trajectory for lipid types.
     It has the following methods:
+
     1. Simple constructor, which sets the topology,residue names, and
-    trajectory
-    2. concatenateTraj method to do the basic by lipid concatenation
-    3. alignTraj method to perform the alignment of the concatenated trajectory
+       trajectory
+    2. :meth:`concatenateTraj` method to do the basic by lipid concatenation
+    3. :meth:`alignTraj` method to perform the alignment of the concatenated trajectory
     4. The enveloping concatenate method
+
+    :param topology: topology for lipid
+    :param traj: MDAnalysis trajectory
+    :param lipid_resname: lipid resname in the trajectory
     """
 
     def __init__(self, topology: Topology, traj, lipid_resname: str):
-        """
-        Constructor for Concatenator:
-            topology      - topology for lipid
-            traj          - MDAnalysis trajectory
-            lipid_resname - lipid resname in the trajectory
-        """
         self.topology = topology
         self.traj = traj
         self.lipid_resname = lipid_resname
@@ -570,6 +606,7 @@ class Concatenator:
 
         return concatenated_traj, n_lipid, n_frames * n_lipid
 
+
     """
     alignTraj alignes the concatenated trajectory in two steps: (1) it computes
     average structure after alignment to the first frame, and (2) it alignes
@@ -577,6 +614,11 @@ class Concatenator:
     """
 
     def align_traj(self, concatenated_traj):
+        """
+        alignTraj alignes the concatenated trajectory in two steps: (1) it computes
+        average structure after alignment to the first frame, and (2) it alignes
+        the structure to the calculated average structure in (1).
+        """
         # Compute average structure after alignment to the first frame
         av = align.AverageStructure(concatenated_traj, ref_frame=0).run()
         # Align to average structure
@@ -592,11 +634,15 @@ class Concatenator:
         )
         return coords.reshape(-1, 3), coords.mean(axis=0).reshape(1, -1)
 
+
     """
     Simple enveloping function to perform concatenation
     """
 
     def concatenate(self):
+        """
+        Simple enveloping function to perform concatenation
+        """
         print(f"Concatenator: Concatenating lipid with resname {self.lipid_resname}")
         if not self.topology.is_merge_needed():
             # Merging is not needed
@@ -611,28 +657,27 @@ class Concatenator:
 class PCA:
     """
     Class PCA is a class that actually performs PCA. It has the following methods:
+
     1. Simple constructor, which sets the aligned trajtory, average coordinates,
-    number of lipids, number of frames in the concatenated trajectory and
-    trajectory length in ns
-    2. PCA prepares the trajectory coordinates for analysis and calculates
-    principal components
-    3. get_proj projects the trajectory on principal components
-    4. get_lipid_autocorrelation calculates the autocorrelation timeseries for
-    individual lipid
-    5. get_autocorrelations calculates the autocorrelation timeseries for
-    trajectory
+       number of lipids, number of frames in the concatenated trajectory and
+       trajectory length in ns
+    2. :meth:`PCA` prepares the trajectory coordinates for analysis and calculates
+       principal components
+    3. :meth:`get_proj` projects the trajectory on principal components
+    4. :meth:`get_lipid_autocorrelation` calculates the autocorrelation timeseries for
+       individual lipid
+    5. :meth:`get_autocorrelations` calculates the autocorrelation timeseries for
+       trajectory
+
+    :param aligned_traj: np.array with positions of concatenated and aligned
+                         trajectory
+    :param av_pos: np.array with average positions for the lipid
+    :param n_lipid: number of lipids of particular type in the system
+    :param n_frames: number of frames in the concatenated trajectory
+    :param traj_time: trajectory length in ns
     """
 
     def __init__(self, aligned_traj, av_pos, n_lipid, n_frames, traj_time):
-        """
-        Constructor for PCA:
-            aligned_traj - np.array with positions of concatenated and aligned
-                        trajectory
-            av_pos       - np.array with average positions for the lipid
-            n_lipid      - number of lipids of particular type in the system
-            n_frames     - number of frames in the concatenated trajectory
-            traj_time    - trajectory length in ns
-        """
         self.aligned_traj = aligned_traj
         self.av_pos = av_pos
         self.n_lipid = n_lipid
@@ -705,20 +750,20 @@ class PCA:
 class TimeEstimator:
     """
     Class TimeEstimator is a class that estimates equilbration time from
-    autocorrelation data. It includes the following methods:
-        1. Simple constructor, which sets the autocorrelation data
-        2. Helper method get_nearest_value that finds the interval in the data
-        where the autocorrelation falls below specific value
-        3. timerelax method calculates the logarithms of autocorrelation and
-        calculates the decay time
-        4. calculate_time method calculates the estimated equilibration time
+    autocorrelation data. 
+    It includes the following methods:
+
+    1. Simple constructor, which sets the autocorrelation data
+    2. Helper method :meth:`get_nearest_value` that finds the interval in the data
+       where the autocorrelation falls below specific value
+    3. :meth:`timerelax` method calculates the logarithms of autocorrelation and
+       calculates the decay time
+    4. :meth:`calculate_time` method calculates the estimated equilibration time
+    
+    :param autocorrelation: autocorrelation data
     """
 
     def __init__(self, autocorrelation):
-        """
-        Constructor for PCA:
-            autocorrelation - autocorrelation data
-        """
         self.autocorrelation = autocorrelation
 
     def get_nearest_value(self, iterable, value):
