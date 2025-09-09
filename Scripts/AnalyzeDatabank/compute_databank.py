@@ -52,8 +52,13 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
+        "--ff",
+        help="Compute MAICOS electron density and form-factor for all systems",
+        action="store_true",
+    )
+    parser.add_argument(
         "--maicos",
-        help="Compute MAICOS for all systems",
+        help="Compute all MAICOS properties for all systems",
         action="store_true",
     )
     parser.add_argument(
@@ -127,11 +132,22 @@ if __name__ == "__main__":
         from DatabankLib.analyze import computeNMRPCA
 
         run_analysis(computeNMRPCA, logger, id_range=id_range)
+
+    if args.ff and args.maicos:
+        pass
+
+    if args.ff and not args.maicos:
+        logger.info("Computing MAICoS electron density and form-factor for all systems")
+        from DatabankLib.analyze import computeMAICOS
+        run_analysis(computeMAICOS, logger, id_range=id_range)
+
     if args.maicos:
         logger.info("Computing MAICOS for all systems")
         from DatabankLib.analyze import computeMAICOS
+        def compute_all_maicos_props(s, l):
+            return computeMAICOS(s, l, ffonly=False)
+        run_analysis(compute_all_maicos_props, logger, id_range=id_range)
 
-        run_analysis(computeMAICOS, logger, id_range=id_range)
     if args.thickness:
         logger.info("Computing Thickness for all systems")
         from DatabankLib.analyze import computeTH

@@ -627,7 +627,7 @@ def computeMAICOS(  # noqa: N802 (API)
     }
 
     if not ffonly:
-        set_maicos_files += {
+        set_maicos_files |= {
             "LipidMassDensity.json",
             "WaterMassDensity.json",
             "TotalMassDensity.json",
@@ -700,7 +700,7 @@ def computeMAICOS(  # noqa: N802 (API)
                 if not os.path.isfile(tpr_name):
                     _ = urllib.request.urlretrieve(tpr_url, tpr_name)
         elif "openMM" in software or "NAMD" in software:
-            if _not_skip_dwnld(struc_name): 
+            if _not_skip_dwnld(struc_name):
                 pdb_url = resolve_download_file_url(doi, struc)
                 if not os.path.isfile(struc_name):
                     _ = urllib.request.urlretrieve(pdb_url, struc_name)

@@ -108,6 +108,7 @@ def test_maicos_what_to_compute(caplog, logger):
 
     from DatabankLib.analyze import computeMAICOS
     from DatabankLib.core import System
+    from DatabankLib import RCODE_ERROR
 
     s = System(
         data={
@@ -134,14 +135,24 @@ def test_maicos_what_to_compute(caplog, logger):
     caplog.clear()
     logger.info("Testing MAICOS interface against GROMACS-like setup")
     with caplog.at_level(logging.INFO):
-        rcode = computeMAICOS(s, logging.getLogger("test_logger"))
+        rcode = computeMAICOS(s, logging.getLogger("test_logger"), ffonly=False)
     for line in caplog.text.splitlines():
         if "Files to be computed:" in line:
             break
     check.is_in("TotalDensity", line)
     check.is_in("DiporderWater", line)
-    check.equal(rcode, 2)
-
+    check.equal(rcode, RCODE_ERROR)
+    # Testing maicos-default ffonly=True
+    caplog.clear()
+    logger.info("Testing MAICOS default-mode interface against GROMACS-like setup")
+    with caplog.at_level(logging.INFO):
+        rcode = computeMAICOS(s, logging.getLogger("test_logger"))
+    for line in caplog.text.splitlines():
+        if "Files to be computed:" in line:
+            break
+    check.is_in("TotalDensity", line)
+    check.is_not_in("DiporderWater", line)
+    check.equal(rcode, RCODE_ERROR)
     # Now it will be NAMD-like setup
     logger.info("Testing MAICOS interface against NAMD-like setup")
     del s["TPR"]
@@ -151,7 +162,7 @@ def test_maicos_what_to_compute(caplog, logger):
 
     caplog.clear()
     with caplog.at_level(logging.INFO):
-        rcode = computeMAICOS(s, logging.getLogger("test_logger"))
+        rcode = computeMAICOS(s, logging.getLogger("test_logger"), ffonly=False)
     for line in caplog.text.splitlines():
         if "Files to be computed:" in line:
             break
@@ -159,4 +170,4 @@ def test_maicos_what_to_compute(caplog, logger):
     check.is_not_in("DiporderWater", line)
     check.is_not_in("Dielectric", line)
     check.is_not_in("ChargeDensity", line)
-    check.equal(rcode, 2)
+    check.equal(rcode, RCODE_ERROR)

@@ -82,15 +82,17 @@ def first_last_carbon(system: System, logger: Logger) -> tuple[str, str]:
 
     return (last_atom, g3_atom)
 
+
 def traj_centering_for_maicos(
-        system_path: str,
-        trj_name: str,
-        tpr_name: str,
-        last_atom: str,
-        g3_atom: str,
-        eq_time: int = 0,
-        *,
-        recompute: bool = False) -> str:
+    system_path: str,
+    trj_name: str,
+    tpr_name: str,
+    last_atom: str,
+    g3_atom: str,
+    eq_time: int = 0,
+    *,
+    recompute: bool = False,
+) -> str:
     """Center trajectory around the center of mass of all methyl carbons."""
     xtccentered = os.path.join(system_path, "centered.xtc")
     if os.path.isfile(xtccentered) and not recompute:
@@ -220,6 +222,7 @@ def traj_centering_for_maicos(
         raise RuntimeError(msg) from e
 
     return xtccentered
+
 
 class NumpyArrayEncoder(CompactJSONEncoder):
     """Encoder for 2xN numpy arrays to be used with json.dump."""
