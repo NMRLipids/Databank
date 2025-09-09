@@ -9,6 +9,7 @@ import os
 from urllib.error import HTTPError, URLError
 
 import pytest
+import pytest_check as check
 
 # run only without mocking data
 pytestmark = pytest.mark.nodata
@@ -31,12 +32,12 @@ class TestDownloadResourceFromUri:
             == 0
         )
         # repeat download
-        assert (
+        check.equal(
             dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
                 "./" + self.TESTFILENAME,
-            )
-            == 1
+            ),
+            1,
         )
         os.remove(self.TESTFILENAME)
 
@@ -46,6 +47,7 @@ class TestDownloadResourceFromUri:
         # redownload corrupted file
         with open(self.TESTFILENAME, "w") as f:
             f.write("BABABA")
+        old_size = os.path.getsize(self.TESTFILENAME)
         assert (
             dio.download_resource_from_uri(
                 "https://zenodo.org/records/8435138/files/pope-md313rfz.tpr",
@@ -53,6 +55,9 @@ class TestDownloadResourceFromUri:
             )
             == 2
         )
+        # check filesize
+        check.greater(os.path.getsize(self.TESTFILENAME), old_size,
+                      msg="File was not redownloaded despite size mismatch!")
         os.remove(self.TESTFILENAME)
 
     def test_errs__download_resource_from_uri(self):
