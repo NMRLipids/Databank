@@ -1,3 +1,6 @@
+
+.. _search_databank_py:
+
 searchDATABANK script
 =====================
 

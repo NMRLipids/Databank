@@ -1,3 +1,6 @@
+
+.. _quality_evaluation_py:
+
 QualityEvaluation script
 ========================
 

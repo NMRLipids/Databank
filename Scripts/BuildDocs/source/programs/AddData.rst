@@ -1,6 +1,8 @@
+
+.. _add_data_py:
+
 AddData script
 ==============
 
-.. _AddDataPy:
 
 .. automodule:: BuildDatabank.AddData
