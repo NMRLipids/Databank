@@ -17,6 +17,8 @@ It is also possible to make your own data repository and plug it into the NMRlip
    contrib/addingData.rst
    contrib/addingExpData.md
    contrib/addingMolecule.rst
+   schemas/moleculesAndMapping.md
+   schemas/simulation_metadata.md
 
 
 

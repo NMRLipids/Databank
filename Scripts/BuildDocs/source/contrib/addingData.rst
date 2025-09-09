@@ -6,72 +6,72 @@ Adding simulations
 Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform 
 automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. 
 The first three steps can be performed using graphical GitHub interface. 
-To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids databank git <https://github.com/NMRLipids/Databank/>`_.
+To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids BilayerData git <https://github.com/NMRLipids/BilayerData/>`_.
+Remember that data is plugged to the main Databank repo as a submodule.
 
-#. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository. If you want to use other repository than Zenodo, please do not hesitate to open an `GitHub issue <https://github.com/NMRLipids/Databank/issues>`_ on this.
+#. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository.\
+   If you want to use other repository than Zenodo, please do not hesitate to open an `GitHub issue <https://github.com/NMRLipids/Databank/issues>`_ on this.
 
-#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmecontent` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
+#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_ (**TODO: LINK DOESN'T WORK**).
+   For instructions, see :ref:`readmecontent` and `examples <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_.
+   Mapping files are described in  :ref:`molecule_names` and are located in the :ref:`molecule_record` inside the folder of corresponding molecule.
 
-#. Save the created ``info.yaml`` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch. **You can stop here or continue to create `README.yaml` file in step 4.** 
+#. You can store the created ``info.yaml`` file somewhere inside `./info_files/ <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_ folder in the BilayerData git and make a pull request to the main branch. **You can stop here or continue to create `README.yaml` file in step 4.** 
 
-#. Before continuing, clone a repo on your computer and perform the following steps locally before making a pull request to the main branch. To create the ``README.yaml`` file for the databank, return to the `Databank/Scripts/BuildDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank>`_ folder in the NMRlipids databank git and run
-
-   .. code-block:: bash
-		   
-         python3 AddData.py -f {path to the info.yaml file that you created} -w {working-directory}
-
-   For available command line arguments, you can run
-
-   .. code-block:: bash		   
-
-         python3 AddData.py --help
-
-   After this is finished, you should see a new folder in `Data/simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system. Commit the created ``README.yaml`` file into the git.
-
-#. To perform basic analyses for the added system(s), go to `Databank/Scripts/AnalyzeDatabank/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/AnalyzeDatabank>`_ folder and run
-
-   .. code-block:: bash
-		   
-         ./calcProperties.sh
-
-   After this, you should see the results in the same folder where ``README.yaml`` is located. The results can be added into the get by running
+#. Before continuing, make sure that your `Data` submodule is switched to your own fork. 
+   To create the ``README.yaml`` file for the databank you should run :ref:`add_data_py` on your info-file:
 
    .. code-block:: bash
 
-	git add ../../Data/Simulations/*/*/*/*/apl.json
-	git add ../../Data/Simulations/*/*/*/*/*OrderParameters.json
-	git add ../../Data/Simulations/*/*/*/*/FormFactor.json
-	git add ../../Data/Simulations/*/*/*/*/TotalDensity.json
-	git add ../../Data/Simulations/*/*/*/*/thickness.json
-	git add ../../Data/Simulations/*/*/*/*/eq_times.json
+      path-to/AddData.py -f {path to the info.yaml file that you created} -w {working-directory}
 
-#. For the quality evaluation against experiments, the simulation needs to be first connected to the corresponding experimental data (if available) by running ``searchDATABANK.py`` in `Scripts/BuildDatabank <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank>`_ folder. This will add the ``EXPERIMENT`` dictionary into the ``README.yaml`` files. This dictionary defines the location of related experimental data in `Data/experiments <https://github.com/NMRLipids/Databank/tree/main/Data/experiments>`_ folder. Then the quality evaluation can be then done by running the ``QualityEvaluation.py``
+   After this is finished, you should see a new folder in `./simulations <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ which contains the ``README.yaml`` file of your system.
+   Commit the created ``README.yaml`` file into the git.
 
    .. code-block:: bash
 
-	python searchDATABANK.py
-	python QualityEvaluation.py
+      git add Simulations/**/README.yaml
+
+#. To perform basic analyses for the added system(s) you should run :ref:`compute_databank_py` with the following keys:
+
+   .. code-block:: bash
+
+      path-to/compute_databank.py --apl --nmrpca --ff --thickness \
+         --OP --range *-0 
+
+   By default, your new-created system gets ID -1, -2, etc, so we run recomputing only 
+   on range from -inf to 0.
+   After this, you should see the results in the same folder where ``README.yaml`` is located.
+   The results files should be staged by running
+
+   .. code-block:: bash
+
+      git add Simulations/**/*.json
+
+#. For the quality evaluation against experiments, the simulation needs to be first connected 
+   to the corresponding experimental data (if available) by running :ref:`search_databank_py`. 
+   This will add the ``EXPERIMENT`` dictionary into the ``README.yaml`` files. 
+   This dictionary defines the location of related experimental data in `./experiments <https://github.com/NMRLipids/BilayerData/tree/main/experiments>`_ folder. 
+   Then the quality evaluation can be then done by running :ref:`quality_evaluation_py`: 
+
+   .. code-block:: bash
+
+      path-to/searchDATABANK.py
+      path-to/QualityEvaluation.py
 
    The resulting qualities can be then added into the git by running
 
    .. code-block:: bash
 
-	git add ../../Data/Simulations/*/*/*/*/README.yaml
-	git add ../../Data/Simulations/*/*/*/*/*OrderParameters_quality.json
-	git add ../../Data/Simulations/*/*/*/*/FormFactorQuality.json
-	git add ../../Data/Simulations/*/*/*/*/*FragmentQuality.json
-	git add ../../Data/Simulations/*/*/*/*/SYSTEM_quality.json
+      git add Simulations/**/README.yaml
+      git add Simulations/**/*.json
 
-
-   To create rankings of simulations based on their quality against experiments and to store the results in folder `Data/Ranking <https://github.com/NMRLipids/Databank/tree/main/Data/Ranking>`_, run
+   To create rankings of simulations based on their quality against experiments and to store the results in folder `Data/Ranking <https://github.com/NMRLipids/BilayerData/tree/main/Ranking>`_, run
 
    .. code-block:: bash
 		   
-        python makeRanking.py
-
+      path-to/makeRanking.py
+      git add Ranking/*.json
 	
 #. Finally, commit the added data into your fork and make a pull request into the main branch.
-
-Check :doc:`AddData` for details.
-
 

@@ -58,7 +58,7 @@ Instrutions are available at :ref:`addingExpData`.
 System requirements
 -------------------
 
-The code has been tested in Linux environment with python 3.7 or newer and recent `Gromacs <https://manual.gromacs.org/current/install-guide/index.html>`_ version installed.
+The code has been tested in Linux environment with python 3.10 or newer and recent `Gromacs <https://manual.gromacs.org/current/install-guide/index.html>`_ version installed.
 
 Setup using conda as distribution:
 

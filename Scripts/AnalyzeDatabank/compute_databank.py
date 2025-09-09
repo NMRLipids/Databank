@@ -22,6 +22,7 @@ water orientation, dielectric profiles, X-ray form factor).
     just-added systems.
 --apl        Compute APL (Area Per Lipid) for all systems.
 --nmrpca     Compute NMR PCA for all systems.
+--ff         Compute MAICOS electron density and form-factor for all systems.
 --maicos     Compute MAICOS profiles for all systems.
 --thickness  Compute Thickness for all systems.
 --OP         Compute Order Parameter for all systems.
@@ -139,13 +140,16 @@ if __name__ == "__main__":
     if args.ff and not args.maicos:
         logger.info("Computing MAICoS electron density and form-factor for all systems")
         from DatabankLib.analyze import computeMAICOS
+
         run_analysis(computeMAICOS, logger, id_range=id_range)
 
     if args.maicos:
         logger.info("Computing MAICOS for all systems")
         from DatabankLib.analyze import computeMAICOS
+
         def compute_all_maicos_props(s, l):
             return computeMAICOS(s, l, ffonly=False)
+
         run_analysis(compute_all_maicos_props, logger, id_range=id_range)
 
     if args.thickness:

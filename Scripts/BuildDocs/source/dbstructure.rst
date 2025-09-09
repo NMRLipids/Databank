@@ -123,6 +123,8 @@ TODO: write the block
 
 2. :file:`FormFactor.json` contains X-ray scattering form factor data.
 
+.. _molecule_record:
+
 Molecule record
 ---------------
 
@@ -150,12 +152,4 @@ For more information see :ref:`readmesimu` and :ref:`addData`.
 Lipid united-atom dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TODO: write the block
-
-Related pages
--------------
-
-.. toctree::
-   :maxdepth: 1
-   
-   schemas/simulation_metadata.md
 
