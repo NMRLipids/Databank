@@ -54,6 +54,7 @@ from DatabankLib.databankLibrary import lipids_set, molecules_set, parse_valid_c
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 from DatabankLib.settings.molecules import Lipid, NonLipid
 from MDAnalysis import Universe
+from DatabankLib.SchemaValidation.ValidateYAML import validate_info_dict,validate_info_file
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -118,6 +119,12 @@ if __name__ == "__main__":
             yaml_file,
             Loader=yaml.FullLoader,  # noqa: S506
         )  # TODO may throw yaml.YAMLError
+
+    errors = validate_info_dict(info_yaml)
+    if errors:
+        for error in errors:
+            logger.exception(error)
+        sys.exit(1)
 
     # Show the input read
     logger.debug(f"{os.linesep} Input read from {input_path} file:")
