@@ -27,18 +27,18 @@ def main(info_file_path:str, dry_run: bool):
         sys.exit(1)
     if dry_run:
         run_python_script(
-            path_dict["AddData_path"],
+            path_dict["adddata_path"],
             args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
             error_message="AddData dry run failed")
     else:    
         run_python_script(
-            path_dict["AddData_path"],
+            path_dict["adddata_path"],
             args=["-f", info_file_path, "-w", work_directory_real],
             error_message="AddData failed"
         )
         run_python_script(
             path_dict["compute_databank_path"],
-            args = ["--maicos", "--range", "*-0"],
+            args = ["--ff", "--range", "*-0"],
             error_message="Compute_databank failed"
         )
         delete_info_file(info_file_path)
