@@ -28,14 +28,6 @@ Scripts related to adding new simulations into the databank.
 :doc:`More info on BuildDatabank <auto_gen/Scripts.BuildDatabank>`
 
 
-updateGUI
----------
-
-Functionality for updating the GUI of the NMRLipids Databank.
-
-:doc:`More info on updateGUI <auto_gen/Scripts.updateGUI>`
-
-
 tests
 -----
 
