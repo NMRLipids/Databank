@@ -25,7 +25,7 @@ def run_analysis(info_file_path:str) -> None:
     )
     run_python_script(
         path_dict["compute_databank_path"],
-        args = ["--ff", "--range", "*-0"],
+        args=["--nmrpca", "--ff", "--op", "--thickness", "--apl", "--range", "*-0"],
         error_message="Compute_databank failed",
     )
     delete_info_file(info_file_path)
