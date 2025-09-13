@@ -4,7 +4,7 @@ Contains methods used for python scripts related to workflows.
 .. note::
    This module is only used by automated workflows. Users of the Databank
    repository can safely ignore it.
-"""
+"""  # noqa: INP001
 
 import logging
 import os
