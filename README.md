@@ -10,13 +10,17 @@ More information and example applications are available from the [NMRlipids data
 
 ## API
 
-The `DatabankLib` python module provides programmatic access to all simulation data in the NMRlipids Databank. This enables wide range of novel data-driven applications &mdash; from construction of machine learning models that predict membrane properties, to automatic analysis of virtually any property across all simulations in the Databank. 
+The `DatabankLib` python module provides programmatic access to all simulation data in the 
+NMRlipids Databank. It allows to request data to construct various datasets on the base of 
+experimental and simulation data from the Databank that allow one to learn various models about 
+lipid bilayer properties. It also allows to design and effectively run automated analysis across
+all the simulations in the Databank.
 
-NMRlipids Databank-API documentation is available in [here](https://nmrlipids.github.io/databankLibrary.html).
+The documentation for `DatabankLib` module is available in [here](https://nmrlipids.github.io/auto_gen/Scripts.DatabankLib.html).
 
 ## How to use 
 
-[A template](https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb) can be used to get started with the analyses utilizing the NMRlipids databank. Codes that analyze [area per lipid](https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/calcAPL.py), [C-H bond order parameters](https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/calcOrderParameters.py), [X-ray scattering form factors](https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/calc_FormFactors.py), and [principal component equilibration](https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/NMRPCA_timerelax.py) are also available as examples. 
+A [jupyter template notebook](https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb) can be used to get started with the analyses utilizing the NMRlipids databank.
 
 Connection of [Universal molecule and atom naming conventions](https://nmrlipids.github.io/moleculesAndMapping.html) with simulation specific names delivered by mapping files can be used to perform automatic analyses over large sets of simulations. The results for large analyses can be stored using the same structure as used for `README.yaml` files as done, for example, for [water permeation](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/MD-PERMEATION) and lipid [flip-flop](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/Flipflops) rates in the [repository related to the NMRlipids databank manuscript](https://github.com/NMRLipids/DataBankManuscript).
 
@@ -27,8 +31,11 @@ Connection of [Universal molecule and atom naming conventions](https://nmrlipids
 through a graphical user interface (GUI). 
 Simulations can be searched based on their molecular composition, force field,
 temperature, membrane properties, and quality; the search results are ranked based on the simulation quality as evaluated
-against experimental data when available. Membranes can be visualized, and properties between different simulations and
-experiments compared.
+against experimental data when available. GUI provides basic graphical reports
+for the computed properties as well as graphical comparison between simulation
+and experimental data.
+
+The GUI is being developed in the repository [BilayerGUI_laravel](https://github.com/NMRlipids/BilayerGUI_laravel).
 
 
 # Installation
@@ -43,7 +50,7 @@ $ git submodule update --init --remote
 We recomend installing python libraries into an environment, for example, using conda:
 
 ```
- $ conda create --name databank python==3.10 'numpy<2.0' MDAnalysis periodictable -c conda-forge
+ $ conda create --name databank python==3.10 MDAnalysis periodictable -c conda-forge
  $ conda activate databank
  $ (databank) conda install tqdm yaml -c conda-forge
 ```
@@ -61,17 +68,11 @@ You can install the package in non-development mode, without `-e` (it's obligato
 # Contribution
 
 The project is open for contributions! 
+
 For code development, please use extended requirements described in `requirements-dev.txt`:
 ```
  $ (databank) pip install -e . -r Scripts/DatabankLib/requirements-dev.txt
 ```
 It will install `pytest` for unit tests and `ruff` for syntax check.
 
-We are using `ruff` for ensuring the same code quality and formatting across the project. Your contributions will not be reviewed until they pass the `ruff` check. To facilitate quicker fixes, we suggest installing the `pre-commit` hooks via
-
-```
-pre-commit install
-```
-
-This will make sure that no code can be committed to the repository until it satisfies the `ruff` check.
-
+Please consult [CONTRIBUTION.md](./CONTRIBUTION.md) for further information.
