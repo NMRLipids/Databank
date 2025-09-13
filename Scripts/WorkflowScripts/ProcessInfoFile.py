@@ -4,7 +4,7 @@ Executes standard pipeline of processing for an info file.
 .. note::
    This file is only meant to be used by automated workflows.
    Users of the Databank repository can safely ignore it.
-"""
+"""  # noqa: INP001
 
 import argparse
 import os
@@ -21,25 +21,25 @@ def run_analysis(info_file_path:str) -> None:
     run_python_script(
         path_dict["adddata_path"],
         args=["-f", info_file_path, "-w", work_directory_real],
-        error_message="AddData failed"
+        error_message="AddData failed",
     )
     run_python_script(
         path_dict["compute_databank_path"],
         args = ["--ff", "--range", "*-0"],
-        error_message="Compute_databank failed"
+        error_message="Compute_databank failed",
     )
     delete_info_file(info_file_path)
 
 
 def run_dry_run(info_file_path:str) -> None:
-    """Run pre-analysis of info file to rule out errors"""
+    """Run AddData dry-run for pre-analysis of info file to rule out errors"""
     _,work_directory_dry = setup_folders()
     path_dict = get_databank_paths(NMLDB_ROOT_PATH)
     run_python_script(
             path_dict["adddata_path"],
             args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
             error_message="AddData dry run failed")
-    
+
 def setup_folders() -> tuple[str,str]:
     """Set up folders for processing info file"""
     parent_folder = os.path.dirname(NMLDB_ROOT_PATH)
@@ -49,8 +49,8 @@ def setup_folders() -> tuple[str,str]:
     try:
         os.makedirs(work_directory_dry, exist_ok=True)
         os.makedirs(work_directory_real, exist_ok=True)
-    except OSError as e:
-        logger.error("Failed to create work directories")
+    except OSError:
+        logger.exception("Failed to create work directories")
         sys.exit(1)
     return work_directory_real,work_directory_dry
 
