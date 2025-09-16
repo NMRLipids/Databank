@@ -11,8 +11,7 @@ on:
   schedule:
     # check once a week on mondays
     - cron: '0 10 * * 1'
-  workflow_dispatch:
-  push:  
+  workflow_dispatch:  
 
 jobs:
   tests:
