@@ -4,7 +4,7 @@ include LICENSE
 include README.md
 include AUTHORS.md
 
-
+prune data
 prune developer
 prune docs
 prune tests
