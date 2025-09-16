@@ -56,6 +56,9 @@ nml_evaluate_quality = "DatabankLib.bin.evaluate_quality:evaluate_quality"
 nml_make_ranking = "DatabankLib.bin.make_ranking:make_ranking"
 nml_match_experiments = "DatabankLib.bin.match_experiments:match_experiments"
 
+[tool.check-manifest]
+ignore = ["src/DatabankLib/_version.py"]
+
 [tool.pytest.ini_options]
 addopts = "-ra"
 markers = [
