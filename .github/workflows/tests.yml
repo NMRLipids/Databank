@@ -11,6 +11,8 @@ on:
   schedule:
     # check once a week on mondays
     - cron: '0 10 * * 1'
+  workflow_dispatch:
+  push:  
 
 jobs:
   tests:
@@ -43,7 +45,7 @@ jobs:
 
     - name: run Python tests
       run: |
-        tox -e tests
+        tox -e tests-sim2,tests-adddata,tests-nodata
         coverage xml
 
     - name: upload to codecov.io
