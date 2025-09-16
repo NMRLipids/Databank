@@ -18,7 +18,7 @@ import DatabankLib.quality as qq
 from DatabankLib import NMLDB_EXP_PATH, NMLDB_SIMU_PATH
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
-if __name__ == "__main__":
+def evaluate_quality():
     simulations = qq.loadSimulations()
 
     EvaluatedOPs = 0
@@ -180,3 +180,6 @@ if __name__ == "__main__":
 
     print("The number of systems with evaluated order parameters:", EvaluatedOPs)
     print("The number of systems with evaluated form factors:", EvaluatedFFs)
+
+if __name__ == "__main__":
+    evaluate_quality()

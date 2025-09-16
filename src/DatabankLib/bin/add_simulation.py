@@ -62,11 +62,11 @@ pd.set_option("display.width", 1000)
 pd.set_option("display.max_colwidth", 1000)
 
 
-if __name__ == "__main__":
+def add_simulation():
     # parse input yaml file
     parser = argparse.ArgumentParser(
         prog="AddData.py Script",
-        description="Add a new dataset to the NMRLipids databank",
+        description=__doc__,
     )
     parser.add_argument(
         "-f",
@@ -633,3 +633,7 @@ if __name__ == "__main__":
         )
 
     logger.info("Script completed successfully!")
+
+
+if __name__ == "__main__":
+    add_simulation()

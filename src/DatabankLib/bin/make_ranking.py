@@ -16,7 +16,7 @@ from DatabankLib.core import initialize_databank
 from DatabankLib.databankLibrary import lipids_set
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
-if __name__ == "__main__":
+def make_ranking():
     systems = initialize_databank()
 
     # ---- Making list of qualities
@@ -111,3 +111,6 @@ if __name__ == "__main__":
                 with open(outputfile, "w") as fp:
                     json.dump(sorted_qualities, fp, default=str, cls=CompactJSONEncoder)
                 print(f"Quality of {sort_based_on} of {lipid} sorted and saved to {outputfile}")
+
+if __name__ == "__main__":
+    make_ranking()

@@ -37,7 +37,7 @@ import sys
 
 from DatabankLib.utils import run_analysis
 
-if __name__ == "__main__":
+def compute_databank():
     parser = argparse.ArgumentParser(
         prog="compute_databank.py Script",
         description="Compute computable properties",
@@ -162,3 +162,6 @@ if __name__ == "__main__":
         from DatabankLib.analyze import computeOP
 
         run_analysis(computeOP, logger, id_range=id_range)
+
+if __name__ == "__main__":
+    compute_databank()

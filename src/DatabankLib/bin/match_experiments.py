@@ -320,7 +320,7 @@ Experiment:
     \n""")
 
 
-def main():
+def match_experiments():
     """
     Main program function. Not for exporting.
     """
@@ -368,4 +368,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    match_experiments()

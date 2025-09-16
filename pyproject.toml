@@ -50,8 +50,11 @@ repository = "https://github.com/NMRLipids/Databank"
 issues = "https://github.com/NMRLipids/Databank/issues"
 
 [project.scripts]
-lipiddb_add = "maicos.__main__:main"
-
+nml_add_simulation = "DatabankLib.bin.add_simulation:add_simulation"
+nml_compute_databank = "DatabankLib.bin.compute_databank:compute_databank"
+nml_evaluate_quality = "DatabankLib.bin.evaluate_quality:evaluate_quality"
+nml_make_ranking = "DatabankLib.bin.make_ranking:make_ranking"
+nml_match_experiments = "DatabankLib.bin.match_experiments:match_experiments"
 
 [tool.pytest.ini_options]
 addopts = "-ra"
