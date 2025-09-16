@@ -30,10 +30,6 @@ jobs:
       - name: build documentation
         run: tox -e docs
 
-      - name: Check for Changelog
-        if: github.event_name == 'pull_request'
-        run: python ./developer/check_changelog.py
-
       - name: put documentation in the website
         run: |
           git clone https://github.com/$GITHUB_REPOSITORY --branch gh-pages gh-pages
