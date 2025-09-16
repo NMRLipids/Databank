@@ -1,7 +1,7 @@
 Examples and tutorials
 ======================
 
-A template project for analyses utilizing the NMRlipids databank is available in `here <https://github.com/NMRLipids/databank-template/tree/main>`_ where examples and templates for analyses are available from the `scripts <https://github.com/NMRLipids/databank-template/tree/main/scripts>`_ folder. 
+A template project for analyses utilizing the NMRlipids databank is available in `here <https://github.com/NMRLipids/databank-template/tree/main>`_ where examples and templates for analyses are available from the `scripts <https://github.com/NMRLipids/databank-template/tree/main/scripts>`_ folder.
 
 `Plotting basic simulation properties <https://github.com/NMRLipids/databank-template/blob/main/scripts/plotSimulation.ipynb>`_
 ----------------------------------

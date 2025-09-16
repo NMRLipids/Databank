@@ -9,7 +9,7 @@ The functions that help analyzing data in the NMRlipids databank are described h
 
    mkdir NMRlipids/
    cd NMRlipids
-   
+
 then clone the NMRlipids databank git into this folder
 
 .. code-block::
@@ -33,11 +33,11 @@ After running this, ``systems`` is a SystemsCollection which works like a list b
 
    for system in systems:
        print(system)
-   
+
 Examples on analyses over NMRlipids databank can be found from the `template <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_ and `codes used to analyze the results for the NMRlipids databank manuscript <https://github.com/NMRLipids/DataBankManuscript/tree/main/scripts>`_.
 
 
 The functions available to analyze the simulations can be found :doc:`here <auto_gen/Scripts.DatabankLib.databankLibrary>`
 
-More information on initializing the databank and related information can be found on the  :doc:`DatabankLib.core page. <auto_gen/Scripts.DatabankLib.core>` 
+More information on initializing the databank and related information can be found on the  :doc:`DatabankLib.core page. <auto_gen/Scripts.DatabankLib.core>`
 

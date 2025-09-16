@@ -147,8 +147,8 @@ if __name__ == "__main__":
         logger.info("Computing MAICOS for all systems")
         from DatabankLib.analyze import computeMAICOS
 
-        def compute_all_maicos_props(s, l):
-            return computeMAICOS(s, l, ffonly=False)
+        def compute_all_maicos_props(s, ell):
+            return computeMAICOS(s, ell, ffonly=False)
 
         run_analysis(compute_all_maicos_props, logger, id_range=id_range)
 

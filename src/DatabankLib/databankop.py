@@ -76,6 +76,7 @@ class _OrderParameter:
                 warnings.warn(
                     f"Provided value for '{field_name}' is not a string: {field_value}. "
                     "Unexpected behaviour might occur.",
+                    stacklevel=2,
                 )
 
         if len(args) == 0:
@@ -89,6 +90,7 @@ class _OrderParameter:
         else:
             warnings.warn(
                 f"Number of optional positional arguments is {len(args)}, not 0 or 2. Args: {args}\nWrong file format?",
+                stacklevel=2,
             )
 
         self.traj = []  # For storing final OP results.
@@ -138,6 +140,7 @@ def _read_trajs_calc_OPs(
             warnings.warn(
                 f"Selection is empty: [{sel_str}]. Check residue and atom names in the mapping file.",
                 UserWarning,
+                stacklevel=2,
             )
             improper_ops.append(i)
             continue
@@ -151,6 +154,7 @@ def _read_trajs_calc_OPs(
                     f"{res.resids[0]} contains {res.n_atoms} atoms, but should be 2. "
                     "This residue will be skipped.",
                     UserWarning,
+                    stacklevel=2,
                 )
             else:
                 valid_selection.append(res)
@@ -159,6 +163,7 @@ def _read_trajs_calc_OPs(
             warnings.warn(
                 f"No valid atom pairs found for selection: [{sel_str}]",
                 UserWarning,
+                stacklevel=2,
             )
             improper_ops.append(i)
             continue
@@ -267,6 +272,7 @@ def _parse_op_input(mapping_dict: dict, lipid_resname: str):
             warnings.warn(
                 f"Cannot define carbon for the hydrogen {atom_h[0]} ({atom_h[1]})",
                 UserWarning,
+                stacklevel=2,
             )
             continue
 

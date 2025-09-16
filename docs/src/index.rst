@@ -6,7 +6,7 @@
 Welcome to NMRlipids databank's documentation!
 ==============================================
 
-NMRlipids databank is a community-driven catalogue containing atomistic MD simulations of biologically relevant lipid membranes emerging from the `NMRlipids open collaboration <http://nmrlipids.blogspot.com/>`_. 
+NMRlipids databank is a community-driven catalogue containing atomistic MD simulations of biologically relevant lipid membranes emerging from the `NMRlipids open collaboration <http://nmrlipids.blogspot.com/>`_.
 
 
 NMRlipids databank is an overlay databank.
@@ -45,9 +45,9 @@ The NMRlipids Databank is open for additions of simulation data by anyone. For d
 
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository.
 
-#. Create an `info.yaml` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
+#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
 
-#. Save the created `info.yaml` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch.
+#. Save the created ``info.yaml`` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch.
 
 Do not hesitate to ask assistance via `GitHub issues <https://github.com/NMRLipids/Databank/issues>`_.
 
@@ -82,10 +82,6 @@ Setup using conda as distribution:
    :caption: Project Structure
 
    Overview
-
-
-
-
 
 Indices and tables
 ==================

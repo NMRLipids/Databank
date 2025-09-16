@@ -281,7 +281,7 @@ class Parser:
                 u = mda.Universe(self.tpr_name, self.trj_name)
 
                 with mda.Writer(trj_out_name, u.select_atoms("all").n_atoms) as mdaw:
-                    for ts in u.trajectory[::10]:
+                    for _ in u.trajectory[::10]:
                         mdaw.write(u.select_atoms("all"))
 
             self.trj_name = trj_out_name
@@ -553,7 +553,8 @@ class Concatenator:
         for head, sn1, sn2 in zip(
             self.headlist[1:],
             self.tail1list[1:],
-            self.tail2list[1:], strict=False,
+            self.tail2list[1:],
+            strict=False,
         ):
             heavy_atoms_topology = heavy_atoms_topology.union(head + sn1 + sn2)
 

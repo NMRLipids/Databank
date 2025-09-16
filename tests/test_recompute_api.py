@@ -67,7 +67,7 @@ def test_system2MDAnalysisUniverse(systems, systemid, natoms, nframes):
     assert u.trajectory.n_frames == nframes
     with does_not_raise() as _:
         # check that it doesn't fail iterating over the trajectory
-        for f in u.trajectory:
+        for _ in u.trajectory:
             pass
 
 

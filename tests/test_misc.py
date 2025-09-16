@@ -41,10 +41,10 @@ def tip4p_trajectory(tmpdir):
 
     pdb_content = """TITLE     Single 4-site water
 CRYST1   63.646   63.646   86.762  90.00  90.00  90.00 P 1           1
-ATOM      1  OW  wate    1       4.370  31.010  61.030  1.00  0.00            
-ATOM      2  HW1 wate    1       3.800  30.820  61.780  1.00  0.00            
-ATOM      3  HW2 wate    1       5.250  30.760  61.320  1.00  0.00            
-ATOM      4  MW  wate    1       4.410  30.950  61.170  1.00  0.00  
+ATOM      1  OW  wate    1       4.370  31.010  61.030  1.00  0.00
+ATOM      2  HW1 wate    1       3.800  30.820  61.780  1.00  0.00
+ATOM      3  HW2 wate    1       5.250  30.760  61.320  1.00  0.00
+ATOM      4  MW  wate    1       4.410  30.950  61.170  1.00  0.00
 END
 """
     tmpfile = os.path.join(folder, "test_water_maicos.pdb")

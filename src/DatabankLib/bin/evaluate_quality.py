@@ -37,7 +37,7 @@ if __name__ == "__main__":
             OP_data_lipid = {}
             # convert elements to float because in some files the elements are strings
             try:
-                for key, value in simulation.op_data[lipid1].items():
+                for key, _ in simulation.op_data[lipid1].items():
                     OP_array = [float(x) for x in simulation.op_data[lipid1][key][0]]
                     OP_data_lipid[key] = OP_array
             except Exception:
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         expFFdata = {}
         if len(expFFpath) > 0:
             expFFpath_full = os.path.join(NMLDB_EXP_PATH, "FormFactors", expFFpath)
-            for subdir, dirs, files in os.walk(expFFpath_full):
+            for _, _, files in os.walk(expFFpath_full):
                 for filename in files:
                     filepath = os.path.join(expFFpath_full, filename)
                     if filename.endswith(".json"):

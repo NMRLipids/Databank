@@ -3,9 +3,9 @@
 Adding simulations
 ==================
 
-Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform 
-automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation. 
-The first three steps can be performed using graphical GitHub interface. 
+Stepwise instructions to add simulation into the NMRlipids databank, run the basic analyses and perform
+automatic quality evaluation are given here. The first three steps are a minimum requirements to add a simulation.
+The first three steps can be performed using graphical GitHub interface.
 To run the basic analyses and quality evaluation from steps 4 forward, you need to create a local fork of the `NMRlipids BilayerData git <https://github.com/NMRLipids/BilayerData/>`_.
 Remember that data is plugged to the main Databank repo as a submodule.
 
@@ -16,9 +16,9 @@ Remember that data is plugged to the main Databank repo as a submodule.
    For instructions, see :ref:`readmecontent` and `examples <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_.
    Mapping files are described in  :ref:`molecule_names` and are located in the :ref:`molecule_record` inside the folder of corresponding molecule.
 
-#. You can store the created ``info.yaml`` file somewhere inside `./info_files/ <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_ folder in the BilayerData git and make a pull request to the main branch. **You can stop here or continue to create `README.yaml` file in step 4.** 
+#. You can store the created ``info.yaml`` file somewhere inside `./info_files/ <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_ folder in the BilayerData git and make a pull request to the main branch. **You can stop here or continue to create ``README.yaml`` file in step 4.**
 
-#. Before continuing, make sure that your `Data` submodule is switched to your own fork. 
+#. Before continuing, make sure that your ``Data`` submodule is switched to your own fork.
    To create the ``README.yaml`` file for the databank you should run :ref:`add_data_py` on your info-file:
 
    .. code-block:: bash
@@ -37,9 +37,9 @@ Remember that data is plugged to the main Databank repo as a submodule.
    .. code-block:: bash
 
       path-to/compute_databank.py --apl --nmrpca --ff --thickness \
-         --OP --range *-0 
+         --OP --range *-0
 
-   By default, your new-created system gets ID -1, -2, etc, so we run recomputing only 
+   By default, your new-created system gets ID -1, -2, etc, so we run recomputing only
    on range from -inf to 0.
    After this, you should see the results in the same folder where ``README.yaml`` is located.
    The results files should be staged by running
@@ -48,11 +48,11 @@ Remember that data is plugged to the main Databank repo as a submodule.
 
       git add Simulations/**/*.json
 
-#. For the quality evaluation against experiments, the simulation needs to be first connected 
-   to the corresponding experimental data (if available) by running :ref:`search_databank_py`. 
-   This will add the ``EXPERIMENT`` dictionary into the ``README.yaml`` files. 
-   This dictionary defines the location of related experimental data in `./experiments <https://github.com/NMRLipids/BilayerData/tree/main/experiments>`_ folder. 
-   Then the quality evaluation can be then done by running :ref:`quality_evaluation_py`: 
+#. For the quality evaluation against experiments, the simulation needs to be first connected
+   to the corresponding experimental data (if available) by running :ref:`search_databank_py`.
+   This will add the ``EXPERIMENT`` dictionary into the ``README.yaml`` files.
+   This dictionary defines the location of related experimental data in `./experiments <https://github.com/NMRLipids/BilayerData/tree/main/experiments>`_ folder.
+   Then the quality evaluation can be then done by running :ref:`quality_evaluation_py`:
 
    .. code-block:: bash
 
@@ -69,9 +69,9 @@ Remember that data is plugged to the main Databank repo as a submodule.
    To create rankings of simulations based on their quality against experiments and to store the results in folder `Data/Ranking <https://github.com/NMRLipids/BilayerData/tree/main/Ranking>`_, run
 
    .. code-block:: bash
-		   
+
       path-to/makeRanking.py
       git add Ranking/*.json
-	
+
 #. Finally, commit the added data into your fork and make a pull request into the main branch.
 

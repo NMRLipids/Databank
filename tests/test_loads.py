@@ -57,7 +57,9 @@ class TestDownloadResourceFromUri:
         )
         # check filesize
         check.greater(
-            os.path.getsize(self.TESTFILENAME), old_size, msg="File was not redownloaded despite size mismatch!",
+            os.path.getsize(self.TESTFILENAME),
+            old_size,
+            msg="File was not redownloaded despite size mismatch!",
         )
         os.remove(self.TESTFILENAME)
 

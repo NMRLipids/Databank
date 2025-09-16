@@ -7,7 +7,7 @@ Data Organization
 
 The Databank includes three types of objects: Simulation, Experiment, and Molecule. Each is described by it's own metadata file. Metadata is stored in YAML format. Simulation object stores precomputed properties in JSON format. Experiment object stores experimental data in JSON format.
 
-Databank objects are stored in the separated repository; by default, it's a `BilayerData <https://github.com/NMRlipids/BilayerData>`_ but any of its forks or even completely new repo could be used instead. 
+Databank objects are stored in the separated repository; by default, it's a `BilayerData <https://github.com/NMRlipids/BilayerData>`_ but any of its forks or even completely new repo could be used instead.
 It is connected into the NMRlipids Databank repository as a submodule into :file:`./Data` folder.
 
 .. code-block:: console
@@ -59,7 +59,7 @@ Simulation record
 
 Simulation metadata README.yaml
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A file containing all the relevant information of each simulation entry. These files are stored at :py:data:`Scripts.DatabankLib.NMLDB_SIMU_PATH`. 
+A file containing all the relevant information of each simulation entry. These files are stored at :py:data:`Scripts.DatabankLib.NMLDB_SIMU_PATH`.
 
 For more information see :doc:`schemas/simulation_metadata`.
 
@@ -71,16 +71,16 @@ See :py:func:`Scripts.DatabankLib.analyze.computeAPL` for computing details.
 
 
 
-2. :file:`POPC_OrderParameters.json` contains C-H bond order parameters and their uncertainties. 
+2. :file:`POPC_OrderParameters.json` contains C-H bond order parameters and their uncertainties.
 Key in json format gives the universal C and H atom names.
 Values are average over lipids, standard deviation, and the standard error of the mean, respectively. |br|
 See :py:func:`Scripts.DatabankLib.analyze.computeOP` for computing details.
 
-3. :file:`FormFactor.json` contains simulated X-ray scattering form factor. 
+3. :file:`FormFactor.json` contains simulated X-ray scattering form factor.
 X-axis value unit are Å\ :sup:`-1` and y-axis value units are e/nm\ :sup:`2`. |br|
 See :py:func:`Scripts.DatabankLib.analyze.computeFF` for computing details.
 
-4. :file:`XXXXDensity.json` contains electron densities calculated from trajectory. 
+4. :file:`XXXXDensity.json` contains electron densities calculated from trajectory.
 We store separately lipid, water, and total densities.
 X-axis units are nm and y-axis units e/nm\ :sup:`3`. |br|
 See :py:func:`Scripts.DatabankLib.analyze.computeFF` for computing details.
@@ -89,7 +89,7 @@ See :py:func:`Scripts.DatabankLib.analyze.computeFF` for computing details.
 See :py:func:`Scripts.DatabankLib.analyze.computeThickness` for computing details.
 
 6. :file:`eq_times.json` contains a dictionary with relative equilibration time of molecule principal components. It demonstrates how long time is required in this particular simulation to sample the ensemble for each lipid molecule. |br|
-See :py:func:`Scripts.DatabankLib.analyze.computeNMRPCA` for computing details. 
+See :py:func:`Scripts.DatabankLib.analyze.computeNMRPCA` for computing details.
 
 Simulation quality files
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,9 +143,9 @@ Other files
 
 info.yaml
 ~~~~~~~~~
-Contains information given by contributor when adding data into the NMRlipids databank, i.e. all non-recomputable fields of simulation `README.yaml`. This file is given as an input to :py:data:`Scripts.BuildDatabank.AddData` to create ``README.yaml`` files: :code:`python3 AddData.py -f info.yaml`. These files are not required but currently are stored historically in `info_files` subfolder of :py:data:`Scripts.DatabankLib.NMLDB_DATA_PATH`. 
+Contains information given by contributor when adding data into the NMRlipids databank, i.e. all non-recomputable fields of simulation ``README.yaml``. This file is given as an input to :py:data:`Scripts.BuildDatabank.AddData` to create ``README.yaml`` files: :code:`python3 AddData.py -f info.yaml`. These files are not required but currently are stored historically in ``info_files`` subfolder of :py:data:`Scripts.DatabankLib.NMLDB_DATA_PATH`.
 
-For more information see :ref:`readmesimu` and :ref:`addData`.  
+For more information see :ref:`readmesimu` and :ref:`addData`.
 
 .. _uadic_files:
 

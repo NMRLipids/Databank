@@ -6,13 +6,11 @@ Databank project.
 This includes _Package Information_, _Paths_, and _Return Codes_.
 """
 
-# TODO: Add check if gromacs is available?
-
 import os
 
-# Package Information
+from ._version import __version__  # noqa: F401
 
-__version__ = "1.3.0"  # TODO: schange to setuptools scm
+# Package Information
 
 __author__ = "NMRlipids open collaboration"
 

@@ -276,7 +276,7 @@ def plotSimulation(system, lipid: str):  # noqa: N802
             ff_quality = json.load(json_file)
         print("Form factor quality: ", ff_quality[0])
         ffdir = os.path.join(NMLDB_EXP_PATH, "FormFactors", system["EXPERIMENT"]["FORMFACTOR"])
-        for subdir, dirs, files in os.walk(ffdir):
+        for subdir, _, files in os.walk(ffdir):
             for filename in files:
                 if filename.endswith("_FormFactor.json"):
                     ff_path_exp = subdir + "/" + filename

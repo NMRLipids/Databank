@@ -155,7 +155,7 @@ def load_experiments(exp_type: str) -> list[Experiment]:
     rm_idx = []
 
     path = os.path.join(NMLDB_EXP_PATH, exp_type)
-    for subdir, dirs, files in os.walk(path):
+    for subdir, _, files in os.walk(path):
         for fn in files:
             if fn == "README.yaml":
                 rm_idx.append(subdir)

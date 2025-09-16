@@ -42,7 +42,7 @@ def CalcAreaPerMolecule(system):  # noqa: N802 (API name)
             data = json.load(f)
         sum_APL = 0  # noqa: N806
         sum_ind = 0
-        for i, j in data.items():
+        for _, j in data.items():
             sum_APL += j
             sum_ind += 1
         return sum_APL / sum_ind
@@ -79,14 +79,15 @@ def ShowEquilibrationTimes(system: System):  # noqa: N802 (API name)
     warnings.warn(
         "This function is deprecated. Use GetEquilibrationTimes instead.",
         DeprecationWarning,
+        stacklevel=2,
     )
     eq_times_path = os.path.join(NMLDB_SIMU_PATH, system["path"], "eq_times.json")
 
     try:
         with open(eq_times_path) as f:
             eq_time_dict = json.load(f)
-    except Exception:
-        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}")
+    except Exception as err:
+        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}") from err
 
     for i in eq_time_dict:
         print(i + ":", eq_time_dict[i])
@@ -107,8 +108,8 @@ def GetEquilibrationTimes(system: System):  # noqa: N802 (API name)
     try:
         with open(eq_times_path) as f:
             eq_time_dict = json.load(f)
-    except Exception:
-        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}")
+    except Exception as err:
+        raise FileNotFoundError(f"eq_times.json not found for {system['ID']}") from err
 
     return eq_time_dict
 
@@ -428,7 +429,7 @@ def read_trj_PN_angles(  # noqa: N802 (API name)
     res_std_error = [0] * n_res
     j = 0
 
-    for frame in mol.trajectory:
+    for _ in mol.trajectory:
         for i in range(n_res):
             residue = selection[i]
             angles[i, j] = calc_angle(residue, com[2])

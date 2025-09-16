@@ -1,7 +1,7 @@
 Project structure
 =================
 
-Project has four sub-folders inside `Databank/Scripts`:
+Project has four sub-folders inside ``Databank/Scripts``:
 
 
 DatabankLib
@@ -44,12 +44,11 @@ Pytest-based unit and regression tests.
 :doc:`More info on tests <auto_gen/Scripts.tests>`
 
 
-Repository folder structure 
+Repository folder structure
 ---------------------------
 
 .. toctree::
    :maxdepth: 3
-   
+
 
    auto_gen/Scripts
-   
