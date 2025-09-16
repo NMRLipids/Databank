@@ -37,6 +37,7 @@ import sys
 
 from DatabankLib.utils import run_analysis
 
+
 def compute_databank():
     parser = argparse.ArgumentParser(
         prog="compute_databank.py Script",
@@ -162,6 +163,7 @@ def compute_databank():
         from DatabankLib.analyze import computeOP
 
         run_analysis(computeOP, logger, id_range=id_range)
+
 
 if __name__ == "__main__":
     compute_databank()

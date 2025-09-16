@@ -16,13 +16,13 @@ from DatabankLib.core import initialize_databank
 from DatabankLib.databankLibrary import lipids_set
 from DatabankLib.jsonEncoders import CompactJSONEncoder
 
+
 def make_ranking():
     systems = initialize_databank()
 
     # ---- Making list of qualities
     qualities = []
     for system in systems:
-        quality_dict = {}
         path = os.path.join(NMLDB_SIMU_PATH, system["path"])
 
         total_quality_file_path = os.path.join(path, "SYSTEM_quality.json")
@@ -111,6 +111,7 @@ def make_ranking():
                 with open(outputfile, "w") as fp:
                     json.dump(sorted_qualities, fp, default=str, cls=CompactJSONEncoder)
                 print(f"Quality of {sort_based_on} of {lipid} sorted and saved to {outputfile}")
+
 
 if __name__ == "__main__":
     make_ranking()

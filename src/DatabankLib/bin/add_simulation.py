@@ -482,10 +482,6 @@ def add_simulation():
 
     sim["TRAJECTORY_SIZE"] = os.path.getsize(traj)
 
-    dt = 0
-    nsteps = 0
-    nstxout = 0
-
     n_frames = len(u.trajectory)
     timestep = u.trajectory.dt
 
