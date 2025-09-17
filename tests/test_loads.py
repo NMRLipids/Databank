@@ -18,7 +18,8 @@ pytestmark = pytest.mark.nodata
 class TestDownloadResourceFromUri:
     TESTFILENAME = "t.tpr"
 
-    def test_justdl__download_resource_from_uri(self):
+    def test_justdl__download_resource_from_uri(self, monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
         import DatabankLib.databankio as dio
 
         if os.path.exists(self.TESTFILENAME):
@@ -41,7 +42,8 @@ class TestDownloadResourceFromUri:
         )
         os.remove(self.TESTFILENAME)
 
-    def test_corrupted__download_resource_from_uri(self):
+    def test_corrupted__download_resource_from_uri(self, monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
         import DatabankLib.databankio as dio
 
         # redownload corrupted file
@@ -63,7 +65,9 @@ class TestDownloadResourceFromUri:
         )
         os.remove(self.TESTFILENAME)
 
-    def test_errs__download_resource_from_uri(self):
+    def test_errs__download_resource_from_uri(self, monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
+
         import DatabankLib.databankio as dio
 
         # put directory instead of filename
