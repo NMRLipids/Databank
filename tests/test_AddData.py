@@ -32,7 +32,7 @@ class TestAddData:
 
         if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, ".notest")):
             pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
-        cls.exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH,"src","DatabankLib", "bin", "add_simulation.py")
+        cls.exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "src", "DatabankLib", "bin", "add_simulation.py")
         cls.out_dir = DatabankLib.NMLDB_SIMU_PATH
         os.mkdir(cls.out_dir)
 
