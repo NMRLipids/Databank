@@ -26,7 +26,7 @@ keywords = [
 ]
 license = "GPL-3.0-or-later"
 # maintainers = [] TODO
-name = "DatabankLib"
+name = "nmrlipids_databank"
 readme = "README.md"
 dependencies = [
     "buildh>=1.6.1",
