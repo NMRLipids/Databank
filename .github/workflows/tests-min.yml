@@ -1,17 +1,10 @@
 name: Tests
 
 on:
-  pull_request: # This workflow is triggered when pull requests are made or updated towards the main branch.
-    branches:
-      - 'main'
-    paths:
-      - 'src/**/*.py'
-      - 'src/**/*.sh'
-      - 'src/**/*.ipynb'
-  schedule:
-    # check once a week on mondays
-    - cron: '0 10 * * 1'
-  workflow_dispatch:  
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   tests:
@@ -22,12 +15,12 @@ jobs:
         include:
           - os: ubuntu-24.04
             python-version: "3.10"
-    #      - os: ubuntu-24.04
-    #        python-version: "3.13"
-    #      - os: macos-15
-    #        python-version: "3.13"
-    #      - os: windows-2025
-    #        python-version: "3.13"
+          - os: ubuntu-24.04
+            python-version: "3.13"
+          - os: macos-15
+            python-version: "3.13"
+          - os: windows-2025
+            python-version: "3.13"
 
     steps:
     - uses: actions/checkout@v5
@@ -44,7 +37,7 @@ jobs:
 
     - name: run Python tests
       run: |
-        tox -e tests
+        tox -e tests-min
         coverage xml
 
     - name: upload to codecov.io
