@@ -60,7 +60,14 @@ nml_match_experiments = "DatabankLib.bin.match_experiments:match_experiments"
 ignore = ["src/DatabankLib/_version.py"]
 
 [tool.pytest.ini_options]
-addopts = "-ra"
+testpaths = "tests"
+addopts = [
+    "-ra",
+    "--cov=DatabankLib",
+    "--cov-append",
+    "--cov-report=",
+    "--import-mode=append",
+]
 markers = [
     "sim1: toy-databank for computing properties from scratch",
     "sim2: toy-databank with pre-computed properties for API tests",
