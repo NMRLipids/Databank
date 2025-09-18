@@ -17,17 +17,19 @@ def pytest_addoption(parser):
         default="sim1",
         help="Two test groups: sim1|sim2|nodata",
     )
-    
+
+
 # Pytest GLOBAL FIXTURES
 # -------------------------------------------------------------------
 
-#Dictionary for pytest marker to simulation folder
+# Dictionary for pytest marker to simulation folder
 SIM_MAP = {
     "sim1": "Simulations.1",
     "sim2": "Simulations.2",
     "adddata": "Simulations.AddData",
     "nodata": None,
 }
+
 
 @pytest.fixture(autouse=True, scope="module")
 def header_module_scope(request):
@@ -54,12 +56,12 @@ def header_module_scope(request):
         os.environ["NMLDB_SIMU_PATH"] = os.path.join(data_root, sim_dir)
     else:
         os.environ.pop("NMLDB_SIMU_PATH", None)
-    
+
     print("DBG env -> NMLDB_DATA_PATH:", os.getenv("NMLDB_DATA_PATH"))
     print("DBG env -> NMLDB_SIMU_PATH:", os.getenv("NMLDB_SIMU_PATH"))
 
     yield
-    #Teardown:
+    # Teardown:
     remove_databank_import()
     print("DBG: Mocking completed")
 
@@ -80,6 +82,7 @@ def logger():
     # TEARDOWN: clean up handlers after use
     for handler in logger.handlers:
         logger.removeHandler(handler)
+
 
 def remove_databank_import() -> None:
     """Delete DatabankLib module from sys.modules, resets future imports"""

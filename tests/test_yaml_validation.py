@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-pytestmark = [pytest.mark.adddata, pytest.mark.min] 
+pytestmark = [pytest.mark.adddata, pytest.mark.min]
 
 valid = {
     "DOI": "10.5281/zenodo.11614468",
