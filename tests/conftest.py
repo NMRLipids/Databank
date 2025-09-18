@@ -1,6 +1,9 @@
+import importlib
+import os
+import pytest
 import logging
 import os
-
+import sys
 import pytest
 
 # Pytest HOOKS
@@ -14,41 +17,50 @@ def pytest_addoption(parser):
         default="sim1",
         help="Two test groups: sim1|sim2|nodata",
     )
-
-
-def pytest_collection_modifyitems(config, items):
-    cmdopt = config.getoption("--cmdopt")
-    run_only_sim = pytest.mark.skip(reason=f"Skipped by --cmdopt {cmdopt}")
-    for item in items:
-        if cmdopt not in item.keywords:
-            item.add_marker(run_only_sim)
-
-
+    
 # Pytest GLOBAL FIXTURES
 # -------------------------------------------------------------------
 
+#Dictionary for pytest marker to simulation folder
+SIM_MAP = {
+    "sim1": "Simulations.1",
+    "sim2": "Simulations.2",
+    "adddata": "Simulations.AddData",
+    "nodata": None,
+}
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True, scope="module")
 def header_module_scope(request):
-    cmdopt = request.config.getoption("--cmdopt")
-    if cmdopt == "sim1":
-        sim = "Simulations.1"
-    elif cmdopt == "sim2":
-        sim = "Simulations.2"
-    elif cmdopt == "adddata":
-        sim = "Simulations.AddData"
-    elif cmdopt == "nodata":
-        sim = None
-    else:
-        pytest.exit(f"Unknown --cmdopt {cmdopt}")
-    os.environ["NMLDB_DATA_PATH"] = os.path.join(os.path.dirname(__file__), "Data")
-    if sim is not None:
-        os.environ["NMLDB_SIMU_PATH"] = os.path.join(os.path.dirname(__file__), "Data", sim)
-    import DatabankLib
+    """Set env vars depending on data required, remove DatabankLib on teardown."""
+    # Find pytest marker:
+    sim_key = None
+    for key in ("sim1", "sim2", "adddata", "nodata"):
+        if request.node.get_closest_marker(key):
+            sim_key = key
+            break
 
-    print("DBG: Mocking Data path: ", DatabankLib.NMLDB_DATA_PATH)
-    print("DBG: Mocking Simulations path: ", DatabankLib.NMLDB_SIMU_PATH)
+    # Default to nodata:
+    if sim_key is None:
+        cmdopt = request.config.getoption("--cmdopt")
+        if cmdopt in SIM_MAP:
+            sim_key = cmdopt
+        else:
+            sim_key = "nodata"
+
+    data_root = os.path.join(os.path.dirname(__file__), "Data")
+    os.environ["NMLDB_DATA_PATH"] = data_root
+    sim_dir = SIM_MAP[sim_key]
+    if sim_dir:
+        os.environ["NMLDB_SIMU_PATH"] = os.path.join(data_root, sim_dir)
+    else:
+        os.environ.pop("NMLDB_SIMU_PATH", None)
+    
+    print("DBG env -> NMLDB_DATA_PATH:", os.getenv("NMLDB_DATA_PATH"))
+    print("DBG env -> NMLDB_SIMU_PATH:", os.getenv("NMLDB_SIMU_PATH"))
+
     yield
+    #Teardown:
+    remove_databank_import()
     print("DBG: Mocking completed")
 
 
@@ -68,3 +80,9 @@ def logger():
     # TEARDOWN: clean up handlers after use
     for handler in logger.handlers:
         logger.removeHandler(handler)
+
+def remove_databank_import() -> None:
+    """Delete DatabankLib module from sys.modules, resets future imports"""
+    for name in list(sys.modules):
+        if name.startswith("DatabankLib"):
+            del sys.modules[name]

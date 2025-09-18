@@ -18,7 +18,7 @@ import pytest
 # Global fixtures
 # ----------------------------------------------------------------
 
-pytestmark = pytest.mark.sim1
+pytestmark = [pytest.mark.sim1] 
 
 
 @pytest.fixture(scope="module")

@@ -73,6 +73,8 @@ markers = [
     "sim2: toy-databank with pre-computed properties for API tests",
     "adddata: for AddData.py standalone script testing",
     "nodata: test auxilary functions not related to Data",
+    "all: run all tests",
+    "min: run tests not requiring gromacs",
 ]
 
 [tool.ruff]
