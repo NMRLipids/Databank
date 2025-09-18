@@ -1,5 +1,10 @@
 # NMRlipids Databank 
 
+[![tests status](https://img.shields.io/github/checks-status/NMRLipids/Databank/main)](https://github.com/NMRLipids/Databank/actions?query=branch%3Amain)
+[![documentation-stable](https://img.shields.io/badge/📚_documentation-stable-sucess)](https://nmrlipids.github.io/Databank/)
+[![documentation-latest](https://img.shields.io/badge/📒_documentation-latest-yellow)](https://nmrlipids.github.io/Databank/latest/index.html)
+[![coverage](https://codecov.io/gh/NMRLipids/Databank/branch/main/graph/badge.svg)](https://codecov.io/gh/NMRLipids/Databank)
+
 This is the NMRlipids databank &mdash; a community-driven catalogue containing atomistic MD simulations of biologically relevant lipid membranes emerging from the [NMRlipids open collaboration](http://nmrlipids.blogspot.com/2021/03/second-online-meeting-on-nmrlipids.html). 
 
 
