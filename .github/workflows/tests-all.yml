@@ -12,23 +12,31 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
-      - name: Install GROMACS
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gromacs
+    - name: Install GROMACS
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gromacs
 
-      - name: setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-          check-latest: true
+    - name: setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+        check-latest: true
 
-      - run: python -m pip install tox coverage[toml]
+    - run: python -m pip install tox coverage[toml]
 
-      - name: run Python tests
-        run: |
-          tox -e tests-all
+    - name: run Python tests
+      run: |
+        tox -e tests-all
+        coverage xml
+
+    - name: upload to codecov.io
+      uses: codecov/codecov-action@v5
+      with:
+        fail_ci_if_error: true
+        files: tests/coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
