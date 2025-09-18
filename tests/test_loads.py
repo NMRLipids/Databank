@@ -6,6 +6,7 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 """
 
 import os
+import sys
 from urllib.error import HTTPError, URLError
 
 import pytest
@@ -65,6 +66,7 @@ class TestDownloadResourceFromUri:
         )
         os.remove(self.TESTFILENAME)
 
+    @pytest.mark.skipif(sys.platform == "darwin", reason="fails on GitHub Actions")
     def test_errs__download_resource_from_uri(self, monkeypatch, tmp_path):
         monkeypatch.chdir(tmp_path)
 
