@@ -1,8 +1,21 @@
-# Code style and naming conventions
+# Code style and formating
 
-We use `flake8` as a linter-check with `pep8-naming` conventions.
-So, we use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
+We are using `ruff` for ensuring the same code quality and formatting across the project. Your contributions will not be reviewed until they pass the `ruff` check. To facilitate quicker fixes, we suggest installing the `pre-commit` hooks via
+
+```
+pre-commit install
+```
+
+This will make sure that no code can be committed to the repository until it satisfies the `ruff` check.
+
+Some ruff style recomendations are ignored, please consult `pyproject.toml` for details.
+
+We use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
 Sometimes, this convention can be broken, but a rule should be written in the end to allow vscode to ignore the breach.
+
+We use old-style path handling with `os.path` and not with `Path` (planned to change).
+
+We use `subprocess` library for running external programs.
 
 We use type hints and `typing` library for hints like `List[int]`.
 
