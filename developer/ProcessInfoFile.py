@@ -10,8 +10,9 @@ import argparse
 import os
 import sys
 
-from DatabankLib import NMLDB_ROOT_PATH
 from WorkflowScripts.Workflow_utils import delete_info_file, get_databank_paths, logger, run_python_script
+
+from DatabankLib import NMLDB_ROOT_PATH
 
 
 def run_analysis(info_file_path: str) -> None:
