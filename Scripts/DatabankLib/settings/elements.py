@@ -1,6 +1,7 @@
 """
-Elements assigneer functions. Helps Molecule to define brutto formula
-from existing mapping files and element guesser.
+Elements assigneer functions.
+
+Helps Molecule to define brutto formula from existing mapping files and element guesser.
 """
 
 import json
@@ -14,7 +15,7 @@ from DatabankLib import NMLDB_DATA_PATH
 from DatabankLib.core import System
 
 
-def uname2element(mapping_name: str):
+def uname2element(mapping_name: str) -> str:
     """Guess element name from universal atom name.
 
     :param mapping_name: name of the mapping, e.g. 'M_C1', 'M_G'
@@ -30,21 +31,19 @@ def uname2element(mapping_name: str):
 
     if name2 == "G":  # G is a glycerol carbon so change G to C
         name2 = "C"
-    elif name2 == "X":  # X is a placeholder for unknown element, we use 'X' as element name
-        name2 = "Dummy"  # Dummy is used for unknown elements in MDAnalysis
-        return name2
-
+    elif name2 in ["X", "D"]:  # X is dummy, D is a drude particle
+        return "Dummy"  # Dummy is used for unknown elements in MDAnalysis
     try:
         _ = getattr(periodictable, name2).number
     except AttributeError as e:
-        raise KeyError("This mapping name cannot be read by our rules: {mapping_name}") from e
+        msg = f"This mapping name cannot be read by our rules: {mapping_name}"
+        raise KeyError(msg) from e
     else:
         return name2
 
 
 def guess_elements(system: System, u: mda.Universe) -> None:
-    """Assigns elements to atoms in the MDAnalysis universe based on the system's
-    composition.
+    """Assign elements to atoms in the MDAnalysis Universe based on the system's composition.
 
     :param system: Databank System object
     :type system: System
@@ -67,10 +66,7 @@ def guess_elements(system: System, u: mda.Universe) -> None:
             ua_dict = False
 
         for uname, props in mol.mapping_dict.items():
-            try:
-                res = str(props["RESIDUE"])
-            except KeyError:
-                res = ""
+            res = str(props.get("RESIDUE", ""))
             _residue = f"resname {mol_simu_name if res == '' else res} and "
             _name = f"name {props['ATOMNAME']}"
             selstr = _moltype + _residue + _name
@@ -88,7 +84,9 @@ def guess_elements(system: System, u: mda.Universe) -> None:
                     elname = uname2element(uname)
             else:
                 # if not united-atom, ALL atoms must be present
-                assert selection.n_atoms > 0, f"Selection '{selstr}' did not match any atoms in the universe."
+                if selection.n_atoms == 0:
+                    msg = f"Selection '{selstr}' did not match any atoms in the universe."
+                    raise KeyError(msg)
                 elname = uname2element(uname)
             selection.atoms.elements = selection.n_atoms * [elname]
         # end mapping loop
