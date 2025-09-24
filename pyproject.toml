@@ -86,26 +86,7 @@ exclude = ["src/DatabankLib/_version.py"]
 [tool.ruff.lint]
 select = ["E", "F", "B", "I"]
 extend-select = ["E501"]
-ignore = [
-    "INP001",
-    "B027",
-    "PLC0415",
-    "S101",
-    "ANN001",
-    "ANN201",
-    "PT006",
-    "TD",
-    "FIX002", 
-    "TRY003",  # exception handling
-    "D105",
-    "D400",  # docstring style issues
-    "PTH",  # until we migrate to Pathlib
-    "T201",
-    "G004",
-    "S603",  # logging currently ignored
-    "S603",
-    "S607",  # subprocess security issues
-]
+ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 # TODO: check and renable these

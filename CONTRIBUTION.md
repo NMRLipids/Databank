@@ -1,12 +1,14 @@
 # Code style and naming conventions
 
-We use `flake8` as a linter-check with `pep8-naming` conventions.
-So, we use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
-Sometimes, this convention can be broken, but a rule should be written in the end to allow vscode to ignore the breach.
+Regarding versions:
+- We support python3.10+
 
-We use type hints and `typing` library for hints like `List[int]`.
+Regarding conventions:
+- We use `ruff` as a linter-check.
+- We use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
+- Sometimes, this convention can be broken, but a rule should be written in the end to allow `ruff` to ignore the breach.
+- We recommend using extended `ruff` checking by setting `developer/ruff-dev.toml` as a default ruff condig. This set of rules is agreed to be our guide in the code style. 
 
-We inherit `collections.abc` classes if we need to construct a collection with an extended behavior.
 
 We are using automatic testing with `pytest` please consult (test-README)[Scripts/tests/README.md]. We use both unit and regression testing, however the coverage of code with unit-tests remains relatively low.
 

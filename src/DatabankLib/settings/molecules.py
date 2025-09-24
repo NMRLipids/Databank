@@ -86,27 +86,23 @@ class Molecule(ABC):
         if not re.match(pat, name):
             raise ValueError(f"Only {pat} symbols are allowed in Molecule name.")
 
+    @abstractmethod
     def _populate_meta_data(self) -> None:
         """
-        Populates metadata for the molecule from its YAML file.
+        Populate metadata for the molecule from its YAML file.
 
         This method should be implemented in subclasses to load specific
         metadata related to the molecule.
         """
 
     @property
+    @abstractmethod
     def metadata(self) -> dict:
-        """
-        Returns metadata for the molecule.
-
-        :return: dict with metadata
-        """
+        """Metadata for the molecule"""
 
     @property
     def name(self) -> str:
-        """
-        :return: Molecule name.
-        """
+        """Molecule name"""
         return self._molname
 
     # comparison by name to behave in a set
@@ -135,9 +131,7 @@ class Lipid(Molecule):
         return os.path.join(self._lipids_dir, self.name)
 
     def _populate_meta_data(self) -> None:
-        """
-        Populates metadata for the lipid from its YAML file.
-        """
+        """Populate metadata for the lipid from its YAML file."""
         self._metadata = {}
         meta_path = os.path.join(self._get_path(), "metadata.yaml")
         if os.path.isfile(meta_path):
@@ -149,7 +143,7 @@ class Lipid(Molecule):
     @property
     def metadata(self) -> dict:
         """
-        Returns metadata for the lipid.
+        Return metadata for the lipid.
 
         :return: dict with metadata
         """
@@ -169,9 +163,7 @@ class Lipid(Molecule):
 
 
 class NonLipid(Molecule):
-    """
-    Class for non-bilayer molecules: solvent, ions, etc.
-    """
+    """Class for non-bilayer molecules: solvent, ions, etc."""
 
     _nonlipids_dir: str = os.path.join(NMLDB_MOL_PATH, "solution")
     """Directory containing all lipid-subdirs"""
@@ -179,17 +171,19 @@ class NonLipid(Molecule):
     def _get_path(self) -> str:
         return os.path.join(self._nonlipids_dir, self.name)
 
+    def _populate_meta_data(self) -> None:
+        pass
+
+    @property
+    def metadata(self) -> dict:
+        return {}
+
 
 class MoleculeSet(MutableSet[Molecule], ABC):
-    """
-    MoleculeSet is a Set (repeating normal set functionality) but with
-    some additional molecule-specific things.
-    """
+    """Set repeating normal set functionality with some additional molecule-specific things."""
 
     def __init__(self, *args):
-        """
-        Initialize the LipidSet with optional initial elements.
-        """
+        """Initialize the LipidSet with optional initial elements."""
         self._items = set()
         self._names = set()
         for arg in args:
@@ -198,7 +192,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
     @abstractmethod
     def _test_item_type(self, item: Any) -> bool:
         """
-        Tests if item is of proper Molecule type
+        Test if item is of proper Molecule type
 
         :param item: any type variable
         :return: bool answer
@@ -281,9 +275,7 @@ class MoleculeSet(MutableSet[Molecule], ABC):
 
 
 class LipidSet(MoleculeSet):
-    """
-    MoleculeSet specialization for Lipid.
-    """
+    """MoleculeSet specialization for Lipid."""
 
     def _test_item_type(self, item: Any) -> bool:
         return isinstance(item, Lipid)
