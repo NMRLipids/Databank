@@ -1,14 +1,19 @@
-# Code style and naming conventions
+# General rules, code style, and formating
 
 Regarding versions:
 - We support python3.10+
 
 Regarding conventions:
-- We use `ruff` as a linter-check.
+- We use `ruff` as a linter and code-style checker.
 - We use `variable_name`, `ClassName`, and `method_name`. For global variables, we use `UPPER_CASE_NAMES`.
 - Sometimes, this convention can be broken, but a rule should be written in the end to allow `ruff` to ignore the breach.
 - We recommend using extended `ruff` checking by setting `developer/ruff-dev.toml` as a default ruff condig. This set of rules is agreed to be our guide in the code style. 
 
+Please install pre-commit hook:
+```
+pre-commit install
+```
+This will make sure that no code can be committed to the repository until it satisfies the `ruff` check.
 
 We are using automatic testing with `pytest` please consult (test-README)[Scripts/tests/README.md]. We use both unit and regression testing, however the coverage of code with unit-tests remains relatively low.
 
