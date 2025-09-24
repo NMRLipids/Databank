@@ -4,6 +4,9 @@ build/
 dist/
 _version.py
 
+# Data inside the repo
+Data/**
+
 
 # Unit test / coverage reports
 htmlcov/
