@@ -6,40 +6,38 @@ import sys
 def main():
     source_dir = os.path.abspath(os.path.dirname(__file__))
     # Project root is three levels up
-    repo_root = os.path.abspath(os.path.join(source_dir, "..", "..", ".."))
+    if(os.environ.get("READTHEDOCS_REPOSITORY_PATH")):
+        repo_root = os.environ.get("READTHEDOCS_REPOSITORY_PATH")
+    else: 
+        repo_root = os.path.abspath(os.path.join(source_dir, "..", ".."))
 
-    scripts_dir = os.path.relpath(os.path.join(repo_root, "Scripts"), source_dir)
+    scripts_dir = os.path.relpath(os.path.join(repo_root, "src","DatabankLib"), source_dir)
+    developer_dir = os.path.relpath(os.path.join(repo_root, "developer"), source_dir)
     auto_dir = "auto_gen"
     template_dir = "_templates/apidoc"
     excluded_patterns = ["*tests*", "*init*"]
 
-    cmd = [
-        "sphinx-apidoc",
-        "-o",
-        auto_dir,  # relative output directory
-        "--separate",  # separate .rst per module
-        "--implicit-namespaces",  # support namespace packages
-        "-d",
-        "1",  # max depth = 1
-        "--templatedir",
-        template_dir,
-        "--tocfile",
-        "Scripts",  # relative template directory
-        scripts_dir,
-        *excluded_patterns,
+    runs = [
+        (scripts_dir,   "DatabankLib"),
+        (developer_dir, "Developer"),
     ]
 
-    # Display info and execute within source_dir
-    print("Running command:")
-    print(" ".join(cmd))
-
-    try:
-        subprocess.run(cmd, check=False, cwd=source_dir)
-        print("sphinx-apidoc completed successfully")
-    except subprocess.CalledProcessError as e:
-        print(f"sphinx-apidoc failed with exit code {e.returncode}", file=sys.stderr)
-        sys.exit(e.returncode)
-
+    for path, tocname in runs:
+        cmd = [
+            "sphinx-apidoc",
+            "-o", auto_dir,
+            "--separate",
+            "--implicit-namespaces",
+            "-d", "1",
+            "--templatedir", template_dir,
+            "--tocfile", tocname,   # unique per section
+            path,
+            *excluded_patterns,
+        ]
+        print("Running command (cwd=docs/src):")
+        print(" ".join(cmd))
+        subprocess.run(cmd, check=True, cwd=source_dir)
+        print("sphinx-apidoc completed successfully for", tocname)
 
 if __name__ == "__main__":
     main()

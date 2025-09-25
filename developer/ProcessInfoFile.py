@@ -10,15 +10,14 @@ import argparse
 import os
 import sys
 
-from WorkflowScripts.Workflow_utils import delete_info_file, get_databank_paths, logger, run_python_script
+from WorkflowScripts.Workflow_utils import get_databank_paths, logger, run_python_script
 
-from DatabankLib import NMLDB_ROOT_PATH
-
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 def run_analysis(info_file_path: str) -> None:
     """Run full analysis of info-file"""
     work_directory_real, _ = setup_folders()
-    path_dict = get_databank_paths(NMLDB_ROOT_PATH)
+    path_dict = get_databank_paths(REPO_ROOT)
     run_python_script(
         path_dict["adddata_path"],
         args=["-f", info_file_path, "-w", work_directory_real],
@@ -35,7 +34,7 @@ def run_analysis(info_file_path: str) -> None:
 def run_dry_run(info_file_path: str) -> None:
     """Run AddData dry-run for pre-analysis of info file to rule out errors"""
     _, work_directory_dry = setup_folders()
-    path_dict = get_databank_paths(NMLDB_ROOT_PATH)
+    path_dict = get_databank_paths(REPO_ROOT)
     run_python_script(
         path_dict["adddata_path"],
         args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
@@ -45,7 +44,7 @@ def run_dry_run(info_file_path: str) -> None:
 
 def setup_folders() -> tuple[str, str]:
     """Set up folders for processing info file"""
-    parent_folder = os.path.dirname(NMLDB_ROOT_PATH)
+    parent_folder = os.path.dirname(REPO_ROOT)
     base_tmp = os.path.join(parent_folder, "databank_workdir")
     work_directory_dry = os.path.join(base_tmp, "dry")
     work_directory_real = os.path.join(base_tmp, "real")
@@ -64,6 +63,23 @@ def get_args() -> argparse.Namespace:
     parser.add_argument("--info_file_path", required=True, help="Path to the info.yml file")
     parser.add_argument("--dry-run", action="store_true", help="Only run preanalysis (no compute/commit)")
     return parser.parse_args()
+
+
+def delete_info_file(info_file_path: str) -> None:
+    """
+    Delete an info file at the specified path.
+
+    :param info_file_path: Path to the info file to be removed.
+    :raises OSError: Prints a warning if the file cannot be deleted.
+    """
+    try:
+        os.remove(info_file_path)
+    except FileNotFoundError:
+        logger.exception(f"Info file not found, nothing to delete: {info_file_path}")
+    except OSError:
+        logger.exception(f"Could not delete {info_file_path}")
+    else:
+        logger.info(f"Deleted info file: {info_file_path}")
 
 
 if __name__ == "__main__":

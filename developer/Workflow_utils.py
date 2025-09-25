@@ -86,18 +86,3 @@ def get_databank_paths(nmlb_root_path: str) -> dict:
     }
 
 
-def delete_info_file(info_file_path: str) -> None:
-    """
-    Delete an info file at the specified path.
-
-    :param info_file_path: Path to the info file to be removed.
-    :raises OSError: Prints a warning if the file cannot be deleted.
-    """
-    try:
-        os.remove(info_file_path)
-    except FileNotFoundError:
-        logger.exception(f"Info file not found, nothing to delete: {info_file_path}")
-    except OSError:
-        logger.exception(f"Could not delete {info_file_path}")
-    else:
-        logger.info(f"Deleted info file: {info_file_path}")

@@ -9,7 +9,7 @@ DatabankLib
 
 Main project package. Contains most of the project’s logic and API.
 
-:doc:`More info on DatabankLib <auto_gen/Scripts.DatabankLib>`
+:doc:`More info on DatabankLib <auto_gen/DatabankLib>`
 
 
 AnalyzeDatabank
@@ -17,7 +17,7 @@ AnalyzeDatabank
 
 Scripts that perform analysis of the entire databank.
 
-:doc:`More info on AnalyzeDatabank <auto_gen/Scripts.AnalyzeDatabank>`
+:doc:`More info on AnalyzeDatabank <auto_gen/DatabankLib.analyze>`
 
 
 BuildDatabank
@@ -43,4 +43,5 @@ Repository folder structure
    :maxdepth: 3
 
 
-   auto_gen/Scripts
+   auto_gen/DatabankLib
+   auto_gen/Developer
