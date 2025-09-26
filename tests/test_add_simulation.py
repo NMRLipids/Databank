@@ -1,5 +1,5 @@
 """
-`test_adddata.py` perform regression testing of adding-data functionality
+Perform integration testing of adding-simulation functionality.
 
 NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
@@ -32,7 +32,9 @@ class TestAddData:
 
         if os.path.isfile(os.path.join(DatabankLib.NMLDB_DATA_PATH, ".notest")):
             pytest.exit("Test are corrupted. I see '.notest' file in the data folder.")
-        cls.exe = os.path.join(DatabankLib.NMLDB_ROOT_PATH, "src", "DatabankLib", "bin", "add_simulation.py")
+        cls.exe = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "src", "DatabankLib", "bin", "add_simulation.py"
+        )
         cls.out_dir = DatabankLib.NMLDB_SIMU_PATH
         os.mkdir(cls.out_dir)
 

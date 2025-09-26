@@ -44,10 +44,7 @@ def header_module_scope(request):
     # Default to nodata:
     if sim_key is None:
         cmdopt = request.config.getoption("--cmdopt")
-        if cmdopt in SIM_MAP:
-            sim_key = cmdopt
-        else:
-            sim_key = "nodata"
+        sim_key = cmdopt if cmdopt in SIM_MAP else "nodata"
 
     data_root = os.path.join(os.path.dirname(__file__), "Data")
     os.environ["NMLDB_DATA_PATH"] = data_root

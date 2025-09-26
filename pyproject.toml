@@ -3,7 +3,7 @@ requires = ["setuptools>=77", "setuptools_scm>=8", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-authors = [{name = "fooo"}]
+authors = [{name = "NMRlipids Open Collaboration"}]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
