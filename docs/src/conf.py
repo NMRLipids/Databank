@@ -24,7 +24,7 @@ if os.getenv("READTHEDOCS") == "True":
         # set data path to repo_root/tests/Data, but don't override a dev's local setting
         data_path = os.path.join(repo_root, "tests", "Data")
         os.environ.setdefault("NMLDB_DATA_PATH", data_path)
-        
+
 import DatabankLib as dbl
 
 # Directory containing this conf.py
