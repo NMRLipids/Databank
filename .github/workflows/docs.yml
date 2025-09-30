@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'NMRLipids/Databank' 
     runs-on: ubuntu-latest
     permissions:
       contents: write

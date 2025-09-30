@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'NMRLipids/Databank'
     name: Build distribution
     runs-on: ubuntu-latest
     environment:

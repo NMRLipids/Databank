@@ -37,7 +37,8 @@ def run_analysis(info_file_path: str) -> None:
             "--apl",
             "--range",
             "*-0",
-        ]
+        ],
+    check=True,
     )
     delete_info_file(info_file_path)
 

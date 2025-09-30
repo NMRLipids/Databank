@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   documentation-links:
+    if: github.repository == 'NMRLipids/Databank'
     runs-on: ubuntu-latest
     steps:
       - uses: readthedocs/actions/preview@v1

@@ -6,6 +6,7 @@ on:
 
 jobs:
   lint:
+    if: github.repository == 'NMRLipids/Databank' 
     runs-on: ubuntu-22.04
 
     steps:
