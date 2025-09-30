@@ -7,26 +7,37 @@ Executes standard pipeline of processing for an info file.
 """
 
 import argparse
+import logging
 import os
+import subprocess
 import sys
 
-from WorkflowScripts.Workflow_utils import get_databank_paths, logger, run_python_script
+logging.basicConfig(
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+    datefmt="%I:%M:%S %p",
+    level=logging.INFO,
+)
+logger = logging.getLogger(__name__)
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 
 def run_analysis(info_file_path: str) -> None:
     """Run full analysis of info-file"""
     work_directory_real, _ = setup_folders()
-    path_dict = get_databank_paths(REPO_ROOT)
-    run_python_script(
-        path_dict["adddata_path"],
-        args=["-f", info_file_path, "-w", work_directory_real],
-        error_message="AddData failed",
-    )
-    run_python_script(
-        path_dict["compute_databank_path"],
-        args=["--nmrpca", "--ff", "--op", "--thickness", "--apl", "--range", "*-0"],
-        error_message="Compute_databank failed",
+    subprocess.run(["nml_add_simulation", "-f", info_file_path, "-w", work_directory_real], check=True)
+
+    subprocess.run(
+        [
+            "nml_compute_databank",
+            "--nmrpca",
+            "--ff",
+            "--op",
+            "--thickness",
+            "--apl",
+            "--range",
+            "*-0",
+        ]
     )
     delete_info_file(info_file_path)
 
@@ -34,12 +45,7 @@ def run_analysis(info_file_path: str) -> None:
 def run_dry_run(info_file_path: str) -> None:
     """Run AddData dry-run for pre-analysis of info file to rule out errors"""
     _, work_directory_dry = setup_folders()
-    path_dict = get_databank_paths(REPO_ROOT)
-    run_python_script(
-        path_dict["adddata_path"],
-        args=["-f", info_file_path, "-w", work_directory_dry, "--dry-run"],
-        error_message="AddData dry run failed",
-    )
+    subprocess.run(["nml_add_simulation", "-f", info_file_path, "-w", work_directory_dry, "--dry-run"], check=True)
 
 
 def setup_folders() -> tuple[str, str]:

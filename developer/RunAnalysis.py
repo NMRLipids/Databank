@@ -2,20 +2,30 @@
 Execute pipeline of analysis methods that work globally on simulations.
 
 .. note::
-   This file is only meant to be used by automated workflows.
-   Users of the Databank repository can safely ignore it.
+   This file is meant to be used by automated workflows.
 """
 
-from WorkflowScripts.Workflow_utils import get_databank_paths, run_python_script
+import logging
+import subprocess
+import sys
 
-REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+logging.basicConfig(
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+    datefmt="%I:%M:%S %p",
+    level=logging.INFO,
+)
+logger = logging.getLogger(__name__)
+
 
 def main() -> None:
-    """Run analysis scripts on simulations."""
-    path_dict = get_databank_paths(REPO_ROOT)
-    run_python_script(path_dict["searchdatabank_path"], error_message="SearchDatabank failed")
-    run_python_script(path_dict["qualityevaluation_path"], error_message="QualityEvaluation failed")
-    run_python_script(path_dict["makeranking_path"], error_message="MakeRanking failed")
+    """Run analysis CLIs in sequence."""
+    try:
+        subprocess.run(["nml_match_experiments"], check=True)
+        subprocess.run(["nml_evaluate_quality"], check=True)
+        subprocess.run(["nml_make_ranking"], check=True)
+    except subprocess.CalledProcessError:
+        logger.exception("Run analysis failed")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
