@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import zipfile
 from io import BytesIO
 from urllib.request import urlopen, urlretrieve
@@ -38,18 +39,17 @@ def download_and_extract_zip(tag: str) -> None:
             z.extractall()
 
 
-def download_github_folder(dest: str = "ToyData", folder_path: str = "Scripts/tests/Data") -> None:
+def download_toy_folder(dest: str = "ToyData", folder_path: str = "Scripts/tests/Data") -> None:
     """Download a folder from a GitHub repository using the GitHub API."""
     branch = "main"
     api_url = f"https://api.github.com/repos/{CODEREPO}/contents/{folder_path}?ref={branch}"
-    print(api_url)
     os.makedirs(dest, exist_ok=True)
 
     with urlopen(api_url) as response:
         if response.status != 200:
             raise Exception(f"Feil ved hente data: {response.status} {response.text}")
         data_bytes = response.read()
-        data_text = data_bytes.decode('utf-8')
+        data_text = data_bytes.decode("utf-8")
         items = json.loads(data_text)
 
     if isinstance(items, dict) and items.get("message"):
@@ -61,26 +61,60 @@ def download_github_folder(dest: str = "ToyData", folder_path: str = "Scripts/te
             filename = item["name"]
             dest_path = os.path.join(dest, filename)
             urlretrieve(download_url, dest_path)
+            print(".", end="", flush=True)
         else:
-            download_github_folder(os.path.join(dest, item["name"]), os.path.join(folder_path, item["name"]))
+            download_toy_folder(os.path.join(dest, item["name"]), os.path.join(folder_path, item["name"]))
 
 
 def main() -> None:
     """Code program logic."""
+    print("== NMRlipids Databank Data Initializer ==")
+    # can be prg toy | prg stable | prg dev
+    if len(sys.argv) != 2:
+        sys.stderr.write("Usage: nml_initialize_data.py [toy|stable|dev]\n")
+        sys.exit(1)
 
-    download_github_folder()
-    import sys
-    sys.exit(1)
+    prg = sys.argv[1].lower()
+    if prg not in ["toy", "stable", "dev"]:
+        sys.stderr.write("Invalid argument. Use 'toy', 'stable', or 'dev'.")
+        sys.exit(1)
 
-    if git_exists():
-        tag = get_latest_release_tag()
-        print(f"Git found. Cloning {DBREPO} at {tag} ...")
-        clone_repo(tag)
-    else:
-        tag = get_latest_release_tag()
-        print(f"Git not found. Downloading ZIP for {DBREPO} at {tag} ...")
-        download_and_extract_zip(tag)
-        print("Done.")
+    if prg == "toy":
+        print("Downloading toy data: [", end="", flush=True)
+        download_toy_folder()
+        print("] Done.")
+        data_path = os.path.join(os.getcwd(), "ToyData")
+        sim_path = os.path.join(data_path, "Simulations.1")
+    elif prg == "stable":
+        if git_exists():
+            tag = get_latest_release_tag()
+            print(f"Git found. Cloning {DBREPO} at {tag} ...")
+            clone_repo(tag)
+        else:
+            tag = get_latest_release_tag()
+            print(f"Git not found. Downloading ZIP for {DBREPO} at {tag} ...")
+            download_and_extract_zip(tag)
+            print("Done.")
+        data_path = os.path.join(os.getcwd(), "BilayerData")
+    elif prg == "dev":
+        if not git_exists():
+            sys.stderr.write("Git is required for 'dev' option. Please install git.\n")
+            sys.exit(1)
+        print(f"Cloning {DBREPO} at main branch ...")
+        clone_repo("main")
+        data_path = os.path.join(os.getcwd(), "BilayerData")
+    
+    # Write environment setup file
+    with open("databank_env.rc", "w") as f:
+        f.write(f"export NMLDB_DATA_PATH={data_path}\n")
+        if sim_path is not None:
+            f.write(f"export NMLDB_SIMU_PATH={sim_path}\n")
+
+    print(f""""Data initialized into {data_path}. Please do 
+
+   $ source databank_env.rc
+
+to set environment variables.""")
 
 
 if __name__ == "__main__":
