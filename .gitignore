@@ -43,3 +43,4 @@ test.py
 
 source/auto_gen/*
 !source/auto_gen/.gitkeep 
+src/DatabankLib/toy-data.zip

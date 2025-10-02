@@ -97,3 +97,6 @@ convention = "pep257"
 
 [tool.setuptools_scm]
 version_file = "src/DatabankLib/_version.py"
+
+[tool.setuptools.package-data]
+DatabankLib = ["toy-data.zip"]

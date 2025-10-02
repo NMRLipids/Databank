@@ -3,6 +3,7 @@ graft src
 include AUTHORS.md
 include LICENSE
 include README.md
+include src/DatabankLib/toy-data.zip
 
 prune .github
 prune .tox
