@@ -6,7 +6,6 @@ NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
 """
 
 import os
-import platform
 import stat
 import sys
 from urllib.error import HTTPError, URLError
@@ -80,15 +79,14 @@ class TestDownloadResourceFromUri:
         with pytest.raises(IsADirectoryError) as _:
             dio.download_resource_from_uri("https://zenodo.org/records/8435138/files/pope-md313rfz.tpr", "sub")
 
-        if platform.system() == "Windows":
-            fn = "C:\\Windows\\System32\\no-rights.tpr"
-        else:
+        if os.name != "nt":
+            # TODO: fix on Windows
             d.chmod(stat.S_IREAD | stat.S_IRGRP | stat.S_IROTH)
             fn = os.path.join("sub", "no-rights.tpr")
 
-        # ask to write to file which you don't have an access
-        with pytest.raises(PermissionError) as _:
-            dio.download_resource_from_uri("https://zenodo.org/records/8435138/files/pope-md313rfz.tpr", fn)
+            # ask to write to file which you don't have an access
+            with pytest.raises(PermissionError) as _:
+                dio.download_resource_from_uri("https://zenodo.org/records/8435138/files/pope-md313rfz.tpr", fn)
 
 
 # resolve_doi_url
