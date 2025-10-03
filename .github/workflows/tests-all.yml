@@ -32,7 +32,9 @@ jobs:
     - name: run Python tests
       run: |
         tox -e tests-all
-        coverage xml
+        
+    - name: generate coverage.xml
+      run: coverage xml
 
     - name: upload to codecov.io
       uses: codecov/codecov-action@v5
