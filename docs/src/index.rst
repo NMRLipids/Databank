@@ -11,7 +11,7 @@ NMRlipids Databank Project
 NMRlipids databank is a community-driven catalogue of biologically relevant lipid membranes emerging from the `NMRlipids Open Collaboration <http://nmrlipids.blogspot.com/>`_. It gathers atomistic MD simulations, X-ray scattering experiments, and NMR experiments on C-H bond order parameters in one place.
 
 
-*NMRlipids databank is an overlay databank.* Each databank entry (molecule, simulation or experiment) contains the metadata YAML-file, which stores all the essential information for the data upcycling and reuse. This includes, for example, the information about permanent location of each simulation file, but raw data is located in distributed locations outside the NMRlipids Databank. The organisation of the data as well as description of metadata schemas are described in :ref:`dbstructure`. Physically, the database is located in `BilayerData GitHub repository <https://github.com/NMRlipids/BilayerData>`_. 
+*NMRlipids databank is an overlay databank.* Each databank entry (molecule, simulation or experiment) contains the metadata YAML-file, which stores all the essential information for the data upcycling and reuse. This includes, for example, the information about permanent location of each simulation file, but raw data is located in distributed locations outside the NMRlipids Databank. The organisation of the data as well as description of metadata schemas are described in :ref:`dbstructure`. Physically, the database is located in `BilayerData GitHub repository <https://github.com/NMRlipids/BilayerData>`_.
 
 The scientific background and initial motivation of the project is described in the `NMRlipids Databank Manuscript (Nat.Comm., 2024) <https://doi.org/10.1038/s41467-024-45189-z>`_.
 
@@ -64,7 +64,7 @@ Installation and system requirements
 
 The code has been tested in Linux, MacOS and Windows environment with python 3.10 or newer and recent `Gromacs <https://manual.gromacs.org/current/install-guide/index.html>`_ version installed.
 
-Setup is straingforward using `pip` or `uv pip`:
+Setup is straingforward using ``pip`` or ``uv pip``:
 
 .. code-block:: bash
 

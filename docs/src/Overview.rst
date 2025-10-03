@@ -20,7 +20,7 @@ Pytest-based unit and regression tests.
 :doc:`More info on tests <auto_gen/tests>`
 
 docs
-----  
+----
 
 Documentation source files.
 
