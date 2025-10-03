@@ -69,12 +69,14 @@ class TestDownloadResourceFromUri:
     @pytest.mark.skipif(sys.platform == "darwin", reason="fails on GitHub Actions")
     def test_errs__download_resource_from_uri(self, monkeypatch, tmp_path):
         monkeypatch.chdir(tmp_path)
+        d = tmp_path / "sub"
+        d.mkdir()
 
         import DatabankLib.databankio as dio
 
         # put directory instead of filename
         with pytest.raises(IsADirectoryError) as _:
-            dio.download_resource_from_uri("https://zenodo.org/records/8435138/files/pope-md313rfz.tpr", "./")
+            dio.download_resource_from_uri("https://zenodo.org/records/8435138/files/pope-md313rfz.tpr", "sub")
         # ask to write to file which you don't have an access
         with pytest.raises(PermissionError) as _:
             dio.download_resource_from_uri(
