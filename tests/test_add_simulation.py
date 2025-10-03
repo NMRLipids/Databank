@@ -45,7 +45,7 @@ class TestAddData:
 
     def test_add_data_h(self):
         """
-        Testing `AddData.py -h` behavior
+        Testing `add_simulation.py -h` behavior
         """
         result = subprocess.run(
             [
@@ -63,10 +63,10 @@ class TestAddData:
     @pytest.mark.parametrize("infofn, debug", [("info566.yaml", False), ("info566.yaml", True)])
     def test_add_data_addgood(self, infofn, debug, tmp_work_dir, capsys, request):
         """
-        Testing `AddData.py -f <filename> -w <dirname> -o <dirname>` which should
+        Testing `add_simulation.py -f <filename> -w <dirname> -o <dirname>` which should
         end correctly
         """
-        fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
+        fn = os.path.join(os.path.dirname(__file__), "ToyData", "info", infofn)
         run_list = [
             self.exe,
             "-f",
@@ -97,7 +97,7 @@ class TestAddData:
 
     @pytest.mark.parametrize("infofn", ["info566_uf.yaml"])
     def test_add_data_fail(self, infofn, tmp_work_dir, capsys):
-        fn = os.path.join(os.path.dirname(__file__), "Data", "info", infofn)
+        fn = os.path.join(os.path.dirname(__file__), "ToyData", "info", infofn)
         result = subprocess.run(
             [
                 self.exe,
