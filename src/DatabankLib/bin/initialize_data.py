@@ -102,7 +102,7 @@ def initialize_data() -> None:
         if sim_path is not None:
             f.write(f"export NMLDB_SIMU_PATH={sim_path}\n")
 
-    print(f""""Data initialized into {data_path}. Please do 
+    print(f""""Data initialized into {data_path}. Please do
 
    $ source databank_env.rc
 
