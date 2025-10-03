@@ -178,6 +178,10 @@ def download_resource_from_uri(
     fi_name = uri.split("/")[-1]
     return_code = 0
 
+    if os.path.isdir(dest):
+        msg = f"Destination '{dest}' is a directory, not a file."
+        raise IsADirectoryError(msg)
+
     # Check if dest path already exists and compare file size
     if not override_if_exists and os.path.isfile(dest):
         try:
