@@ -30,7 +30,7 @@ jobs:
       - name: Build gromacs image
         run: |
           docker build \
-            -f Scripts/Docker/gromacs \
+            -f developer/docker/gromacs \
             -t nmrlipids/gromacs \
             --build-arg GROMACS_VERSION=${{ steps.version.outputs.version }} \
             .
@@ -40,27 +40,8 @@ jobs:
 
       - name: Build core image
         run: |
-          docker build -f Scripts/Docker/core -t nmrlipids/core .
+          docker build -f developer/docker/core -t nmrlipids/core .
 
       - name: Push core image
         run: docker push nmrlipids/core
 
-  build_doc_builder:
-     runs-on: ubuntu-latest
-     if: github.repository == 'NMRLipids/Databank'
-     steps:
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          
-      - name: Checkout Databank repo 
-        uses: actions/checkout@v4
-
-      - name: Build doc-builder image
-        run: |
-          docker build -f Scripts/Docker/doc-builder -t nmrlipids/doc-builder .
-
-      - name: Push doc-builder image
-        run: docker push nmrlipids/doc-builder

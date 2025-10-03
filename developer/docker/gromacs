@@ -1,0 +1,32 @@
+FROM debian:bookworm-slim as builder
+
+# Build args
+ARG GROMACS_VERSION=2025.2
+ARG MAKE_JOBS
+ENV GROMACS_VERSION=${GROMACS_VERSION}
+
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    bash wget python3.11 python3-pip bzip2 ca-certificates build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install CMake via pip for building GROMACS
+RUN pip3 install --no-cache-dir cmake --break-system-packages
+
+# Download & build GROMACS
+RUN wget https://ftp.gromacs.org/gromacs/gromacs-${GROMACS_VERSION}.tar.gz && \
+    tar xzf gromacs-${GROMACS_VERSION}.tar.gz && \
+    rm gromacs-${GROMACS_VERSION}.tar.gz && \
+    cd gromacs-${GROMACS_VERSION} && mkdir build && cd build && \
+    cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON && \
+    make -j${MAKE_JOBS:-$(nproc)} && \
+    make check -j${MAKE_JOBS:-$(nproc)} && \
+    make install && \
+    cd / && rm -rf gromacs-${GROMACS_VERSION}
+
+
+FROM debian:bookworm-slim AS final
+
+# Copy GROMACS and Conda env from builder
+COPY --from=builder /usr/local/gromacs /usr/local/gromacs
