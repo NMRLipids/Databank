@@ -32,11 +32,10 @@ We are using automatic testing with `pytest` please consult (test-README)[Script
 
 As the code operates with an over-filesystem database, universal path handling is crucial. To construct paths, we use global variables of the type NMLDB\_**XXXX**\_PATH, where **XXXX** could be:
 
-- **ROOT** points by default to the root folder of the repository. Can be set-up and _should not_ be used for Data-related paths. Once set alone, all nested paths are recreated from it.
-- DATA points by default to `./Data` folder. Can be used to point to somewhere inside `Data` but not for molecules, simulations, and experiments. Currently is used for Rankings as well.
-- MOL points by default to `./Data/Molecules` folder, from where molecule lists are initialized. Is used to get access to something in molecule-folders.
-- SIMU points by default to `./Data/Simulations` folder. Is used to get access to a certain simulation.
-- EXP points by default to `./Data/Experiments` folder. Is used to get access to a certain experiment.
+- DATA points by default to `./BilayerData` folder. Can be used to point to somewhere inside the Database but not for molecules, simulations, and experiments. Currently is used for Rankings as well.
+- MOL points by default to `{NMLDB_DATA_PATH}/Molecules` folder, from where molecule lists are initialized. Is used to get access to something in molecule-folders.
+- SIMU points by default to `{NMLDB_DATA_PATH}/Simulations` folder. Is used to get access to a certain simulation.
+- EXP points by default to `{NMLDB_DATA_PATH}/Experiments` folder. Is used to get access to a certain experiment.
 
 We currently construct paths using `os.path.join(a,b)`.
 
@@ -88,8 +87,8 @@ If you wish to test only specific functionalities, for example:
 
 ```bash
   tox -e lint          # code style
-  tox -e tests         # unit tests of the main library
-  tox -e regression    # regression tests
+  tox -e tests-min     # unit tests of the main library
+  tox -e tests-all     # regression tests
 ```
 
 You can also use `tox -e format` to use tox to do actual formatting instead of just
@@ -124,5 +123,5 @@ following command (or open the :file:`docs/build/html/index.html` file manually)
 # Data handling
 
 NMRlipids Databank separates codespace from
-[Data](https://github.com/NMRLipids/BilayerData) since June 2025 (v.1.1.0). Data
-contribution rules are moved there accordingly.
+[the Database](https://github.com/NMRLipids/BilayerData) since June 2025 (v.1.1.0). 
+Data contribution rules are moved there accordingly.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 r"""
-Program **AddData.py**
+Add new simulation into the NMRlipids Databank.
 
 The script adds a simulation into the Databank based on ``info.yaml`` file.
 

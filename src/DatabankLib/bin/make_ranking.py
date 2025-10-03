@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-
 """
-:program: makeRanking.py
-:description: creates different types of ranking lists of simulations based on their
-              quality against experiments. The ranking lists are stored in
-              ``Data/Ranking/`` folder in JSON format. The lists can be shown
-              with the ``plotQuality.ipynb``
+Creates different types of ranking lists inside the Databank.
+
+It ranks simulations based on their quality against experiments. The ranking lists are stored in
+``{NMLDB_DATA_PATH}/Ranking/`` folder in JSON format.
+The lists can be shown with the ``DatabankLib.plottings`` module.
+
+**Usage:**
+
+.. code-block:: console
+
+    nml_make_ranking
+
+No arguments are needed.
 """
 
 import json

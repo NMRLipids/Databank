@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 r"""
-Program **compute_databank.py**
+Compute properties for systems of the databank.
 
-Script to compute various properties for systems of the databank. It allows you to
-compute properties: APL, thickness, PCA relaxation times, MAICOS (density profiles,
+Script can compute selected set of properties for selected range of systems of the databank.
+Properties available: APL, thickness, PCA relaxation times, MAICOS (density profiles,
 water orientation, dielectric profiles, X-ray form factor).
 
 **Usage:**

@@ -145,7 +145,7 @@ info.yaml
 ~~~~~~~~~
 Contains information given by contributor when adding data into the NMRlipids databank, i.e. all non-recomputable fields of simulation ``README.yaml``. This file is given as an input to :py:data:`Scripts.BuildDatabank.AddData` to create ``README.yaml`` files: :code:`python3 AddData.py -f info.yaml`. These files are not required but currently are stored historically in ``info_files`` subfolder of :py:data:`Scripts.DatabankLib.NMLDB_DATA_PATH`.
 
-For more information see :ref:`readmesimu` and :ref:`addData`.
+For more information see :ref:`readmesimu` and :ref:`addSimulation`.
 
 .. _uadic_files:
 

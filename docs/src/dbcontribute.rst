@@ -14,7 +14,7 @@ It is also possible to make your own data repository and plug it into the NMRlip
 .. toctree::
    :maxdepth: 1
 
-   contrib/addingData.rst
+   contrib/addingSimulation.rst
    contrib/addingExpData.md
    contrib/addingMolecule.rst
    schemas/moleculesAndMapping.md

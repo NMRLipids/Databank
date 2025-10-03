@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-
 """
-:program: QualityEvaluation.py
-:description: perform comparison of experiments and simulations according to
-              **EXPERIMENT** field inside ``README.yaml`` file.
+Perform comparison of experiments and simulations.
 
-In the standard protocol, it should be run *after* ``searchDATABANK.py``.
+The script compares according to **EXPERIMENT** field inside :ref:`the simulation README.yaml file <readmesimu>`.
+In the standard protocol, it should be run *after* :ref:`nml_match_experiments <match_experiments_py>`.
+
+**Usage:**
+
+.. code-block:: console
+
+    nml_evaluate_quality
+
+No arguments are needed.
 """
 
 import json

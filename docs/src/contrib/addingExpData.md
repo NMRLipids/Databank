@@ -74,4 +74,4 @@ Steps to add experimental data
    ```
    in folder [Data/experiments/FormFactors](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors). For example, see subfolders of [Data/experiments/FormFactors](https://github.com/NMRLipids/Databank/tree/main/Data/experiments/FormFactors)
 
-5. To update the connections with simulations after adding new experimental data, perform the step 6 in [Adding simulations into the NMRlipids databank](addData).
+5. To update the connections with simulations after adding new experimental data, perform the step 6 in [Adding simulations into the NMRlipids databank](addSimulations).

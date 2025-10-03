@@ -1,7 +1,7 @@
 (readmesimu)=
 # Simulation metadata (README.yaml)
 
-Each simulation in the NMRlipids databank is assigned with a `README.yaml` metadata file which contains all the essential information of the simulation. These files are created from the manually contributed [info.yaml](info_files) files as described in [Adding simulations](addData). The `README.yaml` files are stored as described in [Data organisation](dbstructure). 
+Each simulation in the NMRlipids databank is assigned with a `README.yaml` metadata file which contains all the essential information of the simulation. These files are created from the manually contributed [info.yaml](info_files) files as described in [Adding simulations](addSimulation). The `README.yaml` files are stored as described in [Data organisation](dbstructure). 
 
 You can view examples in the [BilayerData GitHub repository](https://github.com/NMRLipids/BilayerData/tree/main/Simulations). 
 
@@ -53,7 +53,7 @@ _\* --- names and mappings are set by user whereas number of residues is autofil
 
 1. **DOI** (compulsory)  
 Give the DOI identity for the location of simulation files. 
-Current databank works only for the data in [Zenodo](www.zenodo.org), but other potential sources are may be implemented in the future. 
+Current databank works only for the data in [Zenodo](https://www.zenodo.org), but other potential sources are may be implemented in the future. 
 Note that the DOI must point to a specific version of dataset in Zenodo. DOIs pointing to all versions of certain dataset do not work.
 
 2. **TRJ** (compulsory)  

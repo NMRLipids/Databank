@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+r"""
+Match simulations with experiments in the databank.
+
+Script goes through all simulations and experiments in the databank and finds
+pairs of simulations and experiments that match in composition, temperature and
+other conditions. The found pairs are written into the simulation :ref:`README.yaml <readmesimu>`
+files and into a log file.
+
+**Usage:**
+
+.. code-block:: console
+
+    nml_match_experiments
+
+No arguments are needed.
+"""
 
 import logging
 import os

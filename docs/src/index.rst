@@ -3,23 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to NMRlipids databank's documentation!
-==============================================
+.. _index:
 
-NMRlipids databank is a community-driven catalogue containing atomistic MD simulations of biologically relevant lipid membranes emerging from the `NMRlipids open collaboration <http://nmrlipids.blogspot.com/>`_.
+NMRlipids Databank Project
+==========================
+
+NMRlipids databank is a community-driven catalogue of biologically relevant lipid membranes emerging from the `NMRlipids Open Collaboration <http://nmrlipids.blogspot.com/>`_. It gathers atomistic MD simulations, X-ray scattering experiments, and NMR experiments on C-H bond order parameters in one place.
 
 
-NMRlipids databank is an overlay databank.
-------------------------------------------
-Each databank entry is a simulation described by the README.yaml file which contains all the essential information for the data upcycling and reuse. This includes the information about permanent location of each simulation file, but raw data is located in distributed locations outside the NMRlipids databank. The content of README.yaml files is described in `User input and content of README.yaml files <READMEcontent.html>`_. The README.yaml files are stored in the `NMRlipids databank git <https://github.com/NMRLipids/Databank/tree/main/Data/Simulations>`_ in subfolders named based on file hash identities. For details and information about overlay databank structure see the `NMRlipids databank manuscript <https://doi.org/10.26434/chemrxiv-2023-jrpwm>`_.
+*NMRlipids databank is an overlay databank.* Each databank entry (molecule, simulation or experiment) contains the metadata YAML-file, which stores all the essential information for the data upcycling and reuse. This includes, for example, the information about permanent location of each simulation file, but raw data is located in distributed locations outside the NMRlipids Databank. The organisation of the data as well as description of metadata schemas are described in :ref:`dbstructure`. Physically, the database is located in `BilayerData GitHub repository <https://github.com/NMRlipids/BilayerData>`_. 
 
-NMRlipids Databank-GUI
-----------------------
-`NMRlipids Databank-GUI <https://databank.nmrlipids.fi/>`_ provides easy access to the NMRlipids Databank content
-through a graphical user interface (GUI). Simulations can be searched based on their molecular composition, force field,
+The scientific background and initial motivation of the project is described in the `NMRlipids Databank Manuscript (Nat.Comm., 2024) <https://doi.org/10.1038/s41467-024-45189-z>`_.
+
+databank.nmrlipids.fi web-UI
+----------------------------
+
+`NMRlipids Databank-webUI <https://databank.nmrlipids.fi/>`_ provides easy access to the NMRlipids Databank content. Simulations can be searched based on their molecular composition, force field,
 temperature, membrane properties, and quality; the search results are ranked based on the simulation quality as evaluated
-against experimental data when available. Membranes can be visualized, and properties between different simulations and
-experiments compared.
+against experimental data when available. Web-UI provides basic graphical reports
+for the computed properties as well as graphical comparison between simulation
+and experimental data.
+
+The Web-UI is being developed in the repository `BilayerGUI_laravel <https://github.com/NMRlipids/BilayerGUI_laravel>`_.
 
 NMRlipids Databank-API
 ----------------------
@@ -41,47 +46,52 @@ as described in :ref:`molecule_names`.
 Adding simulations into the NMRlipids databank
 ------------------------------------
 
-The NMRlipids Databank is open for additions of simulation data by anyone. For detailed instructions to add new data, to update databank analyses and run quality evaluations, see :ref:`addData`. Quick and minimal steps to add a new simulation are here:
+The NMRlipids Databank is open for additions of simulation and experimental data by anyone. For detailed instructions to add new data, to update databank analyses and run quality evaluations, see :ref:`addSimulation`. Quick and minimal steps to add a new simulation are here:
 
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository.
 
-#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_. For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/mapping_files>`_ .
+#. Login to `NMRlipids Upload Portal <https://upload-portal.nmrlipids.fi/>`_ and fill up the form with metadata for your simulation. For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_. Mapping files are described in  :ref:`molecule_names` and are available from `here <https://github.com/NMRLipids/BilayerData/tree/main/Molecules/membranes>`_ .
 
-#. Save the created ``info.yaml`` file into a new directory with the next free integer into `Scripts/BuildDatabank/info_files/ <https://github.com/NMRLipids/Databank/tree/main/Scripts/BuildDatabank/info_files>`_ folder in the NMRlipids databank git and make a pull request to the main branch.
+#. Your simulation will be automatically processed via GitHub Actions on the server side after the approval of your submission by one of the NMRlipids contributors.
 
-Do not hesitate to ask assistance via `GitHub issues <https://github.com/NMRLipids/Databank/issues>`_.
+Experimental data addition is currently not automatized and should be performed manually via making pull request to the BilayerData repository. The instrutions are available at :ref:`addingExpData`.
 
-Adding experimental data into the NMRlipids databank
----------------------------
-Instrutions are available at :ref:`addingExpData`.
+Do not hesitate to ask assistance regarding data addition on the GitHub page of `BilayerData Issues <https://github.com/NMRLipids/BilayerData/issues>`_.
 
-System requirements
--------------------
 
-The code has been tested in Linux environment with python 3.10 or newer and recent `Gromacs <https://manual.gromacs.org/current/install-guide/index.html>`_ version installed.
+Installation and system requirements
+------------------------------------
 
-Setup using conda as distribution:
+The code has been tested in Linux, MacOS and Windows environment with python 3.10 or newer and recent `Gromacs <https://manual.gromacs.org/current/install-guide/index.html>`_ version installed.
+
+Setup is straingforward using `pip` or `uv pip`:
 
 .. code-block:: bash
 
-    conda create --name databank MDAnalysis
-    conda activate databank
-    (databank) pip install -e .
+   pip install nmrlipids_databank
+   nml_initialize_data dev
+   source databank_env.rc
+
+More detailed instructions are coming soon.
+
+**TODO: write the block**
+
 
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents
+   :caption: Python Interface
 
-   dbstructure
-   dbcontribute
+   gettingstarted
    dbprograms
+   Overview
 
 .. toctree::
    :maxdepth: 1
-   :caption: Project Structure
+   :caption: Membrane Databank
 
-   Overview
+   dbstructure
+   dbcontribute
 
 Indices and tables
 ==================

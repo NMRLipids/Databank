@@ -1,3 +1,6 @@
+
+.. _exampleAndTutorials:
+
 Examples and tutorials
 ======================
 
