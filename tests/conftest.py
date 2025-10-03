@@ -1,10 +1,7 @@
-import importlib
 import os
 import pytest
 import logging
-import os
 import sys
-import pytest
 
 # Pytest HOOKS
 # -------------------------------------------------------------------
@@ -46,7 +43,7 @@ def header_module_scope(request):
         cmdopt = request.config.getoption("--cmdopt")
         sim_key = cmdopt if cmdopt in SIM_MAP else "nodata"
 
-    data_root = os.path.join(os.path.dirname(__file__), "Data")
+    data_root = os.path.join(os.path.dirname(__file__), "ToyData")
     os.environ["NMLDB_DATA_PATH"] = data_root
     sim_dir = SIM_MAP[sim_key]
     if sim_dir:

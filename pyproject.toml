@@ -3,7 +3,10 @@ requires = ["setuptools>=77", "setuptools_scm>=8", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-authors = [{name = "NMRlipids Open Collaboration"}]
+authors = [
+    {name = "NMRlipids Open Collaboration"},
+    {name = "Samuli Ollila", email = "samuli.ollila@helsinki.fi"}
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -17,7 +20,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Shells",
 ]
-description = "TODO"
+description = "NMRlipids Databank main package (DatabankLib). The package contains the core functionality for managing and accessing the NMRlipids Databank."
 dynamic = ["version"]
 keywords = [
     "Science",
@@ -55,6 +58,7 @@ nml_compute_databank = "DatabankLib.bin.compute_databank:compute_databank"
 nml_evaluate_quality = "DatabankLib.bin.evaluate_quality:evaluate_quality"
 nml_make_ranking = "DatabankLib.bin.make_ranking:make_ranking"
 nml_match_experiments = "DatabankLib.bin.match_experiments:match_experiments"
+nml_initialize_data = "DatabankLib.bin.initialize_data:initialize_data"
 
 [tool.check-manifest]
 ignore = ["src/DatabankLib/_version.py"]
@@ -99,4 +103,4 @@ convention = "pep257"
 version_file = "src/DatabankLib/_version.py"
 
 [tool.setuptools.package-data]
-DatabankLib = ["toy-data.zip"]
+"DatabankLib.data" = ["*"]
