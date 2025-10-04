@@ -1,7 +1,7 @@
 """
 `test_misc` contains unit tests of auxiliary functions.
 
-Test data is stored in `./Data/Simulations.2`
+Test data is stored in `./ToyData/Simulations.2`
 
 -------------------------------------------------------------------------------
 NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it

@@ -2,7 +2,7 @@
 `test_recompute_api.py` tests those parts of API, which require building MDAnalysis
 universe and from-trajectories computations.
 
-Test folder: Data/Simulations.1
+Test folder: ToyData/Simulations.1
 
 NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders

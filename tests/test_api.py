@@ -5,7 +5,7 @@ Test module test_api.py
 MDAnalysis Universe and recomputing something. These functions just read README
 files and precomputed JSON data.
 
-Test data is stored in `./Data/Simulations.2`
+Test data is stored in `./ToyData/Simulations.2`
 
 -------------------------------------------------------------------------------
 NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it

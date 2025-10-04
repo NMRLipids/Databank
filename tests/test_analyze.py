@@ -2,7 +2,7 @@
 `test_analyze` tests functions performing databank recomputing. It starts mostly from
 downloading everything from testing repository.
 
-Test data is stored in `./Data/Simulations.1`
+Test data is stored in `./ToyData/Simulations.1`
 
 NOTE: globally import of DatabankLib is **STRICTLY FORBIDDEN** because it
       breaks the substitution of global path folders
@@ -130,13 +130,13 @@ def compareJSONsBtwSD(jsfn: str):
         jsfn (_type_): relative path from simulation folder
     """
     import json
-
     import numpy as np
+    from DatabankLib import NMLDB_DATA_PATH
 
     logger.info(f"Comparing JSON files for: {jsfn}")
 
-    _p1 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.1")
-    _p2 = os.path.join(os.path.dirname(__file__), "Data", "Simulations.2")
+    _p1 = os.path.join(NMLDB_DATA_PATH, "Simulations.1")
+    _p2 = os.path.join(NMLDB_DATA_PATH, "Simulations.2")
     jsf1 = os.path.join(_p1, jsfn)
     jsf2 = os.path.join(_p2, jsfn)
 

@@ -23,6 +23,7 @@ Since June 2025 (v.1.1.0), NMRlipids Databank separates codespace from [Data](ht
 - Markus Miettinen (@markussmiettinen)
 - Patrick Frankel (@PEFrankel)
 - Pavel Buslaev (@pbuslaev)
+- Philip Robin Loche (@PicoCentauri)
 - Samuli O.H. Ollila (@ohsOlilla)
 - Suvi Heinonen (@suviheinonen)
 
