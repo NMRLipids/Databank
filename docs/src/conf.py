@@ -21,8 +21,7 @@ if os.getenv("READTHEDOCS") == "True":
         # make package importable if autodoc needs it
         if repo_root not in sys.path:
             sys.path.insert(0, repo_root)
-        # set data path to repo_root/tests/Data, but don't override a dev's local setting
-        data_path = os.path.join(repo_root, "src", "DatabankLib", "tests", "Data")
+        data_path = os.path.join(repo_root,"src","DatabankLib","data","ToyData")
         os.environ.setdefault("NMLDB_DATA_PATH", data_path)
 
 import DatabankLib as dbl
