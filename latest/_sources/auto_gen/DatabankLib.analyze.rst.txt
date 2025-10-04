@@ -1,0 +1,7 @@
+DatabankLib.analyze module
+==========================
+
+.. automodule:: DatabankLib.analyze
+   :members:
+   :show-inheritance:
+   :undoc-members:

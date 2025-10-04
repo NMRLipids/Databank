@@ -1,0 +1,7 @@
+DatabankLib.databankio module
+=============================
+
+.. automodule:: DatabankLib.databankio
+   :members:
+   :show-inheritance:
+   :undoc-members:

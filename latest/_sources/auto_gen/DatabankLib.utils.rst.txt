@@ -1,0 +1,7 @@
+DatabankLib.utils module
+========================
+
+.. automodule:: DatabankLib.utils
+   :members:
+   :show-inheritance:
+   :undoc-members:

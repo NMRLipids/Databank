@@ -1,0 +1,7 @@
+DatabankLib.settings.elements module
+====================================
+
+.. automodule:: DatabankLib.settings.elements
+   :members:
+   :show-inheritance:
+   :undoc-members:

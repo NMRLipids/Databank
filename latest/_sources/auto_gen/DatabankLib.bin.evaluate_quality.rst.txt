@@ -1,0 +1,7 @@
+DatabankLib.bin.evaluate\_quality module
+========================================
+
+.. automodule:: DatabankLib.bin.evaluate_quality
+   :members:
+   :show-inheritance:
+   :undoc-members:

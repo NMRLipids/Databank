@@ -1,0 +1,7 @@
+DatabankLib.databankop module
+=============================
+
+.. automodule:: DatabankLib.databankop
+   :members:
+   :show-inheritance:
+   :undoc-members:
