@@ -1,0 +1,23 @@
+graft src
+
+include AUTHORS.md
+include LICENSE
+include README.md
+
+prune .github
+prune .tox
+prune developer
+prune docs
+prune tests
+
+exclude .codecov.yml
+exclude .gitignore
+exclude .gitmodules
+exclude .pre-commit-config.yaml
+exclude .readthedocs.yml
+exclude CONTRIBUTING.md
+exclude CONTRIBUTING.rst
+exclude CONTRIBUTION.md
+exclude tox.ini
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib

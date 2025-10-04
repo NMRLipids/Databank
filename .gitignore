@@ -1,5 +1,25 @@
 # python
 __pycache__/
+build/
+dist/
+_version.py
+
+# Data inside the repo
+Data/**
+
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
 # visual studio code
 .vscode/
@@ -13,10 +33,12 @@ test.py
 
 **/*.swp
 
-# if tests are cancelled for some reason
-**/*gro
-**/*tpr
-**/*xtc
+# test data folder copied for testing
+tests/ToyData/**
 
 #Setup files
 *.egg-info
+
+source/auto_gen/*
+!source/auto_gen/.gitkeep 
+src/DatabankLib/toy-data.zip
