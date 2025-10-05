@@ -54,6 +54,8 @@ It is connected into the NMRlipids Databank repository as a submodule into :file
                ├── ion1-forcefield3-mapping.yaml
                └── metadata.yaml
 
+.. _dbstructure_simu:
+
 Simulation record
 -----------------
 
@@ -104,8 +106,11 @@ For more details, see the `NMRlipids databank manuscript <https://doi.org/10.103
 
 4. :file:`FormFactorQuality.json` contains quality of form factor against experimental data determined as described in the `NMRlipids databank manuscript <https://doi.org/10.1038/s41467-024-45189-z>`_. Second term is the scaling coefficient for experimental intensities (Eq. (6) in the `NMRlipids databank manuscript <https://doi.org/10.1038/s41467-024-45189-z>`_).
 
+.. _dbstructure_exp:
+
 Experiment record
 -----------------
+The data is located in subfolders named after the DOI of the original source publication of the data. Because a publication can contain more than one experimental data set, each data set is stored in a subfolder with integer name, for example, [experiments/OrderParameters/10.1039/c2cp42738a/2](https://github.com/NMRLipids/BilayerData/tree/main/experiments/OrderParameters/10.1039/c2cp42738a/2). Each of such folders then contain the experimental data and ``README.yaml`` files describing the experimental conditions.
 
 Order parameter NMR experiment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
