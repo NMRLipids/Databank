@@ -19,7 +19,9 @@ The functions that help analyzing data in the NMRlipids databank are described h
 
    systems = initialize_databank()
 
-After running this, ``systems`` is a SystemsCollection which works like a list but with added functionality and contains dictionaries where each dictionary is a simulation in the NMRlipids databank. A simulation dictionary contains the content of the README.yaml for that simulation. The content of README.yaml files is described in :ref:`readmecontent`. ``systems`` can be then used to loop over all simulations:
+After running this, ``systems`` is an instance of :class:`DatabankLib.core.SystemsCollection` which works like a list but with added functionality and contains dictionaries where each dictionary is a simulation in the NMRlipids databank.
+A simulation dictionary contains the content of the README.yaml for that simulation.
+The content of README.yaml files is described in :ref:`Simulation metadata <readmesimu>`. ``systems`` can be then used to loop over all simulations:
 
 .. code-block:: python
 
