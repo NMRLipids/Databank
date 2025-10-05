@@ -1,0 +1,34 @@
+# This is the template. Please refer the documentation page for the details
+# https://nmrlipids.github.io/Databank/latest/schemas/simulation_metadata.html
+# ----------------------------------------------------------------------------
+
+SYSTEM: UNIQUE_SYSTEM_NAME
+DOI: 10.5281/zenodo.0000000
+
+SOFTWARE: gromacs
+SOFTWARE_VERSION:
+TRJ: filename.xtc
+GRO: filename.gro
+TPR: filename.tpr
+EDR:
+
+PREEQTIME: 0
+TIMELEFTOUT: 0
+
+TEMPERATURE: 323
+
+COMPOSITION:
+ DPPC:
+  NAME: DPPC
+  MAPPING: mappingDPPCcharmm.yaml
+ SOL:
+  NAME: TIP3
+  MAPPING: mappingTIP3PCHARMMgui.yaml
+
+PUBLICATION: https://doi.org/00.00/acs.jctc.0000
+AUTHORS_CONTACT: Doe, John
+
+FF: CHARMM36
+FF_SOURCE: CHARMM-GUI
+FF_DATE: 2022
+

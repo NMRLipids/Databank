@@ -45,7 +45,7 @@ Then you can work with Databank's standalone scripts as well as use `DatabankLib
 
 # Documentation
 
-The NMRlipids Databank project documentation is available in [here](https://nmrlipids.github.io/index.html). 
+The NMRlipids Databank project documentation is available in [here](https://nmrlipids.github.io/Databank/latest/). 
 More information and example applications are available from the [NMRlipids databank manuscript](https://doi.org/10.1038/s41467-024-45189-z).
 
 The `DatabankLib` python module provides programmatic access to all simulation data in the 
@@ -54,13 +54,11 @@ experimental and simulation data from the Databank that allow one to learn vario
 lipid bilayer properties. It also allows to design and effectively run automated analysis across
 all the simulations in the Databank.
 
-The documentation for `DatabankLib` module is available in [here](https://nmrlipids.github.io/auto_gen/Scripts.DatabankLib.html).
-
 ## How to use 
 
 A [jupyter template notebook](https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb) can be used to get started with the analyses utilizing the NMRlipids databank.
 
-Connection of [Universal molecule and atom naming conventions](https://nmrlipids.github.io/moleculesAndMapping.html) with simulation specific names delivered by mapping files can be used to perform automatic analyses over large sets of simulations. The results for large analyses can be stored using the same structure as used for `README.yaml` files as done, for example, for [water permeation](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/MD-PERMEATION) and lipid [flip-flop](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/Flipflops) rates in the [repository related to the NMRlipids databank manuscript](https://github.com/NMRLipids/DataBankManuscript).
+Connection of [Universal molecule and atom naming conventions](https://nmrlipids.github.io/Databank/latest/schemas/moleculesAndMapping.html) with simulation specific names delivered by mapping files can be used to perform automatic analyses over large sets of simulations. The results for large analyses can be stored using the same structure as used for `README.yaml` files as done, for example, for [water permeation](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/MD-PERMEATION) and lipid [flip-flop](https://github.com/NMRLipids/DataBankManuscript/tree/main/Data/Flipflops) rates in the [repository related to the NMRlipids databank manuscript](https://github.com/NMRLipids/DataBankManuscript).
 
 # Web UI
 
