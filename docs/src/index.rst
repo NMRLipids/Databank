@@ -87,7 +87,7 @@ More detailed instructions are coming soon.
    Overview
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Membrane Databank
 
    dbstructure

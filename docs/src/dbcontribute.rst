@@ -12,10 +12,9 @@ Addition of new molecules is also very wellcome.
 It is also possible to make your own data repository and plug it into the NMRlipids Databank instead of BilayerData.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    contrib/addingSimulation.rst
    contrib/addingExpData.md
    contrib/addingMolecule.rst
    schemas/moleculesAndMapping.md
-   schemas/simulation_metadata.md
