@@ -25,6 +25,7 @@ The script adds a simulation into the Databank based on ``info.yaml`` file.
 
 import argparse
 import datetime
+import importlib
 import logging
 import os
 import pprint
@@ -63,10 +64,29 @@ pd.set_option("display.max_colwidth", 1000)
 
 
 def add_simulation():
+    info_template_path = os.path.join(
+        importlib.util.find_spec("DatabankLib").submodule_search_locations[0],
+        "SchemaValidation",
+        "Schema",
+        "info_template.yaml",
+    )
     # parse input yaml file
     parser = argparse.ArgumentParser(
-        prog="AddData.py Script",
-        description=__doc__,
+        prog="Add Simulation Script",
+        description=f"""
+Add new simulation into the NMRlipids Databank. The script adds a
+simulation into the Databank based on ``info.yaml`` file. You can
+get template info-file from here:
+
+{info_template_path}
+
+Returns error codes:
+- 0 - success
+- 1 - input YAML parsing errors
+- 2 - filesystem writting errors
+- 3 - network accessing errors
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "-f",

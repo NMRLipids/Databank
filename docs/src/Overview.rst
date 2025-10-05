@@ -17,7 +17,7 @@ tests
 
 Pytest-based unit and regression tests.
 
-:doc:`More info on tests <auto_gen/tests>`
+:doc:`More info on tests <unittests>`.
 
 docs
 ----
@@ -36,7 +36,6 @@ Repository folder structure
 .. toctree::
    :maxdepth: 3
 
-
    auto_gen/DatabankLib
    auto_gen/developer
-   auto_gen/tests
+   miscsrc/unittests.rst

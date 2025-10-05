@@ -12,7 +12,7 @@ Remember that data is plugged to the main Databank repo as a submodule.
 #. Add trajectory and topology (tpr for Gromacs, pdb or corresponding to other programs) file into a `Zenodo <https://zenodo.org/>`_ repository.\
    If you want to use other repository than Zenodo, please do not hesitate to open an `GitHub issue <https://github.com/NMRLipids/Databank/issues>`_ on this.
 
-#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `template <https://github.com/NMRLipids/Databank/blob/development/Scripts/BuildDatabank/info_files/info.yaml>`_ (**TODO: LINK DOESN'T WORK**).
+#. Create an ``info.yaml`` file containing the essential information on your simulation by filling the `info template <https://github.com/NMRLipids/Databank/blob/main/src/DatabankLib/SchemaValidateion/Schema/info_template.yaml>`_.
    For instructions, see :ref:`readmesimu` and `examples <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_.
    Mapping files are described in  :ref:`molecule_names` and are located in the :ref:`molecule_record` inside the folder of corresponding molecule.
 

@@ -32,7 +32,7 @@ The NMRlipids Databank-API provides programmatic access to all simulation data i
 This enables wide range of novel data-driven applications from construction of machine learning models that predict membrane properties, to automatic analysis of virtually
 any property across all simulations in the Databank. For examples of novel analyses enabled by the NMRlipids databank API see the `NMRlipids databank manuscript <https://doi.org/10.26434/chemrxiv-2023-jrpwm>`_.
 
-Functions available for simulation analyses are described in :ref:`APIfunctions`.
+Functions available for simulation analyses are described in :mod:`DatabankLib.core` and :mod:`DatabankLib.databankLibrary`.
 A project `template <https://github.com/NMRLipids/databank-template>`_ designed to intialize projects that analyse data from NMRlipids databank contains
 a `minimum example for looping over available simulations <https://github.com/NMRLipids/databank-template/blob/main/scripts/template.ipynb>`_.
 For further examples, see codes that analyze the `area per lipid <https://github.com/NMRLipids/Databank/blob/main/Scripts/AnalyzeDatabank/calcAPL.py>`_,
