@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DatabankLib.core module &mdash; NMRlipids Databank v1.2.1.dev139+g37a7eae0e 1.2.1.dev139+g37a7eae0e documentation</title>
+  <title>DatabankLib.core module &mdash; NMRlipids Databank v1.3.1.dev5+g764af3ab9 1.3.1.dev5+g764af3ab9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=59ac788f"></script>
+      <script src="../_static/documentation_options.js?v=32bf1be3"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -32,7 +32,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            NMRlipids Databank v1.2.1.dev139+g37a7eae0e
+            NMRlipids Databank v1.3.1.dev5+g764af3ab9
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -47,20 +47,29 @@
 <li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dbprograms.html">DatabankLib CLI</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../Overview.html">Project structure</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../Overview.html#src-databanklib">src/DatabankLib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Overview.html#tests">tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Overview.html#docs">docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Overview.html#developer">developer</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../Overview.html#repository-folder-structure">Repository folder structure</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="DatabankLib.html">DatabankLib</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="DatabankLib.html#subfolders">Subfolders</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="DatabankLib.html#python-files">Python files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="DatabankLib.html#module-DatabankLib">Module contents</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="DatabankLib.html">DatabankLib</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DatabankLib.html#subfolders">Subfolders</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DatabankLib.html#python-files">Python files</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.analyze.html">DatabankLib.analyze module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.analyze_nmrpca.html">DatabankLib.analyze_nmrpca module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">DatabankLib.core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.databankLibrary.html">DatabankLib.databankLibrary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.databankio.html">DatabankLib.databankio module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.databankop.html">DatabankLib.databankop module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.jpyroutines.html">DatabankLib.jpyroutines module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.jsonEncoders.html">DatabankLib.jsonEncoders module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.maicos.html">DatabankLib.maicos module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.openmm_parser.html">DatabankLib.openmm_parser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.plottings.html">DatabankLib.plottings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.quality.html">DatabankLib.quality module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DatabankLib.utils.html">DatabankLib.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="developer.html">developer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DatabankLib.html#module-DatabankLib">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html">developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../miscsrc/unittesting.html">Project testing</a></li>
 </ul>
 </li>
 </ul>
@@ -76,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">NMRlipids Databank v1.2.1.dev139+g37a7eae0e</a>
+          <a href="../index.html">NMRlipids Databank v1.3.1.dev5+g764af3ab9</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -99,7 +108,7 @@
   <section id="module-DatabankLib.core">
 <span id="databanklib-core-module"></span><h1>DatabankLib.core module<a class="headerlink" href="#module-DatabankLib.core" title="Link to this heading"></a></h1>
 <p>Core databank class and system initialization function.</p>
-<p>Imported by <cite>databankLibrary</cite> by default.
+<p>Imported by <a class="reference internal" href="DatabankLib.databankLibrary.html#module-DatabankLib.databankLibrary" title="DatabankLib.databankLibrary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">DatabankLib.databankLibrary</span></code></a> by default.
 Can be imported without additional libraries to scan Databank system file tree!</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="DatabankLib.core.System">
@@ -152,8 +161,16 @@ Can be imported without additional libraries to scan Databank system file tree!<
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DatabankLib.core.</span></span><span class="sig-name descname"><span class="pre">Databank</span></span><a class="reference internal" href="../_modules/DatabankLib/core.html#Databank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.core.Databank" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Representation of all simulation in the NMR lipids databank.</p>
-<p><cite>path</cite> should be the local location of /Data/Simulations/ in the NMRlipids
-databank folder. Example usage to loop over systems:</p>
+<p><cite>path</cite> should be the local location of <cite>{NMLDB_DATA_PATH}/Simulations/</cite> in
+the NMRlipids databank folder. Example usage to loop over systems:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;BilayerData/Simulations/&#39;</span>
+<span class="n">db_data</span> <span class="o">=</span> <span class="n">databank</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">systems</span> <span class="o">=</span> <span class="n">db_data</span><span class="o">.</span><span class="n">get_systems</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">systems</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="DatabankLib.core.Databank.get_systems">
 <span class="sig-name descname"><span class="pre">get_systems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#DatabankLib.core.SystemsCollection" title="DatabankLib.core.SystemsCollection"><span class="pre">SystemsCollection</span></a></span></span><a class="reference internal" href="../_modules/DatabankLib/core.html#Databank.get_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#DatabankLib.core.Databank.get_systems" title="Link to this definition"></a></dt>

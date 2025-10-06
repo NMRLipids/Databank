@@ -6,20 +6,21 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulation metadata (README.yaml) &mdash; NMRlipids Databank v1.2.1.dev139+g37a7eae0e 1.2.1.dev139+g37a7eae0e documentation</title>
+  <title>Simulation metadata (README.yaml) &mdash; NMRlipids Databank v1.3.1.dev5+g764af3ab9 1.3.1.dev5+g764af3ab9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=59ac788f"></script>
+      <script src="../_static/documentation_options.js?v=32bf1be3"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Universal molecule and atom names" href="moleculesAndMapping.html" /> 
+    <link rel="next" title="Adding experimental data" href="../contrib/addingExpData.html" />
+    <link rel="prev" title="Adding simulations" href="../contrib/addingSimulation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +32,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            NMRlipids Databank v1.2.1.dev139+g37a7eae0e
+            NMRlipids Databank v1.3.1.dev5+g764af3ab9
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -51,14 +52,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../dbstructure.html">Data Organization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../dbcontribute.html">Data Contribution</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../contrib/addingSimulation.html">Adding simulations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../contrib/addingSimulation.html">Adding simulations</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Simulation metadata (README.yaml)</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../contrib/addingExpData.html">Adding experimental data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../contrib/addingMolecule.html">Adding new molecule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="moleculesAndMapping.html">Universal molecule and atom names</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulation metadata (README.yaml)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fields-description">Fields description</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -69,7 +69,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">NMRlipids Databank v1.2.1.dev139+g37a7eae0e</a>
+          <a href="../index.html">NMRlipids Databank v1.3.1.dev5+g764af3ab9</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -78,6 +78,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../dbcontribute.html">Data Contribution</a></li>
+          <li class="breadcrumb-item"><a href="../contrib/addingSimulation.html">Adding simulations</a></li>
       <li class="breadcrumb-item active">Simulation metadata (README.yaml)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/schemas/simulation_metadata.md.txt" rel="nofollow"> View page source</a>
@@ -92,7 +93,7 @@
 <span id="readmesimu"></span><h1>Simulation metadata (README.yaml)<a class="headerlink" href="#simulation-metadata-readme-yaml" title="Link to this heading"></a></h1>
 <p>Each simulation in the NMRlipids databank is assigned with a <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> metadata file which contains all the essential information of the simulation. These files are created from the manually contributed <a class="reference internal" href="../dbstructure.html#info-files"><span class="std std-ref">info.yaml</span></a> files as described in <a class="reference internal" href="../contrib/addingSimulation.html#addsimulation"><span class="std std-ref">Adding simulations</span></a>. The <code class="docutils literal notranslate"><span class="pre">README.yaml</span></code> files are stored as described in <a class="reference internal" href="../dbstructure.html#dbstructure"><span class="std std-ref">Data organisation</span></a>.</p>
 <p>You can view examples in the <a class="reference external" href="https://github.com/NMRLipids/BilayerData/tree/main/Simulations">BilayerData GitHub repository</a>.</p>
-<p>README files contain information that is manually entered into <a class="reference internal" href="../dbstructure.html#info-files"><span class="std std-ref">info.yaml</span></a> files and automatically exctracted information by the <code class="docutils literal notranslate"><span class="pre">AddData.py</span></code> program.
+<p>README files contain information that is manually entered into <a class="reference internal" href="../dbstructure.html#info-files"><span class="std std-ref">info.yaml</span></a> files and automatically exctracted information by the <a class="reference internal" href="../dbprograms.html#add-simulation-py"><span class="std std-ref">nml_add_simulation</span></a> program.
 Table below lists the manually entered compulsory and optional parameters, as well as automatically extracted information from simulation files.</p>
 <hr class="docutils" />
 <table class="docutils align-default">
@@ -243,8 +244,7 @@ Table below lists the manually entered compulsory and optional parameters, as we
 </table>
 <hr class="docutils" />
 <p><em>* — names and mappings are set by user whereas number of residues is autofilled</em></p>
-<section id="fields-description">
-<h2>Fields description<a class="headerlink" href="#fields-description" title="Link to this heading"></a></h2>
+<p><strong>Fields description</strong></p>
 <ol class="arabic simple">
 <li><p><strong>DOI</strong> (compulsory)<br />
 Give the DOI identity for the location of simulation files.
@@ -286,7 +286,7 @@ For example, the COMPOSITION dictionary input for <a class="reference external" 
       <span class="n">MAPPING</span><span class="p">:</span> <span class="n">mappingCLA</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>When running <code class="docutils literal notranslate"><span class="pre">AddData.py</span></code>, the numbers of molecules are added in additional <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys into dictionaries of each molecule, see COMPOSITION (ouput) below.</p>
+<p>When running <a class="reference internal" href="../dbprograms.html#add-simulation-py"><span class="std std-ref">nml_add_simulation</span></a>, the numbers of molecules are added in additional <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys into dictionaries of each molecule, see COMPOSITION (ouput) below.</p>
 <ol class="arabic simple" start="8">
 <li><p><strong>DIR_WRK</strong> (deprecated)<br />
 Give the path of the working directory in your local computer. The trajectory and topology files will be downloaded to this trajectory, and temporary files created during processing will be stored here.</p></li>
@@ -339,7 +339,7 @@ Date when added into the databank.</p></li>
 <li><p><strong>EXPERIMENT</strong><br />
 Potentially connected experimental data.</p></li>
 <li><p><strong>COMPOSITION</strong> (output)<br />
-When adding a simulation into NMRlipids databank with the <code class="docutils literal notranslate"><span class="pre">AddData.py</span></code>, numbers of molecules are automatically calculated and stored into <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys for each molecule in the COMPOSITION dictionary. Number of lipids are calculated separately for both membrane leaflets. For example, the result for the simulation with COMPOSITION input exemplified above is:</p></li>
+When adding a simulation into NMRlipids databank with the <a class="reference internal" href="../dbprograms.html#add-simulation-py"><span class="std std-ref">nml_add_simulation</span></a>, numbers of molecules are automatically calculated and stored into <code class="docutils literal notranslate"><span class="pre">COUNT</span></code> keys for each molecule in the COMPOSITION dictionary. Number of lipids are calculated separately for both membrane leaflets. For example, the result for the simulation with COMPOSITION input exemplified above is:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="n">COMPOSITION</span><span class="p">:</span>
          <span class="n">CHOL</span><span class="p">:</span>
@@ -373,13 +373,13 @@ When adding a simulation into NMRlipids databank with the <code class="docutils 
 Unique numeric identifier assigned to the simulation. It is generated by the CI/CD pipelines of the databank.</p></li>
 </ol>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="moleculesAndMapping.html" class="btn btn-neutral float-left" title="Universal molecule and atom names" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contrib/addingSimulation.html" class="btn btn-neutral float-left" title="Adding simulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contrib/addingExpData.html" class="btn btn-neutral float-right" title="Adding experimental data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project structure &mdash; NMRlipids Databank v1.2.1.dev139+g37a7eae0e 1.2.1.dev139+g37a7eae0e documentation</title>
+  <title>Project structure &mdash; NMRlipids Databank v1.3.1.dev5+g764af3ab9 1.3.1.dev5+g764af3ab9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=59ac788f"></script>
+      <script src="_static/documentation_options.js?v=32bf1be3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            NMRlipids Databank v1.2.1.dev139+g37a7eae0e
+            NMRlipids Databank v1.3.1.dev5+g764af3ab9
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,15 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbprograms.html">DatabankLib CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project structure</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#src-databanklib">src/DatabankLib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tests">tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#docs">docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#developer">developer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#repository-folder-structure">Repository folder structure</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="auto_gen/DatabankLib.html">DatabankLib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto_gen/developer.html">developer</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="auto_gen/DatabankLib.html">DatabankLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_gen/developer.html">developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscsrc/unittesting.html">Project testing</a></li>
 </ul>
 </li>
 </ul>
@@ -71,7 +65,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">NMRlipids Databank v1.2.1.dev139+g37a7eae0e</a>
+          <a href="index.html">NMRlipids Databank v1.3.1.dev5+g764af3ab9</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -92,27 +86,23 @@
   <section id="project-structure">
 <h1>Project structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h1>
 <p>Project has four sub-folders in the root directory:</p>
-<section id="src-databanklib">
-<h2>src/DatabankLib<a class="headerlink" href="#src-databanklib" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">src/DatabankLib</span></code></p>
 <p>Main project package. Contains most of the project’s logic and API.</p>
 <p><a class="reference internal" href="auto_gen/DatabankLib.html"><span class="doc">More info on DatabankLib</span></a></p>
-</section>
-<section id="tests">
-<h2>tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests</span></code></p>
 <p>Pytest-based unit and regression tests.</p>
-<p><span class="xref std std-doc">More info on tests</span></p>
-</section>
-<section id="docs">
-<h2>docs<a class="headerlink" href="#docs" title="Link to this heading"></a></h2>
+<p>More <a class="reference internal" href="miscsrc/unittesting.html#unittesting"><span class="std std-ref">info on tests</span></a>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs</span></code></p>
 <p>Documentation source files.</p>
-</section>
-<section id="developer">
-<h2>developer<a class="headerlink" href="#developer" title="Link to this heading"></a></h2>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">developer</span></code></p>
 <p>Helper scripts and utilities for developers and CI/CD pipelines.
 It is not distributed with the package.</p>
-</section>
-<section id="repository-folder-structure">
-<h2>Repository folder structure<a class="headerlink" href="#repository-folder-structure" title="Link to this heading"></a></h2>
+</li>
+</ol>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_gen/DatabankLib.html">DatabankLib</a><ul>
@@ -163,9 +153,13 @@ It is not distributed with the package.</p>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="miscsrc/unittesting.html">Project testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="miscsrc/unittesting.html#testing-strategy">Testing strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miscsrc/unittesting.html#simulation-1-and-simulation-2">Simulation.1 and Simulation.2</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
 </section>
 
 

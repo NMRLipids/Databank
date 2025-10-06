@@ -4,39 +4,31 @@ Project structure
 Project has four sub-folders in the root directory:
 
 
-src/DatabankLib
----------------
+#. ``src/DatabankLib``
 
-Main project package. Contains most of the project’s logic and API.
+   Main project package. Contains most of the project’s logic and API.
 
-:doc:`More info on DatabankLib <auto_gen/DatabankLib>`
+   :doc:`More info on DatabankLib <auto_gen/DatabankLib>`
 
 
-tests
------
+#. ``tests``
 
-Pytest-based unit and regression tests.
+   Pytest-based unit and regression tests.
 
-:doc:`More info on tests <auto_gen/tests>`
+   More :ref:`info on tests <unittesting>`.
 
-docs
-----
+#. ``docs``
 
-Documentation source files.
+   Documentation source files.
 
-developer
----------
+#. ``developer``
 
-Helper scripts and utilities for developers and CI/CD pipelines.
-It is not distributed with the package.
-
-Repository folder structure
----------------------------
+   Helper scripts and utilities for developers and CI/CD pipelines.
+   It is not distributed with the package.
 
 .. toctree::
    :maxdepth: 3
 
-
    auto_gen/DatabankLib
    auto_gen/developer
-   auto_gen/tests
+   miscsrc/unittesting.rst
