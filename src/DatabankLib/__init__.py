@@ -3,7 +3,7 @@ DatabankLib package for NMRlipids Databank project.
 
 Here we define the main package variables and constants used throughout the NMRlipids
 Databank project.
-This includes _Package Information_, _Paths_, and _Return Codes_.
+This includes *Package Information*, *Paths*, and *Return Codes*.
 """
 
 import importlib.metadata

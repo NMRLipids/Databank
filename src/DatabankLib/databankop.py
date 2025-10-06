@@ -1,16 +1,10 @@
 """
- calculation of order parameters of lipid bilayers
- from a MD trajectory
+Module for calculation of order parameters of lipid bilayers
+from a MD trajectory
 
- meant for use with NMRlipids projects
- ------------------------------------------------------------
- Made by Joe,  Last edit 2017/02/02
- Refactored for performance by Gemini
-------------------------------------------------------------
- input: Order parameter definitions
-        gro and xtc file (or equivalents)
- output: order parameters (2 textfiles)
---------------------------------------------------------
+**Authors:**
+- Made by Joe,  Last edit 2017/02/02
+- Refactored for performance by Gemini
 """
 
 import re

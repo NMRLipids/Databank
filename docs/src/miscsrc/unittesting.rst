@@ -1,5 +1,4 @@
-
-.. _unittests:
+.. _unittesting:
 
 Project testing
 ===============
@@ -32,3 +31,4 @@ In ``ToyData/Simulation.2``, in contrary, we put completed Databank analysis fil
 test only those API part on this toy-Databank, which doesn't require MDAnalysis objects
 to create. Some function requires only JSON files to exist -- for them we prepared
 this folder.
+

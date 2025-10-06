@@ -10,7 +10,7 @@ water orientation, dielectric profiles, X-ray form factor).
 
 .. code-block:: console
 
-    ./compute_databank.py [--apl] [--nmrpca] [--maicos] [--thickness] \
+    nml_compute_databank [--apl] [--nmrpca] [--maicos] [--thickness] \
         [--OP] [--range 0-1000] [--debug] [-h]
 
 

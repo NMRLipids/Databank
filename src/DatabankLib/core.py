@@ -1,7 +1,7 @@
 """
 Core databank class and system initialization function.
 
-Imported by `databankLibrary` by default.
+Imported by :mod:`DatabankLib.databankLibrary` by default.
 Can be imported without additional libraries to scan Databank system file tree!
 """
 
@@ -117,11 +117,12 @@ class Databank:
     """
     Representation of all simulation in the NMR lipids databank.
 
-    `path` should be the local location of /Data/Simulations/ in the NMRlipids
-    databank folder. Example usage to loop over systems:
+    `path` should be the local location of `{NMLDB_DATA_PATH}/Simulations/` in
+    the NMRlipids databank folder. Example usage to loop over systems:
 
     .. code-block:: python
-        path = '../../Data/Simulations/'
+
+        path = 'BilayerData/Simulations/'
         db_data = databank(path)
         systems = db_data.get_systems()
 

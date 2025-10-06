@@ -1,12 +1,12 @@
 """
-:module: settings/engines.py
-
-:description: The module defines dictionaries describing parsing of YAML depending
-              on MD engine used.
+The module defines dictionaries describing parsing of YAML depending on MD engine used.
 
 Engine-specific dictionaries have a fixed subfield types:
+
 - REQUIRED
-    Boolean field indicating if the field SHOULD be filled in `README.yaml`
+
+  Boolean field indicating if the field SHOULD be filled in `README.yaml`
+
 - TYPE
     + file
     + files
@@ -14,15 +14,20 @@ Engine-specific dictionaries have a fixed subfield types:
     + dictionary
     + float
     + integer
+
 - CATEGORY
-    For file(s) type it can be:
+
+  For file(s) type it can be:
+
     + structure
     + topology
     + trajectory
     + energy
     + None
+
 - EXTENSION
-    Is a tuple of possible file extensions
+
+  Is a tuple of possible file extensions
 """
 
 import os.path

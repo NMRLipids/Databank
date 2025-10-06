@@ -62,7 +62,7 @@ def computeNMRPCA(  # noqa: N802 (API)
     :param recompute: Delete previous apl.json and recompute it if True.
                       Defaults to False.
 
-    :return: int success code (RCODE_...)
+    :return: int success code (``RCODE_XXX``)
     """
     # getting data from databank and preprocessing them
     # Start Parser
@@ -149,7 +149,7 @@ def computeAPL(  # noqa: N802 (API)
 
     Returns
     -------
-        int success code (RCODE_...)
+        int success code (``RCODE_XXX``)
     """
     # TODO: reading software and file path for simulations
     path = system["path"]

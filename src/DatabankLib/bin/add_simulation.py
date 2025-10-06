@@ -5,7 +5,7 @@ Add new simulation into the NMRlipids Databank.
 The script adds a simulation into the Databank based on ``info.yaml`` file.
 
 **Usage:**
-    AddData.py Script [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run]
+    nml_add_simulation [-h] [-f FILE] [-d] [-n] [-w WORK_DIR] [--dry-run]
 
 -h, --help             Show this help message and exit
 -f FILE, --file=FILE   Input config file in yaml format.
