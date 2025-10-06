@@ -5,6 +5,12 @@ DatabankLib CLI
 
 The NMRlipids Databank includes several standalone programs that are used to add simulation, pair them with experiments, evaluate quality and process ranking.
 
+   .. _initialize_data_py:
+
+nml_initialize_data
+-------------------
+
+.. automodule:: DatabankLib.bin.initialize_data
 
 .. _add_simulation_py:
 

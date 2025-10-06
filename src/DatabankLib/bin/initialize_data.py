@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+"""
+Initializes NMRlipids Databank data folder for further work and creates `databank_env.rc` file.
+
+
+**Usage:**
+
+.. code-block:: console
+
+    nml_initialize_data [toy|stable|dev|-h]
+    source databank_env.rc
+
+- ``toy``: copies ToyData from the package data. This Databank contains only 4 very small systems
+- ``stable``: download stable release from github.com/NMRlipids/BilayerData (even without git)
+- ``dev``: clone NMRlipids/BilayerData (requires git)
+"""
 
 import importlib.util
 import json
@@ -66,7 +81,7 @@ def initialize_data() -> None:
         sys.exit(1)
 
     prg = sys.argv[1].lower()
-    if prg not in ["toy", "stable", "dev"]:
+    if prg not in ["toy", "stable", "dev", "-h", "--help"]:
         sys.stderr.write("Invalid argument. Use 'toy', 'stable', or 'dev'.")
         sys.exit(1)
     sim_path = None
@@ -95,6 +110,18 @@ def initialize_data() -> None:
         print(f"Cloning {DBREPO} at main branch ...")
         clone_repo("main")
         data_path = os.path.join(os.getcwd(), LOCDIRN)
+    elif prg in ["-h", "--help"]:
+        print("""
+Initializes NMRlipids Databank data folder for further work and creates `databank_env.rc` file.
+
+Usage:
+    nml_initialize_data [toy|stable|dev|-h]
+    source databank_env.rc
+
+toy - copies ToyData from the package data. This Databank contains only 4 very small systems.
+stable - download stable release from github.com/NMRlipids/BilayerData (even without git).
+dev - clone NMRlipids/BilayerData (requires git).
+""")
 
     # Write environment setup file
     with open("databank_env.rc", "w") as f:
