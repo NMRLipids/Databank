@@ -5,6 +5,8 @@ Currently only ``run_analysis``, which runs a given analysis method on a
 range of systems in the databank.
 """
 
+import os
+import sys
 from collections.abc import Callable
 from logging import Logger
 
@@ -53,3 +55,6 @@ def run_analysis(
     SKIPPED: {result_dict[RCODE_SKIPPED]}
     ERROR: {result_dict[RCODE_ERROR]}
     """)
+    if os.getenv("NML_STRICT_MODE") and result_dict[RCODE_ERROR] > 0:
+        logger.error("Detected %d failed analyses. Exiting with code %d.", result_dict[RCODE_ERROR], RCODE_ERROR)
+        sys.exit(RCODE_ERROR)
