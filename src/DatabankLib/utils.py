@@ -28,6 +28,11 @@ def run_analysis(
                      (None, None) which means all systems. Can be also (None, -1)
                      which means all new systems, or (0, None) which means all
                      old systems.
+    Environment variables:
+        - ``NML_STRICT_MODE``: if set to ``"true"`` or ``"1"`` (case-insensitive),
+          the function will exit with code ``RCODE_ERROR`` if one or more analyses
+          fail. When unset, empty, or any other value, failed analyses are only
+          logged and execution continues normally.
 
     :return: None
     """
@@ -55,6 +60,11 @@ def run_analysis(
     SKIPPED: {result_dict[RCODE_SKIPPED]}
     ERROR: {result_dict[RCODE_ERROR]}
     """)
-    if os.getenv("NML_STRICT_MODE") and result_dict[RCODE_ERROR] > 0:
-        logger.error("Detected %d failed analyses. Exiting with code %d.", result_dict[RCODE_ERROR], RCODE_ERROR)
+    strict_mode = os.getenv("NML_STRICT_MODE", "").lower() in ("1", "true")
+    if strict_mode and result_dict[RCODE_ERROR] > 0:
+        logger.error(
+            "Detected %d failed analyses. Exiting with code %d.",
+            result_dict[RCODE_ERROR],
+            RCODE_ERROR,
+        )
         sys.exit(RCODE_ERROR)
