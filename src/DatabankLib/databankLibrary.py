@@ -14,6 +14,7 @@ import sys
 import urllib
 import warnings
 
+from tqdm import tqdm
 import MDAnalysis as mda
 import numpy as np
 from deprecated import deprecated
@@ -276,6 +277,23 @@ def calc_z_dim(gro):
     return z
 
 
+class TqdmUpTo(tqdm):
+    """Provides `update_to(block_num, block_size, total_size)` for `urllib.request`."""
+
+    def update_to(self, b=1, bsize=1, tsize=None):
+        """
+        b  : int, optional
+            Number of blocks transferred so far [default: 1].
+        bsize  : int, optional
+            Size of each block (in tqdm units) [default: 1].
+        tsize  : int, optional
+            Total size (in tqdm units). If [default: None] remains unchanged.
+        """
+        if tsize is not None:
+            self.total = tsize
+        self.update(b * bsize - self.n)  # will also set self.n = b * bsize
+
+
 def _download_and_verify(url: str, dest_path: str, expected_size: int | None = None):
     """
     Downloads a file from a URL, verifies its size, and retries on failure.
@@ -302,12 +320,19 @@ def _download_and_verify(url: str, dest_path: str, expected_size: int | None = N
                             f"Expected: {expected_size}, but remote reports: {remote_size}. "
                             "Proceeding with download.",
                         )
-                    print(f"Downloading {os.path.basename(dest_path)} ({remote_size / 1e6:.2f} MB)...")
                 else:
                     logger.warning("Could not determine remote file size. Downloading without progress.")
                     remote_size = None
 
-            urllib.request.urlretrieve(url, dest_path)
+            with TqdmUpTo(
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                miniters=1,
+                desc=f"Downloading {os.path.basename(dest_path)}",
+                total=remote_size,
+            ) as t:
+                urllib.request.urlretrieve(url, dest_path, reporthook=t.update_to)
 
             local_size = os.path.getsize(dest_path)
             if remote_size is not None and local_size != remote_size:
