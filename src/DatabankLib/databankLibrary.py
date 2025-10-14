@@ -8,6 +8,7 @@ import json
 import logging
 import math
 import os
+import time
 import subprocess
 import sys
 import urllib
@@ -275,6 +276,59 @@ def calc_z_dim(gro):
     return z
 
 
+def _download_and_verify(url: str, dest_path: str, expected_size: int | None = None):
+    """
+    Downloads a file from a URL, verifies its size, and retries on failure.
+
+    It first checks the remote file size via a HEAD request. If `expected_size`
+    is provided, it's compared against the remote size. The file is then
+    downloaded. After download, the local file size is verified against the
+    remote size. The entire process is attempted up to 3 times.
+
+    :param url: The URL to download the file from.
+    :param dest_path: The local path to save the file.
+    :param expected_size: The expected file size in bytes from the databank info.
+    """
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(url) as response:
+                remote_size_str = response.getheader("Content-Length")
+                if remote_size_str:
+                    remote_size = int(remote_size_str)
+                    if expected_size is not None and remote_size != expected_size:
+                        logger.warning(
+                            f"File size mismatch for {os.path.basename(dest_path)}. "
+                            f"Expected: {expected_size}, but remote reports: {remote_size}. "
+                            "Proceeding with download.",
+                        )
+                    print(f"Downloading {os.path.basename(dest_path)} ({remote_size / 1e6:.2f} MB)...")
+                else:
+                    logger.warning("Could not determine remote file size. Downloading without progress.")
+                    remote_size = None
+
+            urllib.request.urlretrieve(url, dest_path)
+
+            local_size = os.path.getsize(dest_path)
+            if remote_size is not None and local_size != remote_size:
+                raise IOError(
+                    f"Downloaded file size mismatch for {os.path.basename(dest_path)}. "
+                    f"Expected {remote_size} bytes, but got {local_size} bytes.",
+                )
+
+            logger.info(f"Successfully downloaded and verified {os.path.basename(dest_path)}.")
+            return  # Exit the function on success
+
+        except (urllib.error.URLError, IOError) as e:
+            logger.warning(f"Attempt {attempt + 1} of {max_retries} failed for {os.path.basename(dest_path)}. Reason: {e}")
+            if attempt + 1 == max_retries:
+                logger.error(f"Failed to download or verify {url} after {max_retries} attempts.")
+                raise
+            wait_time = 5 * (attempt + 1)  # Increase wait time for subsequent retries
+            logger.info(f"Retrying in {wait_time} seconds...")
+            time.sleep(wait_time)
+
+
 def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
     """
     Takes the ``system`` dictionary as an input, downloads the required files to
@@ -316,13 +370,7 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
     else:
         trj_url = resolve_download_file_url(doi, trj)
         if not os.path.isfile(trj_name):
-            print(
-                "Downloading trajectory with the size of ",
-                system["TRAJECTORY_SIZE"],
-                " to ",
-                system["path"],
-            )
-            _ = urllib.request.urlretrieve(trj_url, trj_name)
+            _download_and_verify(trj_url, trj_name, system.get("TRAJECTORY_SIZE"))
 
     # downloading topology (if exists)
     if top is not None:
@@ -332,7 +380,7 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
         else:
             top_url = resolve_download_file_url(doi, top)
             if not os.path.isfile(top_name):
-                _ = urllib.request.urlretrieve(top_url, top_name)
+                _download_and_verify(top_url, top_name)
 
     # downloading structure (if exists)
     if struc is not None:
@@ -342,7 +390,7 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
         else:
             struc_url = resolve_download_file_url(doi, struc)
             if not os.path.isfile(struc_name):
-                _ = urllib.request.urlretrieve(struc_url, struc_name)
+                _download_and_verify(struc_url, struc_name)
 
     made_from_top = False
     try:
