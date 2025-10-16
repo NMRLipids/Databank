@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Organization &mdash; NMRlipids Databank v1.3.1.dev7+g57a424f5b 1.3.1.dev7+g57a424f5b documentation</title>
+  <title>Data Organization &mdash; NMRlipids Databank v1.3.1.dev9+gb2fe58e94 1.3.1.dev9+gb2fe58e94 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=0a7e822a"></script>
+      <script src="_static/documentation_options.js?v=ddfe6846"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            NMRlipids Databank v1.3.1.dev7+g57a424f5b
+            NMRlipids Databank v1.3.1.dev9+gb2fe58e94
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -83,7 +83,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">NMRlipids Databank v1.3.1.dev7+g57a424f5b</a>
+          <a href="index.html">NMRlipids Databank v1.3.1.dev9+gb2fe58e94</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -160,9 +160,9 @@ It is connected into the NMRlipids Databank repository as a submodule into <code
 <h3>Simulation computed properties<a class="headerlink" href="#simulation-computed-properties" title="Link to this heading"></a></h3>
 <p>1. <code class="file docutils literal notranslate"><span class="pre">apl.json</span></code> contains area per lipid (Å<sup>2</sup>) as a function of time (ps) for a simulation. <br />
 See <code class="xref py py-func docutils literal notranslate"><span class="pre">Scripts.DatabankLib.analyze.computeAPL()</span></code> for computing details.</p>
-<p>2. <code class="file docutils literal notranslate"><span class="pre">POPC_OrderParameters.json</span></code> contains C-H bond order parameters and their uncertainties.
-Key in json format gives the universal C and H atom names.
-Values are average over lipids, standard deviation, and the standard error of the mean, respectively. <br />
+<p>2. <code class="file docutils literal notranslate"><span class="pre">XXXXOrderParameters.json</span></code> contains C-H bond order parameters and their uncertainties for each lipid XXXX.
+Key in json format is the merged universal C and H atom names.
+Three values are given: order parameter value for the C-H bond, standard deviation, and the standard error of the mean. <br />
 See <code class="xref py py-func docutils literal notranslate"><span class="pre">Scripts.DatabankLib.analyze.computeOP()</span></code> for computing details.</p>
 <p>3. <code class="file docutils literal notranslate"><span class="pre">FormFactor.json</span></code> contains simulated X-ray scattering form factor.
 X-axis value unit are Å<sup>-1</sup> and y-axis value units are e/nm<sup>2</sup>. <br />
