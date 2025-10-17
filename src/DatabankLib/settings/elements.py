@@ -67,6 +67,8 @@ def guess_elements(system: System, u: mda.Universe) -> None:
 
         for uname, props in mol.mapping_dict.items():
             res = str(props.get("RESIDUE", ""))
+            if mol_simu_name == "water":
+                mol_simu_name = "water*"
             _residue = f"resname {mol_simu_name if res == '' else res} and "
             _name = f"name {props['ATOMNAME']}"
             selstr = _moltype + _residue + _name
