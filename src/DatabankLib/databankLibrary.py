@@ -10,7 +10,6 @@ import math
 import os
 import subprocess
 import sys
-import urllib
 import warnings
 
 import MDAnalysis as mda
@@ -19,7 +18,7 @@ from deprecated import deprecated
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import System
-from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
+from DatabankLib.databankio import download_resource_from_uri, resolve_download_file_url
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 from DatabankLib.settings.molecules import lipids_set, molecule_ff_set, molecules_set
 
@@ -303,15 +302,13 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
         else:
             top_name = os.path.join(system_path, top)
     except Exception:
-        logger.exception(
-            f"Error getting structure/topology/trajectory filenames for system {system['ID']}."
-        )
+        logger.exception(f"Error getting structure/topology/trajectory filenames for system {system['ID']}.")
         raise
 
     # downloading trajectory (obligatory)
     if skip_downloading:
         if not os.path.isfile(trj_name):
-            msg = f"Trajectory should be downloaded [{trj_name}] by user",
+            msg = (f"Trajectory should be downloaded [{trj_name}] by user",)
             raise FileNotFoundError(msg)
     else:
         trj_url = resolve_download_file_url(doi, trj)

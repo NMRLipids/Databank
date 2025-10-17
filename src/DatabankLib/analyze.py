@@ -31,7 +31,7 @@ from DatabankLib import (
 )
 from DatabankLib import analyze_nmrpca as nmrpca
 from DatabankLib.core import System
-from DatabankLib.databankio import resolve_download_file_url, download_resource_from_uri
+from DatabankLib.databankio import download_resource_from_uri, resolve_download_file_url
 from DatabankLib.databankLibrary import GetNlipids, getLipids, system2MDanalysisUniverse
 from DatabankLib.databankop import find_OP
 from DatabankLib.jsonEncoders import CompactJSONEncoder
