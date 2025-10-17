@@ -10,7 +10,6 @@ import math
 import os
 import subprocess
 import sys
-import urllib
 import warnings
 
 import MDAnalysis as mda
@@ -19,7 +18,7 @@ from deprecated import deprecated
 
 from DatabankLib import NMLDB_SIMU_PATH
 from DatabankLib.core import System
-from DatabankLib.databankio import resolve_download_file_url
+from DatabankLib.databankio import download_resource_from_uri, resolve_download_file_url
 from DatabankLib.settings.engines import get_struc_top_traj_fnames, software_dict
 from DatabankLib.settings.molecules import lipids_set, molecule_ff_set, molecules_set
 
@@ -302,17 +301,15 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
             top_name = None
         else:
             top_name = os.path.join(system_path, top)
-    except Exception as e:
-        logger.error("Error getting structure/topology/trajectory filenames.")
-        logger.error(str(e))
+    except Exception:
+        logger.exception(f"Error getting structure/topology/trajectory filenames for system {system['ID']}.")
         raise
 
     # downloading trajectory (obligatory)
     if skip_downloading:
         if not os.path.isfile(trj_name):
-            raise FileNotFoundError(
-                f"Trajectory should be downloaded [{trj_name}] by user",
-            )
+            msg = (f"Trajectory should be downloaded [{trj_name}] by user",)
+            raise FileNotFoundError(msg)
     else:
         trj_url = resolve_download_file_url(doi, trj)
         if not os.path.isfile(trj_name):
@@ -322,27 +319,29 @@ def system2MDanalysisUniverse(system):  # noqa: N802 (API name)
                 " to ",
                 system["path"],
             )
-            _ = urllib.request.urlretrieve(trj_url, trj_name)
+            _ = download_resource_from_uri(trj_url, trj_name)
 
     # downloading topology (if exists)
     if top is not None:
         if skip_downloading:
             if not os.path.isfile(top_name):
-                raise FileNotFoundError(f"TPR should be downloaded [{top_name}]")
+                msg = f"TPR should be downloaded [{top_name}]"
+                raise FileNotFoundError(msg)
         else:
             top_url = resolve_download_file_url(doi, top)
             if not os.path.isfile(top_name):
-                _ = urllib.request.urlretrieve(top_url, top_name)
+                _ = download_resource_from_uri(top_url, top_name)
 
     # downloading structure (if exists)
     if struc is not None:
         if skip_downloading:
             if not os.path.isfile(struc_name):
-                raise FileNotFoundError(f"GRO should be downloaded [{struc_name}]")
+                msg = f"GRO should be downloaded [{struc_name}]"
+                raise FileNotFoundError(msg)
         else:
             struc_url = resolve_download_file_url(doi, struc)
             if not os.path.isfile(struc_name):
-                _ = urllib.request.urlretrieve(struc_url, struc_name)
+                _ = download_resource_from_uri(struc_url, struc_name)
 
     made_from_top = False
     try:
