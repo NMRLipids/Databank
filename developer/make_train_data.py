@@ -1,51 +1,47 @@
-from fairmd.lipids.core import initialize_databank
-from fairmd.lipids.databankio import download_resource_from_uri
-from fairmd.lipids.molecules import Lipid, Molecule, lipids_set
-from fairmd.lipids.api import get_eqtimes, get_thickness, UniverseConstructor#, get_mean_ApL
-from fairmd.lipids.analib.maicos import DensityPlanar, FormFactorPlanar, is_system_suitable_4_maicos, first_last_carbon, traj_centering_for_maicos_gromacs, traj_centering_for_maicos_mda_parallel, traj_centering_for_maicos_mda
-from fairmd.lipids import FMDL_SIMU_PATH, FMDL_MAICOS_NCORES
-from fairmd.lipids.auxiliary import mollib
-from maicos.core.base import AnalysisCollection
+#!/usr/bin/env python3
+
+"""
+Script for processing lipid databank systems and saving analysis results to HDF5.
+
+This script filters systems by water-to-lipid ratio, calculates density
+profiles using maicos, and exports the data for machine learning training.
+"""
+
 import logging
-import MDAnalysis as mda
-import fairmd
-import numpy as np
-import matplotlib.pyplot as plt
-import h5py
 import os
 
+import h5py
+import numpy as np
 
-WATER_TO_LIPID_RATIO_THRESHOLD = 20
-RECOMPUTE = True
+from fairmd.lipids import FMDL_MAICOS_NCORES, FMDL_SIMU_PATH
+from fairmd.lipids.analib.maicos import (
+    DensityPlanar,
+    FormFactorPlanar,
+    first_last_carbon,
+    is_system_suitable_4_maicos,
+    traj_centering_for_maicos_gromacs,
+    traj_centering_for_maicos_mda,
+    traj_centering_for_maicos_mda_parallel,
+)
+from fairmd.lipids.api import UniverseConstructor, get_thickness, get_mean_ApL
+from fairmd.lipids.auxiliary import mollib
+from fairmd.lipids.core import initialize_databank
+from fairmd.lipids.molecules import Lipid, lipids_set
 
-systems = initialize_databank()
-logger = logging.getLogger(__name__)
-
-#### OLDER version get_mean_ApL new one is giving an error - Ill test it and send bug report later
-from fairmd.lipids.core import System
-import json
-def get_mean_ApL(system) -> float:  # noqa: N802 (API name)
-    """
-    Calculate average area per lipid for a system.
-
-    :param system: Simulation object.
-
-    :return: area per lipid (Å^2)
-    """
-    path = os.path.join(FMDL_SIMU_PATH, system["path"], "apl.json")
-    try:
-        with open(path) as f:
-            data = json.load(f)
-    except FileNotFoundError as e:
-        msg = "Area per lipid data is absent for system #{}".format(system["ID"])
-        raise FileNotFoundError(msg) from e
-    except json.JSONDecodeError as e:
-        msg = "Area per lipid data for system #{} in {} is invalid.".format(system["ID"], path)
-        raise ValueError(msg) from e
-    vals = np.array(list(data.values()))
-    return vals.mean()
 
 def is_suitable(system):
+    """
+    Checks if a simulation system is suitable for analysis with maicos.
+
+    Checks for the presence of a 'WARNINGS' dictionary in the system metadata
+    and verifies compatibility using the internal fairmd suitability check.
+
+    Args:
+        system (dict): The system dictionary from the databank.
+
+    Returns:
+        bool: True if the system is suitable for analysis, False otherwise.
+    """
     flag = True
     if "WARNINGS" in system.keys() and type(system["WARNINGS"]) == dict:
         flag = False
@@ -53,12 +49,25 @@ def is_suitable(system):
         print(f"system {system} not suitable for maicos")
         flag = False
     return flag
-#        if "PBC" in system["WARNINGS"].keys():
-#            continue
-#        elif "ORIENTATION" in system["WARNINGS"].keys():
-#            continue
+
 
 def get_scalar_properties(system):
+    """
+    Retrieves scalar physical properties (ApL and thickness) for a given system.
+
+    Attempts to load the mean Area per Lipid (ApL) and bilayer thickness. 
+    If a property cannot be loaded, it assigns a default value of -1 and 
+    logs a warning.
+
+    Args:
+        system (dict): The system dictionary from the databank.
+
+    Returns:
+        tuple: A tuple containing:
+            - ApL (float): Average area per lipid (Å²).
+            - thickness (float): Bilayer thickness (Å).
+            - flag (bool): True if all properties were loaded successfully.
+    """
     flag = True
     try:
         ApL = get_mean_ApL(system)
@@ -75,7 +84,27 @@ def get_scalar_properties(system):
         thickness = -1
     return ApL, thickness, flag
 
+
 def center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger):
+    """
+    Centers the simulation trajectory for analysis, handling different software backends.
+
+    Coordinates trajectory centering using either Gromacs commands or MDAnalysis 
+    (sequential or parallel) based on the simulation metadata and environment 
+    configuration.
+
+    Args:
+        u (MDAnalysis.Universe): The initial MDAnalysis universe.
+        uc (UniverseConstructor): Object containing simulation path and topology info.
+        spath (str): Full path to the simulation directory.
+        last_atom (int/str): Index or name of the last atom for centering reference.
+        g3_atom (int/str): Index or name of the glycerol 3 atom for orientation.
+        eq_time (float): Equilibration time to skip in milliseconds.
+        logger (logging.Logger): Logger instance for status and error reporting.
+
+    Returns:
+    str: The file path to the newly created centered trajectory file
+    """
     if "gromacs" in system["SOFTWARE"]:
         traj_centered = traj_centering_for_maicos_gromacs(
             spath,
@@ -121,30 +150,60 @@ def center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger):
                 recompute=RECOMPUTE,
                 logger=logger,
             )
+    return traj_centered
+
 
 def separate_lipid_atoms(mapping_dict):
-    head_atoms = ''
-    tail_atoms = ''
-    backbone_atoms =  ''
+    """
+    Groups lipid atom names into headgroup, tail, and backbone fragments.
+
+    Parses a mapping dictionary (usually from a Lipid class instance) to 
+    categorize atoms based on their structural fragment.
+
+    Args:
+        mapping_dict (dict): Dictionary mapping atom IDs to names and fragments.
+
+    Returns:
+        tuple: A triplet of space-separated strings (head_atoms, tail_atoms, backbone_atoms)
+            containing the atom names for each respective fragment.
+    """
+    head_atoms = ""
+    tail_atoms = ""
+    backbone_atoms = ""
     for atom in mapping_dict.keys():
-        fragment = mapping_dict[atom]['FRAGMENT']
-        atom_name = mapping_dict[atom]['ATOMNAME']
-        if fragment == 'headgroup':
-            head_atoms += atom_name + ' '
-        elif fragment == 'sn-1' or fragment == 'sn-2' or fragment == 'tail':
-            tail_atoms += atom_name + ' '
-        elif fragment == 'glycerol backbone':
-            backbone_atoms += atom_name + ' '
+        fragment = mapping_dict[atom]["FRAGMENT"]
+        atom_name = mapping_dict[atom]["ATOMNAME"]
+        if fragment == "headgroup":
+            head_atoms += atom_name + " "
+        elif fragment == "sn-1" or fragment == "sn-2" or fragment == "tail":
+            tail_atoms += atom_name + " "
+        elif fragment == "glycerol backbone":
+            backbone_atoms += atom_name + " "
         else:
-            print(f'What is this? {fragment} - {atom_name}')
+            print(f"Invalid atom - {atom} - {atom_name} - {fragment}")
     return (head_atoms, tail_atoms, backbone_atoms)
 
+
 def create_fragment_selectors(lipid_names):
-    head_selector, tail_selector, backbone_selector = 'name ', 'name ', 'name '
+    """
+    Creates MDAnalysis atom selection strings for lipid fragments across a system.
+
+    Iterates through a list of lipid names, registers their fragment mappings, 
+    and constructs 'name ...' strings used to select specific fragments in 
+    a simulation.
+
+    Args:
+        lipid_names (list of str): List of lipid molecule names present in the system.
+
+    Returns:
+        list of str: A list containing three selection strings in the order:
+            [head_selector, tail_selector, backbone_selector].
+    """
+    head_selector, tail_selector, backbone_selector = "name ", "name ", "name "
     for lipid in lipid_names:
         lipid_class = Lipid(lipid)
         lipid_class.register_mapping()
-        
+
         mapping_dict = lipid_class.mapping_dict
         head_atoms, tail_atoms, backbone_atoms = separate_lipid_atoms(mapping_dict)
 
@@ -156,64 +215,100 @@ def create_fragment_selectors(lipid_names):
 
 
 class HDF5LipidWriter:
+    """
+    A handler for saving lipid simulation analysis results into HDF5 format.
+
+    This class manages the hierarchical storage of form factors, density 
+    profiles, and scalar properties. It is designed for long-running 
+    processes by opening and flushing to the file for every system processed.
+    """
     def __init__(self, filename, overwrite_file=False):
+        """
+        Initializes the writer and optionally clears the existing file.
+
+        Args:
+            filename (str): Path to the output .h5 file.
+            overwrite_file (bool): If True, deletes the existing file on initialization.
+        """
         self.filename = filename
 
         if overwrite_file and os.path.exists(self.filename):
             print(f"Clearing existing file: {self.filename}")
             os.remove(self.filename)
 
-    def _get_file_mode(self):
-        return 'a'
-
     def save_system(self, system, scalar_data, form_factor, total_dens, mol_densities, frag_densities):
         """
-        Opens, writes one system, and closes immediately to prevent data loss.
+        Saves a single system's results to the HDF5 file.
+
+        Organizes data into groups for metadata, axes, form factors, and 
+        various electron density profiles (total, fragment-based, and molecule-based).
+        If the system ID already exists, it is overwritten to ensure data integrity.
+
+        Args:
+            system (dict): System metadata from the databank.
+            scalar_data (dict): Dictionary containing 'ApL' and 'thickness'.
+            form_factor (tuple): (q_pos, profile, dprofile) for the form factor.
+            total_dens (tuple): (r_pos, profile, dprofile) for total electron density.
+            mol_densities (list of tuples): List of (profile, dprofile) for each molecule type.
+            frag_densities (list of tuples): List of (profile, dprofile) for lipid fragments.
         """
-        with h5py.File(self.filename, self._get_file_mode()) as f:
+        with h5py.File(self.filename, "a") as f:
             sys_id = str(system["ID"])
-            
-            # Prevent overwriting if system ID already exists
+
             if sys_id in f:
                 print(f"Warning: System {sys_id} already exists in HDF5. Overwriting.")
                 del f[sys_id]
-            
+
             grp = f.create_group(sys_id)
 
-            grp.attrs['path'] = system.get("path", "")
-            grp.attrs['ApL'] = scalar_data.get('ApL', 0)
-            grp.attrs['thickness'] = scalar_data.get('thickness', 0)
+            grp.attrs["path"] = system.get("path", "")
+            grp.attrs["ApL"] = scalar_data.get("ApL", 0)
+            grp.attrs["thickness"] = scalar_data.get("thickness", 0)
 
-            axis_grp = grp.create_group('axis')
-            self._write_dataset(axis_grp, 'q_pos', form_factor[0])
-            self._write_dataset(axis_grp, 'r_pos', total_dens[0])
-            
-            ff_grp = grp.create_group('form_factor')
-            self._write_dataset(ff_grp, 'profile', form_factor[1])
-            self._write_dataset(ff_grp, 'dprofile', form_factor[2])
+            axis_grp = grp.create_group("axis")
+            self._write_dataset(axis_grp, "q_pos", form_factor[0])
+            self._write_dataset(axis_grp, "r_pos", total_dens[0])
 
-            td_grp = grp.create_group('density_total')
-            self._write_dataset(td_grp, 'profile', total_dens[1])
-            self._write_dataset(td_grp, 'dprofile', total_dens[2])
+            ff_grp = grp.create_group("form_factor")
+            self._write_dataset(ff_grp, "profile", form_factor[1])
+            self._write_dataset(ff_grp, "dprofile", form_factor[2])
 
-            frag_labels = ['head', 'tail', 'backbone']
-            frag_grp = grp.create_group('density_fragments')
+            td_grp = grp.create_group("density_total")
+            self._write_dataset(td_grp, "profile", total_dens[1])
+            self._write_dataset(td_grp, "dprofile", total_dens[2])
+
+            frag_labels = ["head", "tail", "backbone"]
+            frag_grp = grp.create_group("density_fragments")
             for i, (profile, dprofile) in enumerate(frag_densities):
                 label = frag_labels[i] if i < len(frag_labels) else f"frag_{i}"
                 sub_grp = frag_grp.create_group(label)
-                self._write_dataset(sub_grp, 'profile', profile)
-                self._write_dataset(sub_grp, 'dprofile', dprofile)
+                self._write_dataset(sub_grp, "profile", profile)
+                self._write_dataset(sub_grp, "dprofile", dprofile)
 
-            mol_grp = grp.create_group('density_molecules')
+            mol_grp = grp.create_group("density_molecules")
             for i, (profile, dprofile) in enumerate(mol_densities):
                 sub_grp = mol_grp.create_group(f"mol_{i}")
-                self._write_dataset(sub_grp, 'profile', profile)
-                self._write_dataset(sub_grp, 'dprofile', dprofile)
-
+                self._write_dataset(sub_grp, "profile", profile)
+                self._write_dataset(sub_grp, "dprofile", dprofile)
 
     def _write_dataset(self, group, name, data):
+        """
+        Helper method to write a NumPy array to an HDF5 group with compression.
+
+        Args:
+            group (h5py.Group): The parent group to write into.
+            name (str): The name of the dataset.
+            data (array-like): The numerical data to save.
+        """
         if data is not None:
             group.create_dataset(name, data=np.array(data), compression="gzip", compression_opts=4)
+
+
+WATER_TO_LIPID_RATIO_THRESHOLD = 20
+RECOMPUTE = True
+
+systems = initialize_databank()
+logger = logging.getLogger(__name__)
 
 writer = HDF5LipidWriter("lipid_FF_dataset.h5")
 test_flag = True
@@ -221,33 +316,27 @@ test_flag = True
 count = 0
 print(f"Number of systems: {len(systems)}")
 for system in systems:
-    if system['TRAJECTORY_SIZE'] > 10**8 and test_flag: #For testing purpouses
+    if system["TRAJECTORY_SIZE"] > 10**8 and test_flag:  # For testing purpouses
         continue
 
     if not is_suitable(system):
         continue
-    
-    ApL, thickness, flag = get_scalar_properties(system)
-    #if not flag:
-    #    continue
-    print(ApL, thickness)
-    scalar_info = {
-        'ApL': ApL, 
-        'thickness': thickness
-    }
 
-    water_n = system['COMPOSITION']['SOL']['COUNT']
-    molecules = system['COMPOSITION'].keys()
+    ApL, thickness, flag = get_scalar_properties(system)
+    # if not flag:
+    #    continue
+    scalar_info = {"ApL": ApL, "thickness": thickness}
+
+    water_n = system["COMPOSITION"]["SOL"]["COUNT"]
+    molecules = system["COMPOSITION"].keys()
     lipid_names = []
     lipid_n = 0
     for molecule in molecules:
         if molecule in lipids_set:
-            lipid_n += sum(system['COMPOSITION'][molecule]['COUNT'])
+            lipid_n += sum(system["COMPOSITION"][molecule]["COUNT"])
             lipid_names.append(molecule)
 
     water_to_lipid_ratio = water_n / lipid_n
-    print(water_to_lipid_ratio)
-
 
     if water_to_lipid_ratio < WATER_TO_LIPID_RATIO_THRESHOLD:
         continue
@@ -262,20 +351,18 @@ for system in systems:
 
     last_atom, g3_atom = first_last_carbon(system, logger)
 
-    spath = f'{FMDL_SIMU_PATH}/{system["path"]}'
+    spath = f"{FMDL_SIMU_PATH}/{system['path']}"
     u = uc.build_universe()
 
     traj_centered = center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger)
 
-    
     u.load_new(traj_centered, format="XTC")
     u.guess_TopologyAttrs(force_guess=["elements"])
     mollib.guess_elements(system, u)
 
     bin_width = 0.3
 
-
-    L_min = u.dimensions[2] 
+    L_min = u.dimensions[2]
     for ts in u.trajectory:
         L_min = min(L_min, ts.dimensions[2])
 
@@ -285,7 +372,7 @@ for system in systems:
 
     save_data = []
 
-    print(f'Calculating form factor')
+    print("Calculating form factor")
     form_factor = FormFactorPlanar(
         atomgroup=u.atoms,
         **base_options,
@@ -294,18 +381,22 @@ for system in systems:
     ).run()
     ff = (form_factor.results.bin_pos, form_factor.results.profile, form_factor.results.dprofile)
 
-    print(f'Calculating total density')
+    print("Calculating total density")
     dens_total_runner = DensityPlanar(
         u.atoms,
         dens="electron",
         **dens_options,
     ).run()
-    dens_total = (dens_total_runner.results.bin_pos, dens_total_runner.results.profile, dens_total_runner.results.dprofile)
+    dens_total = (
+        dens_total_runner.results.bin_pos,
+        dens_total_runner.results.profile,
+        dens_total_runner.results.dprofile,
+    )
 
     molecule_types_selector = [f"resname {system['COMPOSITION'][molecule_type]['NAME']}" for molecule_type in molecules]
     dens_molecule = []
     for selector in molecule_types_selector:
-        print(f'Calculating {selector.split(" ")[1]} density')
+        print(f"Calculating {selector.split(' ')[1]} density")
         molecule_group = u.select_atoms(selector)
         dens_molecule_runner = DensityPlanar(
             molecule_group,
@@ -317,9 +408,9 @@ for system in systems:
 
     fragment_selectors = create_fragment_selectors(lipid_names)
     dens_fragment = []
-    frag_labels = ['head', 'tail', 'backbone']
+    frag_labels = ["head", "tail", "backbone"]
     for i, selector in enumerate(fragment_selectors):
-        print(f'Calculating {frag_labels[i]} density')
+        print(f"Calculating {frag_labels[i]} density")
         fragment_group = u.select_atoms(selector)
         dens_fragment_runner = DensityPlanar(
             fragment_group,
@@ -335,9 +426,9 @@ for system in systems:
         form_factor=ff,
         total_dens=dens_total,
         mol_densities=dens_molecule,
-        frag_densities=dens_fragment
+        frag_densities=dens_fragment,
     )
 
     count += 1
-    
+
 print(f"Final number of systems saved into dataset: {count}")
