@@ -23,15 +23,15 @@ from fairmd.lipids.analib.maicos import (
     traj_centering_for_maicos_mda,
     traj_centering_for_maicos_mda_parallel,
 )
-from fairmd.lipids.api import UniverseConstructor, get_thickness, get_mean_ApL
+from fairmd.lipids.api import UniverseConstructor, get_mean_ApL, get_thickness
 from fairmd.lipids.auxiliary import mollib
-from fairmd.lipids.core import initialize_databank
-from fairmd.lipids.molecules import Lipid, lipids_set
+from fairmd.lipids.core import System, initialize_databank
+from fairmd.lipids.molecules import Lipid
 
 
-def is_suitable(system):
+def is_suitable(system: System) -> bool:
     """
-    Checks if a simulation system is suitable for analysis with maicos.
+    Check if a simulation system is suitable for analysis with maicos.
 
     Checks for the presence of a 'WARNINGS' dictionary in the system metadata
     and verifies compatibility using the internal fairmd suitability check.
@@ -43,7 +43,7 @@ def is_suitable(system):
         bool: True if the system is suitable for analysis, False otherwise.
     """
     flag = True
-    if "WARNINGS" in system.keys() and type(system["WARNINGS"]) == dict:
+    if "WARNINGS" in system and isinstance(system["WARNINGS"], dict):
         flag = False
     if not is_system_suitable_4_maicos(system):
         print(f"system {system} not suitable for maicos")
@@ -51,12 +51,12 @@ def is_suitable(system):
     return flag
 
 
-def get_scalar_properties(system):
+def get_scalar_properties(system: System) -> tuple[float, float, bool]:
     """
-    Retrieves scalar physical properties (ApL and thickness) for a given system.
+    Retrieve scalar physical properties (ApL and thickness) for a given system.
 
-    Attempts to load the mean Area per Lipid (ApL) and bilayer thickness. 
-    If a property cannot be loaded, it assigns a default value of -1 and 
+    Attempts to load the mean Area per Lipid (ApL) and bilayer thickness.
+    If a property cannot be loaded, it assigns a default value of -1 and
     logs a warning.
 
     Args:
@@ -66,31 +66,40 @@ def get_scalar_properties(system):
         tuple: A tuple containing:
             - ApL (float): Average area per lipid (Å²).
             - thickness (float): Bilayer thickness (Å).
-            - flag (bool): True if all properties were loaded successfully.
+            - no_error_flag (bool): True if all properties were loaded successfully.
     """
-    flag = True
+    no_error_flag = True
     try:
-        ApL = get_mean_ApL(system)
+        apl = get_mean_ApL(system)
     except:
         print(f"System {system} - can't load ApL")
-        flag = False
-        ApL = -1
+        no_error_flag = False
+        apl = -1
 
     try:
         thickness = get_thickness(system)
     except:
         print(f"System {system} - can't load thickness")
-        flag = False
+        no_error_flag = False
         thickness = -1
-    return ApL, thickness, flag
+    return apl, thickness, no_error_flag
 
 
-def center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger):
+def center_trajectory(
+    system: System,
+    uc: UniverseConstructor,
+    last_atom,
+    g3_atom,
+    eq_time,
+    logger,
+    *,
+    recompute: bool = False,
+) -> str:
     """
     Centers the simulation trajectory for analysis, handling different software backends.
 
-    Coordinates trajectory centering using either Gromacs commands or MDAnalysis 
-    (sequential or parallel) based on the simulation metadata and environment 
+    Coordinates trajectory centering using either Gromacs commands or MDAnalysis
+    (sequential or parallel) based on the simulation metadata and environment
     configuration.
 
     Args:
@@ -105,6 +114,8 @@ def center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger):
     Returns:
     str: The file path to the newly created centered trajectory file
     """
+    u = uc.build_universe()
+    spath = os.path.join(FMDL_SIMU_PATH, system["path"])
     if "gromacs" in system["SOFTWARE"]:
         traj_centered = traj_centering_for_maicos_gromacs(
             spath,
@@ -113,51 +124,53 @@ def center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger):
             last_atom=last_atom,
             g3_atom=g3_atom,
             eq_time=eq_time,
-            recompute=RECOMPUTE,
+            recompute=recompute,
         )
-    else:
-        if FMDL_MAICOS_NCORES != 1:
-            try:
-                n_jobs = FMDL_MAICOS_NCORES if FMDL_MAICOS_NCORES is not None else -1
-                logger.info(f"Using parallel trajectory centering (n_jobs={n_jobs})")
-                traj_centered = traj_centering_for_maicos_mda_parallel(
-                    u,
-                    spath,
-                    last_atom,
-                    eq_time,
-                    n_jobs=n_jobs,
-                    recompute=RECOMPUTE,
-                    logger=logger,
-                    show_progress=True,
-                )
-            except ImportError:
-                logger.warning("joblib not available, falling back to sequential centering")
-                traj_centered = traj_centering_for_maicos_mda(
-                    u,
-                    spath,
-                    last_atom,
-                    eq_time,
-                    recompute=RECOMPUTE,
-                    logger=logger,
-                )
-        else:
-            logger.info("Using sequential trajectory centering (FMDL_MAICOS_NCORES=1)")
+    elif FMDL_MAICOS_NCORES != 1:
+        try:
+            n_jobs = FMDL_MAICOS_NCORES if FMDL_MAICOS_NCORES is not None else -1
+            logger.info(f"Using parallel trajectory centering (n_jobs={n_jobs})")
+            traj_centered = traj_centering_for_maicos_mda_parallel(
+                u,
+                spath,
+                last_atom,
+                eq_time,
+                n_jobs=n_jobs,
+                recompute=recompute,
+                logger=logger,
+                show_progress=True,
+            )
+        except ImportError:
+            logger.warning("joblib not available, falling back to sequential centering")
             traj_centered = traj_centering_for_maicos_mda(
                 u,
                 spath,
                 last_atom,
                 eq_time,
-                recompute=RECOMPUTE,
+                recompute=recompute,
                 logger=logger,
             )
-    return traj_centered
+    else:
+        logger.info("Using sequential trajectory centering (FMDL_MAICOS_NCORES=1)")
+        traj_centered = traj_centering_for_maicos_mda(
+            u,
+            spath,
+            last_atom,
+            eq_time,
+            recompute=recompute,
+            logger=logger,
+        )
+    u.load_new(traj_centered, format="XTC")
+    u.guess_TopologyAttrs(force_guess=["elements"])
+    mollib.guess_elements(system, u)
+    return u
 
 
 def separate_lipid_atoms(mapping_dict):
     """
-    Groups lipid atom names into headgroup, tail, and backbone fragments.
+    Group lipid atom names into headgroup, tail, and backbone fragments.
 
-    Parses a mapping dictionary (usually from a Lipid class instance) to 
+    Parses a mapping dictionary (usually from a Lipid class instance) to
     categorize atoms based on their structural fragment.
 
     Args:
@@ -170,7 +183,7 @@ def separate_lipid_atoms(mapping_dict):
     head_atoms = ""
     tail_atoms = ""
     backbone_atoms = ""
-    for atom in mapping_dict.keys():
+    for atom in mapping_dict:
         fragment = mapping_dict[atom]["FRAGMENT"]
         atom_name = mapping_dict[atom]["ATOMNAME"]
         if fragment == "headgroup":
@@ -186,10 +199,10 @@ def separate_lipid_atoms(mapping_dict):
 
 def create_fragment_selectors(lipid_names):
     """
-    Creates MDAnalysis atom selection strings for lipid fragments across a system.
+    Create MDAnalysis atom selection strings for lipid fragments across a system.
 
-    Iterates through a list of lipid names, registers their fragment mappings, 
-    and constructs 'name ...' strings used to select specific fragments in 
+    Iterates through a list of lipid names, registers their fragment mappings,
+    and constructs 'name ...' strings used to select specific fragments in
     a simulation.
 
     Args:
@@ -216,15 +229,16 @@ def create_fragment_selectors(lipid_names):
 
 class HDF5LipidWriter:
     """
-    A handler for saving lipid simulation analysis results into HDF5 format.
+    Save lipid simulation analysis results into HDF5 format.
 
-    This class manages the hierarchical storage of form factors, density 
-    profiles, and scalar properties. It is designed for long-running 
+    This class manages the hierarchical storage of form factors, density
+    profiles, and scalar properties. It is designed for long-running
     processes by opening and flushing to the file for every system processed.
     """
-    def __init__(self, filename, overwrite_file=False):
+
+    def __init__(self, filename: str, *, overwrite_file: bool = False) -> None:
         """
-        Initializes the writer and optionally clears the existing file.
+        Initialize the writer and optionally clears the existing file.
 
         Args:
             filename (str): Path to the output .h5 file.
@@ -238,9 +252,9 @@ class HDF5LipidWriter:
 
     def save_system(self, system, scalar_data, form_factor, total_dens, mol_densities, frag_densities):
         """
-        Saves a single system's results to the HDF5 file.
+        Save a single system's results to the HDF5 file.
 
-        Organizes data into groups for metadata, axes, form factors, and 
+        Organizes data into groups for metadata, axes, form factors, and
         various electron density profiles (total, fragment-based, and molecule-based).
         If the system ID already exists, it is overwritten to ensure data integrity.
 
@@ -293,7 +307,7 @@ class HDF5LipidWriter:
 
     def _write_dataset(self, group, name, data):
         """
-        Helper method to write a NumPy array to an HDF5 group with compression.
+        Write a NumPy array to an HDF5 group with compression.
 
         Args:
             group (h5py.Group): The parent group to write into.
@@ -304,131 +318,123 @@ class HDF5LipidWriter:
             group.create_dataset(name, data=np.array(data), compression="gzip", compression_opts=4)
 
 
-WATER_TO_LIPID_RATIO_THRESHOLD = 20
-RECOMPUTE = True
+def recompute_extended_ff_dataset(
+    h5fpath: str, *,
+    hydration_threshold: int = 20,
+    recompute_centering: bool = True,
+    small_trajs_only: bool = False,
+) -> None:
+    """
+    Recompute the extended form factor dataset for all systems in the databank.
 
-systems = initialize_databank()
-logger = logging.getLogger(__name__)
+    This function iterates through all systems, checks their suitability, and
+    processes them to extract form factors and density profiles. The results
+    are saved into an HDF5 file using the HDF5LipidWriter class. Systems that
+    do not meet the criteria (e.g., water-to-lipid ratio) are skipped.
+    """
+    systems = initialize_databank()
+    logger = logging.getLogger(__name__)
+    writer = HDF5LipidWriter(h5fpath)
 
-writer = HDF5LipidWriter("lipid_FF_dataset.h5")
-test_flag = True
+    count = 0
+    print(f"Number of systems: {len(systems)}")
+    for system in systems:
+        if system["TRAJECTORY_SIZE"] > 10**8 and small_trajs_only:  # For testing purpouses
+            continue
 
-count = 0
-print(f"Number of systems: {len(systems)}")
-for system in systems:
-    if system["TRAJECTORY_SIZE"] > 10**8 and test_flag:  # For testing purpouses
-        continue
+        if not is_suitable(system):
+            continue
 
-    if not is_suitable(system):
-        continue
+        ApL, thickness, flag = get_scalar_properties(system)
+        scalar_info = {"ApL": ApL, "thickness": thickness}
 
-    ApL, thickness, flag = get_scalar_properties(system)
-    # if not flag:
-    #    continue
-    scalar_info = {"ApL": ApL, "thickness": thickness}
+        if system.get_hydration(basis="number") < hydration_threshold:
+            continue
 
-    water_n = system["COMPOSITION"]["SOL"]["COUNT"]
-    molecules = system["COMPOSITION"].keys()
-    lipid_names = []
-    lipid_n = 0
-    for molecule in molecules:
-        if molecule in lipids_set:
-            lipid_n += sum(system["COMPOSITION"][molecule]["COUNT"])
-            lipid_names.append(molecule)
+        try:
+            uc = UniverseConstructor(system)
+            uc.download_mddata()
+        except:
+            continue
 
-    water_to_lipid_ratio = water_n / lipid_n
+        eq_time = float(system["TIMELEFTOUT"]) * 1000
+        last_atom, g3_atom = first_last_carbon(system, logger)
 
-    if water_to_lipid_ratio < WATER_TO_LIPID_RATIO_THRESHOLD:
-        continue
+        u = center_trajectory(system, uc, last_atom, g3_atom, eq_time, logger, recompute=recompute_centering)
 
-    try:
-        uc = UniverseConstructor(system)
-        uc.download_mddata()
-    except:
-        continue
+        bin_width = 0.3
 
-    eq_time = float(system["TIMELEFTOUT"]) * 1000
+        L_min = u.dimensions[2]
+        for ts in u.trajectory:
+            L_min = min(L_min, ts.dimensions[2])
 
-    last_atom, g3_atom = first_last_carbon(system, logger)
+        base_options = {"unwrap": False, "bin_width": bin_width, "pack": False}
+        zlim = {"zmin": -L_min / 2, "zmax": L_min / 2}
+        dens_options = {**zlim, **base_options}
 
-    spath = f"{FMDL_SIMU_PATH}/{system['path']}"
-    u = uc.build_universe()
+        print("Calculating form factor")
+        form_factor = FormFactorPlanar(
+            atomgroup=u.atoms,
+            **base_options,
+            zmin=None,
+            zmax=None,
+        ).run()
+        ff = (form_factor.results.bin_pos, form_factor.results.profile, form_factor.results.dprofile)
 
-    traj_centered = center_trajectory(u, uc, spath, last_atom, g3_atom, eq_time, logger)
-
-    u.load_new(traj_centered, format="XTC")
-    u.guess_TopologyAttrs(force_guess=["elements"])
-    mollib.guess_elements(system, u)
-
-    bin_width = 0.3
-
-    L_min = u.dimensions[2]
-    for ts in u.trajectory:
-        L_min = min(L_min, ts.dimensions[2])
-
-    base_options = {"unwrap": False, "bin_width": bin_width, "pack": False}
-    zlim = {"zmin": -L_min / 2, "zmax": L_min / 2}
-    dens_options = {**zlim, **base_options}
-
-    save_data = []
-
-    print("Calculating form factor")
-    form_factor = FormFactorPlanar(
-        atomgroup=u.atoms,
-        **base_options,
-        zmin=None,
-        zmax=None,
-    ).run()
-    ff = (form_factor.results.bin_pos, form_factor.results.profile, form_factor.results.dprofile)
-
-    print("Calculating total density")
-    dens_total_runner = DensityPlanar(
-        u.atoms,
-        dens="electron",
-        **dens_options,
-    ).run()
-    dens_total = (
-        dens_total_runner.results.bin_pos,
-        dens_total_runner.results.profile,
-        dens_total_runner.results.dprofile,
-    )
-
-    molecule_types_selector = [f"resname {system['COMPOSITION'][molecule_type]['NAME']}" for molecule_type in molecules]
-    dens_molecule = []
-    for selector in molecule_types_selector:
-        print(f"Calculating {selector.split(' ')[1]} density")
-        molecule_group = u.select_atoms(selector)
-        dens_molecule_runner = DensityPlanar(
-            molecule_group,
+        print("Calculating total density")
+        dens_total_runner = DensityPlanar(
+            u.atoms,
             dens="electron",
             **dens_options,
         ).run()
-        dens = (dens_molecule_runner.results.profile, dens_molecule_runner.results.dprofile)
-        dens_molecule.append(dens)
+        dens_total = (
+            dens_total_runner.results.bin_pos,
+            dens_total_runner.results.profile,
+            dens_total_runner.results.dprofile,
+        )
 
-    fragment_selectors = create_fragment_selectors(lipid_names)
-    dens_fragment = []
-    frag_labels = ["head", "tail", "backbone"]
-    for i, selector in enumerate(fragment_selectors):
-        print(f"Calculating {frag_labels[i]} density")
-        fragment_group = u.select_atoms(selector)
-        dens_fragment_runner = DensityPlanar(
-            fragment_group,
-            dens="electron",
-            **dens_options,
-        ).run()
-        dens = (dens_fragment_runner.results.profile, dens_fragment_runner.results.dprofile)
-        dens_fragment.append(dens)
+        molecule_types_selector = [
+            f"resname {system['COMPOSITION'][molkey]['NAME']}" for molkey in system.content
+        ]
+        dens_molecule = []
+        for selector in molecule_types_selector:
+            print(f"Calculating {selector.split(' ')[1]} density")
+            molecule_group = u.select_atoms(selector)
+            dens_molecule_runner = DensityPlanar(
+                molecule_group,
+                dens="electron",
+                **dens_options,
+            ).run()
+            dens = (dens_molecule_runner.results.profile, dens_molecule_runner.results.dprofile)
+            dens_molecule.append(dens)
 
-    writer.save_system(
-        system=system,
-        scalar_data=scalar_info,
-        form_factor=ff,
-        total_dens=dens_total,
-        mol_densities=dens_molecule,
-        frag_densities=dens_fragment,
-    )
+        fragment_selectors = create_fragment_selectors(system.lipids.keys())
+        dens_fragment = []
+        frag_labels = ["head", "tail", "backbone"]
+        for i, selector in enumerate(fragment_selectors):
+            print(f"Calculating {frag_labels[i]} density")
+            fragment_group = u.select_atoms(selector)
+            dens_fragment_runner = DensityPlanar(
+                fragment_group,
+                dens="electron",
+                **dens_options,
+            ).run()
+            dens = (dens_fragment_runner.results.profile, dens_fragment_runner.results.dprofile)
+            dens_fragment.append(dens)
 
-    count += 1
+        writer.save_system(
+            system=system,
+            scalar_data=scalar_info,
+            form_factor=ff,
+            total_dens=dens_total,
+            mol_densities=dens_molecule,
+            frag_densities=dens_fragment,
+        )
 
-print(f"Final number of systems saved into dataset: {count}")
+        count += 1
+
+    print(f"Final number of systems saved into dataset: {count}")
+
+if __name__ == "__main__":
+    h5fpath = "lipid_dataset_extended.h5"
+    recompute_extended_ff_dataset(h5fpath, hydration_threshold=0, recompute_centering=False, small_trajs_only=False)
