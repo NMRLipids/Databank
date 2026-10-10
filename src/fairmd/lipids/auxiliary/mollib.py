@@ -18,7 +18,7 @@ from fairmd.lipids.core import System
 from fairmd.lipids.molecules import Lipid, lipids_set
 
 
-def first_last_carbon(system: System, logger: Logger) -> tuple[str, str]:
+def find_terminal_tail_and_g3_atoms(system: System, logger: Logger) -> tuple[str, str]:
     """Find the last carbon of the sn-1 tail and the glycerol g3 carbon."""
     g3_atom = ""
     last_atom = ""

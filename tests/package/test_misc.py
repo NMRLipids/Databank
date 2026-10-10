@@ -67,9 +67,9 @@ def test_uname2element():
         ),
     ],
 )
-def test_first_last_carbon(logger, mappings, composition, expected):
+def test_find_terminal_tail_and_g3_atoms(logger, mappings, composition, expected):
     """Test finding tail and glycerol carbon names for mapping scenarios."""
-    from fairmd.lipids.auxiliary.mollib import first_last_carbon
+    from fairmd.lipids.auxiliary.mollib import find_terminal_tail_and_g3_atoms
 
     class MockLipid:
         def __init__(self, mapping_dict):
@@ -89,7 +89,7 @@ def test_first_last_carbon(logger, mappings, composition, expected):
         CONTENT=content,
     )
 
-    assert first_last_carbon(system, logger) == expected
+    assert find_terminal_tail_and_g3_atoms(system, logger) == expected
 
 
 @pytest.fixture
