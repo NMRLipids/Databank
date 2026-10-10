@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import os
 import shutil
 import json
+import logging
 
 import numpy as np
 import numpy.testing as npt
@@ -36,6 +37,39 @@ def test_uname2element():
 
     with pytest.raises(KeyError):
         uname2element("UnknownElement")
+
+
+def test_first_last_carbon(logger):
+    """Test finding the terminal tail and glycerol carbon atom names."""
+    from fairmd.lipids.auxiliary.mollib import first_last_carbon
+
+    class MockLipid:
+        def __init__(self, mapping_dict):
+            self.mapping_dict = mapping_dict
+
+    class MockSystem(dict):
+        ID = 9999
+
+        @property
+        def content(self):
+            return self["CONTENT"]
+
+    system = MockSystem(
+        ID=9999,
+        COMPOSITION={"DPPC": {"COUNT": 1}},
+        CONTENT={
+            "DPPC": MockLipid(
+                {
+                    "M_G3_M": {"ATOMNAME": "GLY3"},
+                    "M_G1C4_M": {"ATOMNAME": "C4"},
+                    "M_G1C5_M": {"ATOMNAME": "C5"},
+                    "M_G1C6_M": {"ATOMNAME": "C6"},
+                },
+            ),
+        },
+    )
+
+    assert first_last_carbon(system, logger) == ("C6", "GLY3")
 
 
 @pytest.fixture
