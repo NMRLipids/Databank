@@ -39,8 +39,36 @@ def test_uname2element():
         uname2element("UnknownElement")
 
 
-def test_first_last_carbon(logger):
-    """Test finding the terminal tail and glycerol carbon atom names."""
+@pytest.mark.parametrize(
+    ("mappings", "composition", "expected"),
+    [
+        (
+            {"DPPC": {"M_G1C4_M": {"ATOMNAME": "C4"}, "M_G1C5_M": {"ATOMNAME": "C5"}}},
+            ("DPPC",),
+            ("C5", ""),
+        ),
+        (
+            {"DPPC": {"M_G3_M": {"ATOMNAME": "GLY3"}}},
+            ("DPPC",),
+            ("", "GLY3"),
+        ),
+        ({"DPPC": {"M_C1_M": {"ATOMNAME": "C1"}}}, ("DPPC",), ("", "")),
+        (
+            {
+                "OTHER": {"M_G3_M": {"ATOMNAME": "OTHER_G3"}},
+                "DPPC": {
+                    "M_G3_M": {"ATOMNAME": "GLY3"},
+                    "M_G1C4_M": {"ATOMNAME": "C4"},
+                    "M_G1C5_M": {"ATOMNAME": "C5"},
+                },
+            },
+            ("OTHER", "DPPC"),
+            ("C5", "GLY3"),
+        ),
+    ],
+)
+def test_first_last_carbon(logger, mappings, composition, expected):
+    """Test finding tail and glycerol carbon names for mapping scenarios."""
     from fairmd.lipids.auxiliary.mollib import first_last_carbon
 
     class MockLipid:
@@ -54,22 +82,14 @@ def test_first_last_carbon(logger):
         def content(self):
             return self["CONTENT"]
 
+    content = {molecule: MockLipid(mapping) for molecule, mapping in mappings.items()}
     system = MockSystem(
         ID=9999,
-        COMPOSITION={"DPPC": {"COUNT": 1}},
-        CONTENT={
-            "DPPC": MockLipid(
-                {
-                    "M_G3_M": {"ATOMNAME": "GLY3"},
-                    "M_G1C4_M": {"ATOMNAME": "C4"},
-                    "M_G1C5_M": {"ATOMNAME": "C5"},
-                    "M_G1C6_M": {"ATOMNAME": "C6"},
-                },
-            ),
-        },
+        COMPOSITION={molecule: {"COUNT": 1} for molecule in composition},
+        CONTENT=content,
     )
 
-    assert first_last_carbon(system, logger) == ("C6", "GLY3")
+    assert first_last_carbon(system, logger) == expected
 
 
 @pytest.fixture
