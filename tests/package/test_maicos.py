@@ -45,7 +45,7 @@ END
     shutil.rmtree(folder)
 
 
-def test_maicos_interface(tip4p_trajectory, tmp_path):
+def test_density_planar(tip4p_trajectory, tmp_path):
     from fairmd.lipids.analib.maicos import DensityPlanar
 
     u, _ = tip4p_trajectory
@@ -75,6 +75,40 @@ def test_maicos_interface(tip4p_trajectory, tmp_path):
     check.equal(output[14][1], pytest.approx(0.493686, abs=1e-6))
     check.equal(output[14][2], pytest.approx(0.294148, abs=1e-6))
     check.equal(output[-1][1], pytest.approx(0.0, abs=1e-6))
+
+
+def test_diporder_planar(tip4p_trajectory, tmp_path):
+    from fairmd.lipids.analib.maicos import DiporderPlanar
+
+    u, _ = tip4p_trajectory
+    u.add_TopologyAttr("resids", values=[1])
+    u.add_TopologyAttr("resnames", values=["WAT"])
+    u.add_TopologyAttr("charges")
+    u.atoms.charges = [-0.848, 0.424, 0.424, 0.0]
+    output = tmp_path / "diporder.json"
+    dp = DiporderPlanar(
+        u.atoms,
+        zmin=0,
+        zmax=20,
+        unwrap=False,
+        bin_width=1,
+        pack=False,
+        output=output,
+    )
+    dp.run()
+    dp.save()
+
+    assert os.path.isfile(output)
+    with open(output) as output_file:
+        result = json.load(output_file)
+    assert len(result) == 20  # noqa: PLR2004
+    assert all(len(row) == 3 for row in result)  # noqa: PLR2004
+    assert max(row[1] for row in result) > 0
+    check.equal(result[0][0], pytest.approx(0.05, abs=1e-6))
+    check.equal(result[0][1], pytest.approx(0.0, abs=1e-6))
+    check.equal(result[14][1], pytest.approx(2.17714e-05, rel=1e-6))
+    check.equal(result[14][2], pytest.approx(1.37695e-05, rel=1e-6))
+    check.equal(result[-1][1], pytest.approx(0.0, abs=1e-6))
 
 
 @pytest.mark.parametrize(
