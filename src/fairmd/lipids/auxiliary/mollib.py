@@ -78,9 +78,7 @@ def guess_elements(system: System, u: mda.Universe) -> None:
     """Assign elements to atoms in the MDAnalysis Universe based on the system's composition.
 
     :param system: Databank System object
-    :type system: System
     :param u: MDAnalysis Universe object
-    :type u: mda.Universe
     """
     for _mol, comp in system["COMPOSITION"].items():
         # get the name of molecule used in simulation files

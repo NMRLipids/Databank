@@ -168,6 +168,37 @@ def test_maicos_interface(tip4p_trajectory):
     assert fexists
 
 
+@pytest.mark.parametrize(
+    ("system", "expected"),
+    [
+        ({"TYPEOFSYSTEM": "miscellaneous"}, False),
+        ({"TYPEOFSYSTEM": "lipid bilayer"}, True),
+        (
+            {"TYPEOFSYSTEM": "lipid bilayer", "WARNINGS": {"ORIENTATION": "warning"}},
+            False,
+        ),
+        (
+            {"TYPEOFSYSTEM": "lipid bilayer", "WARNINGS": {"PBC": "hexagonal-box"}},
+            False,
+        ),
+        (
+            {"TYPEOFSYSTEM": "lipid bilayer", "WARNINGS": {"NOWATER": True}},
+            False,
+        ),
+        (
+            {"TYPEOFSYSTEM": "lipid bilayer", "WARNINGS": {"PBC": "rectangular-box"}},
+            True,
+        ),
+        ({"TYPEOFSYSTEM": "lipid bilayer", "WARNINGS": {}}, True),
+    ],
+)
+def test_maicos_suitable(system, expected):
+    """Test MAICoS suitability checks for supported and unsupported systems."""
+    from fairmd.lipids.analib.maicos import is_system_suitable_4_maicos
+
+    assert is_system_suitable_4_maicos(system) is expected
+
+
 def test_maicos_what_to_compute(caplog, logger):
     import logging
 
