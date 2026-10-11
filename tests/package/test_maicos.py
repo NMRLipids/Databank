@@ -1,12 +1,13 @@
 """Unit tests for MAICoS-specific functionality."""
 
+import json
 import logging
 import os
 import shutil
 import tempfile
-from contextlib import contextmanager
 
 import pytest
+import pytest_check as check
 
 # run only on sim2 mocking data
 pytestmark = [pytest.mark.sim1, pytest.mark.min]
@@ -34,7 +35,7 @@ END
         u = mda.Universe(tmpfile, format="PDB")
     nul_dim = u.dimensions
     trajectory = np.zeros((10, u.atoms.n_atoms, 3), dtype=np.float32)
-    shift_v = np.array([0.1, 0.0, 0.0], dtype=np.float32)
+    shift_v = np.array([0.0, 0.0, -0.5], dtype=np.float32)
     for i in range(10):
         trajectory[i] = u.atoms.positions.copy() + shift_v * i
     u.load_new(trajectory, order="fac", format=MemoryReader)
@@ -44,26 +45,36 @@ END
     shutil.rmtree(folder)
 
 
-def test_maicos_interface(tip4p_trajectory):
+def test_maicos_interface(tip4p_trajectory, tmp_path):
     from fairmd.lipids.analib.maicos import DensityPlanar
 
-    u, folder = tip4p_trajectory
+    u, _ = tip4p_trajectory
     u.add_TopologyAttr("elements")
     u.atoms.elements = ["O", "H", "H", "Dummy"]
-    ofname = os.path.join(folder, "DiporderWater.json")
-    cos_water = DensityPlanar(
+    ofname = tmp_path / "output.json"
+    dp = DensityPlanar(
         u.atoms,
         dens="electron",
         zmin=0,
-        zmax=8.67623,
+        zmax=20,
         unwrap=False,
         bin_width=1,
         pack=False,
         output=ofname,
     )
-    cos_water.run()
-    cos_water.save()
+    dp.run()
+    dp.save()
     assert os.path.isfile(ofname)
+
+    with open(ofname) as output_file:
+        output = json.load(output_file)
+    assert len(output) == 20  # noqa: PLR2004
+    assert all(len(row) == 3 for row in output)  # noqa: PLR2004
+    assert max(row[1] for row in output) > 0
+    check.equal(output[0][1], pytest.approx(0.0, abs=1e-6))
+    check.equal(output[14][1], pytest.approx(0.493686, abs=1e-6))
+    check.equal(output[14][2], pytest.approx(0.294148, abs=1e-6))
+    check.equal(output[-1][1], pytest.approx(0.0, abs=1e-6))
 
 
 @pytest.mark.parametrize(
