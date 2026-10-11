@@ -266,3 +266,45 @@ def test_maicos_what_to_compute(caplog, logger):
         assert "TotalDensity" in line
         assert "DiporderWater" in line
         assert rcode == RCODE_ERROR
+
+
+def test_traj_centering_for_maicos_mda(tip4p_trajectory, tmp_path):
+    """Test that sequential MDA centering writes the expected trajectory."""
+    import MDAnalysis as mda
+    import numpy as np
+    from MDAnalysis.coordinates.XTC import XTCWriter
+
+    from fairmd.lipids.analib.maicos import traj_centering_for_maicos_mda
+
+    source, _ = tip4p_trajectory
+    source.add_bonds([(0, 1), (0, 2), (0, 3)])
+    topology = tmp_path / "topology.pdb"
+    trajectory = tmp_path / "trajectory.xtc"
+    source.atoms.write(topology)
+    with XTCWriter(str(trajectory), n_atoms=source.atoms.n_atoms) as writer:
+        for ts in source.trajectory:
+            writer.write(source.atoms)
+
+    universe = mda.Universe(topology, trajectory)
+    output_dir = tmp_path / "centered"
+    output_dir.mkdir()
+    result = traj_centering_for_maicos_mda(
+        universe,
+        str(output_dir),
+        "OW",
+        eq_time=0,
+        recompute=True,
+    )
+
+    assert os.path.isfile(result)
+    assert result.endswith("whole.xtc")
+
+    centered = mda.Universe(topology, result)
+    assert centered.trajectory.n_frames == universe.trajectory.n_frames
+
+    for ts in centered.trajectory:
+        np.testing.assert_allclose(
+            centered.select_atoms("name OW").center_of_mass()[2],
+            ts.dimensions[2] / 2.0,
+            atol=1e-4,
+        )
