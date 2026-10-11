@@ -3,6 +3,7 @@
 import logging
 import os
 import shutil
+import tempfile
 from contextlib import contextmanager
 
 import pytest
@@ -33,8 +34,9 @@ END
         u = mda.Universe(tmpfile, format="PDB")
     nul_dim = u.dimensions
     trajectory = np.zeros((10, u.atoms.n_atoms, 3), dtype=np.float32)
+    shift_v = np.array([0.1, 0.0, 0.0], dtype=np.float32)
     for i in range(10):
-        trajectory[i] = u.atoms.positions.copy() + [0.1 * i, 0.0, 0.0]
+        trajectory[i] = u.atoms.positions.copy() + shift_v * i
     u.load_new(trajectory, order="fac", format=MemoryReader)
     for ts in u.trajectory:
         ts.dimensions = nul_dim
@@ -87,33 +89,25 @@ def test_maicos_what_to_compute(caplog, logger):
     from fairmd.lipids.analyze import computeMAICOS
     from fairmd.lipids.core import System
 
-    @contextmanager
-    def temporary_dir():
-        path = os.path.join(FMDL_SIMU_PATH, "tempsy")
-        os.mkdir(path)
+    with tempfile.TemporaryDirectory(dir=FMDL_SIMU_PATH) as path:
         for filename in ("file.xtc", "file.tpr", "file.pdb"):
             open(os.path.join(path, filename), "w").close()
-        try:
-            yield path
-        finally:
-            shutil.rmtree(path)
 
-    system = System(
-        data={
-            "DOI": "00.0000/abcd",
-            "path": "tempsy",
-            "TYPEOFSYSTEM": "lipid bilayer",
-            "SOFTWARE": "GROMACS",
-            "TPR": [["file.tpr"]],
-            "TRJ": [["file.xtc"]],
-            "ID": 9999,
-            "COMPOSITION": {
-                "SOL": {"NAME": "SPC", "MAPPING": "mappingSPCwater.yaml", "COUNT": 1000},
-                "DPPC": {"NAME": "DPPC", "MAPPING": "mappingDPPCberger.yaml", "COUNT": 100},
+        system = System(
+            data={
+                "DOI": "00.0000/abcd",
+                "path": os.path.basename(path),
+                "TYPEOFSYSTEM": "lipid bilayer",
+                "SOFTWARE": "GROMACS",
+                "TPR": [["file.tpr"]],
+                "TRJ": [["file.xtc"]],
+                "ID": 9999,
+                "COMPOSITION": {
+                    "SOL": {"NAME": "SPC", "MAPPING": "mappingSPCwater.yaml", "COUNT": 1000},
+                    "DPPC": {"NAME": "DPPC", "MAPPING": "mappingDPPCberger.yaml", "COUNT": 100},
+                },
             },
-        }
-    )
-    with temporary_dir():
+        )
         with caplog.at_level(logging.INFO):
             rcode = computeMAICOS(system, logging.getLogger("test_logger"), ffonly=False)
         line = next(line for line in caplog.text.splitlines() if "Files to be computed:" in line)
