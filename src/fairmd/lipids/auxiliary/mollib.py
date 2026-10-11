@@ -28,7 +28,7 @@ def find_terminal_tail_and_g3_atoms(system: System, logger: Logger) -> tuple[str
 
             for name in ["M_G3_M", "M_G13_M", "M_C32_M"]:
                 atom_name = mapping.get(name, {}).get("ATOMNAME")
-                g3_atom = atom_name if atom_name else g3_atom
+                g3_atom = atom_name or g3_atom
 
             for carbon_index in range(4, 30):
                 if "M_G1C4_M" in mapping:
@@ -42,7 +42,7 @@ def find_terminal_tail_and_g3_atoms(system: System, logger: Logger) -> tuple[str
                 else:
                     break
                 atom_name = mapping.get(atom, {}).get("ATOMNAME")
-                last_atom = atom_name if atom_name else last_atom
+                last_atom = atom_name or last_atom
     logger.info(f"Found last atom {last_atom} and g3 atom {g3_atom} for system {system['ID']}")
     return last_atom, g3_atom
 
