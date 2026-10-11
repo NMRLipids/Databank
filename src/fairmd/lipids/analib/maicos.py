@@ -38,24 +38,17 @@ def is_system_suitable_4_maicos(system: System) -> bool:
     """
     if system["TYPEOFSYSTEM"] == "miscellaneous":
         return False
-    try:
-        if system["WARNINGS"]["ORIENTATION"]:
-            print("Skipping due to ORIENTATION warning:", system["WARNINGS"]["ORIENTATION"])
-            return False
-    except (KeyError, TypeError):
-        pass
-    try:
-        if system["WARNINGS"]["PBC"] == "hexagonal-box":
-            print("Skipping due to PBC warning:", system["WARNINGS"]["PBC"])
-            return False
-    except (KeyError, TypeError):
-        pass
-    try:
-        if system["WARNINGS"]["NOWATER"]:
-            print("Skipping because there is not water in the trajectory.")
-            return False
-    except (KeyError, TypeError):
-        pass
+    warnings = system.get("WARNINGS") or {}
+    orientation_warning = warnings.get("ORIENTATION")
+    if orientation_warning:
+        print("Skipping due to ORIENTATION warning:", orientation_warning)
+        return False
+    if warnings.get("PBC") == "hexagonal-box":
+        print("Skipping due to PBC warning:", warnings["PBC"])
+        return False
+    if warnings.get("NOWATER"):
+        print("Skipping because there is not water in the trajectory.")
+        return False
     return True
 
 
