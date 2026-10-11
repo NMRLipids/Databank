@@ -5,6 +5,7 @@ import logging
 import os
 import shutil
 import tempfile
+import warnings
 
 import pytest
 import pytest_check as check
@@ -45,6 +46,58 @@ END
     shutil.rmtree(folder)
 
 
+@pytest.fixture
+def tip4p_random_rotation(tmpdir):
+    """TIP4P water rotating continuously for 1000 1-ps frames in memory."""
+    import MDAnalysis as mda
+    import numpy as np
+    from MDAnalysis.coordinates.memory import MemoryReader
+
+    folder = str(tmpdir)
+    pdb_content = """TITLE     Single 4-site water
+CRYST1   63.646   63.646   86.762  90.00  90.00  90.00 P 1           1
+ATOM      1  OW  wate    1       4.370  31.010  61.030  1.00  0.00
+ATOM      2  HW1 wate    1       3.800  30.820  61.780  1.00  0.00
+ATOM      3  HW2 wate    1       5.250  30.760  61.320  1.00  0.00
+ATOM      4  MW  wate    1       4.410  30.950  61.170  1.00  0.00
+END
+"""
+    tmpfile = os.path.join(folder, "test_water_maicos.pdb")
+    with open(tmpfile, "w") as f:
+        f.write(pdb_content)
+    with pytest.warns(UserWarning, match="Element information is missing"):
+        u = mda.Universe(tmpfile, format="PDB")
+
+    box = u.dimensions.copy()
+    origin = u.atoms.positions[0].copy()
+    relative = u.atoms.positions - origin
+    rng = np.random.default_rng(seed=0)
+    n_frames = 400
+    trajectory = np.empty((n_frames, u.atoms.n_atoms, 3), dtype=np.float32)
+    rotation = np.eye(3)
+    for frame in range(n_frames):
+        axis = rng.normal(size=3)
+        axis /= np.linalg.norm(axis)
+        angle = rng.uniform(-np.pi / 12, np.pi / 12)
+        x, y, z = axis
+        c, s = np.cos(angle), np.sin(angle)
+        increment = np.array(
+            [
+                [c + x * x * (1 - c), x * y * (1 - c) - z * s, x * z * (1 - c) + y * s],
+                [y * x * (1 - c) + z * s, c + y * y * (1 - c), y * z * (1 - c) - x * s],
+                [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c)],
+            ],
+        )
+        rotation = increment @ rotation
+        trajectory[frame] = origin + relative @ rotation.T
+
+    u.load_new(trajectory, order="fac", format=MemoryReader, dt=1.0)
+    for ts in u.trajectory:
+        ts.dimensions = box
+    yield u, folder
+    shutil.rmtree(folder)
+
+
 def test_density_planar(tip4p_trajectory, tmp_path):
     from fairmd.lipids.analib.maicos import DensityPlanar
 
@@ -75,6 +128,60 @@ def test_density_planar(tip4p_trajectory, tmp_path):
     check.equal(output[14][1], pytest.approx(0.493686, abs=1e-6))
     check.equal(output[14][2], pytest.approx(0.294148, abs=1e-6))
     check.equal(output[-1][1], pytest.approx(0.0, abs=1e-6))
+
+
+def test_dielectric_planar(tip4p_random_rotation, tmp_path):
+    from fairmd.lipids.analib.maicos import DielectricPlanar
+
+    u, _ = tip4p_random_rotation
+    u.add_TopologyAttr("resids", values=[1])
+    u.add_TopologyAttr("resnames", values=["WAT"])
+    u.add_TopologyAttr("charges")
+    u.atoms.charges = [-0.848, 0.424, 0.424, 0.0]
+    output_prefix = str(tmp_path / "dielectric")
+
+    class IgnoreDielectricWarning(logging.Filter):
+        def filter(self, record):
+            return "Setting `zmin` and `zmax` might cut off molecules." not in record.getMessage()
+
+    root_logger = logging.getLogger()
+    warning_filter = IgnoreDielectricWarning()
+    root_logger.addFilter(warning_filter)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r"Your trajectory does not provide sufficient statistics to estimate a correlation time\.",
+            category=UserWarning,
+            module=r"maicos\.core\.base",
+        )
+        dielectric = DielectricPlanar(
+            u.atoms,
+            temperature=300,
+            zmin=0,
+            zmax=20,
+            unwrap=False,
+            bin_width=1,
+            pack=False,
+            output_prefix=output_prefix,
+        )
+        dielectric.run()
+    root_logger.removeFilter(warning_filter)
+    dielectric.save()
+
+    expected_val_17 = {
+        "_perp.json": (-0.0662769, 0.0137618),
+        "_par.json": (0.0840072, 0.00411034),
+    }
+    for suffix in ("_perp.json", "_par.json"):
+        output = f"{output_prefix}{suffix}"
+        assert os.path.isfile(output)
+        with open(output) as output_file:
+            result = json.load(output_file)
+        assert len(result) == 20  # noqa: PLR2004
+        assert all(len(row) == 3 for row in result)  # noqa: PLR2004
+        check.equal(result[0][0], pytest.approx(0.05, abs=1e-6))
+        check.equal(result[17][1], pytest.approx(expected_val_17[suffix][0], rel=1e-4))
+        check.equal(result[17][2], pytest.approx(expected_val_17[suffix][1], rel=1e-4))
 
 
 def test_diporder_planar(tip4p_trajectory, tmp_path):
