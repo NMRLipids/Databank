@@ -88,7 +88,27 @@ class System(MutableMapping, SampleComposition):
     @property
     def metadata(self) -> dict:
         """Return system metadata through the common metadata provider interface."""
-        return self._store
+        return self._merge_metadata(self._store)
+
+    @classmethod
+    def _high_level_metadata(cls) -> dict:
+        """Load metadata shared by simulations in the configured data set."""
+        metadata_path = os.path.join(FMDL_SIMU_PATH, "metadata.yaml")
+        if not os.path.isfile(metadata_path):
+            return {}
+        with open(metadata_path) as metadata_file:
+            return yaml.safe_load(metadata_file) or {}
+
+    @classmethod
+    def _merge_metadata(cls, metadata: typing.Mapping) -> dict:
+        """Merge shared metadata with entry-specific metadata."""
+        merged = dict(cls._high_level_metadata())
+        for key, value in metadata.items():
+            if isinstance(value, dict) and isinstance(merged.get(key), dict):
+                merged[key] = {**merged[key], **value}
+            else:
+                merged[key] = value
+        return merged
 
     @property
     def n_lipids(self) -> int:

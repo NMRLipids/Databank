@@ -63,6 +63,19 @@ def test_content(systems):
             check.is_instance(v, Lipid)
 
 
+def test_inherited_system_metadata(systems):
+    """Test metadata inherited by simulations from their collection metadata."""
+    system = systems.loc(281)
+    metadata = system.metadata
+
+    check.is_not_none(metadata.get("bioschema_properties"))
+    check.equal(metadata["bioschema_properties"]["license"]["spdx"], "CC-BY-4.0")
+    check.is_in(
+        "Molecular dynamics",
+        [term["name"] for term in metadata["bioschema_properties"]["measurementTechnique"]],
+    )
+
+
 def test_copy_system(systems):
     s1 = systems.loc(566)
     s2 = copy.deepcopy(s1)
