@@ -10,7 +10,7 @@ import os
 import re
 from abc import ABC, abstractmethod
 from collections.abc import MutableSet
-from copy import copy
+from copy import copy, deepcopy
 from glob import glob
 from typing import Any
 
@@ -217,6 +217,35 @@ class Molecule(ABC):
         metadata related to the molecule.
         """
 
+    @staticmethod
+    def _merge_metadata(parent: dict, child: dict) -> dict:
+        """Recursively merge more-specific metadata over inherited metadata."""
+        merged = deepcopy(parent)
+        for key, value in child.items():
+            if isinstance(value, dict) and isinstance(merged.get(key), dict):
+                merged[key] = Molecule._merge_metadata(merged[key], value)
+            else:
+                merged[key] = value
+        return merged
+
+    def _load_metadata(self, category_path: str, required: bool = True) -> dict:
+        """Load root, category, and molecule metadata in inheritance order."""
+        metadata = {}
+        paths = [
+            os.path.join(FMDL_MOL_PATH, "metadata.yaml"),
+            os.path.join(category_path, "metadata.yaml"),
+            os.path.join(self._get_path(), "metadata.yaml"),
+        ]
+        for index, path in enumerate(paths):
+            if not os.path.isfile(path):
+                if required and index == len(paths) - 1:
+                    raise FileNotFoundError(f"Metadata file not found for {self.name}.")
+                continue
+            with open(path) as yaml_file:
+                current = yaml.safe_load(yaml_file) or {}
+            metadata = self._merge_metadata(metadata, current)
+        return metadata
+
     @property
     @abstractmethod
     def metadata(self) -> dict:
@@ -259,14 +288,7 @@ class Lipid(Molecule):
 
     def _populate_meta_data(self) -> None:
         """Populate metadata for the lipid from its YAML file."""
-        self._metadata = {}
-        meta_path = os.path.join(self._get_path(), "metadata.yaml")
-        if os.path.isfile(meta_path):
-            with open(meta_path) as yaml_file:
-                self._metadata = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        else:
-            msg = f"Metadata file not found for {self.name}."
-            raise FileNotFoundError(msg)
+        self._metadata = self._load_metadata(self._lipids_dir)
 
     def _can_load_mapping(self) -> bool:
         super_is_reg = super()._can_load_mapping()
@@ -410,11 +432,13 @@ class NonLipid(Molecule):
         return os.path.join(self._nonlipids_dir, self.name)
 
     def _populate_meta_data(self) -> None:
-        pass
+        self._metadata = self._load_metadata(self._nonlipids_dir, required=False)
 
     @property
     def metadata(self) -> dict:
-        return {}
+        if not hasattr(self, "_metadata"):
+            self._populate_meta_data()
+        return self._metadata
 
 
 class MoleculeSet(MutableSet[Molecule], ABC):
