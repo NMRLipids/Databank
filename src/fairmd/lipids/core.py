@@ -9,13 +9,22 @@ import os
 import sys
 import typing
 from collections.abc import MutableMapping
-from typing import Any
+from typing import Any, Protocol
 
 import yaml
 
 from fairmd.lipids import FMDL_SIMU_PATH
 from fairmd.lipids._base import CollectionSingleton, SampleComposition
 from fairmd.lipids.molecules import Lipid, NonLipid, lipids_set, solubles_set
+
+
+class MetadataProvider(Protocol):
+    """Interface for objects that provide metadata."""
+
+    @property
+    def metadata(self) -> dict:
+        """Return the object's metadata."""
+        ...
 
 
 class System(MutableMapping, SampleComposition):
