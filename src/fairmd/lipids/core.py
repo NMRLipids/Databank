@@ -12,6 +12,7 @@ from collections.abc import MutableMapping
 from typing import Any, Protocol
 
 import yaml
+from deprecated import deprecated
 
 from fairmd.lipids import FMDL_SIMU_PATH
 from fairmd.lipids._base import CollectionSingleton, SampleComposition
@@ -73,11 +74,20 @@ class System(MutableMapping, SampleComposition):
         return f"System({self._store['ID']}): {self._store['path']}"
 
     @property
+    @deprecated(version="1.7.0", reason="Use the metadata property instead.")
     def readme(self) -> dict:
-        """Get the README dictionary of the system in true dict format.
+        """Get the system metadata.
+
+        .. deprecated::
+           Use :attr:`metadata` instead.
 
         :return: dict-type README (dict)
         """
+        return self._store
+
+    @property
+    def metadata(self) -> dict:
+        """Return system metadata through the common metadata provider interface."""
         return self._store
 
     @property

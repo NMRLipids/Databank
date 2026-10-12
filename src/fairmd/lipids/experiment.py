@@ -16,6 +16,7 @@ from typing import Any, Literal
 
 import numpy as np
 import yaml
+from deprecated import deprecated
 
 from fairmd.lipids import FMDL_EXP_PATH
 from fairmd.lipids._base import CollectionSingleton, SampleComposition
@@ -86,8 +87,13 @@ class Experiment(SampleComposition):
         return hash(self.exp_id)
 
     @property
+    @deprecated(version="1.7.0", reason="Use the metadata property instead.")
     def readme(self) -> dict:
-        """Provides access to the experiment's metadata (for backward compatibility)."""
+        """Provides access to experiment metadata.
+
+        .. deprecated::
+           Use :attr:`metadata` instead.
+        """
         return self.metadata
 
     @property
