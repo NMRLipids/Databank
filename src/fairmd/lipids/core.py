@@ -45,16 +45,22 @@ class System(MutableMapping, SampleComposition, MetadataProvider):
         elif isinstance(data, typing.Mapping):
             self._readme_metadata.update(dict(data))
         else:
-            expect_type_msg = "Expected dict or Mapping"
-            raise TypeError(expect_type_msg)
+            msg = "Expected dict or Mapping"
+            raise TypeError(msg)
 
         self._initialize_content()
+
+    @classmethod
+    def from_directory(cls, path: str | os.PathLike) -> "System":
+        """Create a system by loading ``README.yaml`` from *path*."""
+        with open(os.path.join(os.fspath(path), "README.yaml")) as yaml_file:
+            return cls(yaml.safe_load(yaml_file) or {})
 
     def __getitem__(self, key: str):  # noqa: ANN204
         return self.metadata[key]
 
     def __setitem__(self, key: str, value) -> None:
-        self.metadata[key] = value
+        self._metadata[key] = value
 
     def __delitem__(self, key: str) -> None:
         del self.metadata[key]
@@ -86,6 +92,7 @@ class System(MutableMapping, SampleComposition, MetadataProvider):
 
     @property
     def _current_metadata(self) -> typing.Mapping:
+        # NOTE: _readme_metadata is populated by constructor!
         return self._readme_metadata
 
     @classmethod
@@ -205,34 +212,29 @@ class SystemsCollection(CollectionSingleton[System]):
         systems = SystemsCollection()
         for subdir, _dirs, files in os.walk(FMDL_SIMU_PATH):
             for filename in files:
-                filepath = os.path.join(subdir, filename)
-                if filename == "README.yaml":
-                    ydict = {}
-                    try:
-                        with open(filepath) as yaml_file:
-                            ydict.update(yaml.load(yaml_file, Loader=yaml.FullLoader))
-                    except (FileNotFoundError, PermissionError) as e:
-                        sys.stderr.write(f"""
+                if filename != "README.yaml":
+                    continue
+                try:
+                    content = System.from_directory(subdir)
+                except (FileNotFoundError, PermissionError) as e:
+                    sys.stderr.write(f"""
 !!README LOAD ERROR!!
 Problems while loading on of the files required for the system: {e}
-System path: {subdir}
-System: {ydict!s}\n""")
-                    try:
-                        content = System(ydict)
-                    except Exception as e:
-                        sys.stderr.write(f"""
+System path: {subdir}\n""")
+                except Exception as e:
+                    sys.stderr.write(f"""
 !!README LOAD ERROR!!
 Unexpected error: {e}
-System: {ydict!s}\n""")
-                    else:
-                        content["path"] = os.path.relpath(subdir, FMDL_SIMU_PATH)
-                        systems.add(content)
+                System path: {subdir}\n""")
+                else:
+                    content["path"] = os.path.relpath(subdir, FMDL_SIMU_PATH)
+                    systems.add(content)
         return systems
 
 
 def initialize_databank() -> SystemsCollection:
     """
-    Returns Simulation collection (an alias).
+    Return Simulation collection (an alias).
 
     :return: list of dictionaries that contain the content of README.yaml files for
              each system.

@@ -75,6 +75,10 @@ def test_inherited_system_metadata(systems):
         "Molecular dynamics",
         [term["name"] for term in metadata["bioschema_properties"]["measurementTechnique"]],
     )
+    # readed from README
+    check.equal(303.0, metadata["TEMPERATURE"])
+    # explicitly added after constructor
+    check.equal("aa1", metadata["path"])
 
 
 def test_copy_system(systems):
