@@ -9,31 +9,25 @@ import os
 import sys
 import typing
 from collections.abc import MutableMapping
-from typing import Any, Protocol
+from typing import Any
 
 import yaml
 from deprecated import deprecated
 
 from fairmd.lipids import FMDL_SIMU_PATH
 from fairmd.lipids._base import CollectionSingleton, SampleComposition
+from fairmd.lipids.metadata import MetadataProvider
 from fairmd.lipids.molecules import Lipid, NonLipid, lipids_set, solubles_set
 
 
-class MetadataProvider(Protocol):
-    """Interface for objects that provide metadata."""
-
-    @property
-    def metadata(self) -> dict:
-        """Return the object's metadata."""
-        ...
-
-
-class System(MutableMapping, SampleComposition):
+class System(MutableMapping, SampleComposition, MetadataProvider):
     """
     Main Databank single object.
 
     It is an extension of a dictionary with additional functionality.
     """
+
+    _high_level_metadata_cache: dict[str, dict] = {}
 
     def __init__(self, data: dict | typing.Mapping) -> None:
         """
@@ -44,11 +38,12 @@ class System(MutableMapping, SampleComposition):
         :raises ValueError: If a molecule key in the "COMPOSITION" data does not
                             belong to the predefined set of lipids or molecules.
         """
-        self._store: dict = {}
+        MetadataProvider.__init__(self)
+        self._readme_metadata: dict = {}
         if isinstance(data, dict):
-            self._store.update(data)
+            self._readme_metadata.update(data)
         elif isinstance(data, typing.Mapping):
-            self._store.update(dict(data))
+            self._readme_metadata.update(dict(data))
         else:
             expect_type_msg = "Expected dict or Mapping"
             raise TypeError(expect_type_msg)
@@ -56,22 +51,22 @@ class System(MutableMapping, SampleComposition):
         self._initialize_content()
 
     def __getitem__(self, key: str):  # noqa: ANN204
-        return self._store[key]
+        return self.metadata[key]
 
     def __setitem__(self, key: str, value) -> None:
-        self._store[key] = value
+        self.metadata[key] = value
 
     def __delitem__(self, key: str) -> None:
-        del self._store[key]
+        del self.metadata[key]
 
     def __iter__(self) -> typing.Iterator:
-        return iter(self._store)
+        return iter(self.metadata)
 
     def __len__(self) -> int:
-        return len(self._store)
+        return len(self.metadata)
 
     def __repr__(self) -> str:
-        return f"System({self._store['ID']}): {self._store['path']}"
+        return f"System({self.metadata['ID']}): {self.metadata['path']}"
 
     @property
     @deprecated(version="1.7.0", reason="Use the metadata property instead.")
@@ -83,32 +78,28 @@ class System(MutableMapping, SampleComposition):
 
         :return: dict-type README (dict)
         """
-        return self._store
+        return self.metadata
 
     @property
-    def metadata(self) -> dict:
-        """Return system metadata through the common metadata provider interface."""
-        return self._merge_metadata(self._store)
+    def _parent_metadata(self) -> typing.Mapping:
+        return type(self)._high_level_metadata()  # noqa: SLF001
+
+    @property
+    def _current_metadata(self) -> typing.Mapping:
+        return self._readme_metadata
 
     @classmethod
     def _high_level_metadata(cls) -> dict:
         """Load metadata shared by simulations in the configured data set."""
         metadata_path = os.path.join(FMDL_SIMU_PATH, "metadata.yaml")
-        if not os.path.isfile(metadata_path):
-            return {}
-        with open(metadata_path) as metadata_file:
-            return yaml.safe_load(metadata_file) or {}
-
-    @classmethod
-    def _merge_metadata(cls, metadata: typing.Mapping) -> dict:
-        """Merge shared metadata with entry-specific metadata."""
-        merged = dict(cls._high_level_metadata())
-        for key, value in metadata.items():
-            if isinstance(value, dict) and isinstance(merged.get(key), dict):
-                merged[key] = {**merged[key], **value}
+        if metadata_path not in cls._high_level_metadata_cache:
+            if not os.path.isfile(metadata_path):
+                metadata = {}
             else:
-                merged[key] = value
-        return merged
+                with open(metadata_path) as metadata_file:
+                    metadata = yaml.safe_load(metadata_file) or {}
+            cls._high_level_metadata_cache[metadata_path] = metadata
+        return cls._high_level_metadata_cache[metadata_path]
 
     @property
     def n_lipids(self) -> int:

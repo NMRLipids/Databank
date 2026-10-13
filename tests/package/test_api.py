@@ -16,6 +16,7 @@ import copy
 import os
 import sys
 import warnings
+
 import numpy as np
 import pytest
 import pytest_check as check
@@ -79,7 +80,7 @@ def test_inherited_system_metadata(systems):
 def test_copy_system(systems):
     s1 = systems.loc(566)
     s2 = copy.deepcopy(s1)
-    s2._store["GRO"] = None
+    s2._metadata["GRO"] = None
     assert s2["GRO"] is None
     assert s1["GRO"] is not None
 
@@ -186,8 +187,8 @@ def test_n_lipids(systems, systemid, result):
 def test_GetFormFactorMin(systems, systemid, result):
     import numpy as np
 
-    from fairmd.lipids.api import get_FF
     from fairmd.lipids.analib.formfactor import get_mins_from_ffdata
+    from fairmd.lipids.api import get_FF
 
     sys0 = systems.loc(systemid)
     ff_data = get_FF(sys0)
@@ -317,8 +318,9 @@ def test_analyze_th(systems, systemid, result, wipeth, thickres, logger):
     ],
 )
 def test_get_thickness(systems, systemid, result):
-    from fairmd.lipids.api import get_thickness
     import numbers
+
+    from fairmd.lipids.api import get_thickness
 
     sys0 = systems.loc(systemid)
     if result is None:
@@ -461,12 +463,12 @@ def test_GetOP_missing_file_warns(systems, systemid, testmol, result):
 
 
 def test_run_analysis_interface():
-    from fairmd.lipids import RCODE_COMPUTED, RCODE_ERROR, RCODE_SKIPPED
-    from fairmd.lipids.utils import run_analysis
-
     # create logger for testing
     import logging
     from io import StringIO
+
+    from fairmd.lipids import RCODE_COMPUTED, RCODE_ERROR, RCODE_SKIPPED
+    from fairmd.lipids.utils import run_analysis
 
     log_stream = StringIO()
     _logger = logging.getLogger("test_run_analysis")

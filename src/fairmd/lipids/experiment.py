@@ -20,6 +20,7 @@ from deprecated import deprecated
 
 from fairmd.lipids import FMDL_EXP_PATH
 from fairmd.lipids._base import CollectionSingleton, SampleComposition
+from fairmd.lipids.metadata import MetadataProvider
 from fairmd.lipids.molecules import Lipid, NonLipid
 
 
@@ -27,7 +28,7 @@ class ExperimentError(Exception):
     """Experiment-related exception"""
 
 
-class Experiment(SampleComposition):
+class Experiment(SampleComposition, MetadataProvider):
     """Abstract base class representing an experimental dataset in the databank.
 
     Implements important methods from :class:`SampleComposition`: :meth:`get_hydration`,
@@ -69,7 +70,18 @@ class Experiment(SampleComposition):
 
     @property
     def metadata(self) -> dict:
-        """Access the experiment's metadata."""
+        """Access the experiment's local metadata."""
+        if self._metadata is None:
+            self._populate_meta_data()
+        return self._metadata
+
+    @property
+    def _parent_metadata(self) -> typing.Mapping:
+        """Experiment metadata inherited from its class hierarchy."""
+        return {}
+
+    @property
+    def _current_metadata(self) -> typing.Mapping:
         if self._metadata is None:
             self._populate_meta_data()
         return self._metadata
