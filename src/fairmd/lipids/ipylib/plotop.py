@@ -4,7 +4,6 @@ import warnings
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import display
 from matplotlib.figure import Figure
 
 from fairmd.lipids.api import get_OP
@@ -110,6 +109,8 @@ def plotSimulation(system: System, lipid: str) -> None:  # noqa: N802
         DeprecationWarning,
         stacklevel=2,
     )
+    from IPython.display import display  # noqa: PLC0415  (IPython is not a dependency)
+
     display(plot_simulation_FF(system))
     fd = plot_simulation_OP(system, lipid)
     for fig in fd.values():
