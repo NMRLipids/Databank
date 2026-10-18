@@ -34,7 +34,7 @@ def test_autocomplete_output_is_schema_compliant(tmp_path, monkeypatch):
             {
                 "NMRlipids": {"id": "BOGUS"},
                 "bioschema_properties": {"inChIKey": "HEGSGKPQLMEBJL-RKQHYHRCSA-N"},
-            }
+            },
         ),
         encoding="utf-8",
     )
@@ -119,10 +119,13 @@ def test_autocomplete_sameas_from_live_apis():
     expected = {
         "ChEBI": "CHEBI:41128",
         "pubchem.compound": 62852,
-        "metabolights": "MTBLC41128",
         "pdb.ligand": "BOG",
         "ChEMBL": "CHEMBL446037",
     }
+    # tolerates if metabolight server wasn't accessible
+    if "metabolights" in sameas:
+        expected["metabolights"] = "MTBLC41128"
+
     for key, value in expected.items():
         assert sameas.get(key) == value, f"{key}: expected {value!r}, got {sameas.get(key)!r}"
 
