@@ -1,18 +1,24 @@
-from importlib.resources import files
+"""
+These tests exercise developer/autocomplete_mol_metadata.py
+
+They test the functionality that reaches out external databases to retrieve additional information
+for molecular metadata using Inchi-Key as a hook.
+
+NOTE: some of the tests are LIVE
+"""
+
 import importlib.util
 import json
 import os
 import re
 import sys
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
 import yaml
 from jsonschema import Draft7Validator
 
-# These tests exercise developer/autocomplete_mol_metadata.py, which lives in the
-# `developer/` folder and is not part of the distributed package. Mark the whole
-# module as `develop` so it is isolated from the package test suite.
 pytestmark = [pytest.mark.develop, pytest.mark.nodata]
 
 
