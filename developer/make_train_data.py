@@ -271,11 +271,11 @@ def separate_lipid_atoms(mapping_dict):
         fragment = mapping_dict[atom]["FRAGMENT"]
         atom_name = mapping_dict[atom]["ATOMNAME"]
         base_fragment = re.sub(r"\s+\d+$", "", fragment)
-        if base_fragment == "headgroup":
+        if base_fragment in ("headgroup", "glucose"):
             head_atoms += atom_name + " "
-        elif base_fragment in ("sn-1", "sn-2", "tail"):
+        elif base_fragment in ("sn-1", "sn-2", "sn-4", "tail"):
             tail_atoms += atom_name + " "
-        elif base_fragment == "glycerol backbone":
+        elif base_fragment in ("glycerol backbone", "backbone"):
             backbone_atoms += atom_name + " "
         else:
             msg = f"Invalid atom - {atom} - {atom_name} - {fragment}"
