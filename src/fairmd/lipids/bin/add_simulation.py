@@ -70,8 +70,8 @@ pd.set_option("display.max_colwidth", 1000)
 def add_simulation():
     info_template_path = os.path.join(
         importlib.util.find_spec("fairmd.lipids").submodule_search_locations[0],
-        "SchemaValidation",
-        "Schema",
+        "schema_validation",
+        "schema",
         "info_template.yaml",
     )
     # parse input yaml file

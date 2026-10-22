@@ -12,6 +12,7 @@ Table below lists the manually entered compulsory and optional parameters, as we
 key | description | type  
 ----|--------|------
 DOI | DOI from where the raw data is found | User-given 
+DATE | Publication date of the dataset (YYYY-MM-DD) | User-given
 TRJ | Name of the trajectory file found from DOI |  User-given
 TPR | Name of the topology file found from DOI |  User-given
 SOFTWARE | Software used to run the simulation |  User-given
@@ -63,6 +64,9 @@ metadata enrichment tooling tolerates its absence — it composes a description 
 not name a source rather than failing — but that is defensive handling for half-built entries,
 not permission to contribute a simulation without a deposition. Entries added through
 [`fmdl_add_simulation`](add_simulation_py) always have one.
+
+2. **DATE**  
+Give the publication date of the dataset found from the DOI given above, in the format YYYY-MM-DD (e.g. `2026-01-01`). It can be retrieved from [DataCite](https://search.datacite.org).
 
 2. **TRJ** (compulsory)  
 Give the name of the trajectory file that is found from the DOI given above.
