@@ -18,7 +18,7 @@ import numpy as np
 import yaml
 
 from fairmd.lipids import FMDL_EXP_PATH
-from fairmd.lipids._base import CollectionSingleton, SampleComposition
+from fairmd.lipids._base import CollectionSingleton, MetadataProvider, SampleComposition
 from fairmd.lipids.molecules import Lipid, NonLipid
 
 
@@ -26,7 +26,7 @@ class ExperimentError(Exception):
     """Experiment-related exception"""
 
 
-class Experiment(SampleComposition):
+class Experiment(SampleComposition, MetadataProvider):
     """Abstract base class representing an experimental dataset in the databank.
 
     Implements important methods from :class:`SampleComposition`: :meth:`get_hydration`,
@@ -68,7 +68,7 @@ class Experiment(SampleComposition):
 
     @property
     def metadata(self) -> dict:
-        """Access the experiment's metadata."""
+        """Access the experiment's own metadata, the README as stored; nothing inherited."""
         if self._metadata is None:
             self._populate_meta_data()
         return self._metadata
@@ -119,6 +119,11 @@ class Experiment(SampleComposition):
         """Get target folder name for the experiment type."""
         msg = "This method should be implemented in subclasses."
         raise NotImplementedError(msg)
+
+    @classmethod
+    def bioschema_template_dir(cls) -> str:
+        """Experiments inherit the template in their type's folder, e.g. ``experiments/OrderParameters``."""
+        return os.path.join(FMDL_EXP_PATH, cls.target_folder())
 
     # Implementation of SampleComposition interface
 

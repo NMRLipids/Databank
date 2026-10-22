@@ -14,11 +14,11 @@ from typing import Any
 import yaml
 
 from fairmd.lipids import FMDL_SIMU_PATH
-from fairmd.lipids._base import CollectionSingleton, SampleComposition
+from fairmd.lipids._base import CollectionSingleton, MetadataProvider, SampleComposition
 from fairmd.lipids.molecules import Lipid, NonLipid, lipids_set, solubles_set
 
 
-class System(MutableMapping, SampleComposition):
+class System(MutableMapping, SampleComposition, MetadataProvider):
     """
     Main Databank single object.
 
@@ -70,6 +70,19 @@ class System(MutableMapping, SampleComposition):
         :return: dict-type README (dict)
         """
         return self._store
+
+    @property
+    def metadata(self) -> dict:
+        """Get the system's own metadata, the README as stored; nothing inherited.
+
+        :return: dict-type README (dict)
+        """
+        return self._store
+
+    @classmethod
+    def bioschema_template_dir(cls) -> str:
+        """Simulations inherit the template in the simulations folder itself."""
+        return FMDL_SIMU_PATH
 
     @property
     def n_lipids(self) -> int:
