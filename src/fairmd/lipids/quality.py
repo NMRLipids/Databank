@@ -20,6 +20,9 @@ from fairmd.lipids.auxiliary import CompactJSONEncoder, mollib
 from fairmd.lipids.core import System, initialize_databank
 from fairmd.lipids.experiment import ExperimentCollection, OPExperiment
 
+# Minimum absolute value of error below which the error is considered effectively zero
+_MIN_ABSVALUE_FOR_ERROR = 1e-7
+
 
 class QualSimulation(System):
     def __init__(self, s: System):
@@ -97,8 +100,12 @@ class QualityEvaluator(ABC):
         a = xv - xerr
         b = xv + xerr
 
-        a_rel = (yv - a) / yerr
-        b_rel = (yv - b) / yerr
+        # Errors below this scale are effectively zero and do not define a
+        # numerically meaningful probability.
+        invalid_yerr = np.abs(yerr) < _MIN_ABSVALUE_FOR_ERROR
+        with np.errstate(divide="ignore", invalid="ignore"):
+            a_rel = np.where(invalid_yerr, np.nan, (yv - a) / yerr)
+            b_rel = np.where(invalid_yerr, np.nan, (yv - b) / yerr)
 
         p_b = scipy.stats.t.sf(b_rel, df=1, loc=0, scale=1)
         p_a = scipy.stats.t.sf(a_rel, df=1, loc=0, scale=1)

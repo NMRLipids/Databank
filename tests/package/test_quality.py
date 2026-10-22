@@ -48,7 +48,8 @@ def test_prob_op_within_trustinterval():
 def test_calc_ff_quality_sin_exp_curve():
     from fairmd.lipids.quality import FFQualityEvaluator
 
-    rng = np.random.default_rng()
+    # Use a fixed generator so the synthetic noise is deterministic.
+    rng = np.random.default_rng(175977)
 
     # Create FF-like data: |sin(x)| * exp(-x) over q-range typical for FF (0.1 to 3.0)
     q = np.linspace(0.005, 3.0, 1000)

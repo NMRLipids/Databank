@@ -134,6 +134,13 @@ BLOCK_ORDER = [
     "isBasedOn", "isPartOf", "accessRights", "_source",
 ]
 
+# Prose in the generated block that would run past this column -- composed names
+# and descriptions, registry titles -- is folded into a ``>-`` block scalar.
+FOLD_WIDTH = 100
+# Words separated by single spaces: the only text a fold reads back unchanged,
+# since the parser turns each line break back into exactly one space.
+FOLDABLE = re.compile(r"\S+( \S+)+")
+
 DOI_RE = re.compile(r"10\.\d{4,9}/[^\s;,\"']+")
 ORCID_RE = re.compile(r"(\d{4}-\d{4}-\d{4}-\d{3}[\dX])", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
@@ -148,7 +155,7 @@ TRAILING = ".,;:)]}’\"'"
 # hand-written content, which this tool does not make -- it is done in the data
 # repository.
 #
-# DOI is deprecated for experiments only: readme_yaml_schema.json declares DOI
+# DOI is deprecated for experiments only: simulation_schema.json declares DOI
 # for a simulation, where it names the Zenodo deposition and is the right key.
 DEPRECATED_EXPERIMENT_KEYS = {
     "DOI": "ARTICLE_DOI, or DATA_DOI where the value is a data deposition",
@@ -172,7 +179,7 @@ NULLISH = frozenset({"null", "none", "na", "n/a", "??", "?", ""})
 # are left exactly as they are; both fields still get quoted when already ISO,
 # which is what the schemas need (unquoted, YAML yields a date object).
 #
-# A simulation's DATE is not declared in readme_yaml_schema.json at all, so it
+# A simulation's DATE is not declared in simulation_schema.json at all, so it
 # is left as YAML parses it rather than rewritten for tidiness.
 DATE_FIELDS = {
     "simulations": {"DATEOFRUNNING": True, "FF_DATE": False},

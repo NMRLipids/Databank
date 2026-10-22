@@ -74,7 +74,7 @@ are here:
 
 #. Login to `NMRlipids Upload Portal <https://upload-portal.nmrlipids.fi/>`_ and fill up
    the form with metadata for your simulation. For instructions, see :ref:`readmesimu`
-   and `examples <https://github.com/NMRLipids/BilayerData/tree/main/info_files>`_.
+   and :ref:`addSimulation`.
    Mapping files are described in  :ref:`molecule_names` and are available from `here
    <https://github.com/NMRLipids/BilayerData/tree/main/Molecules/membranes>`_ .
 
@@ -113,6 +113,7 @@ More detailed instructions are coming soon.
    :caption: Python Interface
 
    gettingstarted
+   plottings
    dbprograms
    Overview
 
@@ -122,6 +123,12 @@ More detailed instructions are coming soon.
 
    dbstructure
    dbcontribute
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Curation
+
+   curation/curatingSimulation
 
 Indices and tables
 ==================

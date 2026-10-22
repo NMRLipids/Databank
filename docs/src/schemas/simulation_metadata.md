@@ -1,11 +1,11 @@
 (readmesimu)=
 # Simulation metadata (README.yaml)
 
-Each simulation in the FAIRMD Lipids is assigned with a `README.yaml` metadata file which contains all the essential information of the simulation. These files are created from the manually contributed [info.yaml](info_files) files as described in [Adding simulations](addSimulation). The `README.yaml` files are stored as described in [Data organisation](dbstructure). 
+Each simulation in the FAIRMD Lipids is assigned with a `README.yaml` metadata file which contains all the essential information of the simulation. These files are created from manually supplied `info.yaml` input files as described in [Adding simulations](addSimulation). Info files are not stored in BilayerData. The `README.yaml` files are stored as described in [Data organisation](dbstructure).
 
 You can view examples in the [BilayerData GitHub repository](https://github.com/NMRLipids/BilayerData/tree/main/Simulations). 
 
-README files contain information that is manually entered into [info.yaml](info_files) files and automatically extracted information by the [fmdl_add_simulation](add_simulation_py) program. 
+README files contain information that is manually entered into `info.yaml` input files and automatically extracted information by the [fmdl_add_simulation](add_simulation_py) program.
 Table below lists the manually entered compulsory and optional parameters, as well as automatically extracted information from simulation files.  
 
 --------------------
@@ -25,7 +25,7 @@ SYSTEM | System description in the free text format | User-given
 TEMPERATURE | Temperature of the simulation. | User-given 
 COMPOSITION | Molecules' names, mappings, number. | Mixed*
 ||
-PUBLICATION | Reference to a publication(s) related to the data. Legacy: enriched entries carry it as bioschema\_properties.citation | User-given
+PUBLICATION | Reference to a publication(s) related to the data. Legacy: retired by enrichment, which carries it as bioschema\_properties.citation | User-given
 AUTHORS\_CONTACT | Name and email of the main author(s) of the data. |  User-given
 BATCHID | Identifier for a series of related simulations |  User-given
 SOFTWARE\_VERSION | Version of the used software |  User-given
@@ -125,8 +125,11 @@ Give description of system in free format. For example ''POPC with cholesterol a
 
 12. **PUBLICATION**  
 Give reference to a publication(s) related to the data.
-This is a legacy field: in enriched entries the publication references are carried by
-`bioschema_properties.citation` as a list of bare DOIs.
+This is a legacy field, accepted on upload and then retired: enrichment moves the
+references into `bioschema_properties.citation` (bare DOIs where extractable, otherwise
+preserved citation text) and removes the top-level field, so an enriched record carries
+them in one place only. The field is removed only once `citation` demonstrably carries
+everything it held.
 
 13. **AUTHORS\_CONTACT** (compulsory) 
 Give the name and email of the main author(s) of the data.
@@ -234,8 +237,9 @@ caught rather than silently published. One extra is tolerated for now and will b
 `accessRights` (properly DCMI `dct:accessRights`).
 
 Publication references live here as `citation`, a list of bare DOIs, superseding the legacy
-top-level `PUBLICATION` field. The block also carries `_source`, local bookkeeping recording
-which API the record came from and when it was retrieved; it is not a schema.org term and is
+top-level `PUBLICATION` field, which enrichment removes once this list carries its
+content. The block also carries `_source`, local bookkeeping recording which API the
+record came from and when it was retrieved; it is not a schema.org term and is
 stripped before serialising JSON-LD.
 
 Dates (`datePublished`) are `YYYY`, `YYYY-MM` or `YYYY-MM-DD` and **must stay quoted** in the
@@ -246,17 +250,19 @@ non-string.
 temperature, force field, engine, trajectory length — and never taken from the deposition
 record. A Zenodo title names the deposition, which up to 27 entries share, so it does not tell
 them apart; the free-text `SYSTEM` is kept as `alternateName`, and the deposition title as
-`isPartOf.name`. Every composed title ends in the databank `ID` in brackets, which is unique.
+`isPartOf.name`. The name describes the system; it is not an identifier, and similar
+simulations can share one. The databank `ID` is assigned only after merge, and the website's
+JSON-LD identifies each simulation by its databank page.
 
 ```yaml
 bioschema_properties:
   name: Molecular dynamics trajectory of a POPC bilayer at 313 K (CHARMM36, GROMACS 5.0.4,
-    200 ns) [NMRlipids simulation 566]
+    200 ns)
   alternateName: 200POPC_9000SOL_313K
   description: Molecular dynamics trajectory of a lipid bilayer of 200 POPC
     (1-palmitoyl-2-oleoyl-sn-glycero-3-phosphocholine) at 313 K. Simulated with CHARMM36 in
-    GROMACS 5.0.4 for 200 ns (40000 atoms). Deposited as NMRlipids Databank simulation 566 and
-    available from https://doi.org/10.5281/zenodo.4040423.
+    GROMACS 5.0.4 for 200 ns (40000 atoms). Part of the NMRlipids Databank and available from
+    https://doi.org/10.5281/zenodo.4040423.
   sameAs: https://doi.org/10.5281/zenodo.4040423
   datePublished: '2020-09-21'
   license:

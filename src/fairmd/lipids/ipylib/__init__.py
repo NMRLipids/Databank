@@ -1,5 +1,6 @@
 """Routines for IPython/Jupyter notebooks."""
 
-from .plottings import plotFormFactor, plotOrderParameters, plotSimulation
+from .plotff import plot_simulation_FF
+from .plotop import plot_simulation_OP
 
-__all__ = ["plotFormFactor", "plotOrderParameters", "plotSimulation", "showTable"]
+__all__ = ["plot_simulation_FF", "plot_simulation_OP"]

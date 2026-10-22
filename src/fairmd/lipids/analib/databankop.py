@@ -1,6 +1,5 @@
 """
-Module for calculation of order parameters of lipid bilayers
-from a MD trajectory
+Module for calculation of order parameters of lipid bilayers from a MD trajectory
 
 **Authors:**
 - Made by Joe,  Last edit 2017/02/02
@@ -22,35 +21,29 @@ bond_len_max_sq = bond_len_max**2
 
 class _OrderParameter:
     """
-    Class for storing and manipulating order parameter (OP) related metadata
-    (definition, name, etc.), OP trajectories, and methods to evaluate OPs.
+    Atomic dipole with order parameter.
+
+    Allows to store and manipulating OP related metadata (definition, name, etc.), OP trajectories,
+    and methods to evaluate OPs.
     """
 
     def __init__(
         self,
-        resname,
-        atom_name_a,
-        atom_name_b,
-        univ_atom_name_a,
-        univ_atom_name_b,
-        *args,
-    ):
-        """Initializes the OrderParameter object.
+        resname: str,
+        atom_name_a: str,
+        atom_name_b: str,
+        univ_atom_name_a: str,
+        univ_atom_name_b: str,
+    ) -> None:
+        """Initialize the OrderParameter object.
 
         It doesn't matter which atom (A or B) comes first for the OP calculation.
 
         :param resname: Name of the residue the atoms are in.
-        :type resname: str
         :param atom_name_a: Name of the first atom in the topology.
-        :type atom_name_a: str
         :param atom_name_b: Name of the second atom in the topology.
-        :type atom_name_b: str
         :param univ_atom_name_a: Generic/mapping name for atom A.
-        :type univ_atom_name_a: str
         :param univ_atom_name_b: Generic/mapping name for atom B.
-        :type univ_atom_name_b: str
-        :param args: Optional positional arguments. If provided, should be a pair of (avg, std).
-        :type args: tuple
         :raises RuntimeError: If any of the provided names are empty strings.
         """
         self.resname = resname
@@ -63,68 +56,54 @@ class _OrderParameter:
         for field_name, field_value in self.__dict__.items():
             if isinstance(field_value, str):
                 if not field_value.strip():
-                    raise RuntimeError(
+                    msg = (
                         f"Provided name for field '{field_name}' is empty! "
-                        "Cannot use empty names for atoms and OP definitions.",
+                        "Cannot use empty names for atoms and OP definitions."
                     )
+                    raise RuntimeError(msg)
             else:
-                warnings.warn(
-                    f"Provided value for '{field_name}' is not a string: {field_value}. "
-                    "Unexpected behaviour might occur.",
-                    stacklevel=2,
-                )
+                msg = f"Provided value for '{field_name}' is not a string: {field_value}. "
+                raise TypeError(msg)
 
-        if len(args) == 0:
-            self.avg = None
-            self.std = None
-            self.stem = None
-        elif len(args) == 2:
-            self.avg = args[0]
-            self.std = args[1]
-            self.stem = None
-        else:
-            warnings.warn(
-                f"Number of optional positional arguments is {len(args)}, not 0 or 2. Args: {args}\nWrong file format?",
-                stacklevel=2,
-            )
+        self._avg = None
+        self._std = None
+        self._stem = None
 
         self.traj = []  # For storing final OP results.
         self.selection = []  # List of AtomGroups, one for each residue.
         self.atomgroup = None  # A single AtomGroup containing all atoms for this OP.
 
-    @property
-    def get_avg_std_stem_OP(self):  # noqa: N802 (API compliance)
-        """Provides average, stddev, and standard error of the mean of OPs.
-
-        :return: A tuple containing (average, stddev, stem).
-        :rtype: tuple[float, float, float]
-        """
-        std = np.std(self.traj)
+    def finalize(self) -> None:
+        """Finalize the OP object by calculating average, stddev, and stem."""
         n = len(self.traj)
-        stem = std / np.sqrt(n - 1) if n > 1 else 0
-        return np.mean(self.traj), std, stem
+        if n == 0:
+            msg = f"No trajectory data available for OP '{self.name}'. Cannot finalize."
+            raise RuntimeError(msg)
+        self._std = np.std(self.traj)
+        self._avg = np.mean(self.traj)
+        self._stem = self._std / np.sqrt(n - 1) if n > 1 else 0
+
+    @property
+    def avg_std_stem(self) -> tuple[float, float, float]:
+        """Average, stddev, and standard error of the mean of OPs."""
+        return self._avg, self._std, self._stem
 
 
-def _read_trajs_calc_OPs(
+def _read_trajs_calc_OPs(  # noqa: N802
     op_obj_list: list[_OrderParameter],
-    top: str,
-    trajs: list[str],
-):
-    """Creates an MDAnalysis Universe, reads trajectories, and calculates Order Parameters ("S").
+    universe: mda.Universe,
+) -> None:
+    """Read a Universe trajectory and calculate Order Parameters ("S").
 
     This function calculates the order parameters for each definition in ``op_obj_list``.
     This version is optimized for single-core performance using vectorized calculations.
     The results are stored in-place in the ``traj`` attribute of the objects in ``op_obj_list``.
 
     :param op_obj_list: A list of _OrderParameter objects to be processed.
-    :type op_obj_list: list[_OrderParameter]
-    :param top: Path to the topology file (e.g., .gro, .tpr).
-    :type top: str
-    :param trajs: A list of paths to trajectory files (e.g., .xtc).
-    :type trajs: list[str]
+    :param universe: MDAnalysis Universe containing topology and trajectory.
     """
     # --- 1. Setup Universe and Atom Selections ---
-    mol = mda.Universe(top, trajs)
+    mol = universe
     improper_ops = []
 
     for i, op in enumerate(op_obj_list):
@@ -143,7 +122,7 @@ def _read_trajs_calc_OPs(
         # Validate that each residue selection contains exactly two atoms
         valid_selection = []
         for res in selection_by_residue:
-            if res.n_atoms != 2:
+            if res.n_atoms != 2:  # noqa: PLR2004
                 warnings.warn(
                     f"Selection 'name {op.aname_a} {op.aname_b}' in residue "
                     f"{res.resids[0]} contains {res.n_atoms} atoms, but should be 2. "
@@ -189,7 +168,7 @@ def _read_trajs_calc_OPs(
                 continue
 
             # Get all atom positions for this OP in one go
-            # Shape: (n_residues * 2, 3)
+            # Shape is n_residues*2 x 3
             positions = op.atomgroup.positions
 
             # Reshape to easily access atom pairs
@@ -206,17 +185,20 @@ def _read_trajs_calc_OPs(
             # and warnings for atoms that are too far apart (e.g., due to PBC issues).
             valid_mask = d2 <= bond_len_max_sq
 
-            # Initialize cos2 array. We only compute for valid pairs.
-            cos2 = np.zeros_like(d2)
+            # Initialize cos2 array. Invalid long bonds remain nan and are
+            # excluded by the existing valid-mask policy.
+            cos2 = np.full_like(d2, np.nan, dtype=np.float64)
 
             # Safely calculate cosine-squared of the angle with the z-axis
             # for all valid vectors simultaneously.
-            # np.divide handles potential division by zero if d2 is 0.
+            # Zero-length pairs are represented as NaN: their direction is
+            # undefined and must not silently contribute to the result.
             d2_valid = d2[valid_mask]
             vec_valid = vec[valid_mask]
             cos2[valid_mask] = np.divide(
                 vec_valid[:, 2] ** 2,
                 d2_valid,
+                out=np.full_like(d2_valid, np.nan),
                 where=d2_valid != 0,
             )
 
@@ -224,7 +206,8 @@ def _read_trajs_calc_OPs(
             op_values = 0.5 * (3.0 * cos2 - 1.0)
 
             # Add the results for the current frame to the running sum.
-            # We only add the valid ones, others remain 0 for this frame.
+            # Invalid long bonds remain 0; undefined zero-length pairs make
+            # the accumulated result NaN, exposing the bad input.
             op.traj += op_values
 
     # Average the accumulated sums over all frames
@@ -233,17 +216,15 @@ def _read_trajs_calc_OPs(
             op.traj /= n_frames
         # Convert back to a list to maintain original API behavior
         op.traj = op.traj.tolist()
+        op.finalize()
 
 
-def _parse_op_input(mapping_dict: dict, lipid_resname: str):
-    """Parses a mapping dictionary to form a list of C-H pairs for OP calculation.
+def _parse_op_input(mapping_dict: dict, lipid_resname: str) -> list[_OrderParameter]:
+    """Parse a mapping dictionary to form a list of C-H pairs for OP calculation.
 
     :param mapping_dict: The mapping dictionary.
-    :type mapping_dict: dict
     :param lipid_resname: The default lipid residue name.
-    :type lipid_resname: str
     :return: A list of _OrderParameter instances.
-    :rtype: list[_OrderParameter]
     """
     opvals = []
     atom_c = []
@@ -286,27 +267,19 @@ def _parse_op_input(mapping_dict: dict, lipid_resname: str):
     return opvals
 
 
-def find_OP(
+def find_OP(  # noqa: N802
     mdict: dict,
-    top_fname: str,
-    traj_fname: str,
+    universe: mda.Universe,
     lipid_name: str,
-):
+) -> list[_OrderParameter]:
     """Externally used function for computing OP values.
 
     :param mdict: The mapping dictionary.
-    :type mdict: dict
-    :param top_fname: Filename of the topology file (e.g., .gro, .tpr).
-    :type top_fname: str
-    :param traj_fname: Filename(s) of the trajectory file(s).
-    :type traj_fname: str or list[str]
+    :param universe: MDAnalysis Universe containing topology and trajectory.
     :param lipid_name: The residue name of the lipid.
-    :type lipid_name: str
+
     :return: A list of _OrderParameter instances with calculated data.
-    :rtype: list[_OrderParameter]
     """
     op_pairs = _parse_op_input(mdict, lipid_name)
-    if not isinstance(traj_fname, list):
-        traj_fname = [traj_fname]
-    _read_trajs_calc_OPs(op_pairs, top_fname, traj_fname)
+    _read_trajs_calc_OPs(op_pairs, universe)
     return op_pairs

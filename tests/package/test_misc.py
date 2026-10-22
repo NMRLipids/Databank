@@ -59,10 +59,12 @@ END
     tmpfile = os.path.join(folder, "test_water_maicos.pdb")
     with open(tmpfile, "w") as f:
         f.write(pdb_content)
-    u = mda.Universe(
-        tmpfile,
-        format="PDB",
-    )
+    # This fixture intentionally omits element records
+    with pytest.warns(UserWarning, match="Element information is missing"):
+        u = mda.Universe(
+            tmpfile,
+            format="PDB",
+        )
     nul_dim = u.dimensions
     # Store coordinates for each frame
     n_frames = 10

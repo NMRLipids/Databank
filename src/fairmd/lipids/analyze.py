@@ -17,6 +17,7 @@ import sys
 from logging import Logger
 
 import buildh
+import MDAnalysis as mda
 import numpy as np
 from maicos.core.base import AnalysisCollection
 
@@ -319,7 +320,8 @@ def computeOP(  # noqa: N802 (API)
                     check=True,
                 )
             except subprocess.CalledProcessError as e:
-                raise RuntimeError("trjconv exited with error (see above)") from e
+                msg = "trjconv exited with error (see above)"
+                raise RuntimeError(msg) from e
 
             for key in system["UNITEDATOM_DICT"]:
                 # construct order parameter definition file for CH bonds from
@@ -476,8 +478,7 @@ def computeOP(  # noqa: N802 (API)
                         try:
                             op_obj = find_OP(
                                 system.content[key].mapping_dict,
-                                uc.paths["top"],
-                                xtcwhole,
+                                mda.Universe(uc.paths["top"], xtcwhole),
                                 resname,
                             )
                         except Exception as e:
@@ -487,16 +488,14 @@ def computeOP(  # noqa: N802 (API)
                             )
                             op_obj = find_OP(
                                 system.content[key].mapping_dict,
-                                gro,
-                                xtcwhole,
+                                mda.Universe(gro, xtcwhole),
                                 resname,
                             )
 
                     if "openMM" in software or "NAMD" in software:
                         op_obj = find_OP(
                             system.content[key].mapping_dict,
-                            uc.paths["top"],
-                            uc.paths["traj"],
+                            uc.build_universe(),
                             resname,
                         )
 
@@ -506,11 +505,11 @@ def computeOP(  # noqa: N802 (API)
                         outfile.write("Atom     Average OP     OP stem\n")
 
                         for _i, op in enumerate(op_obj):
-                            (op.avg, op.std, op.stem) = op.get_avg_std_stem_OP
-                            outfile.write(f"{op.name} {op.avg!s} {op.stem!s}\n")
+                            _avg, _, _stem = op.avg_std_stem
+                            outfile.write(f"{op.name} {_avg!s} {_stem!s}\n")
 
                             data[str(op.name)] = []
-                            data[str(op.name)].append(op.get_avg_std_stem_OP)
+                            data[str(op.name)].append(op.avg_std_stem)
 
                     with open(outfilename2, "w") as f:
                         json.dump(data, f, cls=CompactJSONEncoder)

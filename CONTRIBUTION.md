@@ -108,6 +108,12 @@ testing it. Also, you may want to setup your editor to automatically apply the
 [ruff](https://ruff.rs/docs/) code formatter when saving your files, there are plugins
 to do this with all major editors.
 
+We are interested in having small overall time of unit tests. So, please use
+
+```bash
+  tox -e profile-tests
+```
+
 # Contributing to the documentation
 
 The documentation is written in reStructuredText (rst) and uses

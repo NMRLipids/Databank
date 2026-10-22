@@ -379,7 +379,7 @@ def test_the_deprecated_doi_key_is_reported_not_rewritten():
     # Renamed records have nothing to report.
     assert mod.deprecated_keys({"ARTICLE_DOI": ARTICLE_DOI, "DATA_DOI": DATA_DOI}, "experiments") == {}
 
-    # A simulation's DOI is the Zenodo deposition, which readme_yaml_schema.json
+    # A simulation's DOI is the Zenodo deposition, which simulation_schema.json
     # declares: the same key is not deprecated there.
     assert mod.deprecated_keys({"DOI": SIMULATION_DOI}, "simulations") == {}
 
@@ -417,7 +417,7 @@ def test_dois_are_normalised_before_use():
 # The generated file, not just the generated block
 #
 # The block schema is mirrored in two files: experiment_schema.json describes an
-# experiment README and readme_yaml_schema.json a simulation one. The generator
+# experiment README and simulation_schema.json a simulation one. The generator
 # writes both kinds, so both contracts are checked against real output rather
 # than against a hand-written fixture.
 # ---------------------------------------------------------------------------
@@ -476,32 +476,33 @@ def seed_datacite_cache(cache_dir):
     (cache_dir / f"{slug}.json").write_text(json.dumps([payload, "datacite"]), encoding="utf-8")
 
 
-@pytest.fixture
-def generated_simulation(tmp_path):
-    """One enriched simulation README, and the whole file it was written into."""
+SIMULATION_RECORD = {
+    "DOI": SIMULATION_DOI,
+    "TRJ": [["run.xtc"]],
+    "TPR": [["run.tpr"]],
+    "PREEQTIME": 100,
+    "TIMELEFTOUT": 10,
+    "SOFTWARE": "gromacs",
+    "SYSTEM": "128DMPC_5000SOL_303K",
+    "COMPOSITION": {
+        "DMPC": {"NAME": "DMPC", "MAPPING": "mappingDMPCcharmm.yaml", "COUNT": [64, 64]},
+    },
+    "FF": "CHARMM36",
+    "AUTHORS_CONTACT": "Ollila, O. H. Samuli",
+    "ID": 566,
+    "TRAJECTORY_SIZE": 3979765856,
+    "TRJLENGTH": 200000.0,
+    "NUMBER_OF_ATOMS": 40000,
+    "DATEOFRUNNING": "2020-09-21",
+    "TEMPERATURE": 303,
+    "SOFTWARE_VERSION": "5.0.4",
+}
+
+
+def run_simulation(tmp_path, **overrides):
+    """Enrich one simulation README; returns the module, its path and its content."""
     mod = load_autocomplete_module()
-    record = {
-        "DOI": SIMULATION_DOI,
-        "TRJ": [["run.xtc"]],
-        "TPR": [["run.tpr"]],
-        "PREEQTIME": 100,
-        "TIMELEFTOUT": 10,
-        "SOFTWARE": "gromacs",
-        "SYSTEM": "128DMPC_5000SOL_303K",
-        "COMPOSITION": {
-            "DMPC": {"NAME": "DMPC", "MAPPING": "mappingDMPCcharmm.yaml", "COUNT": [64, 64]},
-        },
-        "FF": "CHARMM36",
-        "AUTHORS_CONTACT": "Ollila, O. H. Samuli",
-        "ID": 566,
-        "TRAJECTORY_SIZE": 3979765856,
-        "TRJLENGTH": 200000.0,
-        "NUMBER_OF_ATOMS": 40000,
-        "DATEOFRUNNING": "2020-09-21",
-        "TEMPERATURE": 303,
-        "SOFTWARE_VERSION": "5.0.4",
-    }
-    path = build_simulation(tmp_path, record)
+    path = build_simulation(tmp_path, {**SIMULATION_RECORD, **overrides})
     cache = tmp_path / "cache"
     seed_cache(cache)
     seed_datacite_cache(cache)
@@ -517,8 +518,14 @@ def generated_simulation(tmp_path):
     return mod, path, yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+@pytest.fixture
+def generated_simulation(tmp_path):
+    """One enriched simulation README, and the whole file it was written into."""
+    return run_simulation(tmp_path)
+
+
 def readme_schema():
-    return json.loads((SCHEMA_DIR / "readme_yaml_schema.json").read_text(encoding="utf-8"))
+    return json.loads((SCHEMA_DIR / "simulation_schema.json").read_text(encoding="utf-8"))
 
 
 def test_generated_simulation_readme_validates(generated_simulation):
@@ -532,7 +539,8 @@ def test_generated_simulation_block_is_populated(generated_simulation):
     """A file that validates but carries nothing would pass the test above."""
     _, _, readme = generated_simulation
     block = readme["bioschema_properties"]
-    assert block["name"].endswith("[NMRlipids simulation 566]")
+    assert block["name"].startswith("Molecular dynamics trajectory of a DMPC bilayer")
+    assert "NMRlipids simulation" not in block["name"]
     assert DEPOSITION_TITLE not in block["name"]
     assert block["alternateName"] == "128DMPC_5000SOL_303K"
     assert block["sameAs"] == f"https://doi.org/{SIMULATION_DOI}"
@@ -540,6 +548,40 @@ def test_generated_simulation_block_is_populated(generated_simulation):
     assert block["isPartOf"]["identifier"] == SIMULATION_DOI
     # The deposition title names the parent, not this record.
     assert block["isPartOf"]["name"] == DEPOSITION_TITLE
+
+
+def test_duplicate_simulation_names_only_warn(generated_simulation):
+    """Similar simulations may share a name; their ID only exists after merge."""
+    mod, path, _ = generated_simulation
+    twin = path.parent.parent / "twin" / "README.yaml"
+    twin.parent.mkdir()
+    twin.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    found = mod.duplicate_names([path, twin])
+    assert len(found) == 1
+    assert found[0][0] == "WARNING"
+    assert "duplicate name" in found[0][1]
+
+
+def test_check_mode_allows_duplicate_simulation_names(generated_simulation, capsys):
+    mod, path, _ = generated_simulation
+    twin = path.parent.parent / "twin" / "README.yaml"
+    twin.parent.mkdir()
+    twin.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    cache = path.parents[5] / "cache"
+    argv = ["autocomplete_expsim_metadata.py", "--check", "--cache", str(cache), str(path), str(twin)]
+    original_argv = sys.argv
+    sys.argv = argv
+    try:
+        with pytest.raises(SystemExit) as excinfo:
+            mod.main()
+    finally:
+        sys.argv = original_argv
+
+    assert excinfo.value.code == 0
+    captured = capsys.readouterr()
+    assert "WARNING: duplicate name" in captured.out
 
 
 def test_simulation_deposition_is_not_cited_as_a_publication(generated_simulation):
@@ -622,7 +664,7 @@ def block_schema(filename):
     ("page", "schema_file"),
     [
         ("experiment_metadata.md", "experiment_schema.json"),
-        ("simulation_metadata.md", "readme_yaml_schema.json"),
+        ("simulation_metadata.md", "simulation_schema.json"),
     ],
 )
 def test_documented_example_validates(page, schema_file):
@@ -631,11 +673,18 @@ def test_documented_example_validates(page, schema_file):
     assert not errors, f"{page}: {[f'{list(e.absolute_path)}: {e.message}' for e in errors]}"
 
 
-@pytest.mark.parametrize("page", ["experiment_metadata.md", "simulation_metadata.md"])
-def test_documented_example_shows_a_composed_name(page):
+@pytest.mark.parametrize(
+    ("page", "ending"),
+    [
+        # Experiments end in their source tag, simulations in their method detail.
+        ("experiment_metadata.md", "]"),
+        ("simulation_metadata.md", ")"),
+    ],
+)
+def test_documented_example_shows_a_composed_name(page, ending):
     """The examples must not go back to showing a fetched registry title."""
     block = documented_block(page)
-    assert block["name"].rstrip().endswith("]"), block["name"]
+    assert block["name"].rstrip().endswith(ending), block["name"]
     # The composed description ends by naming where the record came from.
     assert block["description"].rstrip().endswith("."), block["description"]
 
@@ -762,7 +811,22 @@ def test_a_deposition_licence_is_not_called_an_article_licence(tmp_path):
 # ---------------------------------------------------------------------------
 
 
-def test_publication_is_retired_for_experiments_too(tmp_path):
+def test_publication_is_retired_for_simulations(tmp_path):
+    """A simulation retires the field as well, and still validates without it.
+
+    ``simulation_schema.json`` declares ``PUBLICATION`` but does not require it,
+    so a record that has given it up is still a valid simulation. Keeping it
+    would leave a superseded field alive beside the ``citation`` list that
+    replaced it, free to drift out of step with it.
+    """
+    _, path, readme = run_simulation(tmp_path, PUBLICATION=f"https://doi.org/{ARTICLE_DOI}")
+    assert "PUBLICATION" not in path.read_text(encoding="utf-8")
+    assert ARTICLE_DOI in readme["bioschema_properties"]["citation"]
+    errors = sorted(Draft7Validator(readme_schema()).iter_errors(readme), key=lambda e: e.path)
+    assert not errors, [f"{list(e.absolute_path)}: {e.message}" for e in errors]
+
+
+def test_publication_is_retired_for_experiments(tmp_path):
     """experiment_schema.json does not declare PUBLICATION and forbids extras."""
     _, paths, blocks = run_generator(
         tmp_path, [base_record(PUBLICATION=f"Dvinskikh et al., https://doi.org/{ARTICLE_DOI}")]
@@ -825,6 +889,48 @@ def test_a_multi_line_publication_the_rule_kept_is_left_intact(tmp_path):
 
     assert not removed
     assert out == readme
+
+
+def test_long_values_are_folded_under_the_width():
+    """Prose that would run past the width is folded into ``>-`` and reads back unchanged.
+
+    The width counts the whole line, key and indentation included, and a value
+    with no space in it cannot be folded, so it is left on its line.
+    """
+    records = load_expsim_module("expsim_metadata.records")
+    unbreakable = (
+        "(innerleaflet,76CHOL,30POPC,52POPE,26POPS,6SAPI24)"
+        "(outerleaflet,76CHOL,52POPC,6POPE,2POPS,57PSM),13495SOL,52SOD"
+    )
+    block = {
+        # Under the width on its own; over it once the key is written in front.
+        "name": "Pure POPC membrane simulations with 1000 mM NaCl with the CHARMM-Drude2023 force field (OpenMM)",
+        "alternateName": unbreakable,
+        "description": (
+            "Molecular dynamics trajectory of a lipid bilayer of 200 DPPC "
+            "(1,2-dipalmitoyl-sn-glycero-3-phosphocholine) at 319 K. Simulated with prosECCo 75 paper "
+            "related data in GROMACS 2022.5-plumed_2.8.2 for 1000 ns (53000 atoms). Deposited as NMRlipids "
+            "Databank simulation 930 and available from https://doi.org/10.5281/zenodo.10635500."
+        ),
+        "sameAs": "https://doi.org/10.5281/zenodo.10635500",
+        "measurementTechnique": [
+            "CHARMM36 (center of mass removed independently for upper leaflet, lower leaflet and water+ions) "
+            "force field",
+        ],
+        "isPartOf": {
+            "@type": "Dataset",
+            "name": "MD simulation trajectory and related files for POPC/cholesterol bilayers "
+            "with varying cholesterol content at 310 K",
+        },
+    }
+    out = records.render_block(block)
+    lines = out.splitlines()
+
+    assert yaml.safe_load(out)["bioschema_properties"] == block
+    assert [line for line in lines if len(line) > records.FOLD_WIDTH] == [f"  alternateName: {unbreakable}"]
+    for folded in ("  name: >-", "  description: >-", "  - >-", "    name: >-"):
+        assert folded in lines
+    assert "  sameAs: https://doi.org/10.5281/zenodo.10635500" in lines
 
 
 # ---------------------------------------------------------------------------

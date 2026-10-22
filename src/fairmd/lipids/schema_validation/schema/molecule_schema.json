@@ -4,7 +4,10 @@
   "properties": {
     "NMRlipids": {
       "type": "object",
-      "required": ["id", "name"],
+      "required": [
+        "id",
+        "name"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -44,7 +47,7 @@
           "pattern": "^LM(FA|GL|GP|SP|ST|PR|SL|PK)[0-9]{4}([0-9a-zA-Z]{4,6})?$"
         },
         "metabolights": {
-          "type": "string", 
+          "type": "string",
           "description": "MetaboLights identifier",
           "pattern": "^MTBL[CS]\\d+$"
         },
@@ -206,7 +209,10 @@
         }
       },
       "additionalProperties": false,
-      "required": ["name", "molecularFormula"],
+      "required": [
+        "name",
+        "molecularFormula"
+      ],
       "description": "Bioschema properties for molecular entity"
     },
     "properties": {
@@ -215,11 +221,17 @@
       "additionalProperties": true
     }
   },
-  "required": ["NMRlipids", "sameAs", "bioschema_properties"],
+  "required": [
+    "NMRlipids",
+    "sameAs",
+    "bioschema_properties"
+  ],
   "additionalProperties": false,
   "oneOf": [
     {
-      "required": ["sameAs"],
+      "required": [
+        "sameAs"
+      ],
       "properties": {
         "sameAs": {
           "minProperties": 1

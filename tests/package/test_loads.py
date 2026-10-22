@@ -12,7 +12,6 @@ import responses
 from responses import matchers
 from unittest import mock
 import sys
-import time
 
 import pytest
 import pytest_check as check
@@ -348,10 +347,13 @@ class TestGetFileSize:
 
 
 class TestResolveFileUrl:
+    zenodo_api_url = "https://zenodo.org/api/records/8435138"
+
+    @responses.activate
     def test_badDOI(self):
         import fairmd.lipids.databankio as dio
 
-        time.sleep(5)
+        responses.add(responses.GET, "https://zenodo.org/api/records/8435a", status=404)
         # test if bad DOI fails
         print("Testing bad DOI resolution", file=sys.stderr)
         with check.raises(requests.exceptions.HTTPError) as e:
@@ -363,16 +365,21 @@ class TestResolveFileUrl:
             dio.resolve_file_url("10.5281/zenodo.8435a", "a.txt", validate_uri=False),
             "https://zenodo.org/records/8435a/files/a.txt",
         )
-        time.sleep(5)
         # non-zenodo DOI fails
         with check.raises(NotImplementedError) as e:
             dio.resolve_file_url("10.1000/xyz123", "a.txt", validate_uri=False)
         check.is_in("Repository not validated", str(e.value))
 
+    @responses.activate
     def test_goodDOI(self):
         import fairmd.lipids.databankio as dio
 
-        time.sleep(5)
+        responses.add(
+            responses.GET,
+            self.zenodo_api_url,
+            json={"files": [{"key": "pope-md313rfz.tpr"}]},
+            status=200,
+        )
         # good DOI works properly
         assert (
             dio.resolve_file_url("10.5281/zenodo.8435138", "pope-md313rfz.tpr", validate_uri=True)
